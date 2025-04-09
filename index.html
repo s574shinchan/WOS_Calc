@@ -237,12 +237,12 @@
         if (cur >= tgt) continue;
         const startIdx = cur - 1;
         const endIdx = tgt - 1;
-        let subtotal = { 매뉴얼: 0, 도면: 0, 비전: 0 };
+        let subtotal = { 매뉴얼: 0, 보석 도면: 0, 보석 비전: 0 };
         for (let j = startIdx + 1; j <= endIdx; j++) {
           const row = data[j];
-          subtotal.매뉴얼 += parseFloat(row["보석 매뉴얼"] || 0);
-          subtotal.도면 += parseFloat(row["보석 도면"] || 0);
-          subtotal.비전 += parseFloat(row["보석 비전"] || 0);
+          subtotal.매뉴얼 += parseFloat(row["매뉴얼"] || 0);
+          subtotal.도면 += parseFloat(row["도면"] || 0);
+          subtotal.비전 += parseFloat(row["비전"] || 0);
         }
         total.매뉴얼 += subtotal.매뉴얼;
         total.도면 += subtotal.도면;
