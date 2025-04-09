@@ -237,7 +237,7 @@
         if (cur >= tgt) continue;
         const startIdx = cur - 1;
         const endIdx = tgt - 1;
-        let subtotal = { 매뉴얼: 0, 보석 도면: 0, 보석 비전: 0 };
+        let subtotal = { 매뉴얼: 0, 도면: 0, 비전: 0 };
         for (let j = startIdx + 1; j <= endIdx; j++) {
           const row = data[j];
           subtotal.매뉴얼 += parseFloat(row["매뉴얼"] || 0);
