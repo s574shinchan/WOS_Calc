@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>건물 자원 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body::before {
+      content: "WOS Calculator";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      font-size: 5rem;
+      color: rgba(0, 0, 0, 0.05);
+      z-index: 0;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-blue-600 mb-4">🏗️ WOS FC건물 자원 계산기</h1>
+
+    <form id="calcForm" class="space-y-6">
+      <table class="w-full table-auto border border-gray-300">
+        <thead class="bg-blue-100">
+          <tr>
+            <th class="p-2 border">건물</th>
+            <th class="p-2 border">선택</th>
+            <th class="p-2 border">현재 레벨</th>
+            <th class="p-2 border">목표 레벨</th>
+          </tr>
+        </thead>
+        <tbody id="buildingTable"></tbody>
+      </table>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block font-semibold">보유 불수정</label>
+          <input type="number" id="owned-불수정" class="w-full border rounded p-2" placeholder="숫자 입력" />
+        </div>
+        <div>
+          <label class="block font-semibold">보유 정제</label>
+          <input type="number" id="owned-정제" class="w-full border rounded p-2" placeholder="숫자 입력" />
+        </div>
+      </div>
+
+      <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+        계산하기
+      </button>
+
+      <div id="resultContainer" class="mt-6 overflow-x-auto"></div>
+    </form>
+  </div>
+
+  <script>
+    const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
+    const buildings = ["용광로", "대사관", "방패병", "지휘부"];
+
+    const buildingTable = document.getElementById("buildingTable");
+    const resultContainer = document.getElementById("resultContainer");
+
+    async function fetchLevelList(building) {
+      const url = `https://opensheet.elk.sh/${sheetID}/${building}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.map(d => d.레벨).filter(Boolean);
+    }
+
+    async function populateTable() {
+      const sampleLevels = await fetchLevelList(buildings[0]);
+
+      buildings.forEach((b, i) => {
+        const options = sampleLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+        buildingTable.innerHTML += `
+          <tr class="text-center">
+            <td class="border p-2">${b}</td>
+            <td class="border p-2">
+              <input type="checkbox" name="check-${i}" class="accent-blue-500 w-5 h-5">
+            </td>
+            <td class="border p-2">
+              <select name="current-${i}" class="border rounded px-2 py-1">${options}</select>
+            </td>
+            <td class="border p-2">
+              <select name="target-${i}" class="border rounded px-2 py-1">${options}</select>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function fetchData(building) {
+      const url = `https://opensheet.elk.sh/${sheetID}/${building}`;
+      const res = await fetch(url);
+      return await res.json();
+    }
+
+    function round1(value) {
+      return Math.round((value + Number.EPSILON) * 10) / 10;
+    }
+
+    async function calculateAll() {
+      const form = document.getElementById("calcForm");
+      const owned = {
+        불수정: parseFloat(document.getElementById("owned-불수정").value) || 0,
+        정제: parseFloat(document.getElementById("owned-정제").value) || 0
+      };
+
+      const grandTotal = { 불수정: 0, 정제: 0, 고기: 0, 나무: 0, 석탄: 0, 철광: 0 };
+      const resultRows = [];
+
+      for (let i = 0; i < buildings.length; i++) {
+        const building = buildings[i];
+        const checked = form[`check-${i}`].checked;
+        if (!checked) continue;
+
+        const cur = form[`current-${i}`].value;
+        const tgt = form[`target-${i}`].value;
+        const data = await fetchData(building);
+        const levels = data.map(d => d.레벨);
+        const curIndex = levels.indexOf(cur);
+        const tgtIndex = levels.indexOf(tgt);
+
+        if (curIndex === -1 || tgtIndex === -1 || curIndex >= tgtIndex) {
+          resultRows.push(`<tr><td class='border p-2 text-center' colspan='8'>⚠️ ${building}: 잘못된 레벨 설정</td></tr>`);
+          continue;
+        }
+
+        const subtotal = { 불수정: 0, 정제: 0, 고기: 0, 나무: 0, 석탄: 0, 철광: 0 };
+
+        for (let j = curIndex + 1; j <= tgtIndex; j++) {
+          const row = data[j];
+          for (const key in subtotal) {
+            subtotal[key] += parseFloat(row[key] || 0);
+            grandTotal[key] += parseFloat(row[key] || 0);
+          }
+        }
+
+        resultRows.push(`
+          <tr class="text-center">
+            <td class="border p-2">${building}</td>
+            <td class="border p-2">${cur} → ${tgt}</td>
+            <td class="border p-2">${round1(subtotal.불수정)}</td>
+            <td class="border p-2">${round1(subtotal.정제)}</td>
+            <td class="border p-2">${round1(subtotal.고기)}</td>
+            <td class="border p-2">${round1(subtotal.나무)}</td>
+            <td class="border p-2">${round1(subtotal.석탄)}</td>
+            <td class="border p-2">${round1(subtotal.철광)}</td>
+          </tr>
+        `);
+      }
+
+      resultRows.push(`
+        <tr class="text-center font-bold bg-blue-50">
+          <td class="border p-2" colspan="2">총합</td>
+          <td class="border p-2">${round1(grandTotal.불수정)}</td>
+          <td class="border p-2">${round1(grandTotal.정제)}</td>
+          <td class="border p-2">${round1(grandTotal.고기)}</td>
+          <td class="border p-2">${round1(grandTotal.나무)}</td>
+          <td class="border p-2">${round1(grandTotal.석탄)}</td>
+          <td class="border p-2">${round1(grandTotal.철광)}</td>
+        </tr>
+      `);
+
+      const 부족불수정 = round1(owned.불수정 - grandTotal.불수정);
+      const 부족정제 = round1(owned.정제 - grandTotal.정제);
+
+      resultRows.push(`
+        <tr class="text-center font-bold bg-red-100">
+          <td class="border p-2" colspan="2">과부족</td>
+          <td class="border p-2">${부족불수정 >= 0 ? '+' : ''}${부족불수정}</td>
+          <td class="border p-2">${부족정제 >= 0 ? '+' : ''}${부족정제}</td>
+          <td class="border p-2" colspan="4"></td>
+        </tr>
+      `);
+
+      resultContainer.innerHTML = `
+        <table class="w-full table-auto border border-gray-300 mt-4">
+          <thead class="bg-gray-100">
+            <tr class="text-center">
+              <th class="p-2 border">건물</th>
+              <th class="p-2 border">레벨 구간</th>
+              <th class="p-2 border">불수정</th>
+              <th class="p-2 border">정제</th>
+              <th class="p-2 border">고기</th>
+              <th class="p-2 border">나무</th>
+              <th class="p-2 border">석탄</th>
+              <th class="p-2 border">철광</th>
+            </tr>
+          </thead>
+          <tbody>${resultRows.join('')}</tbody>
+        </table>
+      `;
+    }
+
+    populateTable();
+  </script>
+  <footer class="text-center text-xs text-gray-500 mt-10">
+    ⛔ 무단 복제 및 배포 금지 | © S574 ShinChan
+  </footer>
+</body>
+</html>
