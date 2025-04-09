@@ -11,17 +11,19 @@
   <div class="mb-4 flex space-x-4">
     <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-1 px-3 rounded">🏗 건물 계산기</button>
     <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 hover:bg-purple-200 text-purple-800 font-semibold py-1 px-3 rounded">💎 보석 계산기</button>
+    <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 hover:bg-green-200 text-green-800 font-semibold py-1 px-3 rounded">🛡 장비 계산기</button>
   </div>
 
+  <!-- 건물 계산기 -->
   <div id="tab-building" class="tab-pane">
-    <div class="bg-white p-6 rounded-xl shadow-md max-w-7xl mx-auto">
+    <div class="bg-white p-6 rounded-xl shadow-md max-w-6xl mx-auto">
       <h1 class="text-2xl font-bold text-blue-600 mb-4">🏗️ 건물 계산기</h1>
       <form id="calcForm" class="space-y-6">
         <table class="w-full table-auto border border-gray-300">
           <thead class="bg-blue-100">
             <tr>
-              <th class="p-2 border">건물</th>
               <th class="p-2 border">선택</th>
+              <th class="p-2 border">건물</th>
               <th class="p-2 border">현재 레벨</th>
               <th class="p-2 border">목표 레벨</th>
             </tr>
@@ -44,10 +46,11 @@
     </div>
   </div>
 
+  <!-- 보석 계산기 -->
   <div id="tab-gem" class="tab-pane hidden">
-    <div class="bg-white p-6 rounded-xl shadow-md max-w-7xl mx-auto">
-      <h2 class="text-2xl font-bold text-purple-600 mb-6">💎 보석 계산기</h2>
-      <form id="gemForm" class="space-y-4">
+    <div class="bg-white p-6 rounded-xl shadow-md max-w-6xl mx-auto">
+      <h2 class="text-2xl font-bold text-purple-600 mb-4">💎 보석 계산기</h2>
+      <form id="gemForm" class="space-y-6">
         <div class="overflow-x-auto">
           <table class="table-auto w-full border border-gray-300 text-sm">
             <thead class="bg-purple-100 text-center">
@@ -60,6 +63,20 @@
             </thead>
             <tbody id="gemTableBody"></tbody>
           </table>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+                 <label class="block font-semibold">보유 매뉴얼</label>
+                 <input type="number" id="own-매뉴얼" class="w-full border rounded p-2" placeholder="숫자 입력">
+          </div>
+          <div>
+                 <label class="block font-semibold">보유 도면</label>
+                 <input type="number" id="own-도면" class="w-full border rounded p-2" placeholder="숫자 입력">
+          </div>
+          <div>
+                 <label class="block font-semibold">보유 비전</label>
+                 <input type="number" id="own-비전" class="w-full border rounded p-2" placeholder="숫자 입력">
+          </div>
+          </div>
         </div>
         <button type="button" onclick="calculateGems()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">계산하기</button>
       </form>
@@ -67,15 +84,51 @@
     </div>
   </div>
 
+  <!-- 장비 계산기 -->
+    <div id="tab-equip" class="tab-pane hidden">
+    <div class="bg-white p-6 rounded-xl shadow-md max-w-6xl mx-auto">
+      <h2 class="text-2xl font-bold text-green-600 mb-4">🛡 장비 계산기</h2>
+      <form id="equipForm" class="space-y-4">
+        <table class="w-full table-auto border border-gray-300 text-center text-sm">
+          <thead class="bg-green-100">
+            <tr>
+              <th class="border p-1">선택</th>
+              <th class="border p-1">장비</th>
+              <th class="border p-1">현재 단계</th>
+              <th class="border p-1">목표 단계</th>
+            </tr>
+          </thead>
+          <tbody id="equipTableBody"></tbody>
+        </table>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div><label class="block font-semibold">보유 합금</label><input type="number" id="own-합금" class="w-full border rounded p-2" placeholder="숫자 입력" /></div>
+          <div><label class="block font-semibold">보유 광택제</label><input type="number" id="own-광택제" class="w-full border rounded p-2" placeholder="숫자 입력" /></div>
+          <div><label class="block font-semibold">보유 설계도면</label><input type="number" id="own-설계도면" class="w-full border rounded p-2" placeholder="숫자 입력" /></div>
+          <div><label class="block font-semibold">보유 달빛앰버</label><input type="number" id="own-달빛앰버" class="w-full border rounded p-2" placeholder="숫자 입력" /></div>
+        </div>
+
+        <button type="button" onclick="calculateEquip()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">계산하기</button>
+      </form>
+      <div id="equipResult" class="mt-6"></div>
+  </div>
+  </div>
+
   <script>
     function switchTab(tab) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
       document.getElementById('tab-' + tab).classList.remove('hidden');
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('bg-blue-300', 'bg-purple-300'));
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300');
+      });
+
       if (tab === 'building') {
-        document.querySelectorAll('.tab-btn')[0].classList.add('bg-blue-300');
-      } else {
-        document.querySelectorAll('.tab-btn')[1].classList.add('bg-purple-300');
+        document.querySelector('.tab-btn:nth-child(1)').classList.add('bg-blue-300');
+      } else if (tab === 'gem') {
+        document.querySelector('.tab-btn:nth-child(2)').classList.add('bg-purple-300');
+      } else if (tab === 'equip') {
+        document.querySelector('.tab-btn:nth-child(3)').classList.add('bg-green-300');
       }
     }
 
@@ -97,9 +150,9 @@
         const options = sampleLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
         buildingTable.innerHTML += `
           <tr class="text-center">
-            <td class="border p-2">${b}</td>
             <td class="border p-2">
               <input type="checkbox" name="check-${i}" class="accent-blue-500 w-5 h-5">
+            <td class="border p-2">${b}</td>
             </td>
             <td class="border p-2">
               <select name="current-${i}" class="border rounded px-2 py-1">${options}</select>
@@ -207,9 +260,13 @@
 
     populateTable();
 
+    <!-- 보석 계산-->
+    const gemSheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
+    const gemSheetName = "영주보석재료";
     const slotNames = ["방패A", "방패B", "방패C", "방패D", "방패E", "방패F", 
 		"창병A", "창병B", "창병C", "창병D", "창병E", "창병F",
 		"궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F"];
+
     function createGemUI() {
       const tbody = document.getElementById("gemTableBody");
       slotNames.forEach((slot, index) => {
@@ -228,7 +285,12 @@
     async function calculateGems() {
       const result = [];
       const total = { 매뉴얼: 0, 도면: 0, 비전: 0 };
-      const res = await fetch(`https://opensheet.elk.sh/${sheetID}/영주보석재료`);
+      const own = {
+        매뉴얼: parseFloat(document.getElementById("own-매뉴얼").value) || 0,
+        도면: parseFloat(document.getElementById("own-도면").value) || 0,
+        비전: parseFloat(document.getElementById("own-비전").value) || 0
+      };
+      const res = await fetch(`https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`);
       const data = await res.json();
       for (let i = 0; i < slotNames.length; i++) {
         if (!document.getElementById(`check-${i}`).checked) continue;
@@ -264,6 +326,12 @@
           <td class="border p-1">${total.도면.toLocaleString()}</td>
           <td class="border p-1">${total.비전.toLocaleString()}</td>
         </tr>
+        <tr class="text-center font-bold bg-red-50">
+          <td colspan="2" class="border p-1">과부족</td>
+          <td class="border p-1">${(own.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
+          <td class="border p-1">${(own.도면 - total.도면).toLocaleString()}</td>
+          <td class="border p-1">${(own.비전 - total.비전).toLocaleString()}</td>
+        </tr>
       `);
       document.getElementById("gemResult").innerHTML = `
         <table class="table-auto w-full border border-gray-300 mt-4 text-sm">
@@ -282,6 +350,119 @@
     }
 
     createGemUI();
+
+    <!-- 장비 계산 -->
+   const equipSheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
+   const equipSheetName = "영주장비재료";
+   const equipItems = ["장비1", "장비2", "장비3", "장비4", "장비5", "장비6"];
+   let equipStages = [], equipData = [];
+
+   async function loadEquipTable() {
+     const url = `https://opensheet.elk.sh/${equipSheetID}/${equipSheetName}`;
+     const res = await fetch(url);
+     const data = await res.json();
+     equipData = data;
+     equipStages = data.map(r => r["단계"]);
+
+     const tbody = document.getElementById("equipTableBody");
+     equipItems.forEach((item, i) => {
+       const options = equipStages.map(s => `<option value="${s}">${s}</option>`).join('');
+       tbody.innerHTML += `
+         <tr>
+           <td class="border p-1"><input type="checkbox" id="equip-check-${i}" class="w-5 h-5 accent-green-500" /></td>
+           <td class="border p-1">${item}</td>
+           <td class="border p-1"><select id="equip-cur-${i}" class="border rounded p-1">${options}</select></td>
+           <td class="border p-1"><select id="equip-tgt-${i}" class="border rounded p-1">${options}</select></td>
+         </tr>
+       `;
+     });
+   }
+
+   async function calculateEquip() {
+     let total = { 합금: 0, 광택제: 0, 설계도면: 0, 달빛앰버: 0 };
+     const own = {
+       합금: parseFloat(document.getElementById("own-합금").value) || 0,
+       광택제: parseFloat(document.getElementById("own-광택제").value) || 0,
+       설계도면: parseFloat(document.getElementById("own-설계도면").value) || 0,
+       달빛앰버: parseFloat(document.getElementById("own-달빛앰버").value) || 0
+     };
+
+     let rows = "";
+
+     for (let i = 0; i < equipItems.length; i++) {
+       if (!document.getElementById(`equip-check-${i}`).checked) continue;
+
+       const cur = document.getElementById(`equip-cur-${i}`).value;
+       const tgt = document.getElementById(`equip-tgt-${i}`).value;
+       const start = equipStages.indexOf(cur);
+       const end = equipStages.indexOf(tgt);
+       if (start === -1 || end === -1 || start >= end) {
+      rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${equipItems[i]}: 잘못된 단계 선택</td></tr>`;
+      continue;
+    }
+
+    const subtotal = { 합금: 0, 광택제: 0, 설계도면: 0, 달빛앰버: 0 };
+    for (let j = start + 1; j <= end; j++) {
+      const row = equipData[j];
+      subtotal.합금 += parseFloat(row["합금"] || 0);
+      subtotal.광택제 += parseFloat(row["광택제"] || 0);
+      subtotal.설계도면 += parseFloat(row["설계도면"] || 0);
+      subtotal.달빛앰버 += parseFloat(row["달빛앰버"] || 0);
+      }
+
+      total.합금 += subtotal.합금;
+      total.광택제 += subtotal.광택제;
+      total.설계도면 += subtotal.설계도면;
+      total.달빛앰버 += subtotal.달빛앰버;
+
+      rows += `
+        <tr class="text-center">
+          <td class="border p-1">${equipItems[i]}</td>
+          <td class="border p-1">${cur} → ${tgt}</td>
+          <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.달빛앰버.toLocaleString()}</td>
+        </tr>
+      `;
+    }
+
+    rows += `
+      <tr class="text-center font-bold bg-green-100">
+        <td colspan="2" class="border p-1">총합</td>
+        <td class="border p-1">${total.합금.toLocaleString()}</td>
+        <td class="border p-1">${total.광택제.toLocaleString()}</td>
+        <td class="border p-1">${total.설계도면.toLocaleString()}</td>
+        <td class="border p-1">${total.달빛앰버.toLocaleString()}</td>
+      </tr>
+      <tr class="text-center font-bold bg-red-50">
+        <td colspan="2" class="border p-1">과부족</td>
+        <td class="border p-1">${(own.합금 - total.합금).toLocaleString()}</td>
+        <td class="border p-1">${(own.광택제 - total.광택제).toLocaleString()}</td>
+        <td class="border p-1">${(own.설계도면 - total.설계도면).toLocaleString()}</td>
+        <td class="border p-1">${(own.달빛앰버 - total.달빛앰버).toLocaleString()}</td>
+      </tr>
+    `;
+
+    document.getElementById("equipResult").innerHTML = `
+      <table class="w-full table-auto border border-gray-300 mt-4 text-sm text-center">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="border p-1">장비</th>
+            <th class="border p-1">구간</th>
+            <th class="border p-1">합금</th>
+            <th class="border p-1">광택제</th>
+            <th class="border p-1">설계도면</th>
+            <th class="border p-1">달빛앰버</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  loadEquipTable();
+
   </script>
 
   <footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
