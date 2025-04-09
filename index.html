@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8" />
   <title>건물 자원 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function toggleViewMode() {
+      const html = document.documentElement;
+      html.classList.toggle('mobile-view');
+      alert(document.documentElement.classList.contains('mobile-view') ? '모바일 보기로 전환됨' : 'PC 보기로 전환됨');
+    }
+  </script>
   <style>
     body::before {
       content: "WOS Calculator";
@@ -24,6 +32,9 @@
   </style>
 </head>
 <body class="bg-gray-100 p-6 font-sans">
+  <div class="text-right mb-4">
+    <button onclick="toggleViewMode()" class="text-sm text-blue-500 underline">📱 모바일 / 🖥️ PC 보기 전환</button>
+  </div>
   <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
     <h1 class="text-2xl font-bold text-blue-600 mb-4">🏗️ WOS FC건물 자원 계산기</h1>
 
