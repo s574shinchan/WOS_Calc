@@ -156,24 +156,24 @@
           <tr class="text-center">
             <td class="border p-2">${building}</td>
             <td class="border p-2">${cur} → ${tgt}</td>
-            <td class="border p-2">${round1(subtotal.불수정)}</td>
-            <td class="border p-2">${round1(subtotal.정제)}</td>
-            <td class="border p-2">${round1(subtotal.고기)}</td>
-            <td class="border p-2">${round1(subtotal.나무)}</td>
-            <td class="border p-2">${round1(subtotal.석탄)}</td>
-            <td class="border p-2">${round1(subtotal.철광)}</td>
+            <td class="border p-2">${round1(subtotal.불수정.toLocaleString())}</td>
+            <td class="border p-2">${round1(subtotal.정제.toLocaleString())}</td>
+            <td class="border p-2">${round1(subtotal.고기.toLocaleString())}</td>
+            <td class="border p-2">${round1(subtotal.나무.toLocaleString())}</td>
+            <td class="border p-2">${round1(subtotal.석탄.toLocaleString())}</td>
+            <td class="border p-2">${round1(subtotal.철광.toLocaleString())}</td>
           </tr>
         `);
       }
       resultRows.push(`
         <tr class="text-center font-bold bg-blue-50">
           <td class="border p-2" colspan="2">총합</td>
-          <td class="border p-2">${round1(grandTotal.불수정)}</td>
-          <td class="border p-2">${round1(grandTotal.정제)}</td>
-          <td class="border p-2">${round1(grandTotal.고기)}</td>
-          <td class="border p-2">${round1(grandTotal.나무)}</td>
-          <td class="border p-2">${round1(grandTotal.석탄)}</td>
-          <td class="border p-2">${round1(grandTotal.철광)}</td>
+          <td class="border p-2">${round1(grandTotal.불수정.toLocaleString())}</td>
+          <td class="border p-2">${round1(grandTotal.정제.toLocaleString())}</td>
+          <td class="border p-2">${round1(grandTotal.고기.toLocaleString())}</td>
+          <td class="border p-2">${round1(grandTotal.나무.toLocaleString())}</td>
+          <td class="border p-2">${round1(grandTotal.석탄.toLocaleString())}</td>
+          <td class="border p-2">${round1(grandTotal.철광.toLocaleString())}</td>
         </tr>
       `);
       const 부족불수정 = round1(owned.불수정 - grandTotal.불수정);
@@ -251,18 +251,18 @@
           <tr class="text-center">
             <td class="border p-1">${slotNames[i]}</td>
             <td class="border p-1">Lv.${cur} → Lv.${tgt}</td>
-            <td class="border p-1">${subtotal.매뉴얼}</td>
-            <td class="border p-1">${subtotal.도면}</td>
-            <td class="border p-1">${subtotal.비전}</td>
+            <td class="border p-1">${subtotal.매뉴얼.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.도면.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.비전.toLocaleString()}</td>
           </tr>
         `);
       }
       result.push(`
         <tr class="bg-purple-100 font-bold text-center">
           <td class="border p-1" colspan="2">총합</td>
-          <td class="border p-1">${total.매뉴얼}</td>
-          <td class="border p-1">${total.도면}</td>
-          <td class="border p-1">${total.비전}</td>
+          <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
+          <td class="border p-1">${total.도면.toLocaleString()}</td>
+          <td class="border p-1">${total.비전.toLocaleString()}</td>
         </tr>
       `);
       document.getElementById("gemResult").innerHTML = `
