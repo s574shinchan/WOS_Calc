@@ -42,16 +42,16 @@
 
   <script>
     // 환경에 따라 기본 높이 설정
-    const isMobile = window.innerWidth < 768;
-    const frame = document.getElementById("calcFrame");
-    frame.style.height = isMobile ? "1200px" : "1000px";
+    //const isMobile = window.innerWidth < 768;
+    //const frame = document.getElementById("calcFrame");
+    //frame.style.height = isMobile ? "1200px" : "1000px";
     
     // iframe 내부에서 실제 컨텐츠 높이 수신
-    window.addEventListener("message", (event) => {
-      if (event.data.type === "setHeight" && event.data.height) {
-        frame.style.height = event.data.height + "px";
-      }
-    });
+    //window.addEventListener("message", (event) => {
+    //  if (event.data.type === "setHeight" && event.data.height) {
+    //    frame.style.height = event.data.height + "px";
+    //  }
+    //});
     
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
@@ -61,6 +61,19 @@
         equip: "equip.html",
         hero: "hero_equip.html",
       }[tab];
+
+      // 탭에 따라 높이 조절
+      const frame = document.getElementById("calcFrame");
+      const isMobile = window.innerWidth <= 768;
+      
+      const heightMap = {
+        building: isMobile ? "1400px" : "800px",
+        gem:      isMobile ? "1450px" : "1200px",
+        equip:    isMobile ? "1300px" : "800px",
+        hero:     isMobile ? "1200px" : "800px",
+      };
+      
+      frame.style.height = heightMap[tab];
 
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
