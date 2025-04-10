@@ -169,7 +169,7 @@
       </table>
       `;
       
-      window.parent.postMessage({ type: "BUILDING_RESULT", html: resultHTML }, "*");      
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");      
     }
 
     loadBuildingGrid();
