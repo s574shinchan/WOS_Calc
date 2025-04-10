@@ -169,6 +169,14 @@
       
     </script>
     <script>
+      function resizeParentFrame() {
+        const height = document.body.scrollHeight;
+        window.parent.postMessage({ type: "setHeight", height }, "*");
+      }
+      
+      window.addEventListener("load", resizeParentFrame);
+      window.addEventListener("resize", resizeParentFrame);
+      
       document.addEventListener("contextmenu", event => event.preventDefault());
       document.addEventListener("keydown", function (e) {
         if (e.key === "F12" ||
