@@ -142,23 +142,7 @@
         <td class="border p-1">${(own.재료장비 - total.재료장비).toLocaleString()}</td>
         </tr>
         `;
-        
-        document.getElementById("heroEquipResult").innerHTML = `
-        <table class="w-full table-auto border mt-4 text-sm text-center">
-        <thead class="bg-gray-100">
-        <tr>
-        <th class="border p-1">장비</th>
-        <th class="border p-1">레벨</th>
-        <th class="border p-1">경험치</th>
-        <th class="border p-1">너트</th>
-        <th class="border p-1">미스릴</th>
-        <th class="border p-1">재료장비</th>
-        </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-        </table>
-        `;
-        
+               
         showPopup(`
         <table class="w-full table-auto border mt-4 text-sm text-center">
           <thead class="bg-gray-100">
