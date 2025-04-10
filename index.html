@@ -72,7 +72,7 @@
 
     window.addEventListener("message", function (e) {
       if (e.data?.type === "HEIGHT_UPDATE") {
-        document.getElementById("calcFrame").style.height = e.data.height + "px";
+        document.getElementById("calcFrame").style.height = e.data.height + "3px";
       }
       if (e.data?.type === "BUILDING_RESULT" || e.data?.type === "RESULT_POPUP") {
         document.getElementById("globalPopupContent").innerHTML = e.data.html;
