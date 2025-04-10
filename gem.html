@@ -174,7 +174,7 @@
         const newHeight = Math.ceil(document.body.scrollHeight);
         
         // 5px 이상 차이날 때만 리사이징
-        if (Math.abs(newHeight - lastHeight) > 10) {
+        if (Math.abs(newHeight - lastHeight) > 30) {
           window.parent.postMessage({ type: "setHeight", height: newHeight }, "*");
           lastHeight = newHeight;
         }
