@@ -8,72 +8,94 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"
      crossorigin="anonymous"></script>
 </head>
-  <body class="bg-gray-100 p-6 font-sans">
-    <div class="max-w-6xl mx-auto">
-      <div class="mb-4 flex flex-wrap gap-2 justify-start">
-        <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-          🏗 건물
-        </button>
-        <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 text-purple-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-          💎 영주보석
-        </button>
-        <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-          🛡 영주장비
-        </button>
-        <button onclick="switchTab('hero')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-          🧝 영웅장비
-        </button>
-      </div>
-      <iframe id="calcFrame" src="building.html" class="w-full h-[1000px] border rounded"></iframe>
+<body class="bg-gray-100 p-6 font-sans">
+  <div class="max-w-6xl mx-auto">
+    <div class="mb-4 flex flex-wrap gap-2 justify-start">
+      <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        🏗 건물
+      </button>
+      <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 text-purple-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        💎 영주보석
+      </button>
+      <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        🛡 영주장비
+      </button>
+      <button onclick="switchTab('hero')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        🧝 영웅장비
+      </button>
     </div>
-    
-    <script>
-      function switchTab(tab) {
-        const frame = document.getElementById("calcFrame");
-        frame.src = {
-          building: "building.html",
-          gem: "gem.html",
-          equip: "equip.html",
-          hero: "hero_equip.html",
-        }[tab];
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-          btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
-          btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800');
-          btn.classList.add('bg-gray-200', 'text-gray-800');
-        });
-        
-        const colorMap = {
-          building: ['bg-blue-300', 'text-blue-800'],
-          gem: ['bg-purple-300', 'text-purple-800'],
-          equip: ['bg-green-300', 'text-green-800'],
-          hero: ['bg-yellow-300', 'text-yellow-800'],
-        };
-        
-        const activeBtn = {
-          building: 0,
-          gem: 1,
-          equip: 2,
-          hero: 3,
-        }[tab];
-        
-        const btns = document.querySelectorAll('.tab-btn');
-        btns[activeBtn].classList.remove('bg-gray-200', 'text-gray-800');
-        btns[activeBtn].classList.add(...colorMap[tab]);
-      }
-    </script>
-    
-    <script>
-      document.addEventListener("contextmenu", event => event.preventDefault());
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "F12" ||
-           (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-           (e.ctrlKey && (e.key === "U" || e.key === "S")))
-        {
-          e.preventDefault();
-        }
+    <iframe id="calcFrame" src="building.html" class="w-full h-[1000px] border rounded"></iframe>
+  </div>
+
+  <!-- 📌 결과 팝업 모달 (상위 페이지에 고정) -->
+  <div id="globalPopupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 mx-2">
+      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+      <div id="globalPopupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
+      <div class="text-center mt-4">
+        <button onclick="closeGlobalPopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      const frame = document.getElementById("calcFrame");
+      frame.src = {
+        building: "building.html",
+        gem: "gem.html",
+        equip: "equip.html",
+        hero: "hero_equip.html",
+      }[tab];
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
+        btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800');
+        btn.classList.add('bg-gray-200', 'text-gray-800');
       });
-      
-    </script>
-  </body>
+
+      const colorMap = {
+        building: ['bg-blue-300', 'text-blue-800'],
+        gem: ['bg-purple-300', 'text-purple-800'],
+        equip: ['bg-green-300', 'text-green-800'],
+        hero: ['bg-yellow-300', 'text-yellow-800'],
+      };
+
+      const activeBtn = {
+        building: 0,
+        gem: 1,
+        equip: 2,
+        hero: 3,
+      }[tab];
+
+      const btns = document.querySelectorAll('.tab-btn');
+      btns[activeBtn].classList.remove('bg-gray-200', 'text-gray-800');
+      btns[activeBtn].classList.add(...colorMap[tab]);
+    }
+
+    // 팝업 처리
+    window.addEventListener("message", function (event) {
+      if (event.data?.type === "BUILDING_RESULT" || event.data?.type === "RESULT_POPUP") {
+        document.getElementById("globalPopupContent").innerHTML = event.data.html;
+        document.getElementById("globalPopupModal").classList.remove("hidden");
+      }
+    });
+
+    function closeGlobalPopup() {
+      document.getElementById("globalPopupModal").classList.add("hidden");
+    }
+  </script>
+
+  <!-- 기본 보안 스크립트 -->
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
 </html>
