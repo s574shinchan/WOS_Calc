@@ -1,31 +1,26 @@
-name: Deploy to S3 and Invalidate CloudFront
+
+name: Deploy to AWS S3
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main  # main 브랜치에 push될 때마다 실행
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: GitHub 저장소 체크아웃
       uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2.2.0  # 버전 명확히 지정
+    - name: AWS S3에 업로드
+      uses: jakejarvis/s3-sync-action@master
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-
-    - name: Upload index.html to S3
-      run: |
-        aws s3 cp index.html s3://byshin/index.html \
-          --cache-control "no-cache" \
-
-    - name: Invalidate CloudFront cache
-      run: |
-        aws cloudfront create-invalidation \
-          --distribution-id E3J0XAC3ZD3YP4 \
-          --paths "/index.html"
+        args: --acl public-read --delete
+      env:
+        AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        SOURCE_DIR: ./
