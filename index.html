@@ -52,20 +52,17 @@
   </script>
 
 <script>
-  // 마우스 우클릭 방지
-  document.addEventListener("contextmenu", event => event.preventDefault());
-
-  // F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S 등 개발자도구 단축키 방지
-  document.addEventListener("keydown", function (e) {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "S"))
-    ) {
-      e.preventDefault();
-    }
-  });
-</script>
-
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+        (e.ctrlKey && (e.key === "U" || e.key === "S"))
+      ) {
+        e.preventDefault();
+      }
+    });
+  </script>
 </body>
 </html>
