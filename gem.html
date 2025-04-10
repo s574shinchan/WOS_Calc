@@ -23,9 +23,9 @@
     </div>
     <!-- 팝업 모달 -->
     <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-      <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 max-h-[80vh] overflow-y-auto">
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 max-h-[80vh] overflow-y-auto">
         <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
-        <div id="popupContent" class="overflow-x-auto text-sm"></div>
+        <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
         <div class="text-center mt-4">
           <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
         </div>
@@ -155,19 +155,19 @@
         `;
         
         showPopup(`
-        <table class="w-full table-auto border mt-4 text-sm text-center">
-          <thead class="bg-gray-100">
-            <tr>
-            <th class="border p-1">슬롯</th>
-            <th class="border p-1">레벨</th>
-            <th class="border p-1">매뉴얼</th>
-            <th class="border p-1">도면</th>
-            <th class="border p-1">비전</th>
-            </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-            </table>
-            `);
+        <table class="min-w-[700px] w-full table-auto border mt-4 text-sm text-center whitespace-nowrap">
+        <thead class="bg-gray-100">
+        <tr>
+        <th class="border p-1">슬롯</th>
+        <th class="border p-1">레벨</th>
+        <th class="border p-1">매뉴얼</th>
+        <th class="border p-1">도면</th>
+        <th class="border p-1">비전</th>
+        </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+        </table>
+        `);
       }
       
       createGemUI();
