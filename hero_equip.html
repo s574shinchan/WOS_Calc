@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,152 +6,189 @@
   <title>영웅 장비 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-4 font-sans text-sm">
-  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
-    <h2 class="text-2xl font-bold text-yellow-600 mb-4">🧝 영웅 장비 계산기</h2>
-    <form id="heroEquipForm" class="space-y-4">
-      <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        <div><label class="block font-semibold">보유 경험치</label><input type="number" id="own-경험치" class="w-full border rounded p-2" /></div>
-        <div><label class="block font-semibold">보유 너트</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
-        <div><label class="block font-semibold">보유 미스릴</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" /></div>
-        <div><label class="block font-semibold">보유 재료장비</label><input type="number" id="own-재료장비" class="w-full border rounded p-2" /></div>
+  <body class="bg-gray-100 p-4 font-sans text-sm">
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+      <h2 class="text-2xl font-bold text-yellow-600 mb-4">🧝 영웅 장비 계산기</h2>
+      <form id="heroEquipForm" class="space-y-4">
+        <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div><label class="block font-semibold">보유 경험치</label><input type="number" id="own-경험치" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 너트</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 미스릴</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 재료장비</label><input type="number" id="own-재료장비" class="w-full border rounded p-2" /></div>
+        </div>
+        <button type="button" onclick="calculateHeroEquip()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
+      </form>
+      <div id="heroEquipResult" class="mt-6"></div>
+    </div>
+    
+    <!-- 팝업 모달 -->
+    <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 max-h-[80vh] overflow-y-auto">
+        <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+        <div id="popupContent" class="overflow-x-auto text-sm"></div>
+        <div class="text-center mt-4">
+          <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+        </div>
       </div>
-      <button type="button" onclick="calculateHeroEquip()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
-    </form>
-    <div id="heroEquipResult" class="mt-6"></div>
-  </div>
-
-<script>
-const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
-const sheetName = "영웅장비재료";
-const heroItems = ["머리", "장갑", "벨트", "신발"];
-let heroStages = [], heroData = [];
-
-async function loadHeroEquip() {
-  const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  heroData = data;
-  heroStages = data.map(r => r["레벨"]).filter(Boolean);
-
-  const grid = document.getElementById("heroEquipGridBody");
-  heroItems.forEach((item, i) => {
-    const options = heroStages.map(s => `<option value="${s}">${s}</option>`).join('');
-    grid.innerHTML += `
-      <div class="border p-2 rounded bg-yellow-50 text-xs">
-        <label for="hero-check-${i}" class="flex items-center font-semibold mb-1">
+    </div>
+    
+    <script>
+      
+      function showPopup(html) {
+        document.getElementById("popupContent").innerHTML = html;
+        document.getElementById("popupModal").classList.remove("hidden");
+      }
+      
+      function closePopup() {
+        document.getElementById("popupModal").classList.add("hidden");
+      }
+      
+      const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
+      const sheetName = "영웅장비재료";
+      const heroItems = ["머리", "장갑", "벨트", "신발"];
+      let heroStages = [], heroData = [];
+      
+      async function loadHeroEquip() {
+        const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        heroData = data;
+        heroStages = data.map(r => r["레벨"]).filter(Boolean);
+        
+        const grid = document.getElementById("heroEquipGridBody");
+        heroItems.forEach((item, i) => {
+          const options = heroStages.map(s => `<option value="${s}">${s}</option>`).join('');
+          grid.innerHTML += `
+          <div class="border p-2 rounded bg-yellow-50 text-xs">
+          <label for="hero-check-${i}" class="flex items-center font-semibold mb-1">
           <input type="checkbox" id="hero-check-${i}" class="w-4 h-4 mr-1 accent-yellow-500" />
           ${item}
-        </label>
-        <select id="hero-cur-${i}" class="w-full border rounded p-1 mb-1 text-xs">${options}</select>
-        <select id="hero-tgt-${i}" class="w-full border rounded p-1 text-xs">${options}</select>
-      </div>
-    `;
-  });
-}
-
-async function calculateHeroEquip() {
-  const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  const levels = data.map(d => d["레벨"]);
-
-  let total = { 경험치: 0, 너트: 0, 미스릴: 0, 재료장비: 0 };
-  let rows = "";
-
-  for (let i = 0; i < heroItems.length; i++) {
-    if (!document.getElementById(`hero-check-${i}`).checked) continue;
-
-    const cur = document.getElementById(`hero-cur-${i}`).value;
-    const tgt = document.getElementById(`hero-tgt-${i}`).value;
-    const start = levels.indexOf(cur);
-    const end = levels.indexOf(tgt);
-    if (start === -1 || end === -1 || start >= end) {
-      rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${heroItems[i]}: 잘못된 레벨 선택</td></tr>`;
-      continue;
-    }
-
-    const subtotal = { 경험치: 0, 너트: 0, 미스릴: 0, 재료장비: 0 };
-    for (let j = start + 1; j <= end; j++) {
-      const row = data[j];
-      subtotal.경험치 += parseFloat(row["경험치"] || 0);
-      subtotal.너트 += parseFloat(row["너트"] || 0);
-      subtotal.미스릴 += parseFloat(row["미스릴"] || 0);
-      subtotal.재료장비 += parseFloat(row["재료장비"] || 0);
-    }
-
-    total.경험치 += subtotal.경험치;
-    total.너트 += subtotal.너트;
-    total.미스릴 += subtotal.미스릴;
-    total.재료장비 += subtotal.재료장비;
-
-    rows += `
-      <tr class="text-center">
-        <td class="border p-1">${heroItems[i]}</td>
-        <td class="border p-1">${cur} → ${tgt}</td>
-        <td class="border p-1">${subtotal.경험치.toLocaleString()}</td>
-        <td class="border p-1">${subtotal.너트.toLocaleString()}</td>
-        <td class="border p-1">${subtotal.미스릴.toLocaleString()}</td>
-        <td class="border p-1">${subtotal.재료장비.toLocaleString()}</td>
-      </tr>
-    `;
-  }
-
-  const own = {
-    경험치: parseFloat(document.getElementById("own-경험치").value) || 0,
-    너트: parseFloat(document.getElementById("own-너트").value) || 0,
-    미스릴: parseFloat(document.getElementById("own-미스릴").value) || 0,
-    재료장비: parseFloat(document.getElementById("own-재료장비").value) || 0,
-  };
-
-  rows += `
-    <tr class="text-center font-bold bg-yellow-100">
-      <td colspan="2" class="border p-1">총합</td>
-      <td class="border p-1">${total.경험치.toLocaleString()}</td>
-      <td class="border p-1">${total.너트.toLocaleString()}</td>
-      <td class="border p-1">${total.미스릴.toLocaleString()}</td>
-      <td class="border p-1">${total.재료장비.toLocaleString()}</td>
-    </tr>
-    <tr class="text-center font-bold bg-red-50">
-      <td colspan="2" class="border p-1">과부족</td>
-      <td class="border p-1">${(own.경험치 - total.경험치).toLocaleString()}</td>
-      <td class="border p-1">${(own.너트 - total.너트).toLocaleString()}</td>
-      <td class="border p-1">${(own.미스릴 - total.미스릴).toLocaleString()}</td>
-      <td class="border p-1">${(own.재료장비 - total.재료장비).toLocaleString()}</td>
-    </tr>
-  `;
-
-  document.getElementById("heroEquipResult").innerHTML = `
-    <table class="w-full table-auto border mt-4 text-sm text-center">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="border p-1">장비</th>
-          <th class="border p-1">레벨</th>
-          <th class="border p-1">경험치</th>
-          <th class="border p-1">너트</th>
-          <th class="border p-1">미스릴</th>
-          <th class="border p-1">재료장비</th>
+          </label>
+          <select id="hero-cur-${i}" class="w-full border rounded p-1 mb-1 text-xs">${options}</select>
+          <select id="hero-tgt-${i}" class="w-full border rounded p-1 text-xs">${options}</select>
+          </div>
+          `;
+        });
+      }
+      
+      async function calculateHeroEquip() {
+        const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const levels = data.map(d => d["레벨"]);
+        
+        let total = { 경험치: 0, 너트: 0, 미스릴: 0, 재료장비: 0 };
+        let rows = "";
+        
+        for (let i = 0; i < heroItems.length; i++) {
+          if (!document.getElementById(`hero-check-${i}`).checked) continue;
+          
+          const cur = document.getElementById(`hero-cur-${i}`).value;
+          const tgt = document.getElementById(`hero-tgt-${i}`).value;
+          const start = levels.indexOf(cur);
+          const end = levels.indexOf(tgt);
+          if (start === -1 || end === -1 || start >= end) {
+            rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${heroItems[i]}: 잘못된 레벨 선택</td></tr>`;
+            continue;
+          }
+          
+          const subtotal = { 경험치: 0, 너트: 0, 미스릴: 0, 재료장비: 0 };
+          for (let j = start + 1; j <= end; j++) {
+            const row = data[j];
+            subtotal.경험치 += parseFloat(row["경험치"] || 0);
+            subtotal.너트 += parseFloat(row["너트"] || 0);
+            subtotal.미스릴 += parseFloat(row["미스릴"] || 0);
+            subtotal.재료장비 += parseFloat(row["재료장비"] || 0);
+          }
+          
+          total.경험치 += subtotal.경험치;
+          total.너트 += subtotal.너트;
+          total.미스릴 += subtotal.미스릴;
+          total.재료장비 += subtotal.재료장비;
+          
+          rows += `
+          <tr class="text-center">
+          <td class="border p-1">${heroItems[i]}</td>
+          <td class="border p-1">${cur} → ${tgt}</td>
+          <td class="border p-1">${subtotal.경험치.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.너트.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.미스릴.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.재료장비.toLocaleString()}</td>
+          </tr>
+          `;
+        }
+        
+        const own = {
+          경험치: parseFloat(document.getElementById("own-경험치").value) || 0,
+          너트: parseFloat(document.getElementById("own-너트").value) || 0,
+          미스릴: parseFloat(document.getElementById("own-미스릴").value) || 0,
+          재료장비: parseFloat(document.getElementById("own-재료장비").value) || 0,
+        };
+        
+        rows += `
+        <tr class="text-center font-bold bg-yellow-100">
+        <td colspan="2" class="border p-1">총합</td>
+        <td class="border p-1">${total.경험치.toLocaleString()}</td>
+        <td class="border p-1">${total.너트.toLocaleString()}</td>
+        <td class="border p-1">${total.미스릴.toLocaleString()}</td>
+        td class="border p-1">${total.재료장비.toLocaleString()}</td>
         </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
-}
-
-loadHeroEquip();
-</script>
-  <script>
-  document.addEventListener("contextmenu", event => event.preventDefault());
-  document.addEventListener("keydown", function (e) {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "S"))
-    ) {
-      e.preventDefault();
-    }
-  });
-</script>
-</body>
+        <tr class="text-center font-bold bg-red-50">
+        <td colspan="2" class="border p-1">과부족</td>
+        <td class="border p-1">${(own.경험치 - total.경험치).toLocaleString()}</td>
+        <td class="border p-1">${(own.너트 - total.너트).toLocaleString()}</td>
+        <td class="border p-1">${(own.미스릴 - total.미스릴).toLocaleString()}</td>
+        <td class="border p-1">${(own.재료장비 - total.재료장비).toLocaleString()}</td>
+        </tr>
+        `;
+        
+        document.getElementById("heroEquipResult").innerHTML = `
+        <table class="w-full table-auto border mt-4 text-sm text-center">
+        <thead class="bg-gray-100">
+        <tr>
+        <th class="border p-1">장비</th>
+        <th class="border p-1">레벨</th>
+        <th class="border p-1">경험치</th>
+        <th class="border p-1">너트</th>
+        <th class="border p-1">미스릴</th>
+        <th class="border p-1">재료장비</th>
+        </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+        </table>
+        `;
+        
+        showPopup(`
+        <table class="w-full table-auto border mt-4 text-sm text-center">
+          <thead class="bg-gray-100">
+            <tr>
+            <th class="border p-1">장비</th>
+            <th class="border p-1">레벨</th>
+            <th class="border p-1">경험치</th>
+            <th class="border p-1">너트</th>
+            <th class="border p-1">미스릴</th>
+            <th class="border p-1">재료장비</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `);
+      }
+      
+      loadHeroEquip();
+    </script>
+    <script>
+      document.addEventListener("contextmenu", event => event.preventDefault());
+      document.addEventListener("keydown", function (e) {
+        if (
+          e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))
+        ) {
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
 </html>
