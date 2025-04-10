@@ -10,11 +10,19 @@
 </head>
 <body class="bg-gray-100 p-6 font-sans">
   <div class="max-w-6xl mx-auto">
-    <div class="mb-4 flex space-x-4">
-      <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-2 px-4 rounded text-base">🏗 건물</button>
-      <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 text-purple-800 font-semibold py-2 px-4 rounded text-base">💎 영주보석</button>
-      <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-2 px-4 rounded text-base">🛡 영주장비</button>
-      <button onclick="switchTab('hero')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-2 px-4 rounded text-base">🧝 영웅장비</button>
+    <div class="mb-4 flex flex-wrap gap-2 justify-start sm:justify-center">
+      <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        🏗 건물
+      </button>
+      <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 text-purple-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        💎 영주보석
+      </button>
+      <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        🛡 영주장비
+      </button>
+      <button onclick="switchTab('hero')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        🧝 영웅장비
+      </button>
     </div>
     <iframe id="calcFrame" src="building.html" class="w-full h-[1200px] border rounded"></iframe>
   </div>
