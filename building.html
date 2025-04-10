@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -23,7 +21,7 @@
 
   <!-- 팝업 모달 -->
   <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 max-h-[80vh] overflow-y-auto">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
       <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
       <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
       <div class="text-center mt-4">
@@ -146,7 +144,7 @@
       `;
 
       showPopup(`
-        <table class="min-w-[700px] w-full table-auto border mt-4 text-sm text-center whitespace-nowrap">
+        <table class="w-full table-auto border mt-4 text-sm text-center">
           <thead class="bg-gray-100">
             <tr>
               <th class="border p-1">건물</th>
