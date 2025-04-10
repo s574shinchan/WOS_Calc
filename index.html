@@ -71,6 +71,10 @@
     }
 
     window.addEventListener("message", function (e) {
+      if (e.data?.type === "setHeight" && e.data.height) {
+        const frame = document.getElementById("calcFrame");
+        frame.style.height = e.data.height + "px";
+      }
       if (e.data?.type === "HEIGHT_UPDATE") {
         document.getElementById("calcFrame").style.height = e.data.height + "px";
       }
