@@ -142,27 +142,30 @@
           <td class="border p-1" colspan="4"></td>
         </tr>
       `;
-
-      showPopup(`
-        <table class="w-full table-auto border mt-4 text-sm text-center">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="border p-1">건물</th>
-              <th class="border p-1">레벨</th>
-              <th class="border p-1">불수정</th>
-              <th class="border p-1">정제</th>
-              <th class="border p-1">고기</th>
-              <th class="border p-1">나무</th>
-              <th class="border p-1">석탄</th>
-              <th class="border p-1">철광</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `);
+      
+      const resultHTML = `
+      <table class="w-full table-auto border mt-4 text-sm text-center">
+      <thead class="bg-gray-100">
+      <tr>
+      <th class="border p-1">건물</th>
+      <th class="border p-1">레벨</th>
+      <th class="border p-1">불수정</th>
+      <th class="border p-1">정제</th>
+      <th class="border p-1">고기</th>
+      <th class="border p-1">나무</th>
+      <th class="border p-1">석탄</th>
+      <th class="border p-1">철광</th>
+      </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+      </table>
+      `;
+      
+      window.parent.postMessage({ type: "BUILDING_RESULT", html: resultHTML }, "*");      
     }
 
     loadBuildingGrid();
+    
   </script>
   <script>
     document.addEventListener("contextmenu", event => event.preventDefault());
