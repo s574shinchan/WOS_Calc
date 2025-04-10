@@ -6,6 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>영주보석 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function sendHeightToParent() {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: "HEIGHT_UPDATE", height }, "*");
+    }
+    window.addEventListener("load", sendHeightToParent);
+    window.addEventListener("resize", sendHeightToParent);
+  </script>
 </head>
   <body class="bg-gray-100 p-4 font-sans text-sm">
     <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
@@ -139,7 +147,7 @@
         </tr>
         `;
         
-        showPopup(`
+        const resultHTML = `
         <table class="w-full table-auto border mt-4 text-sm text-center">
         <thead class="bg-gray-100">
         <tr>
@@ -152,10 +160,13 @@
         </thead>
         <tbody>${rows}</tbody>
         </table>
-        `);
+        `;
+      
+        window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");    
       }
       
       createGemUI();
+      
     </script>
     <script>
       document.addEventListener("contextmenu", event => event.preventDefault());
