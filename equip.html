@@ -1,152 +1,187 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>영주장비 계산기</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-4 font-sans text-sm">
-  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
-    <h2 class="text-2xl font-bold text-green-600 mb-4">🛡 영주장비 계산기</h2>
-    <form id="equipForm" class="space-y-4">
-      <div id="equipGridBody" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        <div><label class="block font-semibold">보유 합금</label><input type="number" id="own-합금" class="w-full border rounded p-2" /></div>
-        <div><label class="block font-semibold">보유 광택제</label><input type="number" id="own-광택제" class="w-full border rounded p-2" /></div>
-        <div><label class="block font-semibold">보유 설계도면</label><input type="number" id="own-설계도면" class="w-full border rounded p-2" /></div>
-        <div><label class="block font-semibold">보유 달빛앰버</label><input type="number" id="own-달빛앰버" class="w-full border rounded p-2" /></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>영주장비 계산기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 p-4 font-sans text-sm">
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+      <h2 class="text-2xl font-bold text-green-600 mb-4">🛡 영주장비 계산기</h2>
+      <form id="equipForm" class="space-y-4">
+        <div id="equipGridBody" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div><label class="block font-semibold">보유 합금</label><input type="number" id="own-합금" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 광택제</label><input type="number" id="own-광택제" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 설계도면</label><input type="number" id="own-설계도면" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 달빛앰버</label><input type="number" id="own-달빛앰버" class="w-full border rounded p-2" /></div>
+        </div>
+        <button type="button" onclick="calculateEquip()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">계산하기</button>
+      </form>
+      <div id="equipResult" class="mt-6"></div>
+    </div>
+    
+    <!-- 팝업 모달 -->
+    <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 max-h-[80vh] overflow-y-auto">
+        <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+        <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
+        <div class="text-center mt-4">
+          <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+        </div>
       </div>
-      <button type="button" onclick="calculateEquip()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">계산하기</button>
-    </form>
-    <div id="equipResult" class="mt-6"></div>
-  </div>
-
-<script>
-const equipSheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
-const equipSheetName = "영주장비재료";
-const equipItems = ["장비1", "장비2", "장비3", "장비4", "장비5", "장비6"];
-let equipStages = [], equipData = [];
-
-async function loadEquipTable() {
-  const url = `https://opensheet.elk.sh/${equipSheetID}/${equipSheetName}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  equipData = data;
-  equipStages = data.map(r => r["단계"]);
-
-  equipItems.forEach((item, i) => {
-    const options = equipStages.map(s => `<option value="${s}">${s}</option>`).join('');
-    const grid = document.getElementById("equipGridBody");
-    grid.innerHTML += `
-      <div class="border p-2 rounded bg-green-50 p-2">
-        <label for="equip-check-${i}" class="flex items-center text-sm font-semibold mb-1">
+    </div>
+    
+    <script>
+      function showPopup(html) {
+        document.getElementById("popupContent").innerHTML = html;
+        document.getElementById("popupModal").classList.remove("hidden");
+      }
+      
+      function closePopup() {
+        document.getElementById("popupModal").classList.add("hidden");
+      }
+      
+      const equipSheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
+      const equipSheetName = "영주장비재료";
+      const equipItems = ["장비1", "장비2", "장비3", "장비4", "장비5", "장비6"];
+      let equipStages = [], equipData = [];
+      
+      async function loadEquipTable() {
+        const url = `https://opensheet.elk.sh/${equipSheetID}/${equipSheetName}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        equipData = data;
+        equipStages = data.map(r => r["단계"]);
+        equipItems.forEach((item, i) => {
+          const options = equipStages.map(s => `<option value="${s}">${s}</option>`).join('');
+          const grid = document.getElementById("equipGridBody");
+          grid.innerHTML += `
+          <div class="border p-2 rounded bg-green-50 p-2">
+          <label for="equip-check-${i}" class="flex items-center text-sm font-semibold mb-1">
           <input type="checkbox" id="equip-check-${i}" class="w-5 h-5 mr-1 accent-green-500" />
           ${item}
-        </label>
-        <select id="equip-cur-${i}" class="w-full border rounded text-sm p-1 mb-1">${options}</select>
-        <select id="equip-tgt-${i}" class="w-full border rounded text-sm p-1">${options}</select>
-      </div>
-    `;
-  });
-}
+          </label>
+          <select id="equip-cur-${i}" class="w-full border rounded text-sm p-1 mb-1">${options}</select>
+          <select id="equip-tgt-${i}" class="w-full border rounded text-sm p-1">${options}</select>
+          </div>
+          `;
+        });
+      }
+      
+      async function calculateEquip() {
+        let total = { 합금: 0, 광택제: 0, 설계도면: 0, 달빛앰버: 0 };
+        const own = {
+          합금: parseFloat(document.getElementById("own-합금").value) || 0,
+          광택제: parseFloat(document.getElementById("own-광택제").value) || 0,
+          설계도면: parseFloat(document.getElementById("own-설계도면").value) || 0,
+          달빛앰버: parseFloat(document.getElementById("own-달빛앰버").value) || 0
+        };
+        
+        let rows = "";
+        
+        for (let i = 0; i < equipItems.length; i++) {
+          if (!document.getElementById(`equip-check-${i}`).checked) continue;
+          
+          const cur = document.getElementById(`equip-cur-${i}`).value;
+          const tgt = document.getElementById(`equip-tgt-${i}`).value;
+          const start = equipStages.indexOf(cur);
+          const end = equipStages.indexOf(tgt);
+          if (start === -1 || end === -1 || start >= end) {
+            rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${equipItems[i]}: 잘못된 단계 선택</td></tr>`;
+            continue;
+          }
 
-async function calculateEquip() {
-  let total = { 합금: 0, 광택제: 0, 설계도면: 0, 달빛앰버: 0 };
-  const own = {
-    합금: parseFloat(document.getElementById("own-합금").value) || 0,
-    광택제: parseFloat(document.getElementById("own-광택제").value) || 0,
-    설계도면: parseFloat(document.getElementById("own-설계도면").value) || 0,
-    달빛앰버: parseFloat(document.getElementById("own-달빛앰버").value) || 0
-  };
-
-  let rows = "";
-
-  for (let i = 0; i < equipItems.length; i++) {
-    if (!document.getElementById(`equip-check-${i}`).checked) continue;
-
-    const cur = document.getElementById(`equip-cur-${i}`).value;
-    const tgt = document.getElementById(`equip-tgt-${i}`).value;
-    const start = equipStages.indexOf(cur);
-    const end = equipStages.indexOf(tgt);
-    if (start === -1 || end === -1 || start >= end) {
-      rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${equipItems[i]}: 잘못된 단계 선택</td></tr>`;
-      continue;
-    }
-
-    const subtotal = { 합금: 0, 광택제: 0, 설계도면: 0, 달빛앰버: 0 };
-    for (let j = start + 1; j <= end; j++) {
-      const row = equipData[j];
-      subtotal.합금 += parseFloat(row["합금"] || 0);
-      subtotal.광택제 += parseFloat(row["광택제"] || 0);
-      subtotal.설계도면 += parseFloat(row["설계도면"] || 0);
-      subtotal.달빛앰버 += parseFloat(row["달빛앰버"] || 0);
-    }
-
-    total.합금 += subtotal.합금;
-    total.광택제 += subtotal.광택제;
-    total.설계도면 += subtotal.설계도면;
-    total.달빛앰버 += subtotal.달빛앰버;
-
-    rows += `
-      <tr class="text-center">
-        <td class="border p-1">${equipItems[i]}</td>
-        <td class="border p-1">${cur} → ${tgt}</td>
-        <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
-        <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
-        <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
-        <td class="border p-1">${subtotal.달빛앰버.toLocaleString()}</td>
-      </tr>
-    `;
-  }
-
-  rows += `
-    <tr class="text-center font-bold bg-green-100">
-      <td colspan="2" class="border p-1">총합</td>
-      <td class="border p-1">${total.합금.toLocaleString()}</td>
-      <td class="border p-1">${total.광택제.toLocaleString()}</td>
-      <td class="border p-1">${total.설계도면.toLocaleString()}</td>
-      <td class="border p-1">${total.달빛앰버.toLocaleString()}</td>
-    </tr>
-    <tr class="text-center font-bold bg-red-50">
-      <td colspan="2" class="border p-1">과부족</td>
-      <td class="border p-1">${(own.합금 - total.합금).toLocaleString()}</td>
-      <td class="border p-1">${(own.광택제 - total.광택제).toLocaleString()}</td>
-      <td class="border p-1">${(own.설계도면 - total.설계도면).toLocaleString()}</td>
-      <td class="border p-1">${(own.달빛앰버 - total.달빛앰버).toLocaleString()}</td>
-    </tr>
-  `;
-
-  document.getElementById("equipResult").innerHTML = `
-    <table class="table-auto w-full border mt-4 text-sm text-center">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="border p-1">장비</th>
-          <th class="border p-1">구간</th>
-          <th class="border p-1">합금</th>
-          <th class="border p-1">광택제</th>
-          <th class="border p-1">설계도면</th>
-          <th class="border p-1">달빛앰버</th>
+          const subtotal = { 합금: 0, 광택제: 0, 설계도면: 0, 달빛앰버: 0 };
+          for (let j = start + 1; j <= end; j++) {
+            const row = equipData[j];
+            subtotal.합금 += parseFloat(row["합금"] || 0);
+            subtotal.광택제 += parseFloat(row["광택제"] || 0);
+            subtotal.설계도면 += parseFloat(row["설계도면"] || 0);
+            subtotal.달빛앰버 += parseFloat(row["달빛앰버"] || 0);
+          }
+          
+          total.합금 += subtotal.합금;
+          total.광택제 += subtotal.광택제;
+          total.설계도면 += subtotal.설계도면;
+          total.달빛앰버 += subtotal.달빛앰버;
+          
+          rows += `
+          <tr class="text-center">
+          <td class="border p-1">${equipItems[i]}</td>
+          <td class="border p-1">${cur} → ${tgt}</td>
+          <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.달빛앰버.toLocaleString()}</td>
+          </tr>
+          `;
+        }
+        
+        rows += `
+        <tr class="text-center font-bold bg-green-100">
+        <td colspan="2" class="border p-1">총합</td>
+        <td class="border p-1">${total.합금.toLocaleString()}</td>
+        <td class="border p-1">${total.광택제.toLocaleString()}</td>
+        <td class="border p-1">${total.설계도면.toLocaleString()}</td>
+        <td class="border p-1">${total.달빛앰버.toLocaleString()}</td>
         </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
-}
-
-loadEquipTable();
-</script>
-  <script>
-  document.addEventListener("contextmenu", event => event.preventDefault());
-  document.addEventListener("keydown", function (e) {
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "S"))
-    ) {
-      e.preventDefault();
-    }
-  });
-</script>
-</body>
+        <tr class="text-center font-bold bg-red-50">
+        <td colspan="2" class="border p-1">과부족</td>
+        <td class="border p-1">${(own.합금 - total.합금).toLocaleString()}</td>
+        <td class="border p-1">${(own.광택제 - total.광택제).toLocaleString()}</td>
+        <td class="border p-1">${(own.설계도면 - total.설계도면).toLocaleString()}</td>
+        <td class="border p-1">${(own.달빛앰버 - total.달빛앰버).toLocaleString()}</td>
+        </tr>
+        `;
+          
+        document.getElementById("equipResult").innerHTML = `     
+        <table class="table-auto w-full border mt-4 text-sm text-center">
+        <thead class="bg-gray-100">
+        <tr>
+        <th class="border p-1">장비</th>
+        <th class="border p-1">구간</th>
+        <th class="border p-1">합금</th>
+        <th class="border p-1">광택제</th>
+        <th class="border p-1">설계도면</th>
+        <th class="border p-1">달빛앰버</th>
+        </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+        </table>
+        `;
+        
+        showPopup(`
+        <table class="min-w-[700px] w-full table-auto border mt-4 text-sm text-center whitespace-nowrap">
+          <thead class="bg-gray-100">
+            <tr>
+            <th class="border p-1">장비</th>
+            <th class="border p-1">구간</th>
+            <th class="border p-1">합금</th>
+            <th class="border p-1">광택제</th>
+            <th class="border p-1">설계도면</th>
+            <th class="border p-1">달빛앰버</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `);
+      }
+      
+      loadEquipTable();
+      
+    </script>
+    <script>
+      document.addEventListener("contextmenu", event => event.preventDefault());
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "F12" ||
+            (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+            (e.ctrlKey && (e.key === "U" || e.key === "S"))
+           ) {
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
 </html>
