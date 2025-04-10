@@ -36,16 +36,16 @@ async function loadEquipTable() {
   equipStages = data.map(r => r["단계"]);
 
   equipItems.forEach((item, i) => {
-    const options = equipStages.map(s => `<option value="\${s}">\${s}</option>`).join('');
+    const options = equipStages.map(s => `<option value="${s}">${s}</option>`).join('');
     const grid = document.getElementById("equipGridBody");
     grid.innerHTML += `
-      <div class="border rounded bg-green-50 p-2">
-        <label for="equip-check-\${i}" class="block text-xs font-semibold mb-1">
-          <input type="checkbox" id="equip-check-\${i}" class="mr-1 align-middle accent-green-500" />
-          \${item}
+      <div class="border p-2 rounded bg-green-50 p-2">
+        <label for="equip-check-${i}" class="flex items-center text-sm font-semibold mb-1">
+          <input type="checkbox" id="equip-check-${i}" class="w-5 h-5 mr-1 accent-green-500" />
+          ${item}
         </label>
-        <select id="equip-cur-\${i}" class="w-full border rounded text-xs mb-1">\${options}</select>
-        <select id="equip-tgt-\${i}" class="w-full border rounded text-xs">\${options}</select>
+        <select id="equip-cur-${i}" class="w-full border rounded text-sm p-2 mb-1">${options}</select>
+        <select id="equip-tgt-${i}" class="w-full border rounded text-sm p-2">${options}</select>
       </div>
     `;
   });
@@ -63,14 +63,14 @@ async function calculateEquip() {
   let rows = "";
 
   for (let i = 0; i < equipItems.length; i++) {
-    if (!document.getElementById(\`equip-check-\${i}\`).checked) continue;
+    if (!document.getElementById(`equip-check-${i}`).checked) continue;
 
-    const cur = document.getElementById(\`equip-cur-\${i}\`).value;
-    const tgt = document.getElementById(\`equip-tgt-\${i}\`).value;
+    const cur = document.getElementById(`equip-cur-${i}`).value;
+    const tgt = document.getElementById(`equip-tgt-${i}`).value;
     const start = equipStages.indexOf(cur);
     const end = equipStages.indexOf(tgt);
     if (start === -1 || end === -1 || start >= end) {
-      rows += \`<tr><td class="border p-1 text-center" colspan="6">⚠️ \${equipItems[i]}: 잘못된 단계 선택</td></tr>\`;
+      rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${equipItems[i]}: 잘못된 단계 선택</td></tr>`;
       continue;
     }
 
@@ -88,37 +88,37 @@ async function calculateEquip() {
     total.설계도면 += subtotal.설계도면;
     total.달빛앰버 += subtotal.달빛앰버;
 
-    rows += \`
+    rows += `
       <tr class="text-center">
-        <td class="border p-1">\${equipItems[i]}</td>
-        <td class="border p-1">\${cur} → \${tgt}</td>
-        <td class="border p-1">\${subtotal.합금.toLocaleString()}</td>
-        <td class="border p-1">\${subtotal.광택제.toLocaleString()}</td>
-        <td class="border p-1">\${subtotal.설계도면.toLocaleString()}</td>
-        <td class="border p-1">\${subtotal.달빛앰버.toLocaleString()}</td>
+        <td class="border p-1">${equipItems[i]}</td>
+        <td class="border p-1">${cur} → ${tgt}</td>
+        <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.달빛앰버.toLocaleString()}</td>
       </tr>
-    \`;
+    `;
   }
 
-  rows += \`
+  rows += `
     <tr class="text-center font-bold bg-green-100">
       <td colspan="2" class="border p-1">총합</td>
-      <td class="border p-1">\${total.합금.toLocaleString()}</td>
-      <td class="border p-1">\${total.광택제.toLocaleString()}</td>
-      <td class="border p-1">\${total.설계도면.toLocaleString()}</td>
-      <td class="border p-1">\${total.달빛앰버.toLocaleString()}</td>
+      <td class="border p-1">${total.합금.toLocaleString()}</td>
+      <td class="border p-1">${total.광택제.toLocaleString()}</td>
+      <td class="border p-1">${total.설계도면.toLocaleString()}</td>
+      <td class="border p-1">${total.달빛앰버.toLocaleString()}</td>
     </tr>
     <tr class="text-center font-bold bg-red-50">
       <td colspan="2" class="border p-1">과부족</td>
-      <td class="border p-1">\${(own.합금 - total.합금).toLocaleString()}</td>
-      <td class="border p-1">\${(own.광택제 - total.광택제).toLocaleString()}</td>
-      <td class="border p-1">\${(own.설계도면 - total.설계도면).toLocaleString()}</td>
-      <td class="border p-1">\${(own.달빛앰버 - total.달빛앰버).toLocaleString()}</td>
+      <td class="border p-1">${(own.합금 - total.합금).toLocaleString()}</td>
+      <td class="border p-1">${(own.광택제 - total.광택제).toLocaleString()}</td>
+      <td class="border p-1">${(own.설계도면 - total.설계도면).toLocaleString()}</td>
+      <td class="border p-1">${(own.달빛앰버 - total.달빛앰버).toLocaleString()}</td>
     </tr>
-  \`;
+  `;
 
-  document.getElementById("equipResult").innerHTML = \`
-    <table class="w-full table-auto border mt-4 text-sm text-center">
+  document.getElementById("equipResult").innerHTML = `
+    <table class="table-auto w-full border mt-4 text-sm text-center">
       <thead class="bg-gray-100">
         <tr>
           <th class="border p-1">장비</th>
@@ -129,24 +129,24 @@ async function calculateEquip() {
           <th class="border p-1">달빛앰버</th>
         </tr>
       </thead>
-      <tbody>\${rows}</tbody>
+      <tbody>${rows}</tbody>
     </table>
-  \`;
+  `;
 }
 
 loadEquipTable();
 </script>
   <script>
-    document.addEventListener("contextmenu", event => event.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (
-        e.key === "F12" ||
-        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-        (e.ctrlKey && (e.key === "U" || e.key === "S"))
-      ) {
-        e.preventDefault();
-      }
-    });
-  </script>
+  document.addEventListener("contextmenu", event => event.preventDefault());
+  document.addEventListener("keydown", function (e) {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "S"))
+    ) {
+      e.preventDefault();
+    }
+  });
+</script>
 </body>
 </html>
