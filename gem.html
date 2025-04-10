@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영주보석 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+    <h2 class="text-2xl font-bold text-purple-600 mb-4">💎 영주보석 계산기</h2>
+    <form id="gemForm" class="space-y-6">
+      <div id="gemTableBody" class="grid grid-cols-12 gap-2"></div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div><label class="block font-semibold">보유 매뉴얼</label><input type="number" id="own-매뉴얼" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 도면</label><input type="number" id="own-도면" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 비전</label><input type="number" id="own-비전" class="w-full border rounded p-2" /></div>
+      </div>
+      <button type="button" onclick="calculateGems()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">계산하기</button>
+    </form>
+    <div id="gemResult" class="mt-6"></div>
+  </div>
+
+<script>
+const gemSheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
+const gemSheetName = "영주보석재료";
+const gemSlots = ["방패A", "방패B", "방패C", "방패D", "방패E", "방패F", 
+  "창병A", "창병B", "창병C", "창병D", "창병E", "창병F",
+  "궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F"];
+let gemLevels = [];
+
+async function createGemUI() {
+  const grid = document.getElementById("gemTableBody");
+  const url = `https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  gemLevels = data.map(d => d["레벨"]);
+
+  gemSlots.forEach((slot, i) => {
+    const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+    grid.innerHTML += `
+      <div class="col-span-2 border p-2 rounded bg-purple-50">
+        <label class="flex items-center text-sm font-semibold mb-1">
+          <input type="checkbox" id="gem-check-${i}" class="w-5 h-5 mr-1 accent-purple-500" />
+          ${slot}
+        </label>
+        <select id="gem-cur-${i}" class="w-full border rounded text-sm p-2 mb-1">${options}</select>
+        <select id="gem-tgt-${i}" class="w-full border rounded text-sm p-2">${options}</select>
+      </div>
+    `;
+  });
+}
+
+async function calculateGems() {
+  const url = `https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  const levels = data.map(d => d["레벨"]);
+
+  let total = { 매뉴얼: 0, 도면: 0, 비전: 0 };
+  let rows = "";
+
+  for (let i = 0; i < gemSlots.length; i++) {
+    if (!document.getElementById(`gem-check-${i}`).checked) continue;
+
+    const cur = document.getElementById(`gem-cur-${i}`).value;
+    const tgt = document.getElementById(`gem-tgt-${i}`).value;
+    const start = levels.indexOf(cur);
+    const end = levels.indexOf(tgt);
+
+    if (start === -1 || end === -1 || start >= end) {
+      rows += `<tr><td class="border p-1 text-center text-red-600" colspan="5">⚠️ ${gemSlots[i]}: 잘못된 레벨 선택</td></tr>`;
+      continue;
+    }
+
+    let subtotal = { 매뉴얼: 0, 도면: 0, 비전: 0 };
+    for (let j = start + 1; j <= end; j++) {
+      subtotal.매뉴얼 += parseFloat(data[j]["매뉴얼"] || 0);
+      subtotal.도면 += parseFloat(data[j]["도면"] || 0);
+      subtotal.비전 += parseFloat(data[j]["비전"] || 0);
+    }
+
+    total.매뉴얼 += subtotal.매뉴얼;
+    total.도면 += subtotal.도면;
+    total.비전 += subtotal.비전;
+
+    rows += `
+      <tr class="text-center">
+        <td class="border p-1">${gemSlots[i]}</td>
+        <td class="border p-1">${cur} → ${tgt}</td>
+        <td class="border p-1">${subtotal.매뉴얼.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.도면.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.비전.toLocaleString()}</td>
+      </tr>
+    `;
+  }
+
+  const owned = {
+    매뉴얼: parseFloat(document.getElementById("own-매뉴얼").value) || 0,
+    도면: parseFloat(document.getElementById("own-도면").value) || 0,
+    비전: parseFloat(document.getElementById("own-비전").value) || 0,
+  };
+
+  rows += `
+    <tr class="text-center font-bold bg-purple-100">
+      <td class="border p-1" colspan="2">총합</td>
+      <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
+      <td class="border p-1">${total.도면.toLocaleString()}</td>
+      <td class="border p-1">${total.비전.toLocaleString()}</td>
+    </tr>
+    <tr class="text-center font-bold bg-red-50">
+      <td class="border p-1" colspan="2">과부족</td>
+      <td class="border p-1">${(owned.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
+      <td class="border p-1">${(owned.도면 - total.도면).toLocaleString()}</td>
+      <td class="border p-1">${(owned.비전 - total.비전).toLocaleString()}</td>
+    </tr>
+  `;
+
+  document.getElementById("gemResult").innerHTML = `
+    <table class="table-auto w-full border mt-4 text-sm text-center">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="border p-1">슬롯</th>
+          <th class="border p-1">레벨</th>
+          <th class="border p-1">매뉴얼</th>
+          <th class="border p-1">도면</th>
+          <th class="border p-1">비전</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+createGemUI();
+</script>
+
+<script>
+  document.addEventListener("contextmenu", event => event.preventDefault());
+  document.addEventListener("keydown", function (e) {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "S"))
+    ) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+</body>
+</html>
