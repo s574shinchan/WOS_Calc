@@ -11,7 +11,7 @@
   <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
     <h2 class="text-2xl font-bold text-yellow-600 mb-4">🧝 영웅 장비 계산기</h2>
     <form id="heroEquipForm" class="space-y-4">
-      <div id="heroEquipGridBody" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         <div><label class="block font-semibold">보유 경험치</label><input type="number" id="own-경험치" class="w-full border rounded p-2" /></div>
         <div><label class="block font-semibold">보유 너트</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
@@ -40,13 +40,13 @@ async function loadHeroEquip() {
   heroItems.forEach((item, i) => {
     const options = heroStages.map(s => `<option value="${s}">${s}</option>`).join('');
     grid.innerHTML += `
-      <div class="border p-2 rounded bg-yellow-50 p-2">
-        <label for="hero-check-${i}" class="flex items-center text-sm font-semibold mb-1">
-          <input type="checkbox" id="hero-check-${i}" class="w-5 h-5 mr-1 accent-yellow-500" />
+      <div class="border p-2 rounded bg-yellow-50 text-xs">
+        <label for="hero-check-${i}" class="flex items-center font-semibold mb-1">
+          <input type="checkbox" id="hero-check-${i}" class="w-4 h-4 mr-1 accent-yellow-500" />
           ${item}
         </label>
-        <select id="hero-cur-${i}" class="w-full border rounded text-sm p-2 mb-1">${options}</select>
-        <select id="hero-tgt-${i}" class="w-full border rounded text-sm p-2">${options}</select>
+        <select id="hero-cur-${i}" class="w-full border rounded p-1 mb-1 text-xs">${options}</select>
+        <select id="hero-tgt-${i}" class="w-full border rounded p-1 text-xs">${options}</select>
       </div>
     `;
   });
@@ -142,7 +142,7 @@ async function calculateHeroEquip() {
 
 loadHeroEquip();
 </script>
-<script>
+  <script>
   document.addEventListener("contextmenu", event => event.preventDefault());
   document.addEventListener("keydown", function (e) {
     if (
