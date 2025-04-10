@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>영웅 장비 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function sendHeightToParent() {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: "HEIGHT_UPDATE", height }, "*");
+    }
+    window.addEventListener("load", sendHeightToParent);
+    window.addEventListener("resize", sendHeightToParent);
+  </script>
 </head>
   <body class="bg-gray-100 p-4 font-sans text-sm">
     <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
@@ -142,22 +150,24 @@
         <td class="border p-1">${(own.재료장비 - total.재료장비).toLocaleString()}</td>
         </tr>
         `;
-               
-        showPopup(`
+        
+        const resultHTML = `
         <table class="w-full table-auto border mt-4 text-sm text-center">
-          <thead class="bg-gray-100">
-            <tr>
-            <th class="border p-1">장비</th>
-            <th class="border p-1">레벨</th>
-            <th class="border p-1">경험치</th>
-            <th class="border p-1">너트</th>
-            <th class="border p-1">미스릴</th>
-            <th class="border p-1">재료장비</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
+        <thead class="bg-gray-100">
+        <tr>
+        <th class="border p-1">장비</th>
+        <th class="border p-1">레벨</th>
+        <th class="border p-1">경험치</th>
+        <th class="border p-1">너트</th>
+        <th class="border p-1">미스릴</th>
+        <th class="border p-1">재료장비</th>
+        </tr>
+        </thead>
+        <tbody>${rows}</tbody>
         </table>
-      `);
+        `;
+        
+        window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
       }
       
       loadHeroEquip();
