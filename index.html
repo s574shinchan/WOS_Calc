@@ -12,7 +12,7 @@
 <body class="bg-gray-100 p-6 font-sans">
 <div class="max-w-6xl mx-auto mb-4">
   <div class="mb-4 flex space-x-4">
-    <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-1 px-3 rounded">🏗 건물</button>
+    <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-1 px-3 rounded">🏗 건  물</button>
     <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 hover:bg-purple-200 text-purple-800 font-semibold py-1 px-3 rounded">💎 영주보석</button>
     <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 hover:bg-green-200 text-green-800 font-semibold py-1 px-3 rounded">🛡 영주장비</button>
   </div>
@@ -21,9 +21,9 @@
   <!-- 건물 계산기 -->
   <div id="tab-building" class="tab-pane">
     <div class="bg-white p-6 rounded-xl shadow-md max-w-6xl mx-auto">
-      <h1 class="text-2xl font-bold text-blue-600 mb-4">🏗️ 건물 계산</h1>
+      <h1 class="text-2xl font-bold text-blue-600 mb-4">🏗️ 건물 계산기</h1>
       <form id="calcForm" class="space-y-6">
-        <table class="w-full table-auto border border-gray-300 text-center text-sm">
+        <table class="w-full table-auto border border-gray-300">
           <thead class="bg-blue-100">
             <tr>
               <th class="p-1 border">선택</th>
@@ -53,7 +53,7 @@
   <!-- 보석 계산기 -->
   <div id="tab-gem" class="tab-pane hidden">
     <div class="bg-white p-6 rounded-xl shadow-md max-w-6xl mx-auto">
-      <h2 class="text-2xl font-bold text-purple-600 mb-4">💎 보석 계산</h2>
+      <h2 class="text-2xl font-bold text-purple-600 mb-4">💎 보석 계산기</h2>
       <form id="gemForm" class="space-y-6">
         <div id="gemTableBody" class="grid grid-cols-12 gap-2"></div>
 
@@ -81,7 +81,7 @@
   <!-- 장비 계산기 -->
     <div id="tab-equip" class="tab-pane hidden">
     <div class="bg-white p-6 rounded-xl shadow-md max-w-6xl mx-auto">
-      <h2 class="text-2xl font-bold text-green-600 mb-4">🛡 장비 계산</h2>
+      <h2 class="text-2xl font-bold text-green-600 mb-4">🛡 장비 계산기</h2>
       <form id="equipForm" class="space-y-4">
         <table class="w-full table-auto border border-gray-300 text-center text-sm">
           <thead class="bg-green-100">
@@ -271,16 +271,16 @@
 		"궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F"];
 
     async function createGemUI() {
-  	const grid = document.getElementById("gemTableBody");
-  	const url = `https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`;
-  	const res = await fetch(url);
-  	const data = await res.json();
-  	gemLevels = data.map(d => d["레벨"]);
+  const grid = document.getElementById("gemTableBody");
+  const url = `https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  gemLevels = data.map(d => d["레벨"]);
 
-  	gemSlots.forEach((slot, i) => {
-    	const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
-       	grid.innerHTML += `
-	 <div class="col-span-2 border p-2 rounded bg-purple-50">
+  gemSlots.forEach((slot, i) => {
+    const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+       grid.innerHTML += `
+         <div class="col-span-2 border p-2 rounded bg-purple-50">
            <label for="gem-check-${i}" class="block text-xs font-semibold mb-1">
              <input type="checkbox" id="gem-check-${i}" class="mr-1 align-middle accent-purple-500" />
              ${slot}
@@ -288,7 +288,7 @@
            <select id="gem-cur-${i}" class="w-full border rounded text-xs mb-1">${options}</select>
            <select id="gem-tgt-${i}" class="w-full border rounded text-xs">${options}</select>
          </div>
-	`;
+       `;
      });
     }
 
