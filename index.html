@@ -209,50 +209,50 @@
         }
         resultRows.push(`
           <tr class="text-center">
-            <td class="border p-2">${building}</td>
-            <td class="border p-2">${cur} → ${tgt}</td>
-            <td class="border p-2">${round1(subtotal.불수정).toLocaleString()}</td>
-            <td class="border p-2">${round1(subtotal.정제).toLocaleString()}</td>
-            <td class="border p-2">${round1(subtotal.고기)}</td>
-            <td class="border p-2">${round1(subtotal.나무)}</td>
-            <td class="border p-2">${round1(subtotal.석탄)}</td>
-            <td class="border p-2">${round1(subtotal.철광)}</td>
+            <td class="border p-1">${building}</td>
+            <td class="border p-1">${cur} → ${tgt}</td>
+            <td class="border p-1">${round1(subtotal.불수정).toLocaleString()}</td>
+            <td class="border p-1">${round1(subtotal.정제).toLocaleString()}</td>
+            <td class="border p-1">${round1(subtotal.고기)}</td>
+            <td class="border p-1">${round1(subtotal.나무)}</td>
+            <td class="border p-1">${round1(subtotal.석탄)}</td>
+            <td class="border p-1">${round1(subtotal.철광)}</td>
           </tr>
         `);
       }
       resultRows.push(`
         <tr class="text-center font-bold bg-blue-50">
-          <td class="border p-2" colspan="2">총합</td>
-          <td class="border p-2">${round1(grandTotal.불수정).toLocaleString()}</td>
-          <td class="border p-2">${round1(grandTotal.정제).toLocaleString()}</td>
-          <td class="border p-2">${round1(grandTotal.고기)}</td>
-          <td class="border p-2">${round1(grandTotal.나무)}</td>
-          <td class="border p-2">${round1(grandTotal.석탄)}</td>
-          <td class="border p-2">${round1(grandTotal.철광)}</td>
+          <td class="border p-1" colspan="2">총합</td>
+          <td class="border p-1">${round1(grandTotal.불수정).toLocaleString()}</td>
+          <td class="border p-1">${round1(grandTotal.정제).toLocaleString()}</td>
+          <td class="border p-1">${round1(grandTotal.고기)}</td>
+          <td class="border p-1">${round1(grandTotal.나무)}</td>
+          <td class="border p-1">${round1(grandTotal.석탄)}</td>
+          <td class="border p-1">${round1(grandTotal.철광)}</td>
         </tr>
       `);
       const 부족불수정 = round1(owned.불수정 - grandTotal.불수정);
       const 부족정제 = round1(owned.정제 - grandTotal.정제);
       resultRows.push(`
         <tr class="text-center font-bold bg-red-100">
-          <td class="border p-2" colspan="2">과부족</td>
-          <td class="border p-2">${부족불수정 >= 0 ? '+' : ''}${부족불수정.toLocaleString()}</td>
-          <td class="border p-2">${부족정제 >= 0 ? '+' : ''}${부족정제.toLocaleString()}</td>
-          <td class="border p-2" colspan="4"></td>
+          <td class="border p-1" colspan="2">과부족</td>
+          <td class="border p-1">${부족불수정 >= 0 ? '+' : ''}${부족불수정.toLocaleString()}</td>
+          <td class="border p-1">${부족정제 >= 0 ? '+' : ''}${부족정제.toLocaleString()}</td>
+          <td class="border p-1" colspan="4"></td>
         </tr>
       `);
       resultContainer.innerHTML = `
         <table class="w-full table-auto border border-gray-300 mt-4">
           <thead class="bg-gray-100">
             <tr class="text-center">
-              <th class="p-2 border">건물</th>
-              <th class="p-2 border">레벨 구간</th>
-              <th class="p-2 border">불수정</th>
-              <th class="p-2 border">정제</th>
-              <th class="p-2 border">고기</th>
-              <th class="p-2 border">나무</th>
-              <th class="p-2 border">석탄</th>
-              <th class="p-2 border">철광</th>
+              <th class="p-1 border">건물</th>
+              <th class="p-1 border">레벨 구간</th>
+              <th class="p-1 border">불수정</th>
+              <th class="p-1 border">정제</th>
+              <th class="p-1 border">고기</th>
+              <th class="p-1 border">나무</th>
+              <th class="p-1 border">석탄</th>
+              <th class="p-1 border">철광</th>
             </tr>
           </thead>
           <tbody>${resultRows.join('')}</tbody>
