@@ -6,13 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WOS 계산기 | S574 ShinChan</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"
+     crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-100 p-6 font-sans">
+<div class="max-w-6xl mx-auto mb-4">
   <div class="mb-4 flex space-x-4">
     <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-1 px-3 rounded">🏗 건물 계산기</button>
     <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 hover:bg-purple-200 text-purple-800 font-semibold py-1 px-3 rounded">💎 보석 계산기</button>
     <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 hover:bg-green-200 text-green-800 font-semibold py-1 px-3 rounded">🛡 장비 계산기</button>
   </div>
+</div>	
 
   <!-- 건물 계산기 -->
   <div id="tab-building" class="tab-pane">
@@ -51,18 +55,8 @@
     <div class="bg-white p-6 rounded-xl shadow-md max-w-6xl mx-auto">
       <h2 class="text-2xl font-bold text-purple-600 mb-4">💎 보석 계산기</h2>
       <form id="gemForm" class="space-y-6">
-        <div class="overflow-x-auto">
-          <table class="table-auto w-full border border-gray-300 text-sm">
-            <thead class="bg-purple-100 text-center">
-              <tr>
-                <th class="p-2 border">선택</th>
-                <th class="p-2 border">슬롯</th>
-                <th class="p-2 border">현재 레벨</th>
-                <th class="p-2 border">목표 레벨</th>
-              </tr>
-            </thead>
-            <tbody id="gemTableBody"></tbody>
-          </table>
+        <div id="gemTableBody" class="grid grid-cols-12 gap-2"></div>
+
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
                  <label class="block font-semibold">보유 매뉴얼</label>
@@ -77,7 +71,7 @@
                  <input type="number" id="own-비전" class="w-full border rounded p-2" placeholder="숫자 입력">
           </div>
           </div>
-        </div>
+
         <button type="button" onclick="calculateGems()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">계산하기</button>
       </form>
       <div id="gemResult" class="mt-6"></div>
@@ -116,20 +110,28 @@
 
   <script>
     function switchTab(tab) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
-      document.getElementById('tab-' + tab).classList.remove('hidden');
+    // 1. 모든 탭 숨기기
+    document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+    document.getElementById('tab-' + tab).classList.remove('hidden');
 
-      document.querySelectorAll('.tab-btn').forEach(btn => {
+    // 2. 모든 버튼 초기화
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300');
-      });
+        btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800');
+        btn.classList.add('bg-gray-200', 'text-gray-800');
+    });
 
-      if (tab === 'building') {
-        document.querySelector('.tab-btn:nth-child(1)').classList.add('bg-blue-300');
-      } else if (tab === 'gem') {
-        document.querySelector('.tab-btn:nth-child(2)').classList.add('bg-purple-300');
-      } else if (tab === 'equip') {
-        document.querySelector('.tab-btn:nth-child(3)').classList.add('bg-green-300');
-      }
+    // 3. 선택된 버튼 강조 스타일 적용
+    const selectedBtn = {
+        building: { bg: 'bg-blue-300', text: 'text-blue-800', index: 0 },
+        gem: { bg: 'bg-purple-300', text: 'text-purple-800', index: 1 },
+        equip: { bg: 'bg-green-300', text: 'text-green-800', index: 2 },
+    }[tab];
+
+    const active = buttons[selectedBtn.index];
+    active.classList.remove('bg-gray-200', 'text-gray-800');
+    active.classList.add(selectedBtn.bg, selectedBtn.text);
     }
 
     const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
@@ -263,90 +265,112 @@
     <!-- 보석 계산-->
     const gemSheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
     const gemSheetName = "영주보석재료";
-    const slotNames = ["방패A", "방패B", "방패C", "방패D", "방패E", "방패F", 
+    let gemLevels = [];
+    const gemSlots = ["방패A", "방패B", "방패C", "방패D", "방패E", "방패F", 
 		"창병A", "창병B", "창병C", "창병D", "창병E", "창병F",
 		"궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F"];
 
-    function createGemUI() {
-      const tbody = document.getElementById("gemTableBody");
-      slotNames.forEach((slot, index) => {
-        const options = Array.from({ length: 16 }, (_, i) => `<option value="${i+1}">Lv.${i+1}</option>`).join('');
-        tbody.innerHTML += `
-          <tr class="text-center">
-            <td class="border p-1"><input type="checkbox" id="check-${index}" class="w-5 h-5 accent-purple-500"></td>
-            <td class="border p-1">${slot}</td>
-            <td class="border p-1"><select id="cur-${index}" class="border rounded p-1">${options}</select></td>
-            <td class="border p-1"><select id="tgt-${index}" class="border rounded p-1">${options}</select></td>
-          </tr>
-        `;
-      });
+    async function createGemUI() {
+  const grid = document.getElementById("gemTableBody");
+  const url = `https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  gemLevels = data.map(d => d["레벨"]);
+
+  gemSlots.forEach((slot, i) => {
+    const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+       grid.innerHTML += `
+         <div class="col-span-2 border p-2 rounded bg-purple-50">
+           <label for="gem-check-${i}" class="block text-xs font-semibold mb-1">
+             <input type="checkbox" id="gem-check-${i}" class="mr-1 align-middle accent-purple-500" />
+             ${slot}
+           </label>
+           <select id="gem-cur-${i}" class="w-full border rounded text-xs mb-1">${options}</select>
+           <select id="gem-tgt-${i}" class="w-full border rounded text-xs">${options}</select>
+         </div>
+       `;
+     });
     }
 
     async function calculateGems() {
-      const result = [];
-      const total = { 매뉴얼: 0, 도면: 0, 비전: 0 };
-      const own = {
-        매뉴얼: parseFloat(document.getElementById("own-매뉴얼").value) || 0,
-        도면: parseFloat(document.getElementById("own-도면").value) || 0,
-        비전: parseFloat(document.getElementById("own-비전").value) || 0
-      };
-      const res = await fetch(`https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`);
-      const data = await res.json();
-      for (let i = 0; i < slotNames.length; i++) {
-        if (!document.getElementById(`check-${i}`).checked) continue;
-        const cur = parseInt(document.getElementById(`cur-${i}`).value);
-        const tgt = parseInt(document.getElementById(`tgt-${i}`).value);
-        if (cur >= tgt) continue;
-        const startIdx = cur - 1;
-        const endIdx = tgt - 1;
-        let subtotal = { 매뉴얼: 0, 도면: 0, 비전: 0 };
-        for (let j = startIdx + 1; j <= endIdx; j++) {
-          const row = data[j];
-          subtotal.매뉴얼 += parseFloat(row["매뉴얼"] || 0);
-          subtotal.도면 += parseFloat(row["도면"] || 0);
-          subtotal.비전 += parseFloat(row["비전"] || 0);
-        }
-        total.매뉴얼 += subtotal.매뉴얼;
-        total.도면 += subtotal.도면;
-        total.비전 += subtotal.비전;
-        result.push(`
-          <tr class="text-center">
-            <td class="border p-1">${slotNames[i]}</td>
-            <td class="border p-1">Lv.${cur} → Lv.${tgt}</td>
-            <td class="border p-1">${subtotal.매뉴얼.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.도면.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.비전.toLocaleString()}</td>
-          </tr>
-        `);
-      }
-      result.push(`
-        <tr class="bg-purple-100 font-bold text-center">
-          <td class="border p-1" colspan="2">총합</td>
-          <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
-          <td class="border p-1">${total.도면.toLocaleString()}</td>
-          <td class="border p-1">${total.비전.toLocaleString()}</td>
+     const url = `https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`;
+     const res = await fetch(url);
+     const data = await res.json();
+     const levels = data.map(d => d["레벨"]);
+
+     let total = { 매뉴얼: 0, 도면: 0, 비전: 0 };
+     let rows = "";
+
+  for (let i = 0; i < gemSlots.length; i++) {
+    if (!document.getElementById(`gem-check-${i}`).checked) continue;
+
+    const cur = document.getElementById(`gem-cur-${i}`).value;
+    const tgt = document.getElementById(`gem-tgt-${i}`).value;
+    const start = levels.indexOf(cur);
+    const end = levels.indexOf(tgt);
+
+    if (start === -1 || end === -1 || start >= end) {
+      rows += `<tr><td class="border p-1 text-center" colspan="4">⚠️ ${gemSlots[i]}: 잘못된 레벨 선택</td></tr>`;
+      continue;
+    }
+
+    let subtotal = { 매뉴얼: 0, 도면: 0, 비전: 0 };
+    for (let j = start + 1; j <= end; j++) {
+      subtotal.매뉴얼 += parseFloat(data[j]["매뉴얼"] || 0);
+      subtotal.도면 += parseFloat(data[j]["도면"] || 0);
+      subtotal.비전 += parseFloat(data[j]["비전"] || 0);
+    }
+
+    total.매뉴얼 += subtotal.매뉴얼;
+    total.도면 += subtotal.도면;
+    total.비전 += subtotal.비전;
+
+    rows += `
+      <tr class="text-center">
+        <td class="border p-1">${gemSlots[i]}</td>
+        <td class="border p-1">${cur} → ${tgt}</td>
+        <td class="border p-1">${subtotal.매뉴얼.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.도면.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.비전.toLocaleString()}</td>
+      </tr>
+    `;
+  }
+
+  const owned = {
+    매뉴얼: parseFloat(document.getElementById("own-매뉴얼").value) || 0,
+    도면: parseFloat(document.getElementById("own-도면").value) || 0,
+    비전: parseFloat(document.getElementById("own-비전").value) || 0,
+  };
+
+  rows += `
+    <tr class="text-center font-bold bg-purple-100">
+      <td class="border p-1" colspan="2">총합</td>
+      <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
+      <td class="border p-1">${total.도면.toLocaleString()}</td>
+      <td class="border p-1">${total.비전.toLocaleString()}</td>
+    </tr>
+    <tr class="text-center font-bold bg-red-50">
+      <td class="border p-1" colspan="2">과부족</td>
+      <td class="border p-1">${(owned.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
+      <td class="border p-1">${(owned.도면 - total.도면).toLocaleString()}</td>
+      <td class="border p-1">${(owned.비전 - total.비전).toLocaleString()}</td>
+    </tr>
+  `;
+
+  document.getElementById("gemResult").innerHTML = `
+    <table class="table-auto w-full border mt-4 text-sm text-center">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="border p-1">슬롯</th>
+          <th class="border p-1">레벨</th>
+          <th class="border p-1">매뉴얼</th>
+          <th class="border p-1">도면</th>
+          <th class="border p-1">비전</th>
         </tr>
-        <tr class="text-center font-bold bg-red-50">
-          <td colspan="2" class="border p-1">과부족</td>
-          <td class="border p-1">${(own.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
-          <td class="border p-1">${(own.도면 - total.도면).toLocaleString()}</td>
-          <td class="border p-1">${(own.비전 - total.비전).toLocaleString()}</td>
-        </tr>
-      `);
-      document.getElementById("gemResult").innerHTML = `
-        <table class="table-auto w-full border border-gray-300 mt-4 text-sm">
-          <thead class="bg-gray-100 text-center">
-            <tr>
-              <th class="border p-1">슬롯</th>
-              <th class="border p-1">레벨 구간</th>
-              <th class="border p-1">보석 매뉴얼</th>
-              <th class="border p-1">보석 도면</th>
-              <th class="border p-1">보석 비전</th>
-            </tr>
-          </thead>
-          <tbody>${result.join('')}</tbody>
-        </table>
-      `;
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
     }
 
     createGemUI();
