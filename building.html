@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,22 +8,22 @@
   <title>건물 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-6 font-sans">
-  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-2xl font-bold text-blue-600 mb-4">🏗 건물 계산기</h2>
-    <form id="buildingForm" class="space-y-6">
-      <div id="buildingGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<body class="bg-gray-100 p-4 font-sans text-sm">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-blue-600 mb-4">🏗️ 건물 계산기</h1>
+    <form id="calcForm" class="space-y-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="buildingGridBody"></div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         <div><label class="block font-semibold">보유 불수정</label><input type="number" id="owned-불수정" class="w-full border rounded p-2" /></div>
         <div><label class="block font-semibold">보유 정제</label><input type="number" id="owned-정제" class="w-full border rounded p-2" /></div>
       </div>
-      <button type="button" onclick="calculateBuildings()" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">계산하기</button>
+      <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">계산하기</button>
     </form>
-    <div id="buildingResult" class="mt-6"></div>
   </div>
-  <!-- 팝업 오버레이 -->
+
+  <!-- 팝업 모달 -->
   <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 max-h-[80vh] overflow-y-auto">
       <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
       <div id="popupContent" class="overflow-x-auto text-sm"></div>
       <div class="text-center mt-4">
@@ -29,46 +31,53 @@
       </div>
     </div>
   </div>
-  
+
   <script>
+    function showPopup(html) {
+      document.getElementById("popupContent").innerHTML = html;
+      document.getElementById("popupModal").classList.remove("hidden");
+    }
+    function closePopup() {
+      document.getElementById("popupModal").classList.add("hidden");
+    }
+
     const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
-    const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
-    
+    const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창　병", "궁　병", "아카데미"];
+    let levelList = [];
+
     async function fetchLevels(building) {
       const url = `https://opensheet.elk.sh/${sheetID}/${building}`;
       const res = await fetch(url);
       const data = await res.json();
       return data.map(d => d["레벨"]).filter(Boolean);
     }
-    
+
     async function loadBuildingGrid() {
-      const grid = document.getElementById("buildingGrid");
-      const levels = await fetchLevels(buildingList[0]);
-      
+      const grid = document.getElementById("buildingGridBody");
+      levelList = await fetchLevels(buildingList[0]);
+
       buildingList.forEach((name, i) => {
-        const options = levels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+        const options = levelList.map(lv => `<option value="${lv}">${lv}</option>`).join("");
         grid.innerHTML += `
-        <div class="border rounded bg-blue-50 p-2 col-span-1">
-        <label class="flex items-center text-sm font-semibold mb-1">
-        <input type="checkbox" id="building-check-${i}" class="w-5 h-5 mr-1 accent-blue-500" />${name}
-        </label>
-        <select id="building-cur-${i}" class="w-full border rounded text-sm p-1 mb-1">${options}</select>
-        <select id="building-tgt-${i}" class="w-full border rounded text-sm p-1">${options}</select>
-        </div>
+          <div class="border rounded bg-blue-50 p-2 col-span-1 text-xs">
+            <label for="building-check-${i}" class="block font-semibold mb-1">
+              <input type="checkbox" id="building-check-${i}" class="mr-1 align-middle accent-blue-500" />
+              ${name}
+            </label>
+            <select id="building-cur-${i}" class="w-full border rounded mb-1">${options}</select>
+            <select id="building-tgt-${i}" class="w-full border rounded">${options}</select>
+          </div>
         `;
       });
     }
-    
-    function round1(value) {
-      return Math.round((value + Number.EPSILON) * 10) / 10;
-    }
-    
-    async function calculateBuildings() {
+
+    async function calculateAll() {
       let total = { 불수정: 0, 정제: 0, 고기: 0, 나무: 0, 석탄: 0, 철광: 0 };
       let rows = "";
-      
+
       for (let i = 0; i < buildingList.length; i++) {
         if (!document.getElementById(`building-check-${i}`).checked) continue;
+
         const name = buildingList[i];
         const cur = document.getElementById(`building-cur-${i}`).value;
         const tgt = document.getElementById(`building-tgt-${i}`).value;
@@ -78,12 +87,12 @@
         const levels = data.map(d => d["레벨"]);
         const start = levels.indexOf(cur);
         const end = levels.indexOf(tgt);
-        
+
         if (start === -1 || end === -1 || start >= end) {
-          rows += `<tr><td colspan="4" class="border p-1 text-red-600">⚠️ ${name}: 잘못된 레벨</td></tr>`;
+          rows += `<tr><td class="border p-1 text-center" colspan="8">⚠️ ${name}: 잘못된 레벨 설정</td></tr>`;
           continue;
         }
-        
+
         let subtotal = { 불수정: 0, 정제: 0, 고기: 0, 나무: 0, 석탄: 0, 철광: 0 };
         for (let j = start + 1; j <= end; j++) {
           subtotal.불수정 += parseFloat(data[j]["불수정"] || 0);
@@ -93,64 +102,68 @@
           subtotal.석탄 += parseFloat(data[j]["석탄"] || 0);
           subtotal.철광 += parseFloat(data[j]["철광"] || 0);
         }
-        
+
         total.불수정 += subtotal.불수정;
         total.정제 += subtotal.정제;
-        
+        total.고기 += subtotal.고기;
+        total.나무 += subtotal.나무;
+        total.석탄 += subtotal.석탄;
+        total.철광 += subtotal.철광;
+
         rows += `
-        <tr class="text-center">
-        <td class="border p-1">${name}</td>
-        <td class="border p-1">${cur} → ${tgt}</td>
-        <td class="border p-1">${subtotal.불수정.toLocaleString()}</td>
-        <td class="border p-1">${subtotal.정제.toLocaleString()}</td>
-        <td class="border p-1">${round1(subtotal.고기).toLocaleString()}</td>
-        <td class="border p-1">${round1(subtotal.나무).toLocaleString()}</td>
-        <td class="border p-1">${round1(subtotal.석탄).toLocaleString()}</td>
-        <td class="border p-1">${round1(subtotal.철광).toLocaleString()}</td>
-        </tr>
+          <tr class="text-center">
+            <td class="border p-1">${name}</td>
+            <td class="border p-1">${cur} → ${tgt}</td>
+            <td class="border p-1">${subtotal.불수정.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.정제.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.고기.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.나무.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.석탄.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.철광.toLocaleString()}</td>
+          </tr>
         `;
       }
-      
-      const owned불수정 = parseFloat(document.getElementById("owned-불수정").value) || 0;
-      const owned정제 = parseFloat(document.getElementById("owned-정제").value) || 0;
-      
+
+      const own불수정 = parseFloat(document.getElementById("owned-불수정").value) || 0;
+      const own정제 = parseFloat(document.getElementById("owned-정제").value) || 0;
+
       rows += `
-      <tr class="font-bold bg-blue-100 text-center">
-      <td class="border p-1" colspan="2">총합</td>
-      <td class="border p-1">${total.불수정.toLocaleString()}</td>
-      <td class="border p-1">${total.정제.toLocaleString()}</td>
-      <td class="border p-1">${round1(total.고기).toLocaleString()}</td>
-      <td class="border p-1">${round1(total.나무).toLocaleString()}</td>
-      <td class="border p-1">${round1(total.석탄).toLocaleString()}</td>
-      <td class="border p-1">${round1(total.철광).toLocaleString()}</td>
-      </tr>
-      <tr class="font-bold bg-red-50 text-center">
-      <td class="border p-1" colspan="2">과부족</td>
-      <td class="border p-1">${(owned불수정 - total.불수정).toLocaleString()}</td>
-      <td class="border p-1">${(owned정제 - total.정제).toLocaleString()}</td>
-      <td class="border p-1" colspan="4"></td>
-      </tr>
+        <tr class="text-center font-bold bg-blue-100">
+          <td class="border p-1" colspan="2">총합</td>
+          <td class="border p-1">${total.불수정.toLocaleString()}</td>
+          <td class="border p-1">${total.정제.toLocaleString()}</td>
+          <td class="border p-1">${total.고기.toLocaleString()}</td>
+          <td class="border p-1">${total.나무.toLocaleString()}</td>
+          <td class="border p-1">${total.석탄.toLocaleString()}</td>
+          <td class="border p-1">${total.철광.toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-red-100">
+          <td class="border p-1" colspan="2">과부족</td>
+          <td class="border p-1">${(own불수정 - total.불수정).toLocaleString()}</td>
+          <td class="border p-1">${(own정제 - total.정제).toLocaleString()}</td>
+          <td class="border p-1" colspan="4"></td>
+        </tr>
       `;
 
-      document.getElementById("buildingResult").innerHTML = `
-      <table class="w-full table-auto border mt-4 text-sm text-center">
-      <thead class="bg-gray-100">
-      <tr>
-      <th class="border p-1">건물</th>
-      <th class="border p-1">레벨</th>
-      <th class="border p-1">불수정</th>
-      <th class="border p-1">정제</th>
-      <th class="border p-1">고기</th>
-      <th class="border p-1">나무</th>
-      <th class="border p-1">석탄</th>
-      <th class="border p-1">철광</th>
-      </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-      </table>
-      `;
+      showPopup(`
+        <table class="w-full table-auto border mt-4 text-sm text-center">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-1">건물</th>
+              <th class="border p-1">레벨</th>
+              <th class="border p-1">불수정</th>
+              <th class="border p-1">정제</th>
+              <th class="border p-1">고기</th>
+              <th class="border p-1">나무</th>
+              <th class="border p-1">석탄</th>
+              <th class="border p-1">철광</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `);
     }
-    
+
     loadBuildingGrid();
   </script>
   <script>
