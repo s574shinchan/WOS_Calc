@@ -152,14 +152,14 @@
         const options = sampleLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
         buildingTable.innerHTML += `
           <tr class="text-center">
-            <td class="border p-2">
+            <td class="border p-1">
               <input type="checkbox" name="check-${i}" class="accent-blue-500 w-5 h-5">
-            <td class="border p-2">${b}</td>
+            <td class="border p-1">${b}</td>
             </td>
-            <td class="border p-2">
+            <td class="border p-1">
               <select name="current-${i}" class="border rounded px-2 py-1">${options}</select>
             </td>
-            <td class="border p-2">
+            <td class="border p-1">
               <select name="target-${i}" class="border rounded px-2 py-1">${options}</select>
             </td>
           </tr>
@@ -271,16 +271,16 @@
 		"궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F"];
 
     async function createGemUI() {
-  const grid = document.getElementById("gemTableBody");
-  const url = `https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  gemLevels = data.map(d => d["레벨"]);
+  	const grid = document.getElementById("gemTableBody");
+  	const url = `https://opensheet.elk.sh/${gemSheetID}/${gemSheetName}`;
+  	const res = await fetch(url);
+  	const data = await res.json();
+  	gemLevels = data.map(d => d["레벨"]);
 
-  gemSlots.forEach((slot, i) => {
-    const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
-       grid.innerHTML += `
-         <div class="col-span-2 border p-2 rounded bg-purple-50">
+  	gemSlots.forEach((slot, i) => {
+    	const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+       	grid.innerHTML += `
+	 <div class="col-span-2 border p-2 rounded bg-purple-50">
            <label for="gem-check-${i}" class="block text-xs font-semibold mb-1">
              <input type="checkbox" id="gem-check-${i}" class="mr-1 align-middle accent-purple-500" />
              ${slot}
@@ -288,7 +288,7 @@
            <select id="gem-cur-${i}" class="w-full border rounded text-xs mb-1">${options}</select>
            <select id="gem-tgt-${i}" class="w-full border rounded text-xs">${options}</select>
          </div>
-       `;
+	`;
      });
     }
 
