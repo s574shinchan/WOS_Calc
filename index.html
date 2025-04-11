@@ -26,7 +26,7 @@
       id="calcFrame"
       src="building.html"
       class="w-full border rounded invisible"
-      style="min-height: 800px; height: 1500px;"
+      style="min-height: 1000px; height: 1500px;"
       onload="this.classList.remove('invisible')"
     ></iframe>
   </div>
@@ -69,7 +69,10 @@
 
       // 프레임 src 및 높이 설정
       frame.src = tab + ".html";
-      frame.style.height = heightMap[tab];
+      if(heightMap[tab] > frame.style.height)
+        frame.style.height = heightMap[tab];
+      else
+        frame.style.height = 1000px;
       
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
