@@ -67,14 +67,14 @@
         buildingList.forEach((name, i) => {
           const options = levelList.map(lv => `<option value="${lv}">${lv}</option>`).join("");
           grid.innerHTML += `
-            <div class="border p-1 rounded bg-blue-50 p-2 col-span-1 text-xs">
-              <label for="building-check-${i}" class="flex items-center font-semibold mb-1">
-                <input type="checkbox" id="building-check-${i}" class="mr-1 align-middle accent-blue-500" />
-                ${name}
-              </label>
-              <select id="building-cur-${i}" class="w-full border rounded p-1 mb-1">${options}</select>
-              <select id="building-tgt-${i}" class="w-full border rounded p-1">${options}</select>
-            </div>
+          <div class="border p-1 rounded bg-blue-50 text-xs">
+          <label for="building-check-${i}" class="flex items-center font-semibold mb-1">
+          <input type="checkbox" id="building-check-${i}" class="mr-1 w-4 h-4 accent-blue-500" />
+          ${name}
+          </label>
+          <select id="building-cur-${i}" class="w-full border rounded p-1 mb-1 text-xs">${options}</select>
+          <select id="building-tgt-${i}" class="w-full border rounded p-1 text-xs">${options}</select>
+          </div>
           `;
         });
       }
