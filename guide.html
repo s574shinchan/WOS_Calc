@@ -596,15 +596,6 @@
           }
         });
       });
-      
-      document.querySelectorAll("details").forEach((detail) => {
-        detail.addEventListener("toggle", () => {
-          if (detail.open) {
-            // 해당 섹션을 열면 부드럽게 화면으로 스크롤 이동
-            detail.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        });
-      });
     </script>
     <script>    
     document.addEventListener("contextmenu", event => event.preventDefault());
