@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>건물 계산기</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!--
     <script>
       function sendHeightToParent() {
         const height = document.documentElement.scrollHeight;
@@ -13,6 +14,7 @@
       window.addEventListener("load", sendHeightToParent);
       window.addEventListener("resize", sendHeightToParent);
     </script>
+    -->
   </head>
   <body class="bg-gray-100 p-4 font-sans text-sm">
     <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
@@ -176,21 +178,6 @@
       
     </script>
     <script>
-      
-      let lastHeight = 0;
-      function resizeParentFrame() {
-        const newHeight = Math.ceil(document.body.scrollHeight);
-        
-        // 5px 이상 차이날 때만 리사이징
-        if (Math.abs(newHeight - lastHeight) > 5) {
-          window.parent.postMessage({ type: "setHeight", height: newHeight }, "*");
-          lastHeight = newHeight;
-        }
-      }
-      
-      window.addEventListener("load", resizeParentFrame);
-      window.addEventListener("resize", resizeParentFrame);
-      
       document.addEventListener("contextmenu", event => event.preventDefault());
       document.addEventListener("keydown", function (e) {
         if (e.key === "F12" ||
