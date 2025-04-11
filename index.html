@@ -54,14 +54,6 @@
     //});
     
     function switchTab(tab) {
-      const frame = document.getElementById("calcFrame");
-      frame.src = {
-        building: "building.html",
-        gem: "gem.html",
-        equip: "equip.html",
-        hero: "hero_equip.html",
-      }[tab];
-
       // 탭에 따라 높이 조절
       const frame = document.getElementById("calcFrame");
       const isMobile = window.innerWidth <= 768;
@@ -73,8 +65,16 @@
         hero:     isMobile ? "1200px" : "800px",
       };
       
-      frame.style.height = heightMap[tab];
+      const frame = document.getElementById("calcFrame");
+      frame.src = {
+        building: "building.html",
+        gem: "gem.html",
+        equip: "equip.html",
+        hero: "hero_equip.html",
+      }[tab];
 
+      frame.style.height = heightMap[tab];
+      
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
         btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800');
@@ -113,6 +113,8 @@
         document.getElementById("globalPopupModal").classList.remove("hidden");
       }
     });
+
+    window.onload = () => switchTab('building');
   </script>
 <footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
 </body>
