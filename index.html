@@ -141,7 +141,7 @@
       const frame = document.getElementById("calcFrame");
       
       if (e.data && e.data.iframeHeight) {
-        frame.style.height = e.data.iframeHeight + "px";
+        frame.style.height = e.data.iframeHeight + 32 + "px";
       }
       
       if (e.data?.type === "RESULT_POPUP") {
