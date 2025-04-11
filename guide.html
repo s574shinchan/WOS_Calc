@@ -589,7 +589,7 @@
       }
       function sendHeightToParent() {
         const height = document.documentElement.scrollHeight;
-        window.parent.postMessage({ iframeHeight: height }, "*");
+        window.parent.postMessage({ iframeHeight: height + 5 }, "*");
       }
       
       // 페이지 로드 시 + details 열릴 때 높이 전송
