@@ -55,7 +55,11 @@
       frame.classList.remove("invisible");
       frame.style.opacity = 1;
     }
-
+    
+    function isMobile() {
+      return window.innerWidth <= 768;
+    }
+    
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
       
@@ -64,10 +68,10 @@
       setTimeout(() => {
         frame.src = tab + ".html";
         frame.style.height = {
-          building: "470px",
-          gem: "905px",
-          equip: "485px",
-          hero: "470px",
+          building: isMobile() ? "520px" : "470px",
+          gem:      isMobile() ? "920px" : "905px",
+          equip:    isMobile() ? "520px" : "485px",
+          hero:     isMobile() ? "500px" :"470px",
         }[tab];
       }, 200);
       
@@ -98,11 +102,7 @@
 
     window.addEventListener("message", function (e) {
       const frame = document.getElementById("calcFrame");
-
-      if (e.data?.type === "HEIGHT_UPDATE") {
-        frame.style.height = `${e.data.height}px`;
-      }
-
+      
       if (e.data?.type === "RESULT_POPUP") {
         document.getElementById("globalPopupContent").innerHTML = e.data.html;
         document.getElementById("globalPopupModal").classList.remove("hidden");
