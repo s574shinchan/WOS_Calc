@@ -58,11 +58,18 @@
 
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
-      const heightMap = { building: "500px", gem: "1200px", equip: "1050px", hero: "1000px", };
       
       frame.style.opacity = 0;
       setTimeout(() => { frame.src = tab + ".html"; }, 200);
-      frame.style.height = heightMap[tab];
+      
+      if (tab === 'building') {
+        frame.style.height = "500px";
+      } else if (tab === 'gem') {
+        frame.style.height = "1200px";
+      } else if (tab === 'equip') {
+        frame.style.height = "600px";
+      } else if (tab === 'hero') {
+        frame.style.height = "600px";
 
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
