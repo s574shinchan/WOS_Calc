@@ -12,116 +12,115 @@
     <h1 class="text-2xl font-bold text-gray-800">📘 WOS 공략집</h1>
     <div id="GuideGridBody" class="grid grid-cols-2 gap-4"></div>
 
-    <!-- 💎 보석비전 패키지 구성 아코디언 -->
-    <div class="border border-purple-200 rounded">
-      <button 
-        onclick="toggleAccordion('visionPackage')" 
-        class="w-full text-left bg-purple-100 hover:bg-purple-200 text-purple-800 font-semibold px-4 py-2 rounded-t">
-        💎 보석비전 패키지 구성
-      </button>
-      <div id="visionPackage" class="p-4 hidden bg-white rounded-b space-y-3">
-        <div class="overflow-x-auto">
-          <table class="table-auto border w-full text-sm text-center">
-            <thead class="bg-purple-50">
-              <tr>
-                <th class="border p-2">금액</th>
-                <th class="border p-2">매뉴얼</th>
-                <th class="border p-2">도면</th>
-                <th class="border p-2">비전</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="border p-2">7,500</td><td class="border p-2">7</td><td class="border p-2">7</td><td class="border p-2">2</td></tr>
-              <tr><td class="border p-2">15,000</td><td class="border p-2">14</td><td class="border p-2">14</td><td class="border p-2">4</td></tr>
-              <tr><td class="border p-2">30,000</td><td class="border p-2">28</td><td class="border p-2">28</td><td class="border p-2">8</td></tr>
-              <tr><td class="border p-2">79,000</td><td class="border p-2">70</td><td class="border p-2">70</td><td class="border p-2">20</td></tr>
-              <tr><td class="border p-2">149,000</td><td class="border p-2">140</td><td class="border p-2">140</td><td class="border p-2">40</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="text-xs text-gray-600">📌 참고 : 149,000 패키지는 <span class="font-semibold text-red-500">최대 20번</span>까지 구매 가능합니다.</p>
+    <!-- 📦 각종 패키지 구성 -->
+    <details class="bg-white border border-gray-300 rounded-md p-4">
+      <summary class="cursor-pointer text-lg font-bold text-purple-700 mb-2">📦 각종 패키지 구성</summary>
+      <div class="mt-3 space-y-4 text-sm text-gray-800">
+        
+        <!-- 💎 보석비전 패키지 구성 -->
+        <section>
+          <h3 class="font-semibold text-purple-600">💎 보석비전 패키지</h3>
+          <div class="overflow-x-auto">
+            <table class="table-auto border w-full text-sm text-center">
+              <thead class="bg-purple-100">
+                <tr>
+                  <th class="border p-2">금액</th>
+                  <th class="border p-2">매뉴얼</th>
+                  <th class="border p-2">도면</th>
+                  <th class="border p-2">비전</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="border p-2">7,500</td><td class="border p-2">7</td><td class="border p-2">7</td><td class="border p-2">2</td></tr>
+                <tr><td class="border p-2">15,000</td><td class="border p-2">14</td><td class="border p-2">14</td><td class="border p-2">4</td></tr>
+                <tr><td class="border p-2">30,000</td><td class="border p-2">28</td><td class="border p-2">28</td><td class="border p-2">8</td></tr>
+                <tr><td class="border p-2">79,000</td><td class="border p-2">70</td><td class="border p-2">70</td><td class="border p-2">20</td></tr>
+                <tr><td class="border p-2">149,000</td><td class="border p-2">140</td><td class="border p-2">140</td><td class="border p-2">40</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-gray-600 mt-1">📌 참고 : 149,000 패키지는 <span class="font-semibold text-red-500">최대 20번</span>까지 구매 가능합니다.</p>
+        </section>
       </div>
-    </div>
-  </div>
-
-  <!-- 🛫 이민 시스템 안내 -->
-<details class="bg-white border border-gray-300 rounded-md p-4">
-  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
-  <div class="mt-3 space-y-4 text-sm text-gray-800">
-
-    <!-- 서버분류 -->
-    <section>
-      <h3 class="font-semibold text-blue-600 mb-1">• 서버분류</h3>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-        <li>일반서버: 이민수용: <strong>55</strong> | 일반초대: <strong>35</strong> | 자유이민: <strong>20 (선착순)</strong> | 특별초대: <strong>최대 3</strong></li>
-        <li>강성서버: 이민수용: <strong>30</strong> | 일반초대: <strong>20</strong> | 자유이민: <strong>10 (선착순)</strong> | 특별초대: <strong>없음</strong></li>
-      </ul>
-    </section>
-
-    <!-- 일정 -->
-    <section>
-      <h3 class="font-semibold text-blue-600 mb-1">• 일정</h3>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-        <li><strong>일 ~ 화</strong>: 이민 전투력 제한 설정 및 이민모집 홍보</li>
-        <li><strong>수 ~ 목</strong>: 초대권 받은 사람들 이동 가능 (특별초대 + 일반초대)</li>
-        <li><strong>금 ~ 토</strong>: <u>UTC 00:00부터</u> 자유이민 시작 (선착순)</li>
-      </ul>
-    </section>
-
-    <!-- 용어정리 -->
-    <section>
-      <h3 class="font-semibold text-blue-600 mb-1">• 용어정리</h3>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-        <li>특별초대: <strong>전투력 제한 없음</strong>, <u>첫 이민 시 3장</u>, <u>월 1장 추가</u>, <strong>최대 3장 보유 가능</strong></li>
-        <li>일반초대: <strong>전투력 제한 범위 내</strong></li>
-      </ul>
-    </section>
-
-    <!-- 그 외 -->
-    <section>
-      <h3 class="font-semibold text-blue-600 mb-1">• 그 외</h3>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-        <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
-        <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
-        <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
-        <li>모병소/의무실 병사도 전투력 포함</li>
-        <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
-        <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
-      </ul>
-    </section>
-
-    <!-- 이민권 패키지 구성 -->
-    <section>
-      <h3 class="font-semibold text-blue-600 mb-1">• 이민권 패키지 구성</h3>
-      <div class="overflow-x-auto">
-        <table class="table-auto border w-full text-sm text-center">
-          <thead class="bg-blue-100">
-            <tr>
-              <th class="border p-2">금액</th>
-              <th class="border p-2">이민권 수량</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td class="border p-2">7,500</td><td class="border p-2">1장</td></tr>
-            <tr><td class="border p-2">15,000</td><td class="border p-2">2장</td></tr>
-            <tr><td class="border p-2">30,000</td><td class="border p-2">3장</td></tr>
-            <tr><td class="border p-2">79,000</td><td class="border p-2">4장</td></tr>
-            <tr><td class="border p-2">149,000</td><td class="border p-2">5장</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="text-xs text-gray-600 mt-1">📌 참고: <strong class="text-red-500">149,000</strong> 패키지는 <strong>최대 15번</strong> 구매 가능</p>
-    </section>
+    </details>
     
-  </div>
-</details>
-
-
-  <script>
-    function toggleAccordion(id) {
-      const section = document.getElementById(id);
-      section.classList.toggle("hidden");
-    }
-  </script>
+    <!-- 🛫 이민 시스템 안내 -->
+    <details class="bg-white border border-gray-300 rounded-md p-4">
+      <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
+      <div class="mt-3 space-y-4 text-sm text-gray-800">
+        
+        <!-- 서버분류 -->
+        <section>
+          <h3 class="font-semibold text-blue-600 mb-1">• 서버분류</h3>
+          <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+            <li>일반서버: 이민수용: <strong>55</strong> | 일반초대: <strong>35</strong> | 자유이민: <strong>20 (선착순)</strong> | 특별초대: <strong>최대 3</strong></li>
+            <li>강성서버: 이민수용: <strong>30</strong> | 일반초대: <strong>20</strong> | 자유이민: <strong>10 (선착순)</strong> | 특별초대: <strong>없음</strong></li>      
+          </ul>
+        </section>
+        
+        <!-- 일정 -->
+        <section>
+          <h3 class="font-semibold text-blue-600 mb-1">• 일정</h3>
+          <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+            <li><strong>일 ~ 화</strong>: 이민 전투력 제한 설정 및 이민모집 홍보</li>
+            <li><strong>수 ~ 목</strong>: 초대권 받은 사람들 이동 가능 (특별초대 + 일반초대)</li>
+            <li><strong>금 ~ 토</strong>: <u>UTC 00:00부터</u> 자유이민 시작 (선착순)</li>      
+          </ul>
+        </section>
+        
+        <!-- 용어정리 -->
+        <section>
+          <h3 class="font-semibold text-blue-600 mb-1">• 용어정리</h3>
+          <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+            <li>특별초대: <strong>전투력 제한 없음</strong>, <u>첫 이민 시 3장</u>, <u>월 1장 추가</u>, <strong>최대 3장 보유 가능</strong></li>
+            <li>일반초대: <strong>전투력 제한 범위 내</strong></li>
+          </ul>
+        </section>
+        
+        <!-- 그 외 -->
+        <section>
+          <h3 class="font-semibold text-blue-600 mb-1">• 그 외</h3>
+          <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+            <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
+            <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
+            <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
+            <li>모병소/의무실 병사도 전투력 포함</li>
+            <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
+            <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
+          </ul>
+        </section>
+        
+        <!-- 이민권 패키지 구성 -->
+        <section>
+          <h3 class="font-semibold text-blue-600 mb-1">• 이민권 패키지 구성</h3>
+          <div class="overflow-x-auto">
+            <table class="table-auto border w-full text-sm text-center">
+              <thead class="bg-blue-100">
+                <tr>
+                  <th class="border p-2">금액</th>
+                  <th class="border p-2">이민권 수량</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="border p-2">7,500</td><td class="border p-2">1장</td></tr>
+                <tr><td class="border p-2">15,000</td><td class="border p-2">2장</td></tr>
+                <tr><td class="border p-2">30,000</td><td class="border p-2">3장</td></tr>
+                <tr><td class="border p-2">79,000</td><td class="border p-2">4장</td></tr>
+                <tr><td class="border p-2">149,000</td><td class="border p-2">5장</td></tr>
+              </tbody>
+            </table>      
+          </div>
+          <p class="text-xs text-gray-600 mt-1">📌 참고: <strong class="text-red-500">149,000</strong> 패키지는 <strong>최대 15번</strong> 구매 가능</p>
+        </section>
+        
+      </div>
+    </details>
+    
+    <script>
+      function toggleAccordion(id) {
+        const section = document.getElementById(id);
+        section.classList.toggle("hidden");
+      }
+    </script>
 </body>
 </html>
