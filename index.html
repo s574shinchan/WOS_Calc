@@ -58,17 +58,10 @@
 
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
+      const heightMap = { building: "500px", gem: "1200px", equip: "1050px", hero: "1000px", };
+      
       frame.style.opacity = 0;
-      setTimeout(() => {
-        frame.src = tab + ".html";
-      }, 200);
-
-      const heightMap = {
-      building: isMobile() ? "1350px" : "500px",
-      gem:      isMobile() ? "1600px" : "1200px",
-      equip:    isMobile() ? "1450px" : "1050px",
-      hero:     isMobile() ? "1450px" : "1000px",
-      };
+      setTimeout(() => { frame.src = tab + ".html"; }, 200);
       frame.style.height = heightMap[tab];
 
       document.querySelectorAll('.tab-btn').forEach(btn => {
