@@ -78,18 +78,18 @@
     
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
+      const tabMap = {
+        building: "building.html",
+        gem: "gem.html",
+        equip: "equip.html",
+        hero: "hero_equip.html",
+        pet: "pet.html",
+        gift: "https://wos-giftcode.centurygame.com/"
+      };
       
       // 프레임 src 및 높이 설정
       frame.style.opacity = 0; // 사라지게 처리
       setTimeout(() => {
-        const tabMap = {
-          building: "building.html",
-          gem: "gem.html",
-          equip: "equip.html",
-          hero: "hero_equip.html",
-          pet: "pet.html",
-          gift: "https://wos-giftcode.centurygame.com/"
-        };
         frame.src = tabMap[tab];
         frame.style.height = {
           building: isMobile() ? "720px" : "485px",
