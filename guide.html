@@ -582,6 +582,29 @@
         const section = document.getElementById(id);
         section.classList.toggle("hidden");
       }
+      function sendHeightToParent() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ iframeHeight: height }, "*");
+      }
+      
+      // 페이지 로드 시 + details 열릴 때 높이 전송
+      window.addEventListener("load", sendHeightToParent);
+      document.querySelectorAll("details").forEach((detail) => {
+        detail.addEventListener("toggle", () => {
+          if (detail.open) {
+            setTimeout(sendHeightToParent, 300); // 부드럽게 열리고 나서 높이 전송
+          }
+        });
+      });
+      
+      document.querySelectorAll("details").forEach((detail) => {
+        detail.addEventListener("toggle", () => {
+          if (detail.open) {
+            // 해당 섹션을 열면 부드럽게 화면으로 스크롤 이동
+            detail.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
     </script>
 </body>
 </html>
