@@ -40,6 +40,9 @@
       <button onclick="switchTab('pet')" class="tab-btn bg-gray-200 text-yellow-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
         🐾 펫돌파
       </button>
+      <button onclick="switchTab('gift')" class="tab-btn bg-gray-200 text-indigo-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        🎁 교환센터
+      </button>
     </div>
 
     <iframe
@@ -79,13 +82,22 @@
       // 프레임 src 및 높이 설정
       frame.style.opacity = 0; // 사라지게 처리
       setTimeout(() => {
-        frame.src = tab + ".html";
+        const tabMap = {
+          building: "building.html",
+          gem: "gem.html",
+          equip: "equip.html",
+          hero: "hero_equip.html",
+          pet: "pet.html",
+          gift: "https://wos-giftcode.centurygame.com/"
+        };
+        frame.src = tabMap[tab];
         frame.style.height = {
           building: isMobile() ? "720px" : "485px",
           gem:      isMobile() ? "995px" : "955px",
           equip:    isMobile() ? "680px" : "485px",
           hero:     isMobile() ? "550px" : "485px",
           pet:      isMobile() ? "680px" : "485px",
+          gift: "1000px";
         }[tab];
       }, 200);
       
@@ -101,6 +113,7 @@
         equip: ['bg-green-300', 'text-green-800'],
         hero: ['bg-yellow-300', 'text-yellow-800'],
         pet: ['bg-pink-300', 'text-pink-800'],
+        gift: ['bg-indigo-300', 'text-indigo-800'],
       };
 
       const activeBtn = {
@@ -109,6 +122,7 @@
         equip: 2,
         hero: 3,
         pet: 4,
+        gift: 5,
       }[tab];
 
       const btns = document.querySelectorAll('.tab-btn');
