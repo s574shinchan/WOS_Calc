@@ -115,7 +115,18 @@
 
     window.onload = () => switchTab('building');
   </script>
-
+  <script>
+      document.addEventListener("contextmenu", event => event.preventDefault());
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "F12" ||
+            (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+            (e.ctrlKey && (e.key === "U" || e.key === "S")))
+        {
+          e.preventDefault();
+        }
+      });
+  </script>
+  
   <footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
 </body>
 </html>
