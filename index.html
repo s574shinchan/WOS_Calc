@@ -22,12 +22,7 @@
         🧝 영웅장비
       </button>
     </div>
-    <iframe
-      id="calcFrame"
-      src="building.html"
-      class="w-full border rounded transition-all duration-300 ease-in-out"
-      style="height: 1000px;"
-      ></iframe>
+    <iframe id="calcFrame" src="building.html" class="w-full h-[1000px] border rounded"></iframe>
   </div>
 
   <div id="globalPopupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
@@ -57,22 +52,17 @@
       // 탭에 따라 높이 조절
       const frame = document.getElementById("calcFrame");
       const isMobile = window.innerWidth <= 768;
-      
-      const heightMap = {
-        building: isMobile ? "1400px" : "800px",
-        gem:      isMobile ? "1450px" : "1200px",
-        equip:    isMobile ? "1300px" : "800px",
-        hero:     isMobile ? "1200px" : "800px",
-      };
-      
-      const frame = document.getElementById("calcFrame");
-      frame.src = {
-        building: "building.html",
-        gem: "gem.html",
-        equip: "equip.html",
-        hero: "hero_equip.html",
-      }[tab];
 
+      // 높이 매핑
+      const heightMap = {
+        building: isMobile ? "1400px" : "700px",
+        gem:      isMobile ? "1600px" : "1000px",
+        equip:    isMobile ? "1400px" : "700px",
+        hero:     isMobile ? "1400px" : "600px",
+      };
+
+      // 프레임 src 및 높이 설정
+      frame.src = tab + ".html";
       frame.style.height = heightMap[tab];
       
       document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -101,10 +91,10 @@
     }
 
     window.addEventListener("message", function (e) {
-      if (e.data?.type === "setHeight" && e.data.height) {
-        const frame = document.getElementById("calcFrame");
-        frame.style.height = e.data.height + "px";
-      }
+      //if (e.data?.type === "setHeight" && e.data.height) {
+      //  const frame = document.getElementById("calcFrame");
+      //  frame.style.height = e.data.height + "px";
+      //}
       if (e.data?.type === "HEIGHT_UPDATE") {
         document.getElementById("calcFrame").style.height = e.data.height + "px";
       }
