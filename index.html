@@ -59,32 +59,17 @@
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
       
-      if (tab === 'building') {
-        frame.style.opacity = 0;
-        setTimeout(() => { 
-          frame.src = tab + ".html"; 
-        }, 200);
-        frame.style.height = "500px";
-      } else if (tab === 'gem') {
-        frame.style.opacity = 0;
-        setTimeout(() => { 
-          frame.src = tab + ".html"; 
-        }, 200);
-        frame.style.height = "1200px";
-      } else if (tab === 'equip') {
-        frame.style.opacity = 0;
-        setTimeout(() => { 
-          frame.src = tab + ".html"; 
-        }, 200);
-        frame.style.height = "600px";
-      } else if (tab === 'hero') {
-        frame.style.opacity = 0;
-        setTimeout(() => { 
-          frame.src = tab + ".html"; 
-        }, 200);
-        frame.style.height = "600px";
-        
-      
+      // 프레임 src 및 높이 설정
+      frame.style.opacity = 0; // 사라지게 처리
+      setTimeout(() => {
+        frame.src = tab + ".html";
+        frame.style.height = {
+          building: "500px",
+          gem: "1200px",
+          equip: "500px",
+          hero: "500px",
+        }[tab];
+      }, 200);
       
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
