@@ -402,13 +402,16 @@
                 <table class="table-auto border w-full text-xs text-center">
                   <thead class="bg-purple-100">
                     <tr>
-                      <th class="border p-1">항목 | 금액</th><th class="border p-1">7,500</th><th class="border p-1">15,000</th><th class="border p-1">30,000</th><th class="border p-1">79,000</th><th class="border p-1">149,000</th><th class="border p-1">합계</th>
+                      <tr><th class="border p-1">금액</th><th class="border p-1">보석재료상자</th><th class="border p-1">보석도면</th><th class="border p-1">보석매뉴얼</th></tr>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td class="border p-1">보석재료상자</td><td class="border p-1">10</td><td class="border p-1">20</td><td class="border p-1">40</td><td class="border p-1">100</td><td class="border p-1">100</td><td class="border p-1">270</td></tr>
-                    <tr><td class="border p-1">보석도면</td><td class="border p-1">40</td><td class="border p-1">80</td><td class="border p-1">160</td><td class="border p-1">400</td><td class="border p-1">400</td><td class="border p-1">1,080</td></tr>
-                    <tr><td class="border p-1">보석매뉴얼</td><td class="border p-1">20</td><td class="border p-1">40</td><td class="border p-1">80</td><td class="border p-1">200</td><td class="border p-1">200</td><td class="border p-1">540</td></tr>
+                    <tr><td class="border p-1">7,500</td><td class="border p-1">10</td><td class="border p-1">40</td><td class="border p-1">20</td></tr>
+                    <tr><td class="border p-1">15,000</td><td class="border p-1">20</td><td class="border p-1">80</td><td class="border p-1">40</td></tr>
+                    <tr><td class="border p-1">30,000</td><td class="border p-1">40</td><td class="border p-1">160</td><td class="border p-1">80</td></tr>
+                    <tr><td class="border p-1">79,000</td><td class="border p-1">100</td><td class="border p-1">400</td><td class="border p-1">200</td></tr>
+                    <tr><td class="border p-1">149,000</td><td class="border p-1">100</td><td class="border p-1">400</td><td class="border p-1">200</td></tr>
+                    <tr><td class="border p-1">합　계</td><td class="border p-1">270</td><td class="border p-1">1,080</td><td class="border p-1">540</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -419,13 +422,16 @@
                 <table class="table-auto border w-full text-xs text-center">
                   <thead class="bg-purple-100">
                     <tr>
-                      <th class="border p-1">항목 | 금액</th><th class="border p-1">7,500</th><th class="border p-1">15,000</th><th class="border p-1">30,000</th><th class="border p-1">79,000</th><th class="border p-1">149,000</th><th class="border p-1">합계</th>
+                      <tr><th class="border p-1">금액</th><th class="border p-1">보석재료상자</th><th class="border p-1">보석도면</th><th class="border p-1">보석매뉴얼</th></tr>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td class="border p-1">보석재료상자</td><td class="border p-1">10</td><td class="border p-1">20</td><td class="border p-1">40</td><td class="border p-1">100</td><td class="border p-1">200</td><td class="border p-1">370</td></tr>
-                    <tr><td class="border p-1">보석도면</td><td class="border p-1">40</td><td class="border p-1">80</td><td class="border p-1">160</td><td class="border p-1">400</td><td class="border p-1">800</td><td class="border p-1">1,480</td></tr>
-                    <tr><td class="border p-1">보석매뉴얼</td><td class="border p-1">35</td><td class="border p-1">70</td><td class="border p-1">140</td><td class="border p-1">350</td><td class="border p-1">700</td><td class="border p-1">1,295</td></tr>
+                    <tr><td class="border p-1">7,500</td><td class="border p-1">10</td><td class="border p-1">40</td><td class="border p-1">35</td></tr>
+                    <tr><td class="border p-1">15,000</td><td class="border p-1">20</td><td class="border p-1">80</td><td class="border p-1">70</td></tr>
+                    <tr><td class="border p-1">30,000</td><td class="border p-1">40</td><td class="border p-1">160</td><td class="border p-1">140</td></tr>
+                    <tr><td class="border p-1">79,000</td><td class="border p-1">100</td><td class="border p-1">400</td><td class="border p-1">350</td></tr>
+                    <tr><td class="border p-1">149,000</td><td class="border p-1">200</td><td class="border p-1">800</td><td class="border p-1">700</td></tr>
+                    <tr><td class="border p-1">합　계</td><td class="border p-1">370</td><td class="border p-1">1,480</td><td class="border p-1">1,295</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -591,9 +597,7 @@
       window.addEventListener("load", sendHeightToParent);
       document.querySelectorAll("details").forEach((detail) => {
         detail.addEventListener("toggle", () => {
-          if (detail.open) {
-            setTimeout(sendHeightToParent, 300); // 부드럽게 열리고 나서 높이 전송
-          }
+          setTimeout(sendHeightToParent, 300); // 부드럽게 열리고 나서 높이 전송
         });
       });
     </script>
