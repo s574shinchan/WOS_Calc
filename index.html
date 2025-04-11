@@ -69,10 +69,6 @@
 
       // 프레임 src 및 높이 설정
       frame.src = tab + ".html";
-      if(heightMap[tab] > frame.style.height)
-        frame.style.height = heightMap[tab];
-      else
-        frame.style.height = 1000px;
       
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
@@ -100,12 +96,8 @@
     }
 
     window.addEventListener("message", function (e) {
-      //if (e.data?.type === "setHeight" && e.data.height) {
-      //  const frame = document.getElementById("calcFrame");
-      //  frame.style.height = e.data.height + "px";
-      //}
       if (e.data?.type === "HEIGHT_UPDATE") {
-        document.getElementById("calcFrame").style.height = e.data.height + "px";
+        document.getElementById("calcFrame").style.height = `${e.data.height}px`;
       }
       if (e.data?.type === "RESULT_POPUP") {
         document.getElementById("globalPopupContent").innerHTML = e.data.html;
