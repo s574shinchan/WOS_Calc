@@ -57,21 +57,9 @@
     function switchTab(tab) {
       // 탭에 따라 높이 조절
       const frame = document.getElementById("calcFrame");
-      const isMobile = window.innerWidth <= 768;
-
-      // 높이 매핑
-      const heightMap = {
-        building: isMobile ? "1400px" : "800px",
-        gem:      isMobile ? "1600px" : "1500px",
-        equip:    isMobile ? "1400px" : "800px",
-        hero:     isMobile ? "1400px" : "800px",
-      };
-
+      
       // 프레임 src 및 높이 설정
-      if(tab == hero)
-        frame.src = tab + "_equip.html";
-      else
-        frame.src = tab + ".html";
+      frame.src = tab + ".html";
       
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
