@@ -59,18 +59,33 @@
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
       
-      frame.style.opacity = 0;
-      setTimeout(() => { frame.src = tab + ".html"; }, 200);
-      
       if (tab === 'building') {
+        frame.style.opacity = 0;
+        setTimeout(() => { 
+          frame.src = tab + ".html"; 
+        }, 200);
         frame.style.height = "500px";
       } else if (tab === 'gem') {
+        frame.style.opacity = 0;
+        setTimeout(() => { 
+          frame.src = tab + ".html"; 
+        }, 200);
         frame.style.height = "1200px";
       } else if (tab === 'equip') {
+        frame.style.opacity = 0;
+        setTimeout(() => { 
+          frame.src = tab + ".html"; 
+        }, 200);
         frame.style.height = "600px";
       } else if (tab === 'hero') {
+        frame.style.opacity = 0;
+        setTimeout(() => { 
+          frame.src = tab + ".html"; 
+        }, 200);
         frame.style.height = "600px";
-
+        
+      
+      
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
         btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800');
