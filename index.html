@@ -68,7 +68,10 @@
       };
 
       // 프레임 src 및 높이 설정
-      frame.src = tab + ".html";
+      if(tab == hero)
+        frame.src = tab + "_equip.html";
+      else
+        frame.src = tab + ".html";
       
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
