@@ -22,7 +22,13 @@
         🧝 영웅장비
       </button>
     </div>
-    <iframe id="calcFrame" src="building.html" class="w-full h-[1000px] border rounded"></iframe>
+    <iframe
+      id="calcFrame"
+      src="building.html"
+      class="w-full border rounded invisible"
+      style="min-height: 1000px; height: 1100px;"
+      onload="this.classList.remove('invisible')"
+    ></iframe>
   </div>
 
   <div id="globalPopupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
@@ -55,10 +61,10 @@
 
       // 높이 매핑
       const heightMap = {
-        building: isMobile ? "1400px" : "710px",
+        building: isMobile ? "1400px" : "750px",
         gem:      isMobile ? "1600px" : "1050px",
-        equip:    isMobile ? "1400px" : "710px",
-        hero:     isMobile ? "1400px" : "610px",
+        equip:    isMobile ? "1400px" : "750px",
+        hero:     isMobile ? "1400px" : "650px",
       };
 
       // 프레임 src 및 높이 설정
