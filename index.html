@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WOS 계산기 통합 | S574 ShinChan</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    #calcFrame {
+      transition: height 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 p-6 font-sans">
   <div class="max-w-6xl mx-auto">
@@ -18,19 +24,21 @@
       <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
         🛡 영주장비
       </button>
-      <button onclick="switchTab('hero')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+      <button onclick="switchTab('hero')" class="tab-btn bg-gray-200 text-yellow-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
         🧝 영웅장비
       </button>
     </div>
+
     <iframe
       id="calcFrame"
       src="building.html"
       class="w-full border rounded invisible"
-      style="min-height: 1000px; height: 1500px;"
-      onload="this.classList.remove('invisible')"
+      style="min-height: 1000px;"
+      onload="onIframeLoad()"
     ></iframe>
   </div>
 
+  <!-- 팝업 모달 -->
   <div id="globalPopupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 mx-2">
       <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
@@ -42,25 +50,19 @@
   </div>
 
   <script>
-    // 환경에 따라 기본 높이 설정
-    //const isMobile = window.innerWidth < 768;
-    //const frame = document.getElementById("calcFrame");
-    //frame.style.height = isMobile ? "1200px" : "1000px";
-    
-    // iframe 내부에서 실제 컨텐츠 높이 수신
-    //window.addEventListener("message", (event) => {
-    //  if (event.data.type === "setHeight" && event.data.height) {
-    //    frame.style.height = event.data.height + "px";
-    //  }
-    //});
-    
-    function switchTab(tab) {
-      // 탭에 따라 높이 조절
+    function onIframeLoad() {
       const frame = document.getElementById("calcFrame");
-      
-      // 프레임 src 및 높이 설정
-      frame.src = tab + ".html";
-      
+      frame.classList.remove("invisible");
+      frame.style.opacity = 1;
+    }
+
+    function switchTab(tab) {
+      const frame = document.getElementById("calcFrame");
+      frame.style.opacity = 0;
+      setTimeout(() => {
+        frame.src = tab + ".html";
+      }, 200);
+
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300');
         btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800');
@@ -87,17 +89,25 @@
     }
 
     window.addEventListener("message", function (e) {
+      const frame = document.getElementById("calcFrame");
+
       if (e.data?.type === "HEIGHT_UPDATE") {
-        document.getElementById("calcFrame").style.height = `${e.data.height}px`;
+        frame.style.height = `${e.data.height}px`;
       }
+
       if (e.data?.type === "RESULT_POPUP") {
         document.getElementById("globalPopupContent").innerHTML = e.data.html;
         document.getElementById("globalPopupModal").classList.remove("hidden");
+      }
+
+      if (e.data?.type === "LOADED") {
+        frame.style.opacity = 1;
       }
     });
 
     window.onload = () => switchTab('building');
   </script>
-<footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
+
+  <footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
 </body>
 </html>
