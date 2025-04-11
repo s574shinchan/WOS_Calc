@@ -67,7 +67,7 @@
         buildingList.forEach((name, i) => {
           const options = levelList.map(lv => `<option value="${lv}">${lv}</option>`).join("");
           grid.innerHTML += `
-          <div class="border p-1 rounded bg-blue-50 text-xs">
+          <div class="border p-2 rounded bg-blue-50 text-xs">
           <label for="building-check-${i}" class="flex items-center font-semibold mb-1">
           <input type="checkbox" id="building-check-${i}" class="mr-1 w-4 h-4 accent-blue-500" />
           ${name}
