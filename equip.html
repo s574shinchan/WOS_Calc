@@ -5,14 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>영주장비 계산기</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      function sendHeightToParent() {
-        const height = document.documentElement.scrollHeight;
-        window.parent.postMessage({ type: "HEIGHT_UPDATE", height }, "*");
-      }
-    window.addEventListener("load", sendHeightToParent);
-    window.addEventListener("resize", sendHeightToParent);
-  </script>
   </head>
   <body class="bg-gray-100 p-4 font-sans text-sm">
     <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
