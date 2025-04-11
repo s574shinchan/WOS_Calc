@@ -101,7 +101,7 @@
           equip:    isMobile() ? "680px" : "485px",
           hero:     isMobile() ? "550px" : "485px",          
           pet:      isMobile() ? "680px" : "485px",
-          guide:    isMobile() ? "2100px" : "1800px",
+          //guide:    isMobile() ? "2100px" : "1800px",
           gift: "1000px",
         }[tab];
       }, 200);
@@ -139,6 +139,10 @@
 
     window.addEventListener("message", function (e) {
       const frame = document.getElementById("calcFrame");
+      
+      if (event.data && event.data.iframeHeight) {
+        frame.style.height = event.data.iframeHeight + "px";
+      }
       
       if (e.data?.type === "RESULT_POPUP") {
         document.getElementById("globalPopupContent").innerHTML = e.data.html;
