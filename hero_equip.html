@@ -173,20 +173,6 @@
       loadHeroEquip();
     </script>
     <script>
-      let lastHeight = 0;
-      function resizeParentFrame() {
-        const newHeight = Math.ceil(document.body.scrollHeight);
-        
-        // 5px 이상 차이날 때만 리사이징
-        if (Math.abs(newHeight - lastHeight) > 5) {
-          window.parent.postMessage({ type: "setHeight", height: newHeight }, "*");
-          lastHeight = newHeight;
-        }
-      }
-    
-      window.addEventListener("load", resizeParentFrame);
-      window.addEventListener("resize", resizeParentFrame);
-      
       document.addEventListener("contextmenu", event => event.preventDefault());
       document.addEventListener("keydown", function (e) {
         if (
