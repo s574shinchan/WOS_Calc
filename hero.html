@@ -21,6 +21,20 @@
         <button type="button" onclick="calculateHeroEquip()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
       </form>
       </details>
+
+      <details class="bg-white border border-indigo-300 rounded-md p-4">
+      <summary class="cursor-pointer text-lg font-bold text-yellow-600 mb-2">🧝 영웅 장비 계산기(마스터리)</summary>
+      <form id="heroEquipForm" class="space-y-4">
+        <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div><label class="block font-semibold">보유 경험치</label><input type="number" id="own-경험치" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 너트</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 미스릴</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 레전드장비</label><input type="number" id="own-재료장비" class="w-full border rounded p-2" /></div>
+        </div>
+        <button type="button" onclick="calculateHeroEquip()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
+      </form>
+      </details>
     </div>
     
     <!-- 팝업 모달 -->
