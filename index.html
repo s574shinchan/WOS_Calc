@@ -145,13 +145,7 @@
       const frame = document.getElementById("calcFrame");
       
       if (event.data && event.data.iframeHeight) {
-        if (currentTab === "guide") {
-          if (frame.style.height !== event.data.iframeHeight + "px") {
-            frame.style.height = event.data.iframeHeight + "px";
-          }
-        } else {
-          frame.style.height = event.data.iframeHeight + "px";
-        }
+        frame.style.height = event.data.iframeHeight + "px";
       }
       
       if (event.data?.type === "RESULT_POPUP") {
