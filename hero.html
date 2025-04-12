@@ -173,7 +173,7 @@
     
       // 초기 높이 저장 및 부모 페이지에 전달
       window.addEventListener("load", () => {
-        initialHeight = document.documentElement.scrollHeight + 5;
+        initialHeight = document.documentElement.scrollHeight;
         lastSentHeight = initialHeight;
         postHeightIfChanged(initialHeight);
       });
@@ -191,7 +191,7 @@
         el.addEventListener("toggle", () => {
           setTimeout(() => {
             const currentHeight = el.open
-              ? document.documentElement.scrollHeight
+              ? document.documentElement.scrollHeight + 5 
               : initialHeight;
             postHeightIfChanged(currentHeight);
           }, 100); // DOM 업데이트 대기
