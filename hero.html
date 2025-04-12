@@ -182,7 +182,7 @@
       function postHeightIfChanged(newHeight) {
         if (lastSentHeight !== newHeight) {
           window.parent.postMessage({ type: "HEIGHT_UPDATE", height: newHeight }, "*");
-          lastSentHeight = newHeight;
+          lastSentHeight = newHeight + 3;
         }
       }
     
