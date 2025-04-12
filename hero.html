@@ -35,7 +35,6 @@
     </div>
     
     <script>
-      
       function showPopup(html) {
         document.getElementById("popupContent").innerHTML = html;
         document.getElementById("popupModal").classList.remove("hidden");
@@ -44,7 +43,9 @@
       function closePopup() {
         document.getElementById("popupModal").classList.add("hidden");
       }
-      
+    </script>
+   
+    <script>
       const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
       const sheetName = "영웅장비재료";
       const heroItems = ["고글", "장갑", "벨트", "신발"];
@@ -165,6 +166,26 @@
       
       loadHeroEquip();
     </script>
+   
+    <script>
+      function toggleAccordion(id) {
+        const section = document.getElementById(id);
+        section.classList.toggle("hidden");
+      }
+      function sendHeightToParent() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ iframeHeight: height + 5}, "*");
+      }
+      
+      // 페이지 로드 시 + details 열릴 때 높이 전송
+      window.addEventListener("load", sendHeightToParent);
+      document.querySelectorAll("details").forEach((detail) => {
+        detail.addEventListener("toggle", () => {
+          setTimeout(sendHeightToParent, 300); // 부드럽게 열리고 나서 높이 전송
+        });
+      });
+    </script>
+    
     <script>
       document.addEventListener("contextmenu", event => event.preventDefault());
       document.addEventListener("keydown", function (e) {
