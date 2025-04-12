@@ -141,21 +141,19 @@
   </script>
    
   <script>
-    window.addEventListener("message", function (e) {
+    window.addEventListener("message", function (event) {
       const frame = document.getElementById("calcFrame");
       
-      if (e.data?.type === "HEIGHT_UPDATE") {
-        if (frame) {
-          frame.style.height = e.data.height + "px";
-        }
+      if (event.data && event.data.iframeHeight) {
+        frame.style.height = event.data.iframeHeight + "px";
       }
       
-      if (e.data?.type === "RESULT_POPUP") {
-        document.getElementById("globalPopupContent").innerHTML = e.data.html;
+      if (event.data?.type === "RESULT_POPUP") {
+        document.getElementById("globalPopupContent").innerHTML = event.data.html;
         document.getElementById("globalPopupModal").classList.remove("hidden");
       }
 
-      if (e.data?.type === "LOADED") {
+      if (event.data?.type === "LOADED") {
         frame.style.opacity = 1;
       }
     });
