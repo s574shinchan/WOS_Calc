@@ -144,9 +144,9 @@
     window.addEventListener("message", function (e) {
       const frame = document.getElementById("calcFrame");
       
-      if (event.data?.type === "HEIGHT_UPDATE") {
-        if (iframe) {
-          iframe.style.height = event.data.height + "px";
+      if (e.data?.type === "HEIGHT_UPDATE") {
+        if (frame) {
+          frame.style.height = e.data.height + "px";
         }
       }
       
