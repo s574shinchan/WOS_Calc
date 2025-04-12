@@ -15,7 +15,7 @@
           <div><label class="block font-semibold">보유 경험치</label><input type="number" id="own-경험치" class="w-full border rounded p-2" /></div>
           <div><label class="block font-semibold">보유 너트</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
           <div><label class="block font-semibold">보유 미스릴</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" /></div>
-          <div><label class="block font-semibold">보유 재료장비</label><input type="number" id="own-재료장비" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 레전드장비</label><input type="number" id="own-재료장비" class="w-full border rounded p-2" /></div>
         </div>
         <button type="button" onclick="calculateHeroEquip()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
       </form>
@@ -45,7 +45,7 @@
       
       const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
       const sheetName = "영웅장비재료";
-      const heroItems = ["머리", "장갑", "벨트", "신발"];
+      const heroItems = ["고글", "장갑", "벨트", "신발"];
       let heroStages = [], heroData = [];
       
       async function loadHeroEquip() {
@@ -77,7 +77,7 @@
         const data = await res.json();
         const levels = data.map(d => d["레벨"]);
         
-        let total = { 경험치: 0, 너트: 0, 미스릴: 0, 재료장비: 0 };
+        let total = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
         let rows = "";
         
         for (let i = 0; i < heroItems.length; i++) {
@@ -92,19 +92,19 @@
             continue;
           }
           
-          const subtotal = { 경험치: 0, 너트: 0, 미스릴: 0, 재료장비: 0 };
+          const subtotal = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
           for (let j = start + 1; j <= end; j++) {
             const row = data[j];
             subtotal.경험치 += parseFloat(row["경험치"] || 0);
             subtotal.너트 += parseFloat(row["너트"] || 0);
             subtotal.미스릴 += parseFloat(row["미스릴"] || 0);
-            subtotal.재료장비 += parseFloat(row["재료장비"] || 0);
+            subtotal.레전드장비 += parseFloat(row["레전드장비"] || 0);
           }
           
           total.경험치 += subtotal.경험치;
           total.너트 += subtotal.너트;
           total.미스릴 += subtotal.미스릴;
-          total.재료장비 += subtotal.재료장비;
+          total.레전드장비 += subtotal.레전드장비;
           
           rows += `
           <tr class="text-center">
@@ -113,7 +113,7 @@
           <td class="border p-1">${subtotal.경험치.toLocaleString()}</td>
           <td class="border p-1">${subtotal.너트.toLocaleString()}</td>
           <td class="border p-1">${subtotal.미스릴.toLocaleString()}</td>
-          <td class="border p-1">${subtotal.재료장비.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
           </tr>
           `;
         }
@@ -122,7 +122,7 @@
           경험치: parseFloat(document.getElementById("own-경험치").value) || 0,
           너트: parseFloat(document.getElementById("own-너트").value) || 0,
           미스릴: parseFloat(document.getElementById("own-미스릴").value) || 0,
-          재료장비: parseFloat(document.getElementById("own-재료장비").value) || 0,
+          레전드장비: parseFloat(document.getElementById("own-레전드장비").value) || 0,
         };
         
         rows += `
@@ -131,14 +131,14 @@
         <td class="border p-1">${total.경험치.toLocaleString()}</td>
         <td class="border p-1">${total.너트.toLocaleString()}</td>
         <td class="border p-1">${total.미스릴.toLocaleString()}</td>
-        <td class="border p-1">${total.재료장비.toLocaleString()}</td>
+        <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
         </tr>
         <tr class="text-center font-bold bg-red-50">
         <td colspan="2" class="border p-1">과부족</td>
         <td class="border p-1">${(own.경험치 - total.경험치).toLocaleString()}</td>
         <td class="border p-1">${(own.너트 - total.너트).toLocaleString()}</td>
         <td class="border p-1">${(own.미스릴 - total.미스릴).toLocaleString()}</td>
-        <td class="border p-1">${(own.재료장비 - total.재료장비).toLocaleString()}</td>
+        <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
         </tr>
         `;
         
@@ -151,7 +151,7 @@
         <th class="border p-1">경험치</th>
         <th class="border p-1">너트</th>
         <th class="border p-1">미스릴</th>
-        <th class="border p-1">재료장비</th>
+        <th class="border p-1">레전드장비</th>
         </tr>
         </thead>
         <tbody>${rows}</tbody>
