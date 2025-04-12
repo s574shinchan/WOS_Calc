@@ -319,7 +319,7 @@
         el.addEventListener("toggle", () => {
           setTimeout(() => {
             const currentHeight = el.open
-              ? document.documentElement.scrollHeight + 5 
+              ? document.documentElement.scrollHeight
               : initialHeight;
             postHeightIfChanged(currentHeight);
           }, 100); // DOM 업데이트 대기
