@@ -296,40 +296,18 @@
     </script>
     
     <script>
-      let initialHeight = null;
-      let lastSentHeight = null;
-    
-      // 초기 높이 저장 및 부모 페이지에 전달
-      window.addEventListener("load", () => {
-        initialHeight = document.documentElement.scrollHeight;
-        lastSentHeight = initialHeight;
-        postHeightIfChanged(initialHeight);
-      });
-    
-      // 높이 변경 시 부모 페이지에 메시지 전송
-      function postHeightIfChanged(newHeight) {
-        if (lastSentHeight !== newHeight) {
-          window.parent.postMessage({ type: "HEIGHT_UPDATE", height: newHeight }, "*");
-          lastSentHeight = newHeight;
-        }
+      function sendHeightToParent() {
+        const height = document.documentElement.scrollHeight + 5;
+        window.parent.postMessage({ iframeHeight: height }, "*");
       }
     
-      // <details> 요소의 토글 이벤트 감지
-      document.querySelectorAll("details").forEach((el) => {
-        el.addEventListener("toggle", () => {
-          setTimeout(() => {
-            const currentHeight = el.open
-              ? document.documentElement.scrollHeight
-              : initialHeight;
-            postHeightIfChanged(currentHeight);
-          }, 100); // DOM 업데이트 대기
+      window.addEventListener("load", sendHeightToParent);
+      document.querySelectorAll("details").forEach((detail) => {
+        detail.addEventListener("toggle", () => {
+          if (detail.open) {
+            setTimeout(sendHeightToParent, 300); // 펼쳐진 후 높이 반영
+          }
         });
-      });
-    
-      // 창 크기 변경 시 높이 재계산
-      window.addEventListener("resize", () => {
-        const newHeight = document.documentElement.scrollHeight;
-        postHeightIfChanged(newHeight);
       });
     </script>
     
