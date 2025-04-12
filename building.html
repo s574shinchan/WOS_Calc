@@ -78,7 +78,18 @@
           `;
         });
       }
-  
+
+      function formatMillionToBillion(value) {
+        const num = parseFloat(value.toString().replace(/,/g, ''));
+        if (isNaN(num)) return value;
+      
+        if (num >= 1000) {
+          return (num / 1000).toFixed(1) + "B";
+        } else {
+          return num + "M";
+        }
+      }
+      
       async function calculateAll() {
         let total = { 불수정: 0, 정제: 0, 고기: 0, 나무: 0, 석탄: 0, 철광: 0 };
         let rows = "";
@@ -110,24 +121,24 @@
             subtotal.석탄 += parseFloat(data[j]["석탄"] || 0);
             subtotal.철광 += parseFloat(data[j]["철광"] || 0);
           }
-  
+          
           total.불수정 += subtotal.불수정;
           total.정제 += subtotal.정제;
           total.고기 += subtotal.고기;
           total.나무 += subtotal.나무;
           total.석탄 += subtotal.석탄;
           total.철광 += subtotal.철광;
-  
+
           rows += `
             <tr class="text-center">
               <td class="border p-1">${name}</td>
               <td class="border p-1">${cur} → ${tgt}</td>
               <td class="border p-1">${subtotal.불수정.toLocaleString()}</td>
               <td class="border p-1">${subtotal.정제.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.고기.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.나무.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.석탄.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.철광.toLocaleString()}</td>
+              <td class="border p-1">${formatMillionToBillion(subtotal.고기)}</td>
+              <td class="border p-1">${formatMillionToBillion(subtotal.나무)}</td>
+              <td class="border p-1">${formatMillionToBillion(subtotal.석탄)}</td>
+              <td class="border p-1">${formatMillionToBillion(subtotal.철광)}</td>
             </tr>
           `;
         }
@@ -140,10 +151,10 @@
             <td class="border p-1" colspan="2">총합</td>
             <td class="border p-1">${total.불수정.toLocaleString()}</td>
             <td class="border p-1">${total.정제.toLocaleString()}</td>
-            <td class="border p-1">${total.고기.toLocaleString()}</td>
-            <td class="border p-1">${total.나무.toLocaleString()}</td>
-            <td class="border p-1">${total.석탄.toLocaleString()}</td>
-            <td class="border p-1">${total.철광.toLocaleString()}</td>
+            <td class="border p-1">${formatMillionToBillion(total.고기)}</td>
+            <td class="border p-1">${formatMillionToBillion(total.나무)}</td>
+            <td class="border p-1">${formatMillionToBillion(total.석탄)}</td>
+            <td class="border p-1">${formatMillionToBillion(total.철광)}</td>
           </tr>
           <tr class="text-center font-bold bg-red-100">
             <td class="border p-1" colspan="2">과부족</td>
