@@ -38,8 +38,13 @@
     </details>
 
     <!-- 팝업 이미지 뷰어 -->
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50">
-      <img id="popupImage" src="" class="max-w-full max-h-full transform scale-100 transition duration-300" />
+    <div id="imageModal"
+         class="fixed inset-0 bg-black bg-opacity-80 hidden overflow-auto z-[9999]">
+      <div class="w-full h-full flex items-center justify-center p-4">
+        <img id="popupImage"
+             src=""
+             class="max-w-none max-h-none object-contain transform scale-100 transition duration-300" />
+      </div>
     </div>
     
     <!-- 📦 각종 패키지 구성 섹션 -->
@@ -233,25 +238,28 @@
     </details>
     
     <script>
-      const modal = document.getElementById("imageModal");
-      const popupImg = document.getElementById("popupImage");
-    
       function openImagePopup(src) {
+        const modal = document.getElementById("imageModal");
+        const popupImg = document.getElementById("popupImage");
+      
         popupImg.src = src;
         popupImg.style.transform = "scale(1)";
         modal.classList.remove("hidden");
+        document.body.classList.add("overflow-hidden"); // 배경 스크롤 방지
       }
-    
-      modal.addEventListener("click", () => {
-        modal.classList.add("hidden");
+      
+      document.getElementById("imageModal").addEventListener("click", () => {
+        document.getElementById("imageModal").classList.add("hidden");
+        document.body.classList.remove("overflow-hidden");
       });
-    
-      popupImg.addEventListener("wheel", (e) => {
+      
+      document.getElementById("popupImage").addEventListener("wheel", (e) => {
         e.preventDefault();
-        let scale = Number(popupImg.style.transform.replace("scale(", "").replace(")", "")) || 1;
+        const img = e.currentTarget;
+        let scale = parseFloat(img.style.transform.replace("scale(", "").replace(")", "")) || 1;
         scale += e.deltaY < 0 ? 0.1 : -0.1;
-        scale = Math.max(0.5, Math.min(3, scale));
-        popupImg.style.transform = `scale(${scale})`;
+        scale = Math.max(0.5, Math.min(5, scale));
+        img.style.transform = `scale(${scale})`;
       });
     </script>
     
