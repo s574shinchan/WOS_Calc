@@ -173,7 +173,7 @@
         section.classList.toggle("hidden");
       }
       function sendHeightToParent() {
-        const height = document.documentElement.scrollHeight;
+        const height = document.documentElement.scrollHeight + 3;
         window.parent.postMessage({ iframeHeight: height}, "*");
       }
       
