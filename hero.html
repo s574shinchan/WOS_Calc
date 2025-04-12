@@ -181,8 +181,8 @@
       // 높이 변경 시 부모 페이지에 메시지 전송
       function postHeightIfChanged(newHeight) {
         if (lastSentHeight !== newHeight) {
-          window.parent.postMessage({ type: "HEIGHT_UPDATE", height: newHeight }, "*");
-          lastSentHeight = newHeight + 3;
+          window.parent.postMessage({ type: "HEIGHT_UPDATE", height: newHeight + 5 }, "*");
+          lastSentHeight = newHeight;
         }
       }
     
