@@ -141,10 +141,10 @@
               <td class="border p-1">${cur} → ${tgt}</td>
               <td class="border p-1">${subtotal.불수정.toLocaleString()}</td>
               <td class="border p-1">${subtotal.정제.toLocaleString()}</td>
-              <td class="border p-1">${round1(formatMillionToBillion(subtotal.고기))}</td>
-              <td class="border p-1">${round1(formatMillionToBillion(subtotal.나무))}</td>
-              <td class="border p-1">${round1(formatMillionToBillion(subtotal.석탄))}</td>
-              <td class="border p-1">${round1(formatMillionToBillion(subtotal.철광))}</td>
+              <td class="border p-1">${formatMillionToBillion(round1(subtotal.고기))}</td>
+              <td class="border p-1">${formatMillionToBillion(round1(subtotal.나무))}</td>
+              <td class="border p-1">${formatMillionToBillion(round1(subtotal.석탄))}</td>
+              <td class="border p-1">${formatMillionToBillion(round1(subtotal.철광))}</td>
             </tr>
           `;
         }
@@ -157,10 +157,10 @@
             <td class="border p-1" colspan="2">총합</td>
             <td class="border p-1">${total.불수정.toLocaleString()}</td>
             <td class="border p-1">${total.정제.toLocaleString()}</td>
-            <td class="border p-1">${round1(formatMillionToBillion(total.고기))}</td>
-            <td class="border p-1">${round1(formatMillionToBillion(total.나무))}</td>
-            <td class="border p-1">${round1(formatMillionToBillion(total.석탄))}</td>
-            <td class="border p-1">${round1(formatMillionToBillion(total.철광))}</td>
+            <td class="border p-1">${formatMillionToBillion(round1(total.고기))}</td>
+            <td class="border p-1">${formatMillionToBillion(round1(total.나무))}</td>
+            <td class="border p-1">${formatMillionToBillion(round1(total.석탄))}</td>
+            <td class="border p-1">${formatMillionToBillion(round1(total.철광))}</td>
           </tr>
           <tr class="text-center font-bold bg-red-100">
             <td class="border p-1" colspan="2">과부족</td>
