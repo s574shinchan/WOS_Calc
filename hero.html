@@ -168,21 +168,40 @@
     </script>
    
     <script>
-      function toggleAccordion(id) {
-        const section = document.getElementById(id);
-        section.classList.toggle("hidden");
+      let initialHeight = null;
+      let lastSentHeight = null;
+    
+      // 초기 높이 저장 및 부모 페이지에 전달
+      window.addEventListener("load", () => {
+        initialHeight = document.documentElement.scrollHeight;
+        lastSentHeight = initialHeight;
+        postHeightIfChanged(initialHeight);
+      });
+    
+      // 높이 변경 시 부모 페이지에 메시지 전송
+      function postHeightIfChanged(newHeight) {
+        if (lastSentHeight !== newHeight) {
+          window.parent.postMessage({ type: "HEIGHT_UPDATE", height: newHeight }, "*");
+          lastSentHeight = newHeight;
+        }
       }
-      function sendHeightToParent() {
-        const height = document.documentElement.scrollHeight + 3;
-        window.parent.postMessage({ iframeHeight: height}, "*");
-      }
-      
-      // 페이지 로드 시 + details 열릴 때 높이 전송
-      window.addEventListener("load", sendHeightToParent);
-      document.querySelectorAll("details").forEach((detail) => {
-        detail.addEventListener("toggle", () => {
-          setTimeout(sendHeightToParent, 300); // 부드럽게 열리고 나서 높이 전송
+    
+      // <details> 요소의 토글 이벤트 감지
+      document.querySelectorAll("details").forEach((el) => {
+        el.addEventListener("toggle", () => {
+          setTimeout(() => {
+            const currentHeight = el.open
+              ? document.documentElement.scrollHeight
+              : initialHeight;
+            postHeightIfChanged(currentHeight);
+          }, 100); // DOM 업데이트 대기
         });
+      });
+    
+      // 창 크기 변경 시 높이 재계산
+      window.addEventListener("resize", () => {
+        const newHeight = document.documentElement.scrollHeight;
+        postHeightIfChanged(newHeight);
       });
     </script>
     
