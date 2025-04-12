@@ -213,12 +213,10 @@
           container.innerHTML = `<p class="text-red-500">⚠️ 테이블 데이터를 불러오는 데 실패했습니다.</p>`;
         }
       });
-    </script>
-      
-    <script>    
+
       let customPakageLoaded = false;
       document.querySelector('summary').addEventListener('click', async () => {
-        const container = document.getElementById('customContainer');
+        const container = document.getElementById('customContianer');
         if (customPakageLoaded) return;
     
         try {
@@ -233,7 +231,7 @@
         }
       });
     </script>
-      
+
     <script>
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
