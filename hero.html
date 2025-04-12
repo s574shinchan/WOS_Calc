@@ -173,7 +173,7 @@
     
       // 초기 높이 저장 및 부모 페이지에 전달
       window.addEventListener("load", () => {
-        initialHeight = document.documentElement.scrollHeight;
+        initialHeight = document.documentElement.scrollHeight + 5;
         lastSentHeight = initialHeight;
         postHeightIfChanged(initialHeight);
       });
@@ -181,7 +181,7 @@
       // 높이 변경 시 부모 페이지에 메시지 전송
       function postHeightIfChanged(newHeight) {
         if (lastSentHeight !== newHeight) {
-          window.parent.postMessage({ type: "HEIGHT_UPDATE", height: newHeight + 5 }, "*");
+          window.parent.postMessage({ type: "HEIGHT_UPDATE", height: newHeight }, "*");
           lastSentHeight = newHeight;
         }
       }
