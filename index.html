@@ -144,8 +144,10 @@
     window.addEventListener("message", function (e) {
       const frame = document.getElementById("calcFrame");
       
-      if (e.data && e.data.iframeHeight) {
-        frame.style.height = e.data.iframeHeight + "px";
+      if (event.data?.type === "HEIGHT_UPDATE") {
+        if (iframe) {
+          iframe.style.height = event.data.height + "px";
+        }
       }
       
       if (e.data?.type === "RESULT_POPUP") {
