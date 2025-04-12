@@ -78,7 +78,9 @@
     function isMobile() {
       return window.innerWidth <= 768;
     }
-    
+  </script>
+   
+  <script>
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
       const tabMap = {
@@ -99,7 +101,7 @@
           building: isMobile() ? "720px" : "485px",
           gem:      isMobile() ? "995px" : "955px",
           equip:    isMobile() ? "680px" : "485px",
-          hero:     isMobile() ? "550px" : "485px",          
+          //hero:     isMobile() ? "550px" : "485px",          
           pet:      isMobile() ? "680px" : "485px",
           //guide:    isMobile() ? "2100px" : "1800px",
           gift: "1000px",
@@ -136,7 +138,9 @@
       btns[activeBtn].classList.remove('bg-gray-200', 'text-gray-800');
       btns[activeBtn].classList.add(...colorMap[tab]);
     }
-
+  </script>
+   
+  <script>
     window.addEventListener("message", function (e) {
       const frame = document.getElementById("calcFrame");
       
@@ -156,7 +160,8 @@
 
     window.onload = () => switchTab('building');
   </script>
-  <script>    
+  
+  <script>
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
       if (e.key === "F12" ||
@@ -167,6 +172,8 @@
       }
     });
   </script>
+  
   <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 및 배포 금지 | © By S574 ShinChan</footer>
+  
 </body>
 </html>
