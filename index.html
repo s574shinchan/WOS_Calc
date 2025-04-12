@@ -145,7 +145,12 @@
       const frame = document.getElementById("calcFrame");
       
       if (event.data && event.data.iframeHeight) {
-        if (frame.style.height <> event.data.iframeHeight) {
+        if (tab ==="guide") {
+          if (frame.style.height <> event.data.iframeHeight) {
+            frame.style.height = event.data.iframeHeight + "px";
+          }
+        }
+        else {
           frame.style.height = event.data.iframeHeight + "px";
         }
       }
