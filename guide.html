@@ -6,46 +6,35 @@
   <title>🎫 패키지구성 | WOS 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-6 font-sans text-sm">
-  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-5">
-    <h1 class="text-2xl font-bold text-gray-800">📘 WOS 공략집</h1>
-    <div id="GuideGridBody" class="grid grid-cols-2 gap-4"></div>
-    <details class="bg-white border border-indigo-300 rounded-md p-4">
-      <summary class="cursor-pointer text-lg font-bold text-indigo-700 mb-2">🧬 세대별 영웅 특성</summary>
-      <div id="heroTableContainer" class="mt-3 overflow-x-auto">
-        <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+  <body class="bg-gray-100 p-6 font-sans text-sm">
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-5">
+      <h1 class="text-2xl font-bold text-gray-800">📘 WOS 공략집</h1>
+      <div id="GuideGridBody" class="grid grid-cols-2 gap-4"></div>
+      <details class="bg-white border border-indigo-300 rounded-md p-4">
+        <summary class="cursor-pointer text-lg font-bold text-indigo-700 mb-2">🧬 세대별 영웅 특성</summary>
+        <div id="heroTableContainer" class="mt-3 overflow-x-auto">
+          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+        </div>
+      </details>
+      
+      <!-- 🛫 이민 시스템 안내 -->
+      <details class="bg-white border border-gray-300 rounded-md p-4">
+        <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
+        <div id="StatusTranferContainer" class="mt-3 space-y-4 text-sm text-gray-800">
+          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>        
+        </div>
+      </details>
+      
+      <!-- 🧪 헬리오스 연구 참고자료 섹션 -->
+      <details class="bg-white border border-red-300 rounded-md p-4">
+        <summary class="cursor-pointer text-lg font-bold text-red-600 mb-2">🧪 헬리오스(T11)</summary>
+        <div class="mt-3">
+          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/7b8601795ff8a85932540f79e4bda456044026e8/images/T11Research.png"
+               alt="헬리오스 참고 이미지"
+               class="w-full mx-auto rounded shadow"
+            />
       </div>
     </details>
-    
-    <!-- 🛫 이민 시스템 안내 -->
-    <details class="bg-white border border-gray-300 rounded-md p-4">
-      <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
-      <div id="StatusTranferContainer" class="mt-3 space-y-4 text-sm text-gray-800">
-        <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>        
-      </div>
-    </details>
-    
-    <!-- 🧪 헬리오스 연구 참고자료 섹션 -->
-    <details class="bg-white border border-red-300 rounded-md p-4">
-      <summary class="cursor-pointer text-lg font-bold text-red-600 mb-2">🧪 헬리오스(T11)</summary>
-      <div class="mt-3">
-        <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/7b8601795ff8a85932540f79e4bda456044026e8/images/T11Research.png"
-             alt="헬리오스 참고 이미지"
-             class="cursor-pointer w-full mx-auto rounded shadow"
-             onclick="openImagePopup(this.src)"
-          />
-      </div>
-    </details>
-
-    <!-- 팝업 이미지 뷰어 -->
-    <div id="imageModal"
-         class="fixed inset-0 bg-black bg-opacity-80 hidden overflow-auto z-[9999]">
-      <div class="w-full h-full flex items-center justify-center p-4">
-        <img id="popupImage"
-             src=""
-             class="max-w-none max-h-none object-contain transform scale-100 transition duration-300" />
-      </div>
-    </div>
     
     <!-- 📦 각종 패키지 구성 섹션 -->
     <details class="bg-white border border-gray-300 rounded-md p-4">
@@ -201,33 +190,7 @@
         </details>
       </div>
     </details>
-    
-    <script>
-      function openImagePopup(src) {
-        const modal = document.getElementById("imageModal");
-        const popupImg = document.getElementById("popupImage");
-      
-        popupImg.src = src;
-        popupImg.style.transform = "scale(1)";
-        modal.classList.remove("hidden");
-        document.body.classList.add("overflow-hidden"); // 배경 스크롤 방지
-      }
-      
-      document.getElementById("imageModal").addEventListener("click", () => {
-        document.getElementById("imageModal").classList.add("hidden");
-        document.body.classList.remove("overflow-hidden");
-      });
-      
-      document.getElementById("popupImage").addEventListener("wheel", (e) => {
-        e.preventDefault();
-        const img = e.currentTarget;
-        let scale = parseFloat(img.style.transform.replace("scale(", "").replace(")", "")) || 1;
-        scale += e.deltaY < 0 ? 0.1 : -0.1;
-        scale = Math.max(0.5, Math.min(5, scale));
-        img.style.transform = `scale(${scale})`;
-      });
-    </script>
-    
+       
     <script>
       function sendHeightToParent() {
         const height = document.documentElement.scrollHeight + 5;
