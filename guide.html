@@ -38,10 +38,12 @@
     </details>
 
     <!-- 팝업 이미지 뷰어 -->
-    <div id="imagePopupLayer" class="fixed inset-0 bg-black bg-opacity-80 hidden z-[9999] overflow-auto">
-      <div class="flex items-center justify-center min-h-screen p-4">
-        <img id="popupImage" src=""
-             class="max-w-none max-h-none transform scale-100 transition duration-300" />
+    <div id="imageModal"
+         class="fixed inset-0 bg-black bg-opacity-80 hidden overflow-auto z-[9999]">
+      <div class="w-full h-full flex items-center justify-center p-4">
+        <img id="popupImage"
+             src=""
+             class="max-w-none max-h-none object-contain transform scale-100 transition duration-300" />
       </div>
     </div>
     
@@ -235,70 +237,30 @@
       </div>
     </details>
     
-    <div id="imagePopupLayer" class="fixed inset-0 bg-black bg-opacity-80 hidden z-[9999] overflow-auto">
-      <div class="flex items-center justify-center min-h-screen p-4">
-        <img id="popupImage" src="" class="max-w-none max-h-none transform scale-100 cursor-grab" />
-      </div>
-    </div>
-    
     <script>
-      const popup = document.getElementById("imagePopupLayer");
-      const img = document.getElementById("popupImage");
-  
-      let scale = 1, offsetX = 0, offsetY = 0, isDragging = false;
-      let startX = 0, startY = 0;
-  
-      function openPopupImage(src) {
-        popup.classList.remove("hidden");
-        img.src = src;
-        scale = 1;
-        offsetX = 0;
-        offsetY = 0;
-        img.style.transform = "scale(1) translate(0px, 0px)";
+      function openImagePopup(src) {
+        const modal = document.getElementById("imageModal");
+        const popupImg = document.getElementById("popupImage");
+      
+        popupImg.src = src;
+        popupImg.style.transform = "scale(1)";
+        modal.classList.remove("hidden");
+        document.body.classList.add("overflow-hidden"); // 배경 스크롤 방지
       }
-  
-      popup.addEventListener("click", () => popup.classList.add("hidden"));
-  
-      img.addEventListener("wheel", (e) => {
+      
+      document.getElementById("imageModal").addEventListener("click", () => {
+        document.getElementById("imageModal").classList.add("hidden");
+        document.body.classList.remove("overflow-hidden");
+      });
+      
+      document.getElementById("popupImage").addEventListener("wheel", (e) => {
         e.preventDefault();
+        const img = e.currentTarget;
+        let scale = parseFloat(img.style.transform.replace("scale(", "").replace(")", "")) || 1;
         scale += e.deltaY < 0 ? 0.1 : -0.1;
-        scale = Math.min(5, Math.max(0.5, scale));
-        img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+        scale = Math.max(0.5, Math.min(5, scale));
+        img.style.transform = `scale(${scale})`;
       });
-  
-      img.addEventListener("mousedown", (e) => {
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        e.stopPropagation();
-      });
-  
-      window.addEventListener("mousemove", (e) => {
-        if (!isDragging) return;
-        offsetX += e.clientX - startX;
-        offsetY += e.clientY - startY;
-        startX = e.clientX;
-        startY = e.clientY;
-        img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
-      });
-  
-      window.addEventListener("mouseup", () => isDragging = false);
-  
-      // 모바일 터치
-      let touchStart = null;
-      img.addEventListener("touchstart", (e) => {
-        touchStart = e.touches[0];
-      });
-      img.addEventListener("touchmove", (e) => {
-        if (!touchStart) return;
-        const touch = e.touches[0];
-        offsetX += touch.clientX - touchStart.clientX;
-        offsetY += touch.clientY - touchStart.clientY;
-        touchStart = touch;
-        img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
-        e.preventDefault();
-      });
-      img.addEventListener("touchend", () => touchStart = null);
     </script>
     
     <script>
