@@ -3,63 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOS 통합 계산기 | S574 ShinChan</title>
+  <title>WOS 계산기 통합 | S574 ShinChan</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    #calcFrame {
-      transition: height 0.3s ease, opacity 0.3s ease;
-      opacity: 0;
-    }
-    body {
-      background-image: url('images/watermark.png');
-      background-repeat: repeat;
-      background-position: center;
-      background-size: auto;
-      background-attachment: fixed;
-      background-color: #f3f3f3;
-      overflow-x: hidden;
-      margin: 0;
-    }
-  </style>
 </head>
-<body class="bg-gray-100 p-6 font-sans">
+<body class="bg-gray-100 p-6 font-sans text-sm">
   <div class="max-w-6xl mx-auto">
+    <!-- 상단 탭 버튼 -->
     <div class="mb-4 flex flex-wrap gap-2 justify-start">
-      <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🏗 건물
-      </button>
-      <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 text-purple-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        💎 영주보석
-      </button>
-      <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🛡 영주장비
-      </button>
-      <button onclick="switchTab('hero')" class="tab-btn bg-gray-200 text-yellow-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🧝 영웅장비
-      </button>
-      <button onclick="switchTab('pet')" class="tab-btn bg-gray-200 text-pink-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🐾 펫돌파
-      </button>
-      <button onclick="switchTab('guide')" class="tab-btn bg-gray-200 text-slate-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        📘 공략집
-      </button>
-      <button onclick="switchTab('gift')" class="tab-btn bg-gray-200 text-indigo-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🎁 교환코드입력
-      </button>
+      <button onclick="switchTab('building.html', this)" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-2 px-4 rounded">🏗 건물</button>
+      <button onclick="switchTab('gem.html', this)" class="tab-btn bg-gray-200 text-purple-800 font-semibold py-2 px-4 rounded">💎 영주보석</button>
+      <button onclick="switchTab('equip.html', this)" class="tab-btn bg-gray-200 text-green-800 font-semibold py-2 px-4 rounded">🛡 영주장비</button>
+      <button onclick="switchTab('hero_equip.html', this)" class="tab-btn bg-gray-200 text-yellow-800 font-semibold py-2 px-4 rounded">🧝 영웅장비</button>
+      <button onclick="switchTab('guide.html', this)" class="tab-btn bg-gray-200 text-indigo-800 font-semibold py-2 px-4 rounded">📘 공략집</button>
     </div>
 
-    <iframe
-      id="calcFrame"
-      src="building.html"
-      class="w-full border rounded invisible"
-      style="min-height: 100px;"
-      onload="onIframeLoad()"
-    ></iframe>
+    <!-- 계산기 콘텐츠가 들어올 영역 -->
+    <div id="content" class="transition-all duration-300 ease-in-out"></div>
   </div>
 
-  <!-- 팝업 모달 -->
+  <!-- 공용 팝업 -->
   <div id="globalPopupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 mx-2">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 mx-4">
       <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
       <div id="globalPopupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
       <div class="text-center mt-4">
@@ -68,112 +32,219 @@
     </div>
   </div>
 
+  <footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
+
   <script>
-    function onIframeLoad() {
-      const frame = document.getElementById("calcFrame");
-      frame.classList.remove("invisible");
-      frame.style.opacity = 1;
-    }
-    
-    function isMobile() {
-      return window.innerWidth <= 768;
-    }
-  </script>
-   
-  <script>
-    function switchTab(tab) {
-      const frame = document.getElementById("calcFrame");
-      const tabMap = {
-        building: "building.html",
-        gem: "gem.html",
-        equip: "equip.html",
-        hero: "hero.html",
-        pet: "pet.html",
-        guide: "guide.html",
-        gift: "https://wos-giftcode.centurygame.com/"
-      };
-      
-      // 프레임 src 및 높이 설정
-      frame.style.opacity = 0; // 사라지게 처리
-      setTimeout(() => {
-        frame.src = tabMap[tab];
-        frame.style.height = {
-          building: isMobile() ? "720px" : "485px",
-          gem:      isMobile() ? "995px" : "955px",
-          equip:    isMobile() ? "680px" : "485px",
-          hero:     isMobile() ? "995px" : "955px",          
-          pet:      isMobile() ? "680px" : "485px",
-          //guide:    isMobile() ? "2100px" : "1800px",
-          gift: "1000px",
-        }[tab];
-      }, 200);
-      
+    async function switchTab(page, button) {
+      // 탭 스타일 초기화
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300', 'bg-pink-300', 'bg-indigo-300', 'bg-slate-300');
-        btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800', 'text-pink-300', 'text-indigo-800','text-slate-800');
+        btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300', 'bg-indigo-300');
+        btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800', 'text-indigo-800');
         btn.classList.add('bg-gray-200', 'text-gray-800');
       });
 
-      const colorMap = {
-        building: ['bg-blue-300', 'text-blue-800'],
-        gem: ['bg-purple-300', 'text-purple-800'],
-        equip: ['bg-green-300', 'text-green-800'],
-        hero: ['bg-yellow-300', 'text-yellow-800'],
-        pet: ['bg-pink-300', 'text-pink-800'],
-        guide: ['bg-slate-300','text-slate-800'],
-        gift: ['bg-indigo-300', 'text-indigo-800'],
-      };
+      // 현재 탭에 색 적용
+      button.classList.remove('bg-gray-200', 'text-gray-800');
+      if (page.includes('building')) button.classList.add('bg-blue-300', 'text-blue-800');
+      else if (page.includes('gem')) button.classList.add('bg-purple-300', 'text-purple-800');
+      else if (page.includes('equip') && !page.includes('hero')) button.classList.add('bg-green-300', 'text-green-800');
+      else if (page.includes('hero')) button.classList.add('bg-yellow-300', 'text-yellow-800');
+      else if (page.includes('guide')) button.classList.add('bg-indigo-300', 'text-indigo-800');
 
-      const activeBtn = {
-        building: 0,
-        gem: 1,
-        equip: 2,
-        hero: 3,
-        pet: 4,
-        guide:5,
-        gift: 6,
-      }[tab];
+      // 외부 HTML fetch 후 삽입
+      const res = await fetch(page);
+      const text = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, "text/html");
+      const inner = doc.body.innerHTML;
+      document.getElementById("content").innerHTML = inner;
 
-      const btns = document.querySelectorAll('.tab-btn');
-      btns[activeBtn].classList.remove('bg-gray-200', 'text-gray-800');
-      btns[activeBtn].classList.add(...colorMap[tab]);
+      // 스크립트 재실행
+      const scripts = doc.querySelectorAll("script");
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        document.getElementById("content").appendChild(newScript);
+      });
     }
-  </script>
-   
-  <script>
-    window.addEventListener("message", function (event) {
-      const frame = document.getElementById("calcFrame");
-      
-      if (event.data && event.data.iframeHeight) {
-        frame.style.height = event.data.iframeHeight + "px";
-      }
-      
-      if (event.data?.type === "RESULT_POPUP") {
-        document.getElementById("globalPopupContent").innerHTML = event.data.html;
+
+    // iframe 방식에서 쓰던 팝업 연결 유지
+    window.addEventListener("message", function (e) {
+      if (e.data?.type === "RESULT_POPUP") {
+        document.getElementById("globalPopupContent").innerHTML = e.data.html;
         document.getElementById("globalPopupModal").classList.remove("hidden");
       }
-
-      if (event.data?.type === "LOADED") {
-        frame.style.opacity = 1;
-      }
     });
 
-    window.onload = () => switchTab('building');
+    // 기본 탭 로딩
+    window.onload = () => {
+      const defaultBtn = document.querySelector(".tab-btn");
+      if (defaultBtn) defaultBtn.click();
+    };
   </script>
-  
-  <script>
-    document.addEventListener("contextmenu", event => event.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" ||
-          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S")))
-      {
-        e.preventDefault();
-      }
-    });
-  </script>
-  
-  <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 및 배포 금지 | © By S574 ShinChan</footer>
-  
 </body>
 </html>
+
+<div id="content">
+<div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-5">
+<h1 class="text-2xl font-bold text-blue-600 mb-4">🏗️ 건물별 레벨별 자원 계산기</h1>
+<form class="space-y-6" id="calcForm">
+<table class="w-full table-auto border border-gray-300">
+<thead class="bg-blue-100">
+<tr>
+<th class="p-2 border">건물</th>
+<th class="p-2 border">선택</th>
+<th class="p-2 border">현재 레벨</th>
+<th class="p-2 border">목표 레벨</th>
+</tr>
+</thead>
+<tbody id="buildingTable"></tbody>
+</table>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div>
+<label class="block font-semibold">보유 불수정</label>
+<input class="w-full border rounded p-2" id="owned-불수정" placeholder="숫자 입력" type="number"/>
+</div>
+<div>
+<label class="block font-semibold">보유 정제</label>
+<input class="w-full border rounded p-2" id="owned-정제" placeholder="숫자 입력" type="number"/>
+</div>
+</div>
+<button class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600" onclick="calculateAll()" type="button">
+        계산하기
+      </button>
+<div class="mt-6 overflow-x-auto" id="resultContainer"></div>
+</form>
+</div>
+<script>
+    const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
+    const buildings = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
+    const buildingTable = document.getElementById("buildingTable");
+    const resultContainer = document.getElementById("resultContainer");
+
+    async function fetchLevelList(building) {
+      const url = `https://opensheet.elk.sh/${sheetID}/${building}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.map(d => d.레벨).filter(Boolean);
+    }
+
+    async function populateTable() {
+      const sampleLevels = await fetchLevelList(buildings[0]);
+      buildings.forEach((b, i) => {
+        const options = sampleLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+        buildingTable.innerHTML += `
+          <tr class="text-center">
+            <td class="border p-2">${b}</td>
+            <td class="border p-2">
+              <input type="checkbox" id="check-${i}" class="accent-blue-500 w-5 h-5">
+            </td>
+            <td class="border p-2">
+              <select id="cur-${i}" class="border rounded px-2 py-1">${options}</select>
+            </td>
+            <td class="border p-2">
+              <select id="tgt-${i}" class="border rounded px-2 py-1">${options}</select>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function fetchData(building) {
+      const url = `https://opensheet.elk.sh/${sheetID}/${building}`;
+      const res = await fetch(url);
+      return await res.json();
+    }
+
+    function round1(value) {
+      return Math.round((value + Number.EPSILON) * 10) / 10;
+    }
+
+    async function calculateAll() {
+      const owned = {
+        불수정: parseFloat(document.getElementById("owned-불수정").value) || 0,
+        정제: parseFloat(document.getElementById("owned-정제").value) || 0
+      };
+      const grandTotal = { 불수정: 0, 정제: 0, 고기: 0, 나무: 0, 석탄: 0, 철광: 0 };
+      const resultRows = [];
+
+      for (let i = 0; i < buildings.length; i++) {
+        if (!document.getElementById(`check-${i}`).checked) continue;
+        const building = buildings[i];
+        const cur = document.getElementById(`cur-${i}`).value;
+        const tgt = document.getElementById(`tgt-${i}`).value;
+        const data = await fetchData(building);
+        const levels = data.map(d => d.레벨);
+        const curIndex = levels.indexOf(cur);
+        const tgtIndex = levels.indexOf(tgt);
+        if (curIndex === -1 || tgtIndex === -1 || curIndex >= tgtIndex) {
+          resultRows.push(`<tr><td class='border p-2 text-center' colspan='8'>⚠️ ${building}: 잘못된 레벨 설정</td></tr>`);
+          continue;
+        }
+
+        const subtotal = { 불수정: 0, 정제: 0, 고기: 0, 나무: 0, 석탄: 0, 철광: 0 };
+        for (let j = curIndex + 1; j <= tgtIndex; j++) {
+          const row = data[j];
+          for (const key in subtotal) {
+            subtotal[key] += parseFloat(row[key] || 0);
+            grandTotal[key] += parseFloat(row[key] || 0);
+          }
+        }
+
+        resultRows.push(`
+          <tr class="text-center">
+            <td class="border p-2">${building}</td>
+            <td class="border p-2">${cur} → ${tgt}</td>
+            <td class="border p-2">${round1(subtotal.불수정)}</td>
+            <td class="border p-2">${round1(subtotal.정제)}</td>
+            <td class="border p-2">${round1(subtotal.고기)}</td>
+            <td class="border p-2">${round1(subtotal.나무)}</td>
+            <td class="border p-2">${round1(subtotal.석탄)}</td>
+            <td class="border p-2">${round1(subtotal.철광)}</td>
+          </tr>
+        `);
+      }
+
+      resultContainer.innerHTML = `
+        <table class="w-full table-auto border mt-4 text-sm text-center">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-1">건물</th>
+              <th class="border p-1">레벨</th>
+              <th class="border p-1">불수정</th>
+              <th class="border p-1">정제</th>
+              <th class="border p-1">고기</th>
+              <th class="border p-1">나무</th>
+              <th class="border p-1">석탄</th>
+              <th class="border p-1">철광</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${resultRows.join("")}
+            <tr class="font-bold bg-blue-100">
+              <td class="border p-1" colspan="2">총합</td>
+              <td class="border p-1">${grandTotal.불수정.toLocaleString()}</td>
+              <td class="border p-1">${grandTotal.정제.toLocaleString()}</td>
+              <td class="border p-1">${grandTotal.고기.toLocaleString()}</td>
+              <td class="border p-1">${grandTotal.나무.toLocaleString()}</td>
+              <td class="border p-1">${grandTotal.석탄.toLocaleString()}</td>
+              <td class="border p-1">${grandTotal.철광.toLocaleString()}</td>
+            </tr>
+            <tr class="font-bold bg-red-100">
+              <td class="border p-1" colspan="2">과부족</td>
+              <td class="border p-1">${(owned.불수정 - grandTotal.불수정).toLocaleString()}</td>
+              <td class="border p-1">${(owned.정제 - grandTotal.정제).toLocaleString()}</td>
+              <td class="border p-1" colspan="4"></td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
+
+    populateTable();
+  </script>
+</div>
