@@ -48,24 +48,25 @@
 
   <script>
     const sheetId = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
-    const sheetName = "건물자원";
     const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
+    const resourceKeys = ["불수정", "정제", "고기", "나무", "석탄", "철광"];
     let buildingData = {};
 
     async function fetchBuildingData() {
-      const url = `https://opensheet.elk.sh/${sheetId}/${sheetName}`;
-      const res = await fetch(url);
-      const data = await res.json();
-
-      data.forEach(row => {
-        const name = row["건물"];
-        if (!buildingList.includes(name)) return;
-        const levels = Object.keys(row)
-          .filter(k => k.startsWith("Lv"))
-          .map(k => parseInt(row[k]) || 0);
-        buildingData[name] = levels;
+      const promises = buildingList.map(async (name) => {
+        const url = `https://opensheet.elk.sh/${sheetId}/${name}`;
+        const res = await fetch(url);
+        const rows = await res.json();
+        buildingData[name] = rows.map(row => {
+          const entry = {};
+          resourceKeys.forEach(key => {
+            entry[key] = parseInt(row[key]) || 0;
+          });
+          return entry;
+        });
       });
 
+      await Promise.all(promises);
       renderBuildings();
     }
 
@@ -81,11 +82,11 @@
           </label>
           <div class="flex gap-2 mt-1">
             <select id="start-${name}" class="flex-1 border rounded p-1">
-              ${levels.map((_, i) => `<option value="${i + 1}">${i + 1}레벨</option>`).join('')}
+              ${levels.map((_, i) => `<option value="${i}">${i + 1}레벨</option>`).join('')}
             </select>
             <span class="self-center">→</span>
             <select id="end-${name}" class="flex-1 border rounded p-1">
-              ${levels.map((_, i) => `<option value="${i + 1}">${i + 1}레벨</option>`).join('')}
+              ${levels.map((_, i) => `<option value="${i}">${i + 1}레벨</option>`).join('')}
             </select>
           </div>
         `;
@@ -95,20 +96,42 @@
 
     function calculateAll() {
       let result = "";
-      let total = 0;
+      let total = {};
+      resourceKeys.forEach(key => total[key] = 0);
 
       buildingList.forEach(name => {
         const checked = document.getElementById(`check-${name}`).checked;
         const start = parseInt(document.getElementById(`start-${name}`).value);
         const end = parseInt(document.getElementById(`end-${name}`).value);
+
         if (checked && end > start) {
-          const sum = buildingData[name].slice(start, end).reduce((a, b) => a + b, 0);
-          result += `<p><strong>${name}</strong> (${start}→${end}) ➜ 누적 자원: ${sum}</p>`;
-          total += sum;
+          const range = buildingData[name].slice(start, end);
+          const subtotal = {};
+          resourceKeys.forEach(key => subtotal[key] = 0);
+
+          range.forEach(row => {
+            resourceKeys.forEach(key => {
+              subtotal[key] += row[key];
+              total[key] += row[key];
+            });
+          });
+
+          result += `<p><strong>${name}</strong> (${start + 1} → ${end + 1}) → ` +
+            resourceKeys.map(key => `${key}: ${subtotal[key]}`).join(', ') + `</p>`;
         }
       });
 
-      result += `<hr class="my-2"><p><strong>총 필요 자원:</strong> ${total}</p>`;
+      result += `<hr class='my-2' />`;
+      resourceKeys.forEach(key => {
+        if (key === "불수정" || key === "정제") {
+          const owned = parseInt(document.getElementById(`owned-${key}`)?.value) || 0;
+          const 부족 = total[key] - owned;
+          result += `<p><strong>총 필요 ${key}:</strong> ${total[key]} (${부족 > 0 ? `부족 ${부족}` : "충분"})</p>`;
+        } else {
+          result += `<p><strong>총 필요 ${key}:</strong> ${total[key]}</p>`;
+        }
+      });
+
       document.getElementById("popupContent").innerHTML = result;
       document.getElementById("popupModal").classList.remove("hidden");
     }
