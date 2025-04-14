@@ -35,10 +35,43 @@
 
   <!-- 콘텐츠 영역 -->
   <div id="content" class="w-full max-w-6xl bg-gray-50 p-6 rounded-xl shadow-inner">
+    
+    <!-- iframe 영역 -->
+    <div class="max-w-6xl mx-auto border rounded shadow bg-white">
+      <iframe
+        id="calcFrame"
+        class="w-full border rounded invisible"
+        style="min-height: 100px;"
+        src="menu.html"
+        frameborder="0"
+        onload="onIframeLoad()"
+        ></iframe>
+    </div>
+    
+    <!-- 팝업 모달 -->
+    <div id="globalPopupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 mx-2">
+        <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+        <div id="globalPopupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
+        <div class="text-center mt-4">
+          <button onclick="document.getElementById('globalPopupModal').classList.add('hidden')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+        </div>
+      </div>
+    </div>
+
+
+    
     <p class="text-gray-400 text-center">페이지를 불러오는 중입니다...</p>
+    
   </div>
 
   <script>
+    function onIframeLoad() {
+      const frame = document.getElementById("calcFrame");
+      frame.classList.remove("invisible");
+      frame.style.opacity = 1;
+    }
+    
     function loadPage(page) {
       fetch(page)
         .then(response => {
@@ -56,6 +89,21 @@
     // 페이지 처음 로드 시 menu.html 자동 로딩
     window.addEventListener('DOMContentLoaded', () => {
       loadPage('menu.html');
+    });
+
+    // 💡 삽입된 스크립트 태그 수동 실행 처리
+      content.querySelectorAll("script").forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        oldScript.replaceWith(newScript);
+      });
+    })
+    .catch(error => {
+      document.getElementById('content').innerHTML = `<p class="text-red-500 text-center">${error.message}</p>`;
     });
   </script>
 </body>
