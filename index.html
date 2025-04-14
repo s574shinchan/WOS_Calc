@@ -3,187 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOS 통합 계산기 | S574 ShinChan</title>
+  <title>WOS 계산기 메인</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    #calcFrame {
-      transition: height 0.3s ease, opacity 0.3s ease;
-      opacity: 0;
-    }
-    body {
-      background-image: url('images/watermark.png');
-      background-repeat: repeat;
-      background-position: center;
-      background-size: auto;
-      background-attachment: fixed;
-      background-color: #f3f3f3;
-      overflow-x: hidden;
-      margin: 0;
+    @media (max-width: 767px) {
+      body { display: none; }
     }
   </style>
 </head>
-<body class="bg-gray-100 p-6 font-sans">
-  <div class="max-w-6xl mx-auto">
-    <div class="mb-4 flex flex-wrap gap-2 justify-start">
-      <button onclick="switchTab('menu')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🏗 Menu
-      </button>
-      <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🏗 건물
-      </button>
-      <button onclick="switchTab('gem')" class="tab-btn bg-gray-200 text-purple-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        💎 영주보석
-      </button>
-      <button onclick="switchTab('equip')" class="tab-btn bg-gray-200 text-green-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🛡 영주장비
-      </button>
-      <button onclick="switchTab('hero')" class="tab-btn bg-gray-200 text-yellow-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🧝 영웅장비
-      </button>
-      <button onclick="switchTab('pet')" class="tab-btn bg-gray-200 text-pink-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🐾 펫돌파
-      </button>
-      <button onclick="switchTab('guide')" class="tab-btn bg-gray-200 text-slate-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        📘 자료모음
-      </button>
-      <button onclick="switchTab('gift')" class="tab-btn bg-gray-200 text-indigo-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        🎁 교환코드입력
-      </button>
-    </div>
-    
-    <!-- iframe 영역 -->
-    <div class="max-w-6xl mx-auto border rounded shadow bg-white">
-      <iframe
-        id="calcFrame"
-        class="w-full border rounded invisible"
-        style="min-height: 100px;"
-        src="menu.html"
-        frameborder="0"
-        onload="onIframeLoad()"
-      ></iframe>
+<body class="bg-white font-sans p-6 min-h-screen flex flex-col items-center justify-center">
+
+  <!-- 로고 -->
+  <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" alt="로고" class="w-72 mb-6 drop-shadow-lg" />
+
+  <!-- 문구 -->
+  <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기</h1>
+
+  <!-- 버튼 영역 -->
+  <div class="flex flex-wrap gap-4 mb-6">
+    <button onclick="loadPage('menu.html')" class="bg-blue-600 text-white px-4 py-2 rounded shadow">📋 메뉴</button>
+    <button onclick="loadPage('building.html')" class="bg-green-600 text-white px-4 py-2 rounded shadow">🏗 건물</button>
+    <button onclick="loadPage('gem.html')" class="bg-purple-600 text-white px-4 py-2 rounded shadow">💎 영주보석</button>
+    <button onclick="loadPage('equip.html')" class="bg-yellow-600 text-white px-4 py-2 rounded shadow">🛡 영주장비</button>
+    <button onclick="loadPage('hero.html')" class="bg-yellow-600 text-white px-4 py-2 rounded shadow">🧝 영웅장비</button>
+    <button onclick="loadPage('pet.html')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🐾 펫돌파</button>
+    <button onclick="loadPage('guide.html')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">📘 자료모음</button>
+    <button onclick="loadPage('https://wos-giftcode.centurygame.com/')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🎁 교환코드입력</button>    
   </div>
 
-  <!-- 팝업 모달 -->
-  <div id="globalPopupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 mx-2">
-      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
-      <div id="globalPopupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
-      <div class="text-center mt-4">
-        <button onclick="document.getElementById('globalPopupModal').classList.add('hidden')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
-      </div>
-    </div>
+  <!-- 콘텐츠 영역 -->
+  <div id="content" class="w-full max-w-6xl bg-gray-50 p-6 rounded-xl shadow-inner">
+    <p class="text-gray-400 text-center">페이지를 불러오는 중입니다...</p>
   </div>
 
   <script>
-    function onIframeLoad() {
-      const frame = document.getElementById("calcFrame");
-      frame.classList.remove("invisible");
-      frame.style.opacity = 1;
+    function loadPage(page) {
+      fetch(page)
+        .then(response => {
+          if (!response.ok) throw new Error('파일을 불러올 수 없습니다.');
+          return response.text();
+        })
+        .then(html => {
+          document.getElementById('content').innerHTML = html;
+        })
+        .catch(error => {
+          document.getElementById('content').innerHTML = `<p class="text-red-500 text-center">${error.message}</p>`;
+        });
     }
-    
-    function isMobile() {
-      return window.innerWidth <= 768;
-    }
-  </script>
-   
-  <script>
-    function switchTab(tab) {
-      const frame = document.getElementById("calcFrame");
-      const tabMap = {
-        menu: "menu.html",
-        building: "building.html",
-        gem: "gem.html",
-        equip: "equip.html",
-        hero: "hero.html",
-        pet: "pet.html",
-        guide: "guide.html",
-        gift: "https://wos-giftcode.centurygame.com/"
-      };
-      
-      // 프레임 src 및 높이 설정
-      frame.style.opacity = 0; // 사라지게 처리
-      setTimeout(() => {
-        frame.src = tabMap[tab];
-        frame.style.height = {
-          menu: "1000px",
-          building: isMobile() ? "720px" : "485px",
-          gem:      isMobile() ? "995px" : "955px",
-          equip:    isMobile() ? "720px" : "565px",
-          hero:     isMobile() ? "995px" : "955px",          
-          pet:      isMobile() ? "680px" : "485px",
-          //guide:    isMobile() ? "2100px" : "1800px",
-          gift: "1000px",
-        }[tab];
-      }, 200);
-      
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300', 'bg-pink-300', 'bg-indigo-300', 'bg-slate-300');
-        btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800', 'text-pink-300', 'text-indigo-800','text-slate-800');
-        btn.classList.add('bg-gray-200', 'text-gray-800');
-      });
 
-      const colorMap = {
-        menu: ['bg-blue-300', 'text-blue-800'],
-        building: ['bg-blue-300', 'text-blue-800'],
-        gem: ['bg-purple-300', 'text-purple-800'],
-        equip: ['bg-green-300', 'text-green-800'],
-        hero: ['bg-yellow-300', 'text-yellow-800'],
-        pet: ['bg-pink-300', 'text-pink-800'],
-        guide: ['bg-slate-300','text-slate-800'],
-        gift: ['bg-indigo-300', 'text-indigo-800'],
-      };
-
-      const activeBtn = {
-        menu: 0,
-        building: 1,
-        gem: 2,
-        equip: 3,
-        hero: 4,
-        pet: 5,
-        guide: 6,
-        gift: 7,
-      }[tab];
-
-      const btns = document.querySelectorAll('.tab-btn');
-      btns[activeBtn].classList.remove('bg-gray-200', 'text-gray-800');
-      btns[activeBtn].classList.add(...colorMap[tab]);
-    }
-  </script>
-   
-  <script>
-    window.addEventListener("message", function (event) {
-      const frame = document.getElementById("calcFrame");
-      
-      if (event.data && event.data.iframeHeight) {
-        frame.style.height = event.data.iframeHeight + "px";
-      }
-      
-      if (event.data?.type === "RESULT_POPUP") {
-        document.getElementById("globalPopupContent").innerHTML = event.data.html;
-        document.getElementById("globalPopupModal").classList.remove("hidden");
-      }
-
-      if (event.data?.type === "LOADED") {
-        frame.style.opacity = 1;
-      }
-    });
-
-    window.onload = () => switchTab('building');
-  </script>
-  
-  <script>
-    document.addEventListener("contextmenu", event => event.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" ||
-          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S")))
-      {
-        e.preventDefault();
-      }
+    // 페이지 처음 로드 시 menu.html 자동 로딩
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPage('menu.html');
     });
   </script>
-  
-  <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 및 배포 금지 | © By S574 ShinChan</footer>
-  
 </body>
 </html>
