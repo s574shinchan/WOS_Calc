@@ -49,7 +49,7 @@
         buildingData[name] = rows.map(row => {
           const entry = {};
           Object.keys(row).forEach(key => {
-            if (key !== "레벨") resourceKeys.add(key);
+            if (key && key !== "레벨") resourceKeys.add(key);
             entry[key] = key === "레벨" ? row[key] : (parseInt(row[key]) || 0);
           });
           return entry;
@@ -155,6 +155,7 @@
       function formatValue(value) {
         if (value >= 1_000_000_000) return `${Math.ceil(value / 100_000_000) / 10}B`;
         if (value >= 1_000_000) return `${Math.ceil(value / 100_000) / 10}M`;
+        if (value >= 1_000) return value.toLocaleString();
         return value;
       }
       
