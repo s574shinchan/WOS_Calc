@@ -50,11 +50,12 @@
         document.getElementById("mainFrame").style.height = event.data.height + "px";
         
         if (event.data.target === "guide.html") {
-          contentWrapper.classList.remove("max-w-xl mx-auto bg-white p-4 rounded shadow flex justify-center");
-          contentWrapper.classList.add("max-w-6xl mx-auto bg-white p-4 rounded shadow flex justify-center");
+          contentWrapper.classList.remove("max-w-xl");
+          contentWrapper.classList.add("max-w-6xl");
+          document.getElementById("mainFrame").style.weigth ="100%";
         } else {
-          contentWrapper.classList.remove("max-w-6xl mx-auto bg-white p-4 rounded shadow flex justify-center");
-          contentWrapper.classList.add("max-w-xl mx-auto bg-white p-4 rounded shadow flex justify-center");
+          contentWrapper.classList.remove("max-w-6xl");
+          contentWrapper.classList.add("max-w-xl");
         }
       }
       
