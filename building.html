@@ -56,13 +56,19 @@
 
         const lines = text.trim().split("n");
         const headers = lines[0].split(",").map(h => h.trim());
+        const levelIndex = headers.findIndex(h => h.replace(/\s/g, '') === '레벨');
+        if (levelIndex === -1) {
+          console.error("❌ '레벨' 컬럼을 찾을 수 없습니다.");
+          return;
+        }
         resourceKeys = new Set([...resourceKeys, ...headers.filter(h => h !== "레벨")]);
 
         buildingData[name] = lines.slice(1).map(line => {
           const values = line.split(",");
           const row = {};
           headers.forEach((key, i) => {
-            row[key] = key === "레벨" ? values[i] : parseInt(values[i]) || 0;
+            const cleanKey = key.trim();
+            row[cleanKey] = cleanKey === "레벨" ? values[i] : parseInt(values[i]) || 0;
           });
           return row;
         });
