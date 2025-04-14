@@ -3,11 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOS 계산기 메인</title>
+  <title>WOS 통합 계산기 & 정보모음</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @media (max-width: 767px) {
       body { display: none; }
+    }
+    #calcFrame {
+      transition: height 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    body {
+      background-image: url('images/watermark.png');
+      background-repeat: repeat;
+      background-position: center;
+      background-size: auto;
+      background-attachment: fixed;
+      background-color: #f3f3f3;
+      overflow-x: hidden;
+      margin: 0;
     }
   </style>
 </head>
@@ -17,19 +31,7 @@
   <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" alt="로고" class="w-72 mb-6 drop-shadow-lg" />
 
   <!-- 문구 -->
-  <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기</h1>
-
-  <!-- 버튼 영역 -->
-  <div class="flex flex-wrap gap-4 mb-6">
-    <button onclick="loadPage('menu.html')" class="bg-blue-600 text-white px-4 py-2 rounded shadow">📋 메뉴</button>
-    <button onclick="loadPage('building.html')" class="bg-green-600 text-white px-4 py-2 rounded shadow">🏗 건물</button>
-    <button onclick="loadPage('gem.html')" class="bg-purple-600 text-white px-4 py-2 rounded shadow">💎 영주보석</button>
-    <button onclick="loadPage('equip.html')" class="bg-yellow-600 text-white px-4 py-2 rounded shadow">🛡 영주장비</button>
-    <button onclick="loadPage('hero.html')" class="bg-yellow-600 text-white px-4 py-2 rounded shadow">🧝 영웅장비</button>
-    <button onclick="loadPage('pet.html')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🐾 펫돌파</button>
-    <button onclick="loadPage('guide.html')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">📘 자료모음</button>
-    <button onclick="loadPage('https://wos-giftcode.centurygame.com/')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🎁 교환코드입력</button>    
-  </div>
+  <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기 & 정보모음</h1>
 
   <!-- 콘텐츠 영역 -->
   <div id="content" class="w-full max-w-6xl bg-gray-50 p-6 rounded-xl shadow-inner">
