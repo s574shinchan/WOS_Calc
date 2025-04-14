@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WOS 계산기 메인</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media (max-width: 767px) {
+      body { display: none; }
+    }
+  </style>
+</head>
+<body class="bg-white font-sans p-6 min-h-screen flex flex-col items-center justify-center">
+
+  <!-- 로고 -->
+  <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/0dc4892a27e3b5cab48121becbe68eb6742d84af/images/logo.png" alt="로고" class="w-72 mb-6 drop-shadow-lg" />
+
+  <!-- 문구 -->
+  <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기 & 정보모음</h1>
+
+  <!-- 버튼들 -->
+  <div class="space-y-4 w-full max-w-xs">
+    <a href="index.html?page=building" class="block text-center border py-3 font-bold hover:bg-gray-100">건물 계산기</a>
+    <a href="index.html?page=gem" class="block text-center border py-3 font-bold hover:bg-gray-100">영주 보석</a>
+    <a href="index.html?page=equip" class="block text-center border py-3 font-bold hover:bg-gray-100">영주 장비</a>
+    <a href="index.html?page=hero" class="block text-center border py-3 font-bold hover:bg-gray-100">영웅 장비</a>
+  </div>
+</body>
+</html>
