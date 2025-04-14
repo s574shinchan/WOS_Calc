@@ -37,11 +37,27 @@
     ></iframe>
   </div>
   
+  <!-- 팝업 HTML -->
+  <div id="globalPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 max-w-5xl w-full shadow-lg max-h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-bold text-center mb-4">계산 결과</h2>
+      <div id="globalPopupContent" class="overflow-x-auto text-sm"></div>
+      <div class="text-center mt-4">
+        <button onclick="closeGlobalPopup()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">닫기</button>
+      </div>
+    </div>
+  </div>
+  
   <!-- 카피라이트 -->  
   <footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
   
   <script>
     window.addEventListener("message", function (event) {
+      if (event.data.type === "BUILDING_RESULT") {
+        const html = event.data.html;
+        document.getElementById("globalPopupContent").innerHTML = html;
+        document.getElementById("globalPopup").classList.remove("hidden");
+      }
       
       if (event.data.type === "NAVIGATE_TO") {
         document.getElementById("mainFrame").src = event.data.target;
@@ -56,6 +72,10 @@
         }
       }
     });
+    
+    function closeGlobalPopup() {
+      document.getElementById("globalPopup").classList.add("hidden");
+    }
   </script>
   <script>
 
