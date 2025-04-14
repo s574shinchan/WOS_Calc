@@ -33,6 +33,18 @@
     ></iframe>
   
   <script>
+    function onIframeLoad() {
+      const frame = document.getElementById("calcFrame");
+      frame.classList.remove("invisible");
+      frame.style.opacity = 1;
+    }
+    
+    function isMobile() {
+      return window.innerWidth <= 768;
+    }
+  </script>
+  
+  <script>
     function loadPage(filename) {
       const frame = document.getElementById('calcFrame');
       frame.src = filename;
