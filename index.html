@@ -3,41 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOS 통합 계산기 & 정보모음</title>
+  <title>WOS 계산기 메인</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    body {
+      background-image: url('https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/watermark.png'); /* 워터마크 이미지 */
+      background-size: 300px;
+      background-repeat: repeat;
+      background-position: center;
+      background-attachment: fixed;
+      background-color: #f8f8f8;
+    }
     @media (max-width: 767px) {
       body { display: none; }
     }
-    #calcFrame {
-      transition: height 0.3s ease, opacity 0.3s ease;
-      opacity: 0;
-    }
-    body {
-      background-image: url('images/watermark.png');
-      background-repeat: repeat;
-      background-position: center;
-      background-size: auto;
-      background-attachment: fixed;
-      background-color: #f3f3f3;
-      overflow-x: hidden;
-      margin: 0;
-    }
   </style>
 </head>
-<body class="bg-gray-100 font-sans p-6 min-h-screen flex flex-col items-center justify-center">
+<body class="font-sans p-6 min-h-screen flex flex-col items-center justify-start">
 
   <!-- 로고 -->
-  <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/95447be6c73345e0bc61d395a4db4cd0116de8ac/images/logo.png" alt="로고" class="w-72 mb-6 drop-shadow-lg" />
+  <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" alt="로고" class="w-72 mb-6 drop-shadow-lg" />
 
-  <!-- 문구 -->
-  <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기 & 정보모음</h1>
+  <!-- 제목 -->
+  <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기</h1>
 
   <!-- 콘텐츠 영역 -->
-  <div id="content" class="w-full max-w-6xl bg-gray-50 p-6 rounded-xl shadow-inner">
+  <div id="content" class="w-full max-w-6xl bg-white bg-opacity-90 p-6 rounded-xl shadow-inner min-h-[300px]">
     <p class="text-gray-400 text-center">페이지를 불러오는 중입니다...</p>
   </div>
 
+  <!-- 카피라이트 -->
+  <footer class="mt-10 text-center text-xs text-gray-500">
+    ⛔ 무단 복제 및 배포 금지 | © 2025 By S574 ShinChan
+  </footer>
+
+  <!-- JavaScript 로직 -->
   <script>
     function loadPage(page) {
       fetch(page)
@@ -48,8 +48,8 @@
         .then(html => {
           const content = document.getElementById('content');
           content.innerHTML = html;
-    
-          // ✅ menu.html일 경우에만 menu.js를 동적으로 로딩
+
+          // menu.html일 경우 menu.js를 동적으로 로딩
           if (page === 'menu.html') {
             const script = document.createElement('script');
             script.src = 'menu.js';
@@ -62,14 +62,10 @@
             `<p class="text-red-500 text-center">${error.message}</p>`;
         });
     }
-    
-    window.addEventListener("DOMContentLoaded", () => {
-      loadPage("menu.html");
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPage('menu.html');
     });
   </script>
-
-  
-  <footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
-  
 </body>
 </html>
