@@ -39,12 +39,6 @@
   </div>
 
   <script>
-    function onIframeLoad() {
-      const frame = document.getElementById("calcFrame");
-      frame.classList.remove("invisible");
-      frame.style.opacity = 1;
-    }
-    
     function loadPage(page) {
       fetch(page)
         .then(response => {
