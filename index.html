@@ -39,38 +39,9 @@
   </div>
 
   <script>
-    function loadPage(page) {
-      fetch(page)
-        .then(response => {
-          if (!response.ok) throw new Error('파일을 불러올 수 없습니다.');
-          return response.text();
-        })
-        .then(html => {
-          document.getElementById('content').innerHTML = html;
-        })
-        .catch(error => {
-          document.getElementById('content').innerHTML = `<p class="text-red-500 text-center">${error.message}</p>`;
-        });
-    }
-
     // 페이지 처음 로드 시 menu.html 자동 로딩
     window.addEventListener('DOMContentLoaded', () => {
       loadPage('menu.html');
-    });
-
-    // 💡 삽입된 스크립트 태그 수동 실행 처리
-      content.querySelectorAll("script").forEach(oldScript => {
-        const newScript = document.createElement("script");
-        if (oldScript.src) {
-          newScript.src = oldScript.src;
-        } else {
-          newScript.textContent = oldScript.textContent;
-        }
-        oldScript.replaceWith(newScript);
-      });
-    })
-    .catch(error => {
-      document.getElementById('content').innerHTML = `<p class="text-red-500 text-center">${error.message}</p>`;
     });
   </script>
 </body>
