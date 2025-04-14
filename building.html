@@ -105,50 +105,59 @@
     }
 
     function calculateAll() {
-      let result = "<table class='w-full table-auto border text-sm text-center'><thead><tr><th class='border p-1'>건물</th>";
+      let total = {};
+      resourceKeys.forEach(key => total[key] = 0);
+    
+      let result = "<table class='w-full table-auto border text-sm text-center'>";
+      result += "<thead class='bg-blue-100'><tr><th class='border p-1'>건물</th><th class='border p-1'>레벨</th>";
       resourceKeys.forEach(key => {
         result += `<th class='border p-1'>${key}</th>`;
       });
       result += "</tr></thead><tbody>";
-      
-      let total = {};
-      resourceKeys.forEach(key => total[key] = 0);
-
+    
       buildingList.forEach(name => {
         const checked = document.getElementById(`check-${name}`).checked;
         const start = parseInt(document.getElementById(`start-${name}`).value);
         const end = parseInt(document.getElementById(`end-${name}`).value);
+        const levels = buildingData[name] || [];
+    
         if (checked && end > start) {
-          const range = buildingData[name].slice(start, end);
+          const levelKey = Object.keys(levels[0] || {}).find(k => k.includes("레벨")) || "레벨";
+          const startLabel = levels[start][levelKey] || `Lv${start + 1}`;
+          const endLabel = levels[end][levelKey] || `Lv${end + 1}`;
+          const range = levels.slice(start, end);
+    
           const subtotal = {};
           resourceKeys.forEach(key => subtotal[key] = 0);
+    
           range.forEach(row => {
             resourceKeys.forEach(key => {
-              subtotal[key] += row[key];
-              total[key] += row[key];
+              const val = row[key] ?? 0;
+              subtotal[key] += val;
+              total[key] += val;
             });
           });
-          result += `<tr><td class='border p-1'>${name}</td>` +
-            resourceKeys.map(key => `<td class='border p-1'>${formatValue(subtotal[key])}</td>`).join('') +
-            "</tr>"; 
-        }
-
-        // 👉 천 단위 넘을 경우 B 표기로 변환
-        function formatValue(value) {
-          if (value >= 1000) {
-            return `${Math.ceil(value / 100) / 10}B`;  // 올림 후 소수 1자리
-          }
-          return `${value}M`;
+    
+          result += `<tr><td class='border p-1 font-medium'>${name}</td><td class='border p-1 text-xs'>${startLabel} → ${endLabel}</td>`;
+          resourceKeys.forEach(key => {
+            result += `<td class='border p-1'>${formatValue(subtotal[key])}</td>`;
+          });
+          result += "</tr>";
         }
       });
       
-      result += `<tr class='font-bold bg-blue-100'><td class='border p-1'>총합계</td>`;
+      result += `<tr class='font-bold bg-blue-100'><td class='border p-1'>총합계</td><td class='border p-1'></td>`;
       resourceKeys.forEach(key => {
-        result += `<td class='border p-1'>${total[key]}</td>`;
+        result += `<td class='border p-1'>${formatValue(total[key])}</td>`;
       });
       result += "</tr></tbody></table>";
+
+      function formatValue(value) {
+        if (value >= 1_000_000_000) return `${Math.ceil(value / 100_000_000) / 10}B`;
+        if (value >= 1_000_000) return `${Math.ceil(value / 100_000) / 10}M`;
+        return value;
+      }
       
-      // 👉 부모에게 메시지로 전달
       window.parent.postMessage({ type: "BUILDING_RESULT", html: result }, "*");
     }
 
