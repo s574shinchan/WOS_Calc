@@ -21,7 +21,6 @@
         <div><label class="block font-semibold">보유 매뉴얼</label><input type="number" id="own-매뉴얼" class="w-full border rounded p-2" /></div>
         <div><label class="block font-semibold">보유 도면</label><input type="number" id="own-도면" class="w-full border rounded p-2" /></div>
         <div><label class="block font-semibold">보유 비전</label><input type="number" id="own-비전" class="w-full border rounded p-2" /></div>
-        <div><label class="block font-semibold">보유 설계도</label><input type="number" id="own-설계도" class="w-full border rounded p-2" /></div>
       </div>
       <button type="button" onclick="calculateGems()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">계산하기</button>
     </form>
@@ -115,13 +114,11 @@
           subtotal.매뉴얼 += parseFloat(row["매뉴얼"] || 0);
           subtotal.도면 += parseFloat(row["도면"] || 0);
           subtotal.비전 += parseFloat(row["비전"] || 0);
-          subtotal.설계도 += parseFloat(row["설계도"] || 0);
         }
 
         total.매뉴얼 += subtotal.매뉴얼;
         total.도면 += subtotal.도면;
         total.비전 += subtotal.비전;
-        total.설계도 += subtotal.설계도;
 
         rows += `
           <tr class="text-center">
@@ -130,7 +127,6 @@
             <td class="border p-1">${subtotal.매뉴얼.toLocaleString()}</td>
             <td class="border p-1">${subtotal.도면.toLocaleString()}</td>
             <td class="border p-1">${subtotal.비전.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.설계도.toLocaleString()}</td>
           </tr>
         `;
       }
@@ -139,7 +135,6 @@
         매뉴얼: parseFloat(document.getElementById("own-매뉴얼").value) || 0,
         도면: parseFloat(document.getElementById("own-도면").value) || 0,
         비전: parseFloat(document.getElementById("own-비전").value) || 0,
-        설계도: parseFloat(document.getElementById("own-설계도").value) || 0,
       };
 
       rows += `
@@ -148,14 +143,12 @@
           <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
           <td class="border p-1">${total.도면.toLocaleString()}</td>
           <td class="border p-1">${total.비전.toLocaleString()}</td>
-          <td class="border p-1">${total.설계도.toLocaleString()}</td>
         </tr>
         <tr class="text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">과부족</td>
           <td class="border p-1">${(owned.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
           <td class="border p-1">${(owned.도면 - total.도면).toLocaleString()}</td>
           <td class="border p-1">${(owned.비전 - total.비전).toLocaleString()}</td>
-          <td class="border p-1">${(owned.설계도 - total.설계도).toLocaleString()}</td>
         </tr>
       `;
 
@@ -168,7 +161,6 @@
               <th class="border p-1">매뉴얼</th>
               <th class="border p-1">도면</th>
               <th class="border p-1">비전</th>
-              <th class="border p-1">설계도</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
