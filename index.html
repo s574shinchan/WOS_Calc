@@ -25,9 +25,6 @@
 <body class="bg-gray-100 p-6 font-sans">
   <div class="max-w-6xl mx-auto">
     <div class="mb-4 flex flex-wrap gap-2 justify-start">
-      <button onclick="switchTab('main')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
-        📑 메인메뉴
-      </button>
       <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
         🏗 건물
       </button>
@@ -57,7 +54,7 @@
         id="calcFrame"
         class="w-full border rounded invisible"
         style="min-height: 100px;"
-        src=""
+        src="building.html"
         frameborder="0"
         onload="onIframeLoad()"
       ></iframe>
@@ -90,7 +87,6 @@
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
       const tabMap = {
-        mian: "main.html",
         building: "building.html",
         gem: "gem.html",
         equip: "equip.html",
@@ -105,7 +101,6 @@
       setTimeout(() => {
         frame.src = tabMap[tab];
         frame.style.height = {
-          main: "1000px",
           building: isMobile() ? "720px" : "485px",
           gem:      isMobile() ? "995px" : "955px",
           equip:    isMobile() ? "680px" : "485px",
@@ -123,7 +118,6 @@
       });
 
       const colorMap = {
-        main: ['bg-blue-300', 'text-blue-800'],
         building: ['bg-blue-300', 'text-blue-800'],
         gem: ['bg-purple-300', 'text-purple-800'],
         equip: ['bg-green-300', 'text-green-800'],
@@ -134,14 +128,13 @@
       };
 
       const activeBtn = {
-        main: 0,
-        building: 1,
-        gem: 2,
-        equip: 3,
-        hero: 4,
-        pet: 5,
-        guide:6,
-        gift: 7,
+        building: 0,
+        gem: 1,
+        equip: 2,
+        hero: 3,
+        pet: 4,
+        guide: 5,
+        gift: 6,
       }[tab];
 
       const btns = document.querySelectorAll('.tab-btn');
@@ -151,14 +144,6 @@
   </script>
    
   <script>
-    // URL 파라미터에서 ?page=xxx 값을 가져옴
-    const urlParams = new URLSearchParams(window.location.search);
-    const page = urlParams.get("page") || "main"; // 기본값은 main.html
-
-    // iframe에 해당 html 파일 로딩
-    const frame = document.getElementById("calcFrame");
-    frame.src = page + ".html";
-  
     window.addEventListener("message", function (event) {
       const frame = document.getElementById("calcFrame");
       
@@ -176,7 +161,7 @@
       }
     });
 
-    window.onload = () => switchTab('main');
+    window.onload = () => switchTab('building');
   </script>
   
   <script>
