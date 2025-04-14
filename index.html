@@ -39,7 +39,31 @@
   </div>
 
   <script>
-    // 페이지 처음 로드 시 menu.html 자동 로딩
+    function loadPage(page) {
+      fetch(page)
+        .then(response => {
+          if (!response.ok) throw new Error(`${page} 파일을 불러올 수 없습니다.`);
+          return response.text();
+        })
+        .then(html => {
+          const content = document.getElementById('content');
+          content.innerHTML = html;
+  
+          // menu.html일 경우 menu.js 추가 로드
+          if (page === 'menu.html') {
+            const script = document.createElement('script');
+            script.src = 'menu.js';
+            script.defer = true;
+            document.body.appendChild(script);
+          }
+        })
+        .catch(error => {
+          document.getElementById('content').innerHTML =
+            `<p class="text-red-500 text-center">${error.message}</p>`;
+        });
+    }
+  
+    // 처음 로드 시 menu.html 자동 호출
     window.addEventListener('DOMContentLoaded', () => {
       loadPage('menu.html');
     });
