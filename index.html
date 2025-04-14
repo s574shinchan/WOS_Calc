@@ -41,6 +41,7 @@
     window.addEventListener("message", function (event) {
       if (event.data.type === "NAVIGATE_TO") {
         document.getElementById("mainFrame").src = event.data.target;
+        document.getElementById("mainFrame").style.height = event.data.height + "px";
       }
     });
   </script>
