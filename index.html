@@ -26,7 +26,7 @@
   <!-- 문구 -->
   <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기 & 정보모음</h1>
   
-  <div id="content" class="max-w-xl mx-auto bg-white p-4 rounded shadow flex justify-center">
+  <div id="content" class="mx-auto bg-white p-4 rounded shadow flex justify-center">
     <iframe 
       id="mainFrame" 
       src="menu.html" 
@@ -36,27 +36,16 @@
       sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
     ></iframe>
   </div>
-
   
   <!-- 카피라이트 -->  
   <footer class="text-center text-xs text-gray-500 mt-10">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
   
   <script>
     window.addEventListener("message", function (event) {
-      const contentWrapper = document.getElementById("content");
       
       if (event.data.type === "NAVIGATE_TO") {
         document.getElementById("mainFrame").src = event.data.target;
         document.getElementById("mainFrame").style.height = event.data.height + "px";
-        
-        if (event.data.target === "guide.html") {
-          contentWrapper.classList.remove("max-w-xl");
-          contentWrapper.classList.add("max-w-6xl");
-          document.getElementById("mainFrame").style.weigth ="100%";
-        } else {
-          contentWrapper.classList.remove("max-w-6xl");
-          contentWrapper.classList.add("max-w-xl");
-        }
       }
       
       if (event.data.iframeHeight) {
@@ -69,15 +58,7 @@
     });
   </script>
   <script>
-  // 최초 로드 시
-  window.addEventListener("load", adjustIframeWidth);
 
-  // src 속성 변경 감지
-  const observer = new MutationObserver(adjustIframeWidth);
-  observer.observe(document.getElementById("mainFrame"), {
-    attributes: true,
-    attributeFilter: ["src"]
-  });
-</script>
+  </script>
 </body>
 </html>
