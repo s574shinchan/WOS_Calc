@@ -43,13 +43,24 @@
   
   <script>
     window.addEventListener("message", function (event) {
+      const contentWrapper = document.getElementById("content");
+      
       if (event.data.type === "NAVIGATE_TO") {
         document.getElementById("mainFrame").src = event.data.target;
         document.getElementById("mainFrame").style.height = event.data.height + "px";
+        
+        if (event.data.target === "guide.html") {
+          contentWrapper.classList.remove("max-w-xl");
+          contentWrapper.classList.add("max-w-6xl");
+        } else {
+          contentWrapper.classList.remove("max-w-6xl");
+          contentWrapper.classList.add("max-w-xl");
+        }
       }
       
       if (event.data.iframeHeight) {
         const frame = document.getElementById("mainFrame");
+
         if (frame && frame.style.height !== event.data.iframeHeight + "px") {
           frame.style.height = event.data.iframeHeight + "px";
         }
@@ -57,21 +68,6 @@
     });
   </script>
   <script>
-  function adjustIframeWidth() {
-    const iframe = document.getElementById("mainFrame");
-    if (!iframe) return;
-
-    const src = iframe.src;
-
-    if (src.includes("guide.html")) {
-      iframe.style.width = "1200px"; // 더 넓게
-    } else {
-      iframe.style.maxWidth = "900px"; // 기본값
-    }
-    
-    console.log("📏 iframe 너비:", iframe.offsetWidth + "px", "(src:", src + ")");
-  }
-
   // 최초 로드 시
   window.addEventListener("load", adjustIframeWidth);
 
