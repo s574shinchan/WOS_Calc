@@ -56,5 +56,29 @@
       }
     });
   </script>
+  <script>
+  function adjustIframeWidth() {
+    const iframe = document.getElementById("mainFrame");
+    if (!iframe) return;
+
+    const src = iframe.src;
+
+    if (src.includes("guide.html")) {
+      iframe.style.maxWidth = "1200px"; // 더 넓게
+    } else {
+      iframe.style.maxWidth = "900px"; // 기본값
+    }
+  }
+
+  // 최초 로드 시
+  window.addEventListener("load", adjustIframeWidth);
+
+  // src 속성 변경 감지
+  const observer = new MutationObserver(adjustIframeWidth);
+  observer.observe(document.getElementById("mainFrame"), {
+    attributes: true,
+    attributeFilter: ["src"]
+  });
+</script>
 </body>
 </html>
