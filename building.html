@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,26 +11,21 @@
     }
   </style>
 </head>
-
 <body class="bg-gray-100 p-4 font-sans text-sm">
   <div class="max-w-6xl mx-auto bg-white p-4 md:p-6 rounded-xl shadow-md">
-    <!-- 뒤로가기 버튼 -->
     <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
       <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
       </svg>
       메뉴로 돌아가기
     </button>
-
     <h1 class="text-2xl font-bold text-blue-600 mb-4 text-center">🏗️ 건물 계산기</h1>
     <form id="calcForm" class="space-y-4">
-      <div id="buildingGridBody" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-      <div id="ownedInputArea" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"></div>
+      <div id="buildingGridBody" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+      <div id="ownedInputArea" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
       <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 text-lg">계산하기</button>
     </form>
   </div>
-
-  <!-- 팝업 모달 -->
   <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center px-4 sm:px-0 hidden z-50">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-4 md:p-6 max-h-[90vh] overflow-y-auto">
       <h3 class="text-xl font-bold mb-4 text-center">계산 결과</h3>
@@ -41,7 +35,6 @@
       </div>
     </div>
   </div>
-
   <script>
     const sheetId = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
     const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
@@ -54,12 +47,14 @@
         const res = await fetch(url);
         const rows = await res.json();
         if (rows.length > 0) {
-          Object.keys(rows[0]).forEach(key => resourceKeys.add(key));
+          Object.keys(rows[0]).forEach(key => {
+            if (key !== "레벨") resourceKeys.add(key);
+          });
         }
         buildingData[name] = rows.map(row => {
           const entry = {};
           Object.keys(row).forEach(key => {
-            entry[key] = parseInt(row[key]) || 0;
+            entry[key] = (key === "레벨") ? row[key] : (parseInt(row[key]) || 0);
           });
           return entry;
         });
@@ -92,17 +87,21 @@
       buildingList.forEach(name => {
         const levels = buildingData[name] || [];
         const div = document.createElement("div");
+        div.className = "bg-pink-50 border border-pink-200 rounded-xl p-4 shadow";
         div.innerHTML = `
-          <label class="block font-semibold mb-1">
-            <input type="checkbox" id="check-${name}" class="mr-2" />${name}
+          <label class="block font-bold mb-2">
+            <input type="checkbox" id="check-${name}" class="mr-2 align-middle" />${name}
           </label>
-          <div class="flex gap-2 mt-1">
-            <select id="start-${name}" class="flex-1 border rounded p-1">
-              ${levels.map((_, i) => `<option value="${i}">${i + 1}레벨</option>`).join('')}
+          <div class="mb-1">
+            <label class="text-sm font-medium">현재 레벨</label>
+            <select id="start-${name}" class="w-full border rounded p-1 mt-1">
+              ${levels.map((row, i) => `<option value="${i}">${row["레벨"] || i + 1}</option>`).join('')}
             </select>
-            <span class="self-center">→</span>
-            <select id="end-${name}" class="flex-1 border rounded p-1">
-              ${levels.map((_, i) => `<option value="${i}">${i + 1}레벨</option>`).join('')}
+          </div>
+          <div>
+            <label class="text-sm font-medium">목표 레벨</label>
+            <select id="end-${name}" class="w-full border rounded p-1 mt-1">
+              ${levels.map((row, i) => `<option value="${i}">${row["레벨"] || i + 1}</option>`).join('')}
             </select>
           </div>
         `;
@@ -165,5 +164,4 @@
     fetchBuildingData();
   </script>
 </body>
-
 </html>
