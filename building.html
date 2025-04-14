@@ -129,8 +129,16 @@
             });
           });
           result += `<tr><td class='border p-1'>${name}</td>` +
-            resourceKeys.map(key => `<td class='border p-1'>${subtotal[key]}</td>`).join('') +
+            resourceKeys.map(key => `<td class='border p-1'>${formatNumber(subtotal[key])}</td>`).join('') +
             "</tr>";
+        }
+
+        // 👉 천 단위 넘을 경우 B 표기로 변환
+        function formatValue(value) {
+          if (value >= 1000) {
+            return `${Math.ceil(value / 100) / 10}B`;  // 올림 후 소수 1자리
+          }
+          return `${value}M`;
         }
       });
       
@@ -139,15 +147,9 @@
         result += `<td class='border p-1'>${total[key]}</td>`;
       });
       result += "</tr></tbody></table>";
-
-      ownedResources.forEach(key => {
-        const owned = parseInt(document.getElementById(`owned-${key}`)?.value) || 0;
-        const 부족 = total[key] - owned;
-        result += `<p class="mt-2"><strong>${key}:</strong> 보유 ${owned} / 필요 ${total[key]} → ${부족 > 0 ? `부족 ${부족}` : "충분"}</p>`;
-      });
-
-      document.getElementById("popupContent").innerHTML = result;
-      document.getElementById("popupModal").classList.remove("hidden");
+      
+      // 👉 부모에게 메시지로 전달
+      window.parent.postMessage({ type: "BUILDING_RESULT", html: result }, "*");
     }
 
     function closePopup() {
