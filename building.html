@@ -157,11 +157,6 @@
       window.location.href = page;
     }
 
-    function sendHeightToParent() {
-      const height = document.documentElement.scrollHeight + 5;
-      window.parent.postMessage({ iframeHeight: height }, "*");
-    }
-
     window.addEventListener("resize", sendHeightToParent);
 
     fetchBuildingData();
