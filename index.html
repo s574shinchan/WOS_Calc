@@ -50,6 +50,13 @@
         document.getElementById("mainFrame").src = event.data.target;
         document.getElementById("mainFrame").style.height = event.data.height + "px";
       }
+      
+      if (event.data.iframeHeight) {
+        const frame = document.getElementById("mainFrame");
+        if (frame && frame.style.height !== event.data.iframeHeight + "px") {
+          frame.style.height = event.data.iframeHeight + "px";
+        }
+      }
     });
   </script>
 </body>
