@@ -1,77 +1,31 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOS 계산기 메인</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @media (max-width: 767px) {
-      body { display: none; }
-    }
-  </style>
-</head>
-<body class="bg-gray-100 font-sans p-6 min-h-screen flex flex-col items-center justify-center">
-
+<!-- menu.html -->
+<div class="space-y-4">
+  <h2 class="text-2xl font-bold text-center text-indigo-700 mb-4">📋 메뉴 선택</h2>
+  
   <!-- 버튼 영역 -->
   <div class="flex flex-col sm:flex-row flex-wrap gap-4 mb-6 justify-center">
-    <button onclick="loadPage('building.html')" class="bg-green-600 text-white px-4 py-2 rounded shadow">🏗 건물</button>
-    <button onclick="loadPage('gem.html')" class="bg-purple-600 text-white px-4 py-2 rounded shadow">💎 영주보석</button>
-    <button onclick="loadPage('equip.html')" class="bg-yellow-600 text-white px-4 py-2 rounded shadow">🛡 영주장비</button>
-    <button onclick="loadPage('hero.html')" class="bg-yellow-600 text-white px-4 py-2 rounded shadow">🧝 영웅장비</button>
-    <button onclick="loadPage('pet.html')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🐾 펫돌파</button>
-    <button onclick="loadPage('guide.html')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">📘 자료모음</button>
-    <button onclick="loadPage('https://wos-giftcode.centurygame.com/')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🎁 교환코드입력</button>    
+    <button class="menu-btn bg-blue-600 text-white px-4 py-3 rounded-xl shadow w-full" data-target="building.html">
+      🏗 건　물
+    </button>
+    <button class="menu-btn bg-purple-600 text-white px-4 py-3 rounded-xl shadow w-full" data-target="gem.html">
+      💎 영주보석
+    </button>
+    <button class="menu-btn bg-green-500 text-white px-4 py-3 rounded-xl shadow w-full" data-target="equip.html">
+      🛡 영주장비
+    </button>
+    <button class="menu-btn bg-yellow-500 text-white px-4 py-3 rounded-xl shadow w-full" data-target="hero.html">
+      🧝 영웅장비
+    </button>
+    <button class="menu-btn bg-pink-500 text-white px-4 py-3 rounded-xl shadow w-full" data-target="pet.html">
+      🐾 펫돌파
+    </button>
+    <button class="menu-btn bg-slate-500 text-white px-4 py-3 rounded-xl shadow w-full" data-target="guide.html">
+      📘 자료모음
+    </button>
+    <button class="menu-btn bg-indigo-500 text-white px-4 py-3 rounded-xl shadow w-full" data-target="https://wos-giftcode.centurygame.com/">
+      🎁 교환코드입력
+    </button>  
   </div>
   
-  <script>
-    function loadPage(page) {
-      fetch(page)
-        .then(response => {
-          if (!response.ok) throw new Error(`${page} 파일을 불러올 수 없습니다.`);
-          return response.text();
-        })
-        .then(html => {
-          const content = document.getElementById('content');
-          content.innerHTML = html;
-    
-          // 삽입된 스크립트 태그 수동 실행
-          content.querySelectorAll("script").forEach(oldScript => {
-            const newScript = document.createElement("script");
-            if (oldScript.src) {
-              newScript.src = oldScript.src;
-            } else {
-              newScript.textContent = oldScript.textContent;
-            }
-            oldScript.replaceWith(newScript);
-          });
-        })
-        .catch(error => {
-          document.getElementById('content').innerHTML = `<p class="text-red-500 text-center">${error.message}</p>`;
-        });
-    }
-  </script>
-
-  <script>
-    window.addEventListener("message", function (event) {
-      const frame = document.getElementById("calcFrame");
-      
-      if (event.data && event.data.iframeHeight) {
-        frame.style.height = event.data.iframeHeight + "px";
-      }
-      
-      if (event.data?.type === "RESULT_POPUP") {
-        document.getElementById("globalPopupContent").innerHTML = event.data.html;
-        document.getElementById("globalPopupModal").classList.remove("hidden");
-      }
-
-      if (event.data?.type === "LOADED") {
-        frame.style.opacity = 1;
-      }
-    });
-  </script>
-
-  <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 및 배포 금지 | © By S574 ShinChan</footer>
-  
-</body>
-</html>
+  <p class="text-sm text-center text-gray-500 mt-6">원하는 계산기를 선택하세요.</p>
+</div>
