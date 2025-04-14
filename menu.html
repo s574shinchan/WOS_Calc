@@ -22,7 +22,7 @@
   </div>
   <script>
     const frameHeights = {
-      "building.html": "1100px",
+      "building.html": "1500px",
       "gem.html":      "1125px",
       "equip.html":    "650px",
       "hero.html":     "550px",
@@ -32,7 +32,7 @@
     document.querySelectorAll(".menu-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const target = btn.getAttribute("data-target");
-        const height = frameHeights[target] || 900;
+        const height = frameHeights[target] || 800;
         window.parent.postMessage({ type: "NAVIGATE_TO", target }, "*");
       });
     });
