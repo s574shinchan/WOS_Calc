@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>장비 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+    <h2 class="text-2xl font-bold text-purple-600 mb-4">🛡️ 장비 계산기</h2>
+    <form id="gearForm" class="space-y-6">
+      <div id="gearTableBody" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+        <div><label class="block font-semibold">보유 합금</label><input type="number" id="own-합금" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 달빛앰버면</label><input type="number" id="own-설계도면" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 광택제</label><input type="number" id="own-광택제" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 달빛앰버</label><input type="number" id="own-앰버" class="w-full border rounded p-2" /></div>
+      </div>
+      <button type="button" onclick="calculateGear()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">계산하기</button>
+    </form>
+  </div>
+
+  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
+      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+      <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
+      <div class="text-center mt-4">
+        <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/2035550da1ab0e8d4601e86c972415b02f568709/data/chief/Gear.csv';
+    const gearSlots = [
+      "무기A", "무기B", "무기C", "무기D", "무기E", "무기F",
+      "방어구A", "방어구B", "방어구C", "방어구D", "방어구E", "방어구F",
+      "장신구A", "장신구B", "장신구C", "장신구D", "장신구E", "장신구F"
+    ];
+    let gearLevels = [];
+    let gearData = [];
+
+    async function fetchCSVData() {
+      const response = await fetch(csvUrl);
+      const csvText = await response.text();
+      const lines = csvText.trim().split('n');
+      const headers = lines[0].split(',');
+      gearData = lines.slice(1).map(line => {
+        const values = line.split(',');
+        const entry = {};
+        headers.forEach((header, index) => {
+          entry[header] = values[index];
+        });
+        return entry;
+      });
+      gearLevels = gearData.map(d => d["레벨"]);
+    }
+
+    async function createGearUI() {
+      await fetchCSVData();
+      const grid = document.getElementById("gearTableBody");
+      gearSlots.forEach((slot, i) => {
+        const options = gearLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+        grid.innerHTML += `
+          <div class="border p-2 rounded bg-purple-50 text-xs">
+            <label class="flex items-center text-sm font-semibold mb-1">
+              <input type="checkbox" id="gear-check-${i}" class="mr-1 w-4 h-4 accent-purple-500" />
+              ${slot}
+            </label>
+            <select id="gear-cur-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
+            <select id="gear-tgt-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
+          </div>
+        `;
+      });
+    }
+
+    function closePopup() {
+      document.getElementById("popupModal").classList.add("hidden");
+    }
+
+    function showPopup(html) {
+      document.getElementById("popupContent").innerHTML = html;
+      document.getElementById("popupModal").classList.remove("hidden");
+    }
+
+    function calculateGear() {
+      let total = { 합금: 0, 설계도면: 0, 광택제: 0, 설계도: 0 };
+      let rows = "";
+
+      for (let i = 0; i < gearSlots.length; i++) {
+        if (!document.getElementById(`gear-check-${i}`).checked) continue;
+
+        const cur = document.getElementById(`gear-cur-${i}`).value;
+        const tgt = document.getElementById(`gear-tgt-${i}`).value;
+        const start = gearLevels.indexOf(cur);
+        const end = gearLevels.indexOf(tgt);
+
+        if (start === -1 || end === -1 || start >= end) {
+          rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${gearSlots[i]}: 잘못된 레벨 선택</td></tr>`;
+          continue;
+        }
+
+        const subtotal = { 합금: 0, 설계도면: 0, 광택제: 0, 설계도: 0 };
+
+        for (let j = start + 1; j <= end; j++) {
+          const row = gearData[j];
+          subtotal.합금 += parseFloat(row["합금"] || 0);
+          subtotal.설계도면 += parseFloat(row["설계도면"] || 0);
+          subtotal.광택제 += parseFloat(row["광택제"] || 0);
+          subtotal.설계도 += parseFloat(row["앰버"] || 0);
+        }
+
+        total.합금 += subtotal.합금;
+        total.설계도면 += subtotal.설계도면;
+        total.광택제 += subtotal.광택제;
+        total.설계도 += subtotal.설계도;
+
+        rows += `
+          <tr class="text-center">
+            <td class="border p-1">${gearSlots[i]}</td>
+            <td class="border p-1">${cur} → ${tgt}</td>
+            <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.설계도.toLocaleString()}</td>
+          </tr>
+        `;
+      }
+
+      const owned = {
+        합금: parseFloat(document.getElementById("own-합금").value) || 0,
+        설계도면: parseFloat(document.getElementById("own-설계도면").value) || 0,
+        광택제: parseFloat(document.getElementById("own-광택제").value) || 0,
+        설계도: parseFloat(document.getElementById("own-앰버").value) || 0,
+      };
+
+      rows += `
+        <tr class="text-center font-bold bg-purple-100">
+          <td class="border p-1" colspan="2">총합</td>
+          <td class="border p-1">${total.합금.toLocaleString()}</td>
+          <td class="border p-1">${total.설계도면.toLocaleString()}</td>
+          <td class="border p-1">${total.광택제.toLocaleString()}</td>
+          <td class="border p-1">${total.설계도.toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">과부족</td>
+          <td class="border p-1">${(owned.합금 - total.합금).toLocaleString()}</td>
+          <td class="border p-1">${(owned.설계도면 - total.설계도면).toLocaleString()}</td>
+          <td class="border p-1">${(owned.광택제 - total.광택제).toLocaleString()}</td>
+          <td class="border p-1">${(owned.설계도 - total.설계도).toLocaleString()}</td>
+        </tr>
+      `;
+
+      const resultHTML = `
+        <table class="w-full table-auto border text-sm text-center mt-4">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-1">슬롯</th>
+              <th class="border p-1">레벨</th>
+              <th class="border p-1">합금</th>
+              <th class="border p-1">설계도면</th>
+              <th class="border p-1">광택제</th>
+              <th class="border p-1">설계도</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      showPopup(resultHTML);
+    }
+
+    createGearUI();
+  </script>
+</body>
+</html>
