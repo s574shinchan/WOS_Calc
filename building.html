@@ -54,7 +54,7 @@
         const res = await fetch(url);
         const text = await res.text();
 
-        const lines = text.trim().split("n");
+        const lines = text.trim().split("\n");
         const headers = lines[0].split(",").map(h => h.trim());
         const levelIndex = headers.findIndex(h => h.replace(/\s/g, '') === '레벨');
         if (levelIndex === -1) {
