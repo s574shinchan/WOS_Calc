@@ -50,14 +50,17 @@
         🎁 교환코드입력
       </button>
     </div>
-
-    <iframe
-      id="calcFrame"
-      src="main.html"
-      class="w-full border rounded invisible"
-      style="min-height: 100px;"
-      onload="onIframeLoad()"
-    ></iframe>
+    
+    <!-- iframe 영역 -->
+    <div class="max-w-6xl mx-auto border rounded shadow bg-white">
+      <iframe
+        id="calcFrame"
+        class="w-full border rounded invisible"
+        style="min-height: 100px;"
+        src=""
+        frameborder="0"
+        onload="onIframeLoad()"
+      ></iframe>
   </div>
 
   <!-- 팝업 모달 -->
@@ -148,6 +151,14 @@
   </script>
    
   <script>
+    // URL 파라미터에서 ?page=xxx 값을 가져옴
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get("page") || "main"; // 기본값은 main.html
+
+    // iframe에 해당 html 파일 로딩
+    const frame = document.getElementById("contentFrame");
+    frame.src = page + ".html";
+  
     window.addEventListener("message", function (event) {
       const frame = document.getElementById("calcFrame");
       
