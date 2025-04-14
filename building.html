@@ -129,7 +129,7 @@
             });
           });
           result += `<tr><td class='border p-1'>${name}</td>` +
-            resourceKeys.map(key => `<td class='border p-1'>${formatNumber(subtotal[key])}</td>`).join('') +
+            resourceKeys.map(key => `<td class='border p-1'>${formatValue(subtotal[key])}</td>`).join('') +
             "</tr>"; 
         }
 
