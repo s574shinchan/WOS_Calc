@@ -6,10 +6,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-white p-6 font-sans">
-  <div class="space-y-6 text-center">
+  <div class="text-center space-y-6">
     <h2 class="text-3xl font-bold text-indigo-700 mb-6">📌 메뉴 선택</h2>
     <div class="flex flex-col items-center gap-4">
-      <button class="menu-btn bg-blue-600 text-white px-6 py-3 rounded-xl shadow w-72" data-target="building.html">🏗 건물계산기</button>
+      <button class="menu-btn bg-blue-600 text-white px-6 py-3 rounded-xl shadow w-72" data-target="building.html">🏗 건물계산</button>
       <button class="menu-btn bg-purple-600 text-white px-6 py-3 rounded-xl shadow w-72" data-target="gem.html">💎 영주보석</button>
       <button class="menu-btn bg-green-600 text-white px-6 py-3 rounded-xl shadow w-72" data-target="equip.html">🛡 영주장비</button>
       <button class="menu-btn bg-yellow-500 text-white px-6 py-3 rounded-xl shadow w-72" data-target="hero.html">🧝 영웅장비</button>
@@ -19,14 +19,11 @@
       <button onclick="window.open('https://wos-giftcode.centurygame.com/')" class="mt-2 text-blue-600 underline">🎁 교환코드 입력하기</button>
     </div>
   </div>
-
   <script>
     document.querySelectorAll(".menu-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const target = btn.getAttribute("data-target");
-        if (target) {
-          window.parent.postMessage({ type: "NAVIGATE_TO", target }, "*");
-        }
+        window.parent.postMessage({ type: "NAVIGATE_TO", target }, "*");
       });
     });
   </script>
