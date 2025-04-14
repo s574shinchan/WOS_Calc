@@ -44,14 +44,5 @@
       }
     });
   </script>
-  <script>
-    window.addEventListener("message", function (event) {
-      if (event.data.type === "NAVIGATE_TO") {
-        document.getElementById("mainFrame").src = event.data.target;
-      } else if (event.data.type === "HEIGHT_UPDATE") {
-        document.getElementById("mainFrame").style.height = event.data.height + "px";
-      }
-    });
-  </script>
 </body>
 </html>
