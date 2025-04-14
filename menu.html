@@ -12,19 +12,33 @@
   </style>
 </head>
 <body class="bg-white font-sans p-6 min-h-screen flex flex-col items-center justify-center">
-
-  <!-- 로고 -->
-  <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/0dc4892a27e3b5cab48121becbe68eb6742d84af/images/logo.png" alt="로고" class="w-72 mb-6 drop-shadow-lg" />
-
-  <!-- 문구 -->
-  <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기 & 정보모음</h1>
-
-  <!-- 버튼들 -->
-  <div class="space-y-4 w-full max-w-xs">
-    <a href="index.html?page=building" class="block text-center border py-3 font-bold hover:bg-gray-100">건물 계산기</a>
-    <a href="index.html?page=gem" class="block text-center border py-3 font-bold hover:bg-gray-100">영주 보석</a>
-    <a href="index.html?page=equip" class="block text-center border py-3 font-bold hover:bg-gray-100">영주 장비</a>
-    <a href="index.html?page=hero" class="block text-center border py-3 font-bold hover:bg-gray-100">영웅 장비</a>
+  
+  <!-- 버튼 영역 -->
+  <div class="flex flex-wrap gap-4 mb-6">
+    <button onclick="loadPage('menu.html')" class="bg-blue-600 text-white px-4 py-2 rounded shadow">📋 메뉴</button>
+    <button onclick="loadPage('building.html')" class="bg-green-600 text-white px-4 py-2 rounded shadow">🏗 건물</button>
+    <button onclick="loadPage('gem.html')" class="bg-purple-600 text-white px-4 py-2 rounded shadow">💎 영주보석</button>
+    <button onclick="loadPage('equip.html')" class="bg-yellow-600 text-white px-4 py-2 rounded shadow">🛡 영주장비</button>
+    <button onclick="loadPage('hero.html')" class="bg-yellow-600 text-white px-4 py-2 rounded shadow">🧝 영웅장비</button>
+    <button onclick="loadPage('pet.html')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🐾 펫돌파</button>
+    <button onclick="loadPage('guide.html')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">📘 자료모음</button>
+    <button onclick="loadPage('https://wos-giftcode.centurygame.com/')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🎁 교환코드입력</button>    
   </div>
+  
+  <script>
+    function loadPage(page) {
+      fetch(page)
+        .then(response => {
+          if (!response.ok) throw new Error('파일을 불러올 수 없습니다.');
+          return response.text();
+        })
+        .then(html => {
+          document.getElementById('content').innerHTML = html;
+        })
+        .catch(error => {
+          document.getElementById('content').innerHTML = `<p class="text-red-500 text-center">${error.message}</p>`;
+        });
+    }
+  </script>
 </body>
 </html>
