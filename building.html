@@ -160,13 +160,5 @@
 
     fetchBuildingData();
   </script>
-  <script>
-    function sendHeightToParent() {
-      const height = document.documentElement.scrollHeight;
-      window.parent.postMessage({ type: "HEIGHT_UPDATE", height }, "*");
-    }
-    window.addEventListener("load", sendHeightToParent);
-    window.addEventListener("resize", sendHeightToParent);
-  </script>
 </body>
 </html>
