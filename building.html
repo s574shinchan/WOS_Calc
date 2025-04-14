@@ -22,22 +22,10 @@
     </form>
   </div>
 
-  <!-- 결과 팝업 -->
-  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-lg p-6 max-w-4xl w-full shadow-lg max-h-[90vh] overflow-y-auto">
-      <h2 class="text-xl font-bold text-center mb-4">계산 결과</h2>
-      <div id="popupContent" class="overflow-x-auto text-sm"></div>
-      <div class="text-center mt-4">
-        <button onclick="closePopup()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">닫기</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     const sheetId = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
     const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
     const ownedResources = ["불수정", "정제"];
-    const displayOnlyResources = ["고기", "나무", "석탄", "철광"];
     let resourceKeys = new Set();
     let buildingData = {};
 
@@ -55,11 +43,12 @@
           return entry;
         });
       });
-      
+
       await Promise.all(promises);
       resourceKeys = Array.from(resourceKeys).filter(key => key !== "레벨");
       renderBuildings();
       renderOwnedInputs();
+      sendHeightToParent();
     }
 
     function renderOwnedInputs() {
@@ -74,70 +63,79 @@
         ownedArea.appendChild(div);
       });
     }
-    
+
     function renderBuildings() {
       const grid = document.getElementById("buildingGridBody");
       grid.innerHTML = "";
       buildingList.forEach(name => {
         const levels = buildingData[name] || [];
-        const levelKey = Object.keys(levels[0] || {}).find(k => k.includes("레벨")) || "레벨";
+        const levelKey = levels.length > 0
+          ? (Object.keys(levels[0]).find(k => k.includes("레벨")) || "레벨")
+          : "레벨";
         const div = document.createElement("div");
         div.className = "bg-blue-50 border border-blue-200 rounded-xl p-4 shadow";
         div.innerHTML = `
         <label class="block font-bold mb-2">
-        <input type="checkbox" id="check-${name}" class="mr-2 align-middle" />${name}
+          <input type="checkbox" id="check-${name}" class="mr-2 align-middle" />${name}
         </label>
         <div class="mb-2">
-        <label class="text-sm font-medium">현재 레벨</label>
-        <select id="start-${name}" class="w-full border rounded p-1 mt-1">
-        ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
-        </select>
+          <label class="text-sm font-medium">현재 레벨</label>
+          <select id="start-${name}" class="w-full border rounded p-1 mt-1">
+            ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
+          </select>
         </div>
         <div>
-        <label class="text-sm font-medium">목표 레벨</label>
-        <select id="end-${name}" class="w-full border rounded p-1 mt-1">
-        ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
-        </select>
+          <label class="text-sm font-medium">목표 레벨</label>
+          <select id="end-${name}" class="w-full border rounded p-1 mt-1">
+            ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
+          </select>
         </div>
         `;
         grid.appendChild(div);
       });
     }
 
+    function formatValue(value) {
+      if (value >= 1_000_000_000) return `${Math.ceil(value / 100_000_000) / 10}B`;
+      if (value >= 1_000_000) return `${Math.ceil(value / 100_000) / 10}M`;
+      if (value >= 1000) return value.toLocaleString();
+      return value;
+    }
+
     function calculateAll() {
       let total = {};
       resourceKeys.forEach(key => total[key] = 0);
-    
+
       let result = "<table class='w-full table-auto border text-sm text-center'>";
       result += "<thead class='bg-blue-100'><tr><th class='border p-1'>건물</th><th class='border p-1'>레벨</th>";
       resourceKeys.forEach(key => {
         result += `<th class='border p-1'>${key}</th>`;
       });
       result += "</tr></thead><tbody>";
-    
+
       buildingList.forEach(name => {
         const checked = document.getElementById(`check-${name}`).checked;
         const start = parseInt(document.getElementById(`start-${name}`).value);
         const end = parseInt(document.getElementById(`end-${name}`).value);
         const levels = buildingData[name] || [];
-    
+
         if (checked && end > start) {
           const levelKey = Object.keys(levels[0] || {}).find(k => k.includes("레벨")) || "레벨";
           const startLabel = levels[start][levelKey] || `Lv${start + 1}`;
           const endLabel = levels[end][levelKey] || `Lv${end + 1}`;
           const range = levels.slice(start, end);
-    
+
           const subtotal = {};
           resourceKeys.forEach(key => subtotal[key] = 0);
-    
+
           range.forEach(row => {
             resourceKeys.forEach(key => {
-              const val = row[key] ?? 0;
-              subtotal[key] += val;
-              total[key] += val;
+              const val = Number(row[key]);
+              subtotal[key] += isNaN(val) ? 0 : val;
+              total[key] += isNaN(val) ? 0 : val;
             });
           });
-    
+
           result += `<tr><td class='border p-1 font-medium'>${name}</td><td class='border p-1 text-xs'>${startLabel} → ${endLabel}</td>`;
           resourceKeys.forEach(key => {
             result += `<td class='border p-1'>${formatValue(subtotal[key])}</td>`;
@@ -145,43 +143,28 @@
           result += "</tr>";
         }
       });
-      
+
       result += `<tr class='font-bold bg-blue-100'><td class='border p-1'>총합계</td><td class='border p-1'></td>`;
       resourceKeys.forEach(key => {
         result += `<td class='border p-1'>${formatValue(total[key])}</td>`;
       });
       result += "</tr></tbody></table>";
 
-      function formatValue(value) {
-        if (value >= 1_000_000_000) return `${Math.ceil(value / 100_000_000) / 10}B`;
-        if (value >= 1_000_000) return `${Math.ceil(value / 100_000) / 10}M`;
-        if (value >= 1_000) return value.toLocaleString();
-        return value;
-      }
-      
       window.parent.postMessage({ type: "BUILDING_RESULT", html: result }, "*");
-    }
-
-    function closePopup() {
-      document.getElementById("popupModal").classList.add("hidden");
     }
 
     function loadPage(page) {
       window.location.href = page;
     }
 
+    function sendHeightToParent() {
+      const height = document.documentElement.scrollHeight + 5;
+      window.parent.postMessage({ iframeHeight: height }, "*");
+    }
+
+    window.addEventListener("resize", sendHeightToParent);
+
     fetchBuildingData();
-  </script>
-  <script>
-    document.addEventListener("contextmenu", event => event.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" ||
-          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
-      {
-        e.preventDefault();
-      }
-    });
   </script>
 </body>
 </html>
