@@ -28,11 +28,23 @@
     function loadPage(page) {
       fetch(page)
         .then(response => {
-          if (!response.ok) throw new Error('파일을 불러올 수 없습니다.');
+          if (!response.ok) throw new Error(`${page} 파일을 불러올 수 없습니다.`);
           return response.text();
         })
         .then(html => {
-          document.getElementById('content').innerHTML = html;
+          const content = document.getElementById('content');
+          content.innerHTML = html;
+    
+          // 삽입된 스크립트 태그 수동 실행
+          content.querySelectorAll("script").forEach(oldScript => {
+            const newScript = document.createElement("script");
+            if (oldScript.src) {
+              newScript.src = oldScript.src;
+            } else {
+              newScript.textContent = oldScript.textContent;
+            }
+            oldScript.replaceWith(newScript);
+          });
         })
         .catch(error => {
           document.getElementById('content').innerHTML = `<p class="text-red-500 text-center">${error.message}</p>`;
