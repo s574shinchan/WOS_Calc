@@ -35,42 +35,9 @@
   
   <script>
     const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
-    const ownedResources = ["불수정", "정제"];
-    let resourceKeys = new Set();
-    let buildingData = {};
-    
-    async function fetchBuildingData() {
-      const promises = buildingList.map(async (name) => {
-        const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${encodeURIComponent(name)}.csv`;
-        const res = await fetch(url);
-        const text = await res.text();
+    const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광"];
+    const buildingData = {};
 
-        const lines = text.trim().split("\n");
-        const headers = lines[0].split(",").map(h => h.trim());
-        const levelIndex = headers.findIndex(h => h.replace(/\s/g, '') === '레벨');
-        if (levelIndex === -1) {
-          console.error("❌ '레벨' 컬럼을 찾을 수 없습니다.");
-          return;
-        }
-        resourceKeys = new Set([...resourceKeys, ...headers.filter(h => h !== "레벨")]);
-
-        buildingData[name] = lines.slice(1).map(line => {
-          const values = line.split(",");
-          const row = {};
-          headers.forEach((key, i) => {
-            const cleanKey = key.trim();
-            row[cleanKey] = cleanKey === "레벨" ? values[i] : parseInt(values[i]) || 0;
-          });
-          return row;
-        });
-      });
-
-      await Promise.all(promises);
-      resourceKeys = Array.from(resourceKeys).filter(key => key !== "레벨");
-      renderBuildings();
-      renderOwnedInputs();
-    }
-    
     function closePopup() {
       document.getElementById("popupModal").classList.add("hidden");
     }
@@ -79,115 +46,112 @@
       document.getElementById("popupContent").innerHTML = html;
       document.getElementById("popupModal").classList.remove("hidden");
     }
-    
-    function renderOwnedInputs() {
-      const ownedArea = document.getElementById("ownedInputArea");
-      ownedArea.innerHTML = "";
-      ownedResources.forEach(key => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-        <label class="block font-semibold">보유 ${key}</label>
-        <input type="number" id="owned-${key}" class="w-full border rounded p-2" />
-        `;
-        ownedArea.appendChild(div);
-      });
+
+    async function fetchBuildingData() {
+      for (const name of buildingList) {
+        const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
+        const res = await fetch(url);
+        const text = await res.text();
+        const lines = text.trim().split("\n");
+        const headers = lines[0].split(",");
+        const data = lines.slice(1).map(line => {
+          const obj = {};
+          const values = line.split(",");
+          headers.forEach((h, i) => {
+            obj[h.trim()] = values[i]?.trim() || "0";
+          });
+          return obj;
+        });
+        buildingData[name] = data;
+      }
+      renderBuildingSelectors();
     }
 
-    function renderBuildings() {
-      const grid = document.getElementById("buildingGridBody");
-      grid.innerHTML = "";
+    function renderBuildingSelectors() {
+      const container = document.getElementById("buildingGridBody");
       buildingList.forEach(name => {
-        const levels = buildingData[name] || [];
-        const levelKey = levels.length > 0
-          ? (Object.keys(levels[0]).find(k => k.includes("레벨")) || "레벨")
-          : "레벨";
-        const div = document.createElement("div");
-        div.className = "bg-blue-50 border border-blue-200 rounded-xl p-4 shadow";
-        div.innerHTML = `
-        <label class="block font-bold mb-2">
-          <input type="checkbox" id="check-${name}" class="mr-2 align-middle" />${name}
-        </label>
-        <div class="mb-2">
-          <label class="text-sm font-medium">현재 레벨</label>
-          <select id="start-${name}" class="w-full border rounded p-1 mt-1">
-            ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
-          </select>
-        </div>
-        <div>
-          <label class="text-sm font-medium">목표 레벨</label>
-          <select id="end-${name}" class="w-full border rounded p-1 mt-1">
-            ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
-          </select>
-        </div>
+        const levels = buildingData[name].map(d => d["레벨"]);
+        const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
+        container.innerHTML += `
+          <div class="bg-blue-50 border p-4 rounded shadow">
+            <label><input type="checkbox" id="check-${name}" class="mr-1" /> ${name}</label>
+            <div class="mt-2">
+              <label class="text-sm">현재 레벨</label>
+              <select id="start-${name}" class="w-full border rounded p-1 mt-1">${options}</select>
+            </div>
+            <div class="mt-2">
+              <label class="text-sm">목표 레벨</label>
+              <select id="end-${name}" class="w-full border rounded p-1 mt-1">${options}</select>
+            </div>
+          </div>
         `;
-        grid.appendChild(div);
       });
-    }
-
-    function formatValue(value) {
-      if (value >= 1_000_000_000) return `${Math.ceil(value / 100_000_000) / 10}B`;
-      if (value >= 1_000_000) return `${Math.ceil(value / 100_000) / 10}M`;
-      if (value >= 1000) return value.toLocaleString();
-      return value;
     }
 
     function calculateAll() {
-      let total = {};
-      resourceKeys.forEach(key => total[key] = 0);
-
-      let result = "<table class='w-full table-auto border text-sm text-center'>";
-      result += "<thead class='bg-blue-100'><tr><th class='border p-1'>건물</th><th class='border p-1'>레벨</th>";
-      resourceKeys.forEach(key => {
-        result += `<th class='border p-1'>${key}</th>`;
-      });
-      result += "</tr></thead><tbody>";
+      let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+      let result = `
+        <table class="w-full border text-sm text-center table-auto mt-4">
+          <thead class="bg-blue-100">
+            <tr>
+              <th class="border p-1">건물</th>
+              <th class="border p-1">레벨</th>
+              <th class="border p-1">불수정</th>
+              <th class="border p-1">정제</th>
+              <th class="border p-1">고기</th>
+              <th class="border p-1">나무</th>
+              <th class="border p-1">석탄</th>
+              <th class="border p-1">철광</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
 
       buildingList.forEach(name => {
-        const checked = document.getElementById(`check-${name}`).checked;
-        const start = parseInt(document.getElementById(`start-${name}`).value);
-        const end = parseInt(document.getElementById(`end-${name}`).value);
-        const levels = buildingData[name] || [];
+        if (!document.getElementById("check-" + name).checked) return;
 
-        if (checked && end > start) {
-          const levelKey = Object.keys(levels[0] || {}).find(k => k.includes("레벨")) || "레벨";
-          const startLabel = levels[start][levelKey] || `Lv${start + 1}`;
-          const endLabel = levels[end][levelKey] || `Lv${end + 1}`;
-          const range = levels.slice(start, end);
+        const start = parseInt(document.getElementById("start-" + name).value);
+        const end = parseInt(document.getElementById("end-" + name).value);
+        const data = buildingData[name].slice(start, end);
+        let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
 
-          const subtotal = {};
-          resourceKeys.forEach(key => subtotal[key] = 0);
-
-          range.forEach(row => {
-            resourceKeys.forEach(key => {
-              const val = Number(row[key]);
-              subtotal[key] += isNaN(val) ? 0 : val;
-              total[key] += isNaN(val) ? 0 : val;
-            });
+        data.forEach(row => {
+          resources.forEach(res => {
+            subtotal[res] += parseInt(row[res] || 0);
+            total[res] += parseInt(row[res] || 0);
           });
+        });
 
-          result += `<tr><td class='border p-1 font-medium'>${name}</td><td class='border p-1 text-xs'>${startLabel} → ${endLabel}</td>`;
-          resourceKeys.forEach(key => {
-            result += `<td class='border p-1'>${formatValue(subtotal[key])}</td>`;
-          });
-          result += "</tr>";
-        }
+        const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
+        result += `
+          <tr>
+            <td class="border p-1 font-medium">${name}</td>
+            <td class="border p-1 text-xs">${levelStr}</td>
+            <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
+            <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
+            <td class="border p-1">${subtotal["고기"].toLocaleString()}</td>
+            <td class="border p-1">${subtotal["나무"].toLocaleString()}</td>
+            <td class="border p-1">${subtotal["석탄"].toLocaleString()}</td>
+            <td class="border p-1">${subtotal["철광"].toLocaleString()}</td>
+          </tr>
+        `;
       });
 
-      result += `<tr class='font-bold bg-blue-100'><td class='border p-1'>총합계</td><td class='border p-1'></td>`;
-      resourceKeys.forEach(key => {
-        result += `<td class='border p-1'>${formatValue(total[key])}</td>`;
-      });
-      result += "</tr></tbody></table>";
-
-      window.parent.postMessage({ type: "BUILDING_RESULT", html: result }, "*");
-
+      result += `
+        <tr class="bg-blue-50 font-bold">
+          <td class="border p-1" colspan="2">총합</td>
+          <td class="border p-1">${total["불수정"].toLocaleString()}</td>
+          <td class="border p-1">${total["정제"].toLocaleString()}</td>
+          <td class="border p-1">${subtotal["고기"].toLocaleString()}</td>
+          <td class="border p-1">${subtotal["나무"].toLocaleString()}</td>
+          <td class="border p-1">${subtotal["석탄"].toLocaleString()}</td>
+          <td class="border p-1">${subtotal["철광"].toLocaleString()}</td>
+        </tr>
+        </tbody></table>
+      `;
       showPopup(result);
     }
 
-    function loadPage(page) {
-      window.location.href = page;
-    }
-    
     fetchBuildingData();
   </script>
 </body>
