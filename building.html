@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-4 font-sans text-sm">
-  <div class="max-w-6xl mx-auto bg-white p-4 md:p-6 rounded-xl shadow-md">
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
     <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
       <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -21,26 +21,50 @@
       <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 text-lg">계산하기</button>
     </form>
   </div>
-
+  
+  <!-- 팝업 모달 -->
+  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
+      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+      <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
+      <div class="text-center mt-4">
+        <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+      </div>
+    </div>
+  </div>
+  
   <script>
-    const sheetId = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
     const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
     const ownedResources = ["불수정", "정제"];
     let resourceKeys = new Set();
     let buildingData = {};
 
+    function closePopup() {
+      document.getElementById("popupModal").classList.add("hidden");
+    }
+
+    function showPopup(html) {
+      document.getElementById("popupContent").innerHTML = html;
+      document.getElementById("popupModal").classList.remove("hidden");
+    }
+
     async function fetchBuildingData() {
       const promises = buildingList.map(async (name) => {
-        const url = `https://opensheet.elk.sh/${sheetId}/${name}`;
+        const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${encodeURIComponent(name)}.csv`;
         const res = await fetch(url);
-        const rows = await res.json();
-        buildingData[name] = rows.map(row => {
-          const entry = {};
-          Object.keys(row).forEach(key => {
-            if (key && key !== "레벨") resourceKeys.add(key);
-            entry[key] = key === "레벨" ? row[key] : (parseInt(row[key]) || 0);
+        const text = await res.text();
+
+        const lines = text.trim().split("n");
+        const headers = lines[0].split(",").map(h => h.trim());
+        resourceKeys = new Set([...resourceKeys, ...headers.filter(h => h !== "레벨")]);
+
+        buildingData[name] = lines.slice(1).map(line => {
+          const values = line.split(",");
+          const row = {};
+          headers.forEach((key, i) => {
+            row[key] = key === "레벨" ? values[i] : parseInt(values[i]) || 0;
           });
-          return entry;
+          return row;
         });
       });
 
