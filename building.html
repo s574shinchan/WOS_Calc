@@ -55,7 +55,7 @@
           return entry;
         });
       });
-
+      
       await Promise.all(promises);
       resourceKeys = Array.from(resourceKeys).filter(key => key !== "레벨");
       renderBuildings();
@@ -68,13 +68,13 @@
       ownedResources.forEach(key => {
         const div = document.createElement("div");
         div.innerHTML = `
-          <label class="block font-semibold">보유 ${key}</label>
-          <input type="number" id="owned-${key}" class="w-full border rounded p-2" />
+        <label class="block font-semibold">보유 ${key}</label>
+        <input type="number" id="owned-${key}" class="w-full border rounded p-2" />
         `;
         ownedArea.appendChild(div);
       });
     }
-
+    
     function renderBuildings() {
       const grid = document.getElementById("buildingGridBody");
       grid.innerHTML = "";
@@ -84,21 +84,21 @@
         const div = document.createElement("div");
         div.className = "bg-blue-50 border border-blue-200 rounded-xl p-4 shadow";
         div.innerHTML = `
-          <label class="block font-bold mb-2">
-            <input type="checkbox" id="check-${name}" class="mr-2 align-middle" />${name}
-          </label>
-          <div class="mb-2">
-            <label class="text-sm font-medium">현재 레벨</label>
-            <select id="start-${name}" class="w-full border rounded p-1 mt-1">
-              ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
-            </select>
-          </div>
-          <div>
-            <label class="text-sm font-medium">목표 레벨</label>
-            <select id="end-${name}" class="w-full border rounded p-1 mt-1">
-              ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
-            </select>
-          </div>
+        <label class="block font-bold mb-2">
+        <input type="checkbox" id="check-${name}" class="mr-2 align-middle" />${name}
+        </label>
+        <div class="mb-2">
+        <label class="text-sm font-medium">현재 레벨</label>
+        <select id="start-${name}" class="w-full border rounded p-1 mt-1">
+        ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
+        </select>
+        </div>
+        <div>
+        <label class="text-sm font-medium">목표 레벨</label>
+        <select id="end-${name}" class="w-full border rounded p-1 mt-1">
+        ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
+        </select>
+        </div>
         `;
         grid.appendChild(div);
       });
@@ -110,7 +110,7 @@
         result += `<th class='border p-1'>${key}</th>`;
       });
       result += "</tr></thead><tbody>";
-
+      
       let total = {};
       resourceKeys.forEach(key => total[key] = 0);
 
@@ -133,7 +133,7 @@
             "</tr>";
         }
       });
-
+      
       result += `<tr class='font-bold bg-blue-100'><td class='border p-1'>총합계</td>`;
       resourceKeys.forEach(key => {
         result += `<td class='border p-1'>${total[key]}</td>`;
@@ -159,6 +159,17 @@
     }
 
     fetchBuildingData();
+  </script>
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
+    });
   </script>
 </body>
 </html>
