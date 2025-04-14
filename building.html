@@ -6,10 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>건물 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    select, input {
+      font-size: 1rem;
+    }
+  </style>
 </head>
 
 <body class="bg-gray-100 p-4 font-sans text-sm">
-  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+  <div class="max-w-6xl mx-auto bg-white p-4 md:p-6 rounded-xl shadow-md">
     <!-- 뒤로가기 버튼 -->
     <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
       <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -18,26 +23,17 @@
       메뉴로 돌아가기
     </button>
 
-    <h1 class="text-2xl font-bold text-blue-600 mb-4">🏗️ 건물 계산기</h1>
+    <h1 class="text-2xl font-bold text-blue-600 mb-4 text-center">🏗️ 건물 계산기</h1>
     <form id="calcForm" class="space-y-4">
-      <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        <div>
-          <label class="block font-semibold">보유 불수정</label>
-          <input type="number" id="owned-불수정" class="w-full border rounded p-2" />
-        </div>
-        <div>
-          <label class="block font-semibold">보유 정제</label>
-          <input type="number" id="owned-정제" class="w-full border rounded p-2" />
-        </div>
-      </div>
-      <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">계산하기</button>
+      <div id="buildingGridBody" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div id="ownedInputArea" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"></div>
+      <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 text-lg">계산하기</button>
     </form>
   </div>
 
   <!-- 팝업 모달 -->
-  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
+  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center px-4 sm:px-0 hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-4 md:p-6 max-h-[90vh] overflow-y-auto">
       <h3 class="text-xl font-bold mb-4 text-center">계산 결과</h3>
       <div id="popupContent" class="overflow-x-auto text-sm"></div>
       <div class="text-center mt-4">
@@ -49,7 +45,7 @@
   <script>
     const sheetId = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
     const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
-    const resourceKeys = ["불수정", "정제", "고기", "나무", "석탄", "철광"];
+    let resourceKeys = new Set();
     let buildingData = {};
 
     async function fetchBuildingData() {
@@ -57,9 +53,12 @@
         const url = `https://opensheet.elk.sh/${sheetId}/${name}`;
         const res = await fetch(url);
         const rows = await res.json();
+        if (rows.length > 0) {
+          Object.keys(rows[0]).forEach(key => resourceKeys.add(key));
+        }
         buildingData[name] = rows.map(row => {
           const entry = {};
-          resourceKeys.forEach(key => {
+          Object.keys(row).forEach(key => {
             entry[key] = parseInt(row[key]) || 0;
           });
           return entry;
@@ -67,7 +66,24 @@
       });
 
       await Promise.all(promises);
+      resourceKeys = Array.from(resourceKeys);
       renderBuildings();
+      renderOwnedInputs();
+    }
+
+    function renderOwnedInputs() {
+      const ownedArea = document.getElementById("ownedInputArea");
+      ownedArea.innerHTML = "";
+      resourceKeys.forEach(key => {
+        if (key === "불수정" || key === "정제") {
+          const div = document.createElement("div");
+          div.innerHTML = `
+            <label class="block font-semibold">보유 ${key}</label>
+            <input type="number" id="owned-${key}" class="w-full border rounded p-2" />
+          `;
+          ownedArea.appendChild(div);
+        }
+      });
     }
 
     function renderBuildings() {
