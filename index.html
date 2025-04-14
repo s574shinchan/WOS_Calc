@@ -156,7 +156,7 @@
     const page = urlParams.get("page") || "main"; // 기본값은 main.html
 
     // iframe에 해당 html 파일 로딩
-    const frame = document.getElementById("contentFrame");
+    const frame = document.getElementById("calcFrame");
     frame.src = page + ".html";
   
     window.addEventListener("message", function (event) {
