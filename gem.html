@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영주보석 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+    <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
+      <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      메뉴로 돌아가기
+    </button>
+    <h2 class="text-2xl font-bold text-purple-600 mb-4">💎 영주보석 계산기</h2>
+    <form id="gemForm" class="space-y-6">
+      <div id="gemTableBody" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+        <div><label class="block font-semibold">보유 매뉴얼</label><input type="number" id="own-매뉴얼" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 도면</label><input type="number" id="own-도면" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 비전</label><input type="number" id="own-비전" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 설계도</label><input type="number" id="own-설계도" class="w-full border rounded p-2" /></div>
+      </div>
+      <button type="button" onclick="calculateGems()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">계산하기</button>
+    </form>
+  </div>
+
+  <!-- 팝업 모달 -->
+  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
+      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+      <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
+      <div class="text-center mt-4">
+        <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/ef3bd1665ddf73044b325143fb9fb16cf98ddcd3/data/chief/Gem.csv';
+    const gemSlots = [
+      "방패A", "방패B", "방패C", "방패D", "방패E", "방패F",
+      "창병A", "창병B", "창병C", "창병D", "창병E", "창병F",
+      "궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F"
+    ];
+    let gemLevels = [];
+    let gemData = [];
+
+    async function fetchCSVData() {
+      const response = await fetch(csvUrl);
+      const csvText = await response.text();
+      const lines = csvText.trim().split('\n');
+      const headers = lines[0].split(',');
+      gemData = lines.slice(1).map(line => {
+        const values = line.split(',');
+        const entry = {};
+        headers.forEach((header, index) => {
+          entry[header] = values[index];
+        });
+        return entry;
+      });
+      gemLevels = gemData.map(d => d["레벨"]);
+    }
+
+    async function createGemUI() {
+      await fetchCSVData();
+      const grid = document.getElementById("gemTableBody");
+      gemSlots.forEach((slot, i) => {
+        const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+        grid.innerHTML += `
+          <div class="border p-2 rounded bg-purple-50 text-xs">
+            <label class="flex items-center text-sm font-semibold mb-1">
+              <input type="checkbox" id="gem-check-${i}" class="mr-1 w-4 h-4 accent-purple-500" />
+              ${slot}
+            </label>
+            <select id="gem-cur-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
+            <select id="gem-tgt-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
+          </div>
+        `;
+      });
+    }
+
+    function closePopup() {
+      document.getElementById("popupModal").classList.add("hidden");
+    }
+
+    function showPopup(html) {
+      document.getElementById("popupContent").innerHTML = html;
+      document.getElementById("popupModal").classList.remove("hidden");
+    }
+
+    function calculateGems() {
+      let total = { 매뉴얼: 0, 도면: 0, 비전: 0, 설계도: 0 };
+      let rows = "";
+
+      for (let i = 0; i < gemSlots.length; i++) {
+        if (!document.getElementById(`gem-check-${i}`).checked) continue;
+
+        const cur = document.getElementById(`gem-cur-${i}`).value;
+        const tgt = document.getElementById(`gem-tgt-${i}`).value;
+        const start = gemLevels.indexOf(cur);
+        const end = gemLevels.indexOf(tgt);
+
+        if (start === -1 || end === -1 || start >= end) {
+          rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${gemSlots[i]}: 잘못된 레벨 선택</td></tr>`;
+          continue;
+        }
+
+        const subtotal = { 매뉴얼: 0, 도면: 0, 비전: 0, 설계도: 0 };
+
+        for (let j = start + 1; j <= end; j++) {
+          const row = gemData[j];
+          subtotal.매뉴얼 += parseFloat(row["매뉴얼"] || 0);
+          subtotal.도면 += parseFloat(row["도면"] || 0);
+          subtotal.비전 += parseFloat(row["비전"] || 0);
+          subtotal.설계도 += parseFloat(row["설계도"] || 0);
+        }
+
+        total.매뉴얼 += subtotal.매뉴얼;
+        total.도면 += subtotal.도면;
+        total.비전 += subtotal.비전;
+        total.설계도 += subtotal.설계도;
+
+        rows += `
+          <tr class="text-center">
+            <td class="border p-1">${gemSlots[i]}</td>
+            <td class="border p-1">${cur} → ${tgt}</td>
+            <td class="border p-1">${subtotal.매뉴얼.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.도면.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.비전.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.설계도.toLocaleString()}</td>
+          </tr>
+        `;
+      }
+
+      const owned = {
+        매뉴얼: parseFloat(document.getElementById("own-매뉴얼").value) || 0,
+        도면: parseFloat(document.getElementById("own-도면").value) || 0,
+        비전: parseFloat(document.getElementById("own-비전").value) || 0,
+        설계도: parseFloat(document.getElementById("own-설계도").value) || 0,
+      };
+
+      rows += `
+        <tr class="text-center font-bold bg-purple-100">
+          <td class="border p-1" colspan="2">총합</td>
+          <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
+          <td class="border p-1">${total.도면.toLocaleString()}</td>
+          <td class="border p-1">${total.비전.toLocaleString()}</td>
+          <td class="border p-1">${total.설계도.toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">과부족</td>
+          <td class="border p-1">${(owned.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
+          <td class="border p-1">${(owned.도면 - total.도면).toLocaleString()}</td>
+          <td class="border p-1">${(owned.비전 - total.비전).toLocaleString()}</td>
+          <td class="border p-1">${(owned.설계도 - total.설계도).toLocaleString()}</td>
+        </tr>
+      `;
+
+      const resultHTML = `
+        <table class="w-full table-auto border text-sm text-center mt-4">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-1">슬롯</th>
+              <th class="border p-1">레벨</th>
+              <th class="border p-1">매뉴얼</th>
+              <th class="border p-1">도면</th>
+              <th class="border p-1">비전</th>
+              <th class="border p-1">설계도</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      showPopup(resultHTML);
+    }
+    
+    function loadPage(page) {
+      window.location.href = page;
+    }
+    
+    createGemUI();
+  </script>
+</body>
+</html>
