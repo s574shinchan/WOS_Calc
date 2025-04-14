@@ -1,64 +1,36 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WOS 메인</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-white font-sans p-6">
-  <div class="text-center mb-8">
-    <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/7b8601795ff8a85932540f79e4bda456044026e8/images/logo.png" class="mx-auto w-72 mb-4" />
-    <h1 class="text-xl font-bold">WOS 통합 계산기 & 정보모음</h1>
-  </div>
-
-  <!-- 버튼 -->
-  <div class="flex flex-col items-center gap-4 mb-6">
-    <button onclick="loadPage('building.html')" class="w-64 border py-3 font-bold hover:bg-gray-100">🏗 건물계산기</button>
-    <button onclick="loadPage('gem.html')" class="w-64 border py-3 font-bold hover:bg-gray-100">💎 영주보석</button>
-    <button onclick="loadPage('equip.html')" class="w-64 border py-3 font-bold hover:bg-gray-100">🛡 영주장비</button>
-    <button onclick="loadPage('hero.html')" class="w-64 border py-3 font-bold hover:bg-gray-100">🧝 영웅장비</button>
-    <button onclick="loadPage('pet.html')" class="w-64 border py-3 font-bold hover:bg-gray-100">🐾 펫돌파</button>
-    <button onclick="loadPage('guidehtml')" class="w-64 border py-3 font-bold hover:bg-gray-100">📘 자료모음</button>
-    <button onclick="loadPage('https://wos-giftcode.centurygame.com/')" class="w-64 border py-3 font-bold hover:bg-gray-100">🎁 교환코드입력</button>
-  </div>
-
-  <!-- iframe 영역 -->
-  <iframe
-      id="calcFrame"
-      src="building.html"
-      class="w-full max-w-5xl mx-auto border rounded shadow"
-      style="min-height: 100px;"
-      onload="onIframeLoad()"
-    ></iframe>
-  
-  <script>
-    function onIframeLoad() {
-      const frame = document.getElementById("calcFrame");
-      frame.classList.remove("invisible");
-      frame.style.opacity = 1;
-    }
-    
-    function isMobile() {
-      return window.innerWidth <= 768;
-    }
-  </script>
-  
-  <script>
-    function loadPage(filename) {
-      const frame = document.getElementById('calcFrame');
-      frame.src = filename;
-    }
-
-    // 높이 자동 조정 (index.html 방식과 동일하게 적용)
-    window.addEventListener("message", (event) => {
-      if (event.data?.type === "HEIGHT_UPDATE") {
-        const frame = document.getElementById("contentFrame");
-        if (frame && frame.style.height !== event.data.height + "px") {
-          frame.style.height = event.data.height + "px";
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WOS 계산기 & 각종정보</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @media (max-width: 767px) {
+        body {
+          display: none;
         }
       }
-    });
-  </script>
-</body>
+    </style>
+  </head>
+  <body class="bg-white flex flex-col items-center justify-center min-h-screen p-6 font-sans">
+    <!-- 로고 이미지 -->
+    <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/7b8601795ff8a85932540f79e4bda456044026e8/images/logo.png" class="mx-auto w-72 mb-4" />
+
+    <!-- 소개 문구 -->
+    <h1 class="text-xl font-semibold text-center text-gray-800 mb-8">
+      WOS 통합 계산기 & 정보모음
+    </h1>
+
+    <!-- 버튼 목록 -->
+    <div class="w-full max-w-xs space-y-4">
+      <a href="index.html#building" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🏗 건물계산기</a>
+      <a href="index.html#gem" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">💎 영주보석</a>
+      <a href="index.html#equip" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🛡 영주장비</a>
+      <a href="index.html#hero" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🧝 영웅장비</a>
+      <a href="index.html#pet" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🐾 펫돌파</a>
+      <a href="index.html#guide" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">📘 자료모음</a>
+      <a href="index.html#gift" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🎁 교환코드입력</a>
+    </div>
+  </body>
 </html>
