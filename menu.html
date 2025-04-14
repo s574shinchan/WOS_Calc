@@ -20,9 +20,23 @@
     </div>
   </div>
   <script>
+    function isMobile() {
+      return window.innerWidth <= 768;
+    }
+    
+    const frameHeights = {
+      "building.html": isMobile() ? "720px" : "485px",
+      "gem.html":      isMobile() ? "995px" : "955px",
+      "equip.html":    isMobile() ? "680px" : "485px",
+      "hero.html":     isMobile() ? "550px" : "485px",      
+      "pet.html":      isMobile() ? "680px" : "485px",
+      "guide.html":    isMobile() ? "2100px" : "1800px",
+    };
+    
     document.querySelectorAll(".menu-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const target = btn.getAttribute("data-target");
+        const height = frameHeights[target] || 1600;
         window.parent.postMessage({ type: "NAVIGATE_TO", target }, "*");
       });
     });
