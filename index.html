@@ -25,6 +25,9 @@
 <body class="bg-gray-100 p-6 font-sans">
   <div class="max-w-6xl mx-auto">
     <div class="mb-4 flex flex-wrap gap-2 justify-start">
+      <button onclick="switchTab('menu')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
+        🏗 Menu
+      </button>
       <button onclick="switchTab('building')" class="tab-btn bg-blue-300 text-blue-800 font-semibold py-3 px-6 text-lg rounded sm:py-2 sm:px-4 sm:text-base">
         🏗 건물
       </button>
@@ -87,6 +90,7 @@
     function switchTab(tab) {
       const frame = document.getElementById("calcFrame");
       const tabMap = {
+        menu: "menu.html",
         building: "building.html",
         gem: "gem.html",
         equip: "equip.html",
@@ -101,6 +105,7 @@
       setTimeout(() => {
         frame.src = tabMap[tab];
         frame.style.height = {
+          menu: "1000px",
           building: isMobile() ? "720px" : "485px",
           gem:      isMobile() ? "995px" : "955px",
           equip:    isMobile() ? "720px" : "565px",
@@ -118,6 +123,7 @@
       });
 
       const colorMap = {
+        menu: ['bg-blue-300', 'text-blue-800'],
         building: ['bg-blue-300', 'text-blue-800'],
         gem: ['bg-purple-300', 'text-purple-800'],
         equip: ['bg-green-300', 'text-green-800'],
@@ -128,13 +134,14 @@
       };
 
       const activeBtn = {
-        building: 0,
-        gem: 1,
-        equip: 2,
-        hero: 3,
-        pet: 4,
-        guide: 5,
-        gift: 6,
+        menu: 0,
+        building: 1,
+        gem: 2,
+        equip: 3,
+        hero: 4,
+        pet: 5,
+        guide: 6,
+        gift: 7,
       }[tab];
 
       const btns = document.querySelectorAll('.tab-btn');
