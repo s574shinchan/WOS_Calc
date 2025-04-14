@@ -38,16 +38,7 @@
     const ownedResources = ["불수정", "정제"];
     let resourceKeys = new Set();
     let buildingData = {};
-
-    function closePopup() {
-      document.getElementById("popupModal").classList.add("hidden");
-    }
-
-    function showPopup(html) {
-      document.getElementById("popupContent").innerHTML = html;
-      document.getElementById("popupModal").classList.remove("hidden");
-    }
-
+    
     async function fetchBuildingData() {
       const promises = buildingList.map(async (name) => {
         const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${encodeURIComponent(name)}.csv`;
@@ -79,7 +70,16 @@
       renderBuildings();
       renderOwnedInputs();
     }
+    
+    function closePopup() {
+      document.getElementById("popupModal").classList.add("hidden");
+    }
 
+    function showPopup(html) {
+      document.getElementById("popupContent").innerHTML = html;
+      document.getElementById("popupModal").classList.remove("hidden");
+    }
+    
     function renderOwnedInputs() {
       const ownedArea = document.getElementById("ownedInputArea");
       ownedArea.innerHTML = "";
@@ -180,6 +180,8 @@
       result += "</tr></tbody></table>";
 
       window.parent.postMessage({ type: "BUILDING_RESULT", html: result }, "*");
+
+      showPopup(result);
     }
 
     function loadPage(page) {
