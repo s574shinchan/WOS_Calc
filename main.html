@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WOS 메인</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @media (max-width: 767px) {
+        body {
+          display: none;
+        }
+      }
+    </style>
+<script>
+  if (window.innerWidth < 768) {
+    window.location.href = "index.html";
+  }
+</script>
+  </head>
+  <body class="bg-white flex flex-col items-center justify-center min-h-screen p-6 font-sans">
+    <!-- 로고 이미지 -->
+    <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/7b8601795ff8a85932540f79e4bda456044026e8/images/logo.png" alt="WOS 로고" class="w-80 mb-6 drop-shadow-lg" />
+
+    <!-- 소개 문구 -->
+    <h1 class="text-xl font-semibold text-center text-gray-800 mb-8">
+      WOS 통합 계산기 & 정보모음
+    </h1>
+
+    <!-- 버튼 목록 -->
+    <div class="w-full max-w-xs space-y-4">
+      <a href="index.html#building" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🏗 건물계산기</a>
+      <a href="index.html#gem" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">💎 영주보석</a>
+      <a href="index.html#equip" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🛡 영주장비</a>
+      <a href="index.html#hero" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🧝 영웅장비</a>
+      <a href="index.html#pet" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🐾 펫돌파</a>
+      <a href="index.html#guide" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">📘 자료모음</a>
+      <a href="index.html#gift" class="block border border-black text-center py-3 font-bold hover:bg-gray-100">🎁 교환코드입력</a>
+    </div>
+  </body>
+</html>
