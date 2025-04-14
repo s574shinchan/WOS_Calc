@@ -24,25 +24,7 @@
     <button onclick="loadPage('https://wos-giftcode.centurygame.com/')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🎁 교환코드입력</button>    
   </div>
   
-  <!-- iframe 영역 -->
-  <div class="max-w-6xl mx-auto border rounded shadow bg-white">
-    <iframe
-      id="calcFrame"
-      class="w-full border rounded invisible"
-      style="min-height: 100px;"
-      src="menu.html"
-      frameborder="0"
-      onload="onIframeLoad()"
-      ></iframe>
-  </div>
-  
   <script>
-    function onIframeLoad() {
-      const frame = document.getElementById("calcFrame");
-      frame.classList.remove("invisible");
-      frame.style.opacity = 1;
-    }
-    
     function loadPage(page) {
       fetch(page)
         .then(response => {
