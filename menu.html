@@ -21,16 +21,12 @@
     </div>
   </div>
   <script>
-    function isMobile() {
-      return window.innerWidth <= 768;
-    }
-    
     const frameHeights = {
-      "building.html": isMobile() ? "1100px" : "485px",
-      "gem.html":      isMobile() ? "1125px" : "955px",
-      "equip.html":    isMobile() ? "650px" : "485px",
-      "hero.html":     isMobile() ? "550px" : "485px",      
-      "pet.html":      isMobile() ? "680px" : "485px",      
+      "building.html": "1100px",
+      "gem.html":      "1125px",
+      "equip.html":    "650px",
+      "hero.html":     "550px",
+      "pet.html":      "680px",      
     };
     
     document.querySelectorAll(".menu-btn").forEach(btn => {
