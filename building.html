@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -5,11 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>건물 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    select, input {
-      font-size: 1rem;
-    }
-  </style>
 </head>
 <body class="bg-gray-100 p-4 font-sans text-sm">
   <div class="max-w-6xl mx-auto bg-white p-4 md:p-6 rounded-xl shadow-md">
@@ -26,18 +22,23 @@
       <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 text-lg">계산하기</button>
     </form>
   </div>
-  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center px-4 sm:px-0 hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-4 md:p-6 max-h-[90vh] overflow-y-auto">
-      <h3 class="text-xl font-bold mb-4 text-center">계산 결과</h3>
+
+  <!-- 결과 팝업 -->
+  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 max-w-4xl w-full shadow-lg max-h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-bold text-center mb-4">계산 결과</h2>
       <div id="popupContent" class="overflow-x-auto text-sm"></div>
       <div class="text-center mt-4">
         <button onclick="closePopup()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">닫기</button>
       </div>
     </div>
   </div>
+
   <script>
     const sheetId = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
     const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
+    const ownedResources = ["불수정", "정제"];
+    const displayOnlyResources = ["고기", "나무", "석탄", "철광"];
     let resourceKeys = new Set();
     let buildingData = {};
 
@@ -46,22 +47,18 @@
         const url = `https://opensheet.elk.sh/${sheetId}/${name}`;
         const res = await fetch(url);
         const rows = await res.json();
-        if (rows.length > 0) {
-          Object.keys(rows[0]).forEach(key => {
-            if (key !== "레벨") resourceKeys.add(key);
-          });
-        }
         buildingData[name] = rows.map(row => {
           const entry = {};
           Object.keys(row).forEach(key => {
-            entry[key] = (key === "레벨") ? row[key] : (parseInt(row[key]) || 0);
+            if (key !== "레벨") resourceKeys.add(key);
+            entry[key] = key === "레벨" ? row[key] : (parseInt(row[key]) || 0);
           });
           return entry;
         });
       });
 
       await Promise.all(promises);
-      resourceKeys = Array.from(resourceKeys);
+      resourceKeys = Array.from(resourceKeys).filter(key => key !== "레벨");
       renderBuildings();
       renderOwnedInputs();
     }
@@ -69,15 +66,13 @@
     function renderOwnedInputs() {
       const ownedArea = document.getElementById("ownedInputArea");
       ownedArea.innerHTML = "";
-      resourceKeys.forEach(key => {
-        if (key === "불수정" || key === "정제") {
-          const div = document.createElement("div");
-          div.innerHTML = `
-            <label class="block font-semibold">보유 ${key}</label>
-            <input type="number" id="owned-${key}" class="w-full border rounded p-2" />
-          `;
-          ownedArea.appendChild(div);
-        }
+      ownedResources.forEach(key => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <label class="block font-semibold">보유 ${key}</label>
+          <input type="number" id="owned-${key}" class="w-full border rounded p-2" />
+        `;
+        ownedArea.appendChild(div);
       });
     }
 
@@ -86,22 +81,23 @@
       grid.innerHTML = "";
       buildingList.forEach(name => {
         const levels = buildingData[name] || [];
+        const levelKey = Object.keys(levels[0] || {}).find(k => k.includes("레벨")) || "레벨";
         const div = document.createElement("div");
-        div.className = "bg-pink-50 border border-pink-200 rounded-xl p-4 shadow";
+        div.className = "bg-blue-50 border border-blue-200 rounded-xl p-4 shadow";
         div.innerHTML = `
           <label class="block font-bold mb-2">
             <input type="checkbox" id="check-${name}" class="mr-2 align-middle" />${name}
           </label>
-          <div class="mb-1">
+          <div class="mb-2">
             <label class="text-sm font-medium">현재 레벨</label>
             <select id="start-${name}" class="w-full border rounded p-1 mt-1">
-              ${levels.map((row, i) => `<option value="${i}">${row["레벨"] || i + 1}</option>`).join('')}
+              ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
             </select>
           </div>
           <div>
             <label class="text-sm font-medium">목표 레벨</label>
             <select id="end-${name}" class="w-full border rounded p-1 mt-1">
-              ${levels.map((row, i) => `<option value="${i}">${row["레벨"] || i + 1}</option>`).join('')}
+              ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
             </select>
           </div>
         `;
@@ -110,7 +106,12 @@
     }
 
     function calculateAll() {
-      let result = "";
+      let result = "<table class='w-full table-auto border text-sm text-center'><thead><tr><th class='border p-1'>건물</th>";
+      resourceKeys.forEach(key => {
+        result += `<th class='border p-1'>${key}</th>`;
+      });
+      result += "</tr></thead><tbody>";
+
       let total = {};
       resourceKeys.forEach(key => total[key] = 0);
 
@@ -118,33 +119,32 @@
         const checked = document.getElementById(`check-${name}`).checked;
         const start = parseInt(document.getElementById(`start-${name}`).value);
         const end = parseInt(document.getElementById(`end-${name}`).value);
-
         if (checked && end > start) {
           const range = buildingData[name].slice(start, end);
           const subtotal = {};
           resourceKeys.forEach(key => subtotal[key] = 0);
-
           range.forEach(row => {
             resourceKeys.forEach(key => {
               subtotal[key] += row[key];
               total[key] += row[key];
             });
           });
-
-          result += `<p><strong>${name}</strong> (${start + 1} → ${end + 1}) → ` +
-            resourceKeys.map(key => `${key}: ${subtotal[key]}`).join(', ') + `</p>`;
+          result += `<tr><td class='border p-1'>${name}</td>` +
+            resourceKeys.map(key => `<td class='border p-1'>${subtotal[key]}</td>`).join('') +
+            "</tr>";
         }
       });
 
-      result += `<hr class='my-2' />`;
+      result += `<tr class='font-bold bg-blue-100'><td class='border p-1'>총합계</td>`;
       resourceKeys.forEach(key => {
-        if (key === "불수정" || key === "정제") {
-          const owned = parseInt(document.getElementById(`owned-${key}`)?.value) || 0;
-          const 부족 = total[key] - owned;
-          result += `<p><strong>총 필요 ${key}:</strong> ${total[key]} (${부족 > 0 ? `부족 ${부족}` : "충분"})</p>`;
-        } else {
-          result += `<p><strong>총 필요 ${key}:</strong> ${total[key]}</p>`;
-        }
+        result += `<td class='border p-1'>${total[key]}</td>`;
+      });
+      result += "</tr></tbody></table>";
+
+      ownedResources.forEach(key => {
+        const owned = parseInt(document.getElementById(`owned-${key}`)?.value) || 0;
+        const 부족 = total[key] - owned;
+        result += `<p class="mt-2"><strong>${key}:</strong> 보유 ${owned} / 필요 ${total[key]} → ${부족 > 0 ? `부족 ${부족}` : "충분"}</p>`;
       });
 
       document.getElementById("popupContent").innerHTML = result;
@@ -155,10 +155,8 @@
       document.getElementById("popupModal").classList.add("hidden");
     }
 
-    if (typeof loadPage === "undefined") {
-      function loadPage(page) {
-        window.location.href = page;
-      }
+    function loadPage(page) {
+      window.location.href = page;
     }
 
     fetchBuildingData();
