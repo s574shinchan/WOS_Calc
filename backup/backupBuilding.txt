@@ -1,0 +1,157 @@
+<script>
+    const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
+    const ownedResources = ["불수정", "정제"];
+    let resourceKeys = new Set();
+    let buildingData = {};
+    
+    async function fetchBuildingData() {
+      const promises = buildingList.map(async (name) => {
+        const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${encodeURIComponent(name)}.csv`;
+        const res = await fetch(url);
+        const text = await res.text();
+
+        const lines = text.trim().split("\n");
+        const headers = lines[0].split(",").map(h => h.trim());
+        const levelIndex = headers.findIndex(h => h.replace(/\s/g, '') === '레벨');
+        if (levelIndex === -1) {
+          console.error("❌ '레벨' 컬럼을 찾을 수 없습니다.");
+          return;
+        }
+        resourceKeys = new Set([...resourceKeys, ...headers.filter(h => h !== "레벨")]);
+
+        buildingData[name] = lines.slice(1).map(line => {
+          const values = line.split(",");
+          const row = {};
+          headers.forEach((key, i) => {
+            const cleanKey = key.trim();
+            row[cleanKey] = cleanKey === "레벨" ? values[i] : parseInt(values[i]) || 0;
+          });
+          return row;
+        });
+      });
+
+      await Promise.all(promises);
+      resourceKeys = Array.from(resourceKeys).filter(key => key !== "레벨");
+      renderBuildings();
+      renderOwnedInputs();
+    }
+    
+    function closePopup() {
+      document.getElementById("popupModal").classList.add("hidden");
+    }
+
+    function showPopup(html) {
+      document.getElementById("popupContent").innerHTML = html;
+      document.getElementById("popupModal").classList.remove("hidden");
+    }
+    
+    function renderOwnedInputs() {
+      const ownedArea = document.getElementById("ownedInputArea");
+      ownedArea.innerHTML = "";
+      ownedResources.forEach(key => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+        <label class="block font-semibold">보유 ${key}</label>
+        <input type="number" id="owned-${key}" class="w-full border rounded p-2" />
+        `;
+        ownedArea.appendChild(div);
+      });
+    }
+
+    function renderBuildings() {
+      const grid = document.getElementById("buildingGridBody");
+      grid.innerHTML = "";
+      buildingList.forEach(name => {
+        const levels = buildingData[name] || [];
+        const levelKey = levels.length > 0
+          ? (Object.keys(levels[0]).find(k => k.includes("레벨")) || "레벨")
+          : "레벨";
+        const div = document.createElement("div");
+        div.className = "bg-blue-50 border border-blue-200 rounded-xl p-4 shadow";
+        div.innerHTML = `
+        <label class="block font-bold mb-2">
+          <input type="checkbox" id="check-${name}" class="mr-2 align-middle" />${name}
+        </label>
+        <div class="mb-2">
+          <label class="text-sm font-medium">현재 레벨</label>
+          <select id="start-${name}" class="w-full border rounded p-1 mt-1">
+            ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-medium">목표 레벨</label>
+          <select id="end-${name}" class="w-full border rounded p-1 mt-1">
+            ${levels.map((row, i) => `<option value="${i}">${row[levelKey] || i + 1}</option>`).join('')}
+          </select>
+        </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function formatValue(value) {
+      if (value >= 1_000_000_000) return `${Math.ceil(value / 100_000_000) / 10}B`;
+      if (value >= 1_000_000) return `${Math.ceil(value / 100_000) / 10}M`;
+      if (value >= 1000) return value.toLocaleString();
+      return value;
+    }
+
+    function calculateAll() {
+      let total = {};
+      resourceKeys.forEach(key => total[key] = 0);
+
+      let result = "<table class='w-full table-auto border text-sm text-center'>";
+      result += "<thead class='bg-blue-100'><tr><th class='border p-1'>건물</th><th class='border p-1'>레벨</th>";
+      resourceKeys.forEach(key => {
+        result += `<th class='border p-1'>${key}</th>`;
+      });
+      result += "</tr></thead><tbody>";
+
+      buildingList.forEach(name => {
+        const checked = document.getElementById(`check-${name}`).checked;
+        const start = parseInt(document.getElementById(`start-${name}`).value);
+        const end = parseInt(document.getElementById(`end-${name}`).value);
+        const levels = buildingData[name] || [];
+
+        if (checked && end > start) {
+          const levelKey = Object.keys(levels[0] || {}).find(k => k.includes("레벨")) || "레벨";
+          const startLabel = levels[start][levelKey] || `Lv${start + 1}`;
+          const endLabel = levels[end][levelKey] || `Lv${end + 1}`;
+          const range = levels.slice(start, end);
+
+          const subtotal = {};
+          resourceKeys.forEach(key => subtotal[key] = 0);
+
+          range.forEach(row => {
+            resourceKeys.forEach(key => {
+              const val = Number(row[key]);
+              subtotal[key] += isNaN(val) ? 0 : val;
+              total[key] += isNaN(val) ? 0 : val;
+            });
+          });
+
+          result += `<tr><td class='border p-1 font-medium'>${name}</td><td class='border p-1 text-xs'>${startLabel} → ${endLabel}</td>`;
+          resourceKeys.forEach(key => {
+            result += `<td class='border p-1'>${formatValue(subtotal[key])}</td>`;
+          });
+          result += "</tr>";
+        }
+      });
+
+      result += `<tr class='font-bold bg-blue-100'><td class='border p-1'>총합계</td><td class='border p-1'></td>`;
+      resourceKeys.forEach(key => {
+        result += `<td class='border p-1'>${formatValue(total[key])}</td>`;
+      });
+      result += "</tr></tbody></table>";
+
+      window.parent.postMessage({ type: "BUILDING_RESULT", html: result }, "*");
+
+      showPopup(result);
+    }
+
+    function loadPage(page) {
+      window.location.href = page;
+    }
+    
+    fetchBuildingData();
+  </script>
