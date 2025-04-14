@@ -1,3 +1,108 @@
+    
+
+  <!-- 팝업 모달 -->
+  <div id="globalPopupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 mx-2">
+      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+      <div id="globalPopupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
+      <div class="text-center mt-4">
+        <button onclick="document.getElementById('globalPopupModal').classList.add('hidden')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function onIframeLoad() {
+      const frame = document.getElementById("calcFrame");
+      frame.classList.remove("invisible");
+      frame.style.opacity = 1;
+    }
+    
+    function isMobile() {
+      return window.innerWidth <= 768;
+    }
+  </script>
+   
+  <script>
+    function switchTab(tab) {
+      const frame = document.getElementById("calcFrame");
+      const tabMap = {
+        menu: "menu.html",
+        building: "building.html",
+        gem: "gem.html",
+        equip: "equip.html",
+        hero: "hero.html",
+        pet: "pet.html",
+        guide: "guide.html",
+        gift: "https://wos-giftcode.centurygame.com/"
+      };
+      
+      // 프레임 src 및 높이 설정
+      frame.style.opacity = 0; // 사라지게 처리
+      setTimeout(() => {
+        frame.src = tabMap[tab];
+        frame.style.height = {
+          menu: "1000px",
+          building: isMobile() ? "720px" : "485px",
+          gem:      isMobile() ? "995px" : "955px",
+          equip:    isMobile() ? "720px" : "565px",
+          hero:     isMobile() ? "995px" : "955px",          
+          pet:      isMobile() ? "680px" : "485px",
+          //guide:    isMobile() ? "2100px" : "1800px",
+          gift: "1000px",
+        }[tab];
+      }, 200);
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-300', 'bg-purple-300', 'bg-green-300', 'bg-yellow-300', 'bg-pink-300', 'bg-indigo-300', 'bg-slate-300');
+        btn.classList.remove('text-blue-800', 'text-purple-800', 'text-green-800', 'text-yellow-800', 'text-pink-300', 'text-indigo-800','text-slate-800');
+        btn.classList.add('bg-gray-200', 'text-gray-800');
+      });
+
+      const colorMap = {
+        menu: ['bg-blue-300', 'text-blue-800'],
+        building: ['bg-blue-300', 'text-blue-800'],
+        gem: ['bg-purple-300', 'text-purple-800'],
+        equip: ['bg-green-300', 'text-green-800'],
+        hero: ['bg-yellow-300', 'text-yellow-800'],
+        pet: ['bg-pink-300', 'text-pink-800'],
+        guide: ['bg-slate-300','text-slate-800'],
+        gift: ['bg-indigo-300', 'text-indigo-800'],
+      };
+
+      const activeBtn = {
+        menu: 0,
+        building: 1,
+        gem: 2,
+        equip: 3,
+        hero: 4,
+        pet: 5,
+        guide: 6,
+        gift: 7,
+      }[tab];
+
+      const btns = document.querySelectorAll('.tab-btn');
+      btns[activeBtn].classList.remove('bg-gray-200', 'text-gray-800');
+      btns[activeBtn].classList.add(...colorMap[tab]);
+    }
+  </script>
+   
+  
+  
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S")))
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+  
+  
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -12,7 +117,7 @@
   </style>
 </head>
 <body class="bg-gray-100 font-sans p-6 min-h-screen flex flex-col items-center justify-center">
-  
+
   <!-- 버튼 영역 -->
   <div class="flex flex-col sm:flex-row flex-wrap gap-4 mb-6 justify-center">
     <button onclick="loadPage('building.html')" class="bg-green-600 text-white px-4 py-2 rounded shadow">🏗 건물</button>
@@ -24,7 +129,25 @@
     <button onclick="loadPage('https://wos-giftcode.centurygame.com/')" class="bg-pink-600 text-white px-4 py-2 rounded shadow">🎁 교환코드입력</button>    
   </div>
   
+  <!-- iframe 영역 -->
+  <div class="max-w-6xl mx-auto border rounded shadow bg-white">
+    <iframe
+      id="calcFrame"
+      class="w-full border rounded invisible"
+      style="min-height: 100px;"
+      src="menu.html"
+      frameborder="0"
+      onload="onIframeLoad()"
+      ></iframe>
+  </div>
+  
   <script>
+    function onIframeLoad() {
+      const frame = document.getElementById("calcFrame");
+      frame.classList.remove("invisible");
+      frame.style.opacity = 1;
+    }
+    
     function loadPage(page) {
       fetch(page)
         .then(response => {
@@ -39,5 +162,27 @@
         });
     }
   </script>
+
+  <script>
+    window.addEventListener("message", function (event) {
+      const frame = document.getElementById("calcFrame");
+      
+      if (event.data && event.data.iframeHeight) {
+        frame.style.height = event.data.iframeHeight + "px";
+      }
+      
+      if (event.data?.type === "RESULT_POPUP") {
+        document.getElementById("globalPopupContent").innerHTML = event.data.html;
+        document.getElementById("globalPopupModal").classList.remove("hidden");
+      }
+
+      if (event.data?.type === "LOADED") {
+        frame.style.opacity = 1;
+      }
+    });
+  </script>
+
+  <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 및 배포 금지 | © By S574 ShinChan</footer>
+  
 </body>
 </html>
