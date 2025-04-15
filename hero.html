@@ -42,7 +42,11 @@
           </div>
         </div>
         
-        <script>  
+        <script> 
+          function loadPage(page) {
+            window.location.href = page;
+          }
+          
           const slotNames = ["고글", "장갑", "벨트", "신발"];
           const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Hero/Mithril.csv";
           let stageList = [];
