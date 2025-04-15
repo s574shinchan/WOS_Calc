@@ -80,10 +80,13 @@
     }
     
     function formatValue(value) {     
-      if (value >= 1000) {
-        return `${Math.ceil(value / 1000) / 10}B`;
+      const num = parseFloat(value.toString().replace(/,/g, ''));
+      if (isNaN(num)) return value;
+      
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1) + "B";
       } else {
-        return `${value}M`;
+        return num + "M";
       }
     }
     
