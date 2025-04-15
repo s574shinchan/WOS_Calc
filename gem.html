@@ -166,7 +166,9 @@
           <tbody>${rows}</tbody>
         </table>
       `;
-      showPopup(resultHTML);
+      
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+      //showPopup(resultHTML);
     }
     
     function loadPage(page) {
