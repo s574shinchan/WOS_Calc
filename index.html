@@ -55,8 +55,8 @@
     window.addEventListener("message", function (event) {
       if (event.data.type === "BUILDING_RESULT") {
         const html = event.data.html;
-        document.getElementById("globalPopupContent").innerHTML = html;
-        document.getElementById("globalPopup").classList.remove("hidden");
+        document.getElementById("popupContent").innerHTML = html;
+        document.getElementById("popupModal").classList.remove("hidden");
       }
       
       if (event.data.type === "NAVIGATE_TO") {
@@ -66,10 +66,9 @@
       
       if (event.data.iframeHeight) {
         const frame = document.getElementById("mainFrame");
-
-        if (frame && frame.style.height !== event.data.iframeHeight + "px") {
-          frame.style.height = event.data.iframeHeight + "px";
-        }
+        
+        frame.style.height = event.data.iframeHeight + "px";
+        frame.style.weight = event.data.iframeWeight + "px";
       }
     });
     
