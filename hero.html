@@ -41,7 +41,6 @@
         </form>
       </details>
     </div>
-   
     <script>
       function loadPage(page) {
         window.location.href = page;
@@ -74,13 +73,15 @@
           }, 300); // 애니메이션 후 정확한 높이 반영
         });
       });
-     
+    </script>
+    <script>  
       const slotNames = ["고글", "장갑", "벨트", "신발"];
       const csvUrl = "https://github.com/s574shinchan/WOS_Calc/blob/26a77e4bd33679d4642619e2097aa8de2c22a2d7/data/Hero/Mithril.csv";
       let stageList = [];
       let csvData = [];
 
-      async function loadMithrilCSV() {
+      async function loadMithrilCSV()
+      {
         const res = await fetch(csvUrl);
         const text = await res.text();
         const lines = text.trim().split("\n").map(l => l.split(","));
@@ -93,8 +94,9 @@
         stageList = csvData.map(r => r["레벨"]);
         renderHeroEquipUI();
       }
-
-      function renderHeroEquipUI() {
+      
+      function renderHeroEquipUI() 
+      {
         const grid = document.getElementById("heroEquipGridBody");
         slotNames.forEach((name, i) => {
           const options = stageList.map(stage => `<option value="${stage}">${stage}</option>`).join("");
@@ -110,25 +112,29 @@
         });
       }
 
-      async function calcMithril() {
+      async function calcMithril()
+      {
         let total = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
         let rows = "";
 
         slotNames.forEach((name, i) => {
-          if (!document.getElementById(`check-${i}`).checked) return;
+          if (!document.getElementById(`check-${i}`).checked) 
+            return;
 
           const start = document.getElementById(`start-${i}`).value;
           const end = document.getElementById(`end-${i}`).value;
           const startIndex = stageList.indexOf(start);
           const endIndex = stageList.indexOf(end);
 
-          if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
+          if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) 
+          {
             rows += `<tr><td class="border p-1 text-center" colspan="5">⚠️ ${name}: 잘못된 단계 선택</td></tr>`;
             return;
           }
 
           const subtotal = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
-          for (let j = startIndex + 1; j <= endIndex; j++) {
+          for (let j = startIndex + 1; j <= endIndex; j++) 
+          {
             const row = data[j];
             subtotal.경험치 += parseFloat(row["경험치"] || "0");
             subtotal.너트 += parseFloat(row["너트"] || "0");
@@ -141,16 +147,14 @@
           total.미스릴 += subtotal.미스릴;
           total.레전드장비 += subtotal.레전드장비;
 
-          rows += `
-          <tr class="text-center">
+          rows += `<tr class="text-center">
           <td class="border p-1">${heroItems[i]}</td>
           <td class="border p-1">${cur} → ${tgt}</td>
           <td class="border p-1">${subtotal.경험치.toLocaleString()}</td>
           <td class="border p-1">${subtotal.너트.toLocaleString()}</td>
           <td class="border p-1">${subtotal.미스릴.toLocaleString()}</td>
           <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
-          </tr>
-          `;
+          </tr>`;
         }
 
         const own = {
@@ -195,8 +199,7 @@
 
         window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
       }
-    </script>
-    <script>
+      
       const masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/45c1d359d62eede1a7d9bb6dcfa0c94498e4f55c/data/Hero/Mastery.csv";
       const masterySlots = ["고글", "장갑", "벨트", "신발"];
       let masteryLevels = [];
@@ -308,6 +311,9 @@
       loadMithrilCSV();
       loadMasteryCSV();
       
+    </script>
+    
+    <script>      
       document.addEventListener("contextmenu", event => event.preventDefault());
       document.addEventListener("keydown", function (e) {
         if (
@@ -319,5 +325,6 @@
         }
       });
     </script>
+    
   </body>
 </html>
