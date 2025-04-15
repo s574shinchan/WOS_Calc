@@ -46,6 +46,22 @@
       function loadPage(page) {
         window.location.href = page;
       }
+      function sendHeightToParent() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ type: "NAVIGATE_TO", height: height + "px" }, "*");
+      }
+    
+      // 페이지 로드 후 최초 전송
+      window.addEventListener("load", sendHeightToParent);
+    
+      // <details>가 열릴 때마다 프레임 높이 재측정
+      document.querySelectorAll("details").forEach(detail => {
+        detail.addEventListener("toggle", () => {
+          if (detail.open) {
+            setTimeout(sendHeightToParent, 300); // 애니메이션 완료 후 높이 반영
+          }
+        });
+      });
     </script>
     <script>      
       const slotNames = ["고글", "장갑", "벨트", "신발"];
