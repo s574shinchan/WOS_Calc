@@ -18,7 +18,7 @@
     }
   </style>
 </head>
-<body class="bg-gray-50 text-sm font-sans p-4 sm:p-2">
+<body class="bg-gray-50 min-h-screen p-4">
   <div class="max-w-4xl mx-auto w-full bg-white shadow rounded-xl p-4 sm:p-3">
     <!-- 로고 -->
     <div class="text-center mb-4">
@@ -36,8 +36,11 @@
       <iframe 
         id="mainFrame" 
         src="menu.html" 
-        class="w-full rounded border min-h-[600px]"
-      ></iframe>
+        class="w-full rounded border min-h-[600px] transition-all duration-300"
+        style="height: 650px;"
+        frameborder="0"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        ></iframe>
     </div>
   
     <!-- 결과 팝업 -->
