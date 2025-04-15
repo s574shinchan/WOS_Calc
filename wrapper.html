@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>교환코드</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-xl font-bold text-blue-700">🎁 교환코드 입력</h1>
+    <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
+      <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      메뉴로 돌아가기
+    </button>
+  </div>
+
+  <iframe src="https://wos-giftcode.centurygame.com/" class="w-full h-[80vh] border rounded"></iframe>
+
+  <script>
+    function loadPage(page) {
+      window.location.href = page;
+    }
+  </script>
+</body>
+</html>
