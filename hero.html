@@ -46,9 +46,21 @@
       function loadPage(page) {
         window.location.href = page;
       }
-      function sendHeightToParent() {
-        const height = document.documentElement.scrollHeight;
+      
+      let lastSentHeight = 0;
+
+      function sendHeightToParent(height) {
+        lastSentHeight = height;
         window.parent.postMessage({ type: "SET_FRAME_SIZE", target: "hero.html", height: height + "px" }, "*");
+      }
+
+      function adjustFrameHeight(onOpen) {
+        const currentHeight = document.documentElement.scrollHeight;
+        const adjustedHeight = onOpen
+          ? currentHeight + 50 // 열릴 때 여유 공간 추가
+          : currentHeight - 50; // 닫힐 때는 줄임 (또는 원래대로)
+        
+        sendHeightToParent(adjustedHeight);
       }
     
       // 페이지 로드 후 최초 전송
@@ -57,9 +69,9 @@
       // <details>가 열릴 때마다 프레임 높이 재측정
       document.querySelectorAll("details").forEach(detail => {
         detail.addEventListener("toggle", () => {
-          if (detail.open) {
-            setTimeout(sendHeightToParent, 300); // 애니메이션 완료 후 높이 반영
-          }
+          setTimeout(() => {
+            adjustFrameHeight(detail.open); // 열림 상태에 따라 조절
+          }, 300); // 애니메이션 후 정확한 높이 반영
         });
       });
     </script>
