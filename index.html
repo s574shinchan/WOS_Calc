@@ -18,38 +18,43 @@
     }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen p-4">
+<body class="bg-gray-50 text-sm font-sans p-4 sm:p-2">
+  <div class="max-w-4xl mx-auto w-full bg-white shadow rounded-xl p-4 sm:p-3">
+    <!-- 로고 -->
+    <div class="text-center mb-4">
+      <img 
+          src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" 
+          alt="로고" 
+          class="w-48 mx-auto sm:w-32 drop-shadow-lg"
+          />
+    </div>
 
-  <!-- 로고 -->
-  <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" alt="로고" class="mx-auto mb-6 w-64 drop-shadow-lg"/>
-
-  <!-- 문구 -->
-  <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기 & 정보모음</h1>
+    <!-- 문구 -->
+    <h1 class="text-xl font-bold mb-8 text-center">WOS 통합 계산기 & 정보모음</h1>
+    
+    <div id="content" class="max-w-6xl mx-auto bg-white p-4 rounded shadow flex justify-center">
+      <iframe 
+        id="mainFrame" 
+        src="menu.html" 
+        class="w-full rounded border min-h-[600px]"
+        style="height: 650px;"
+      ></iframe>
+    </div>
   
-  <div id="content" class="max-w-6xl mx-auto bg-white p-4 rounded shadow flex justify-center">
-    <iframe 
-      id="mainFrame" 
-      src="menu.html" 
-      class="w-full rounded border min-h-[600px] transition-all duration-300"
-      style="height: 650px;"
-      frameborder="0"
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-    ></iframe>
-  </div>
-  
-  <!-- 결과 팝업 -->
-  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
-      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
-      <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
-      <div class="text-center mt-4">
-        <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+    <!-- 결과 팝업 -->
+    <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 text-sm">
+        <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
+        <div id="popupContent" class="overflow-auto max-h-[65vh] text-center"></div>
+        <div class="text-center mt-4">
+          <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
+        </div>
       </div>
     </div>
+    
+    <!-- 카피라이트 -->  
+    <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
   </div>
-  
-  <!-- 카피라이트 -->  
-  <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
   
   <script>
     window.addEventListener("message", function (event) {
