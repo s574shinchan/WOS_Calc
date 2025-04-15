@@ -81,22 +81,25 @@
             frame.style.height = "1410px";
           }
         } else {
-          switch(event.data.target) {
+          switch (event.data.target) {
             case "building.html":
               frame.style.height = "705px";
               break;
-            default:
+            case "gem.html":
+              frame.style.height = "985px";
               break;
-          }
-          
-          if (event.data.target === "gem.html") {
-            frame.style.height = "985px";
-          } else if (event.data.target === "hero.html") {
-            frame.style.height = "1055px";
-          } else if (event.data.target === "wrapper.html") {
-            frame.style.height = "745px";
-          } else if (event.data.target === "menu.html") {
-            frame.style.height = "650px";
+            case "hero.html":
+              frame.style.height = "1055px";
+              break;
+            case "wrapper.html":
+              frame.style.height = "745px";
+              break;
+            case "menu.html":
+              frame.style.height = "650px";
+              break;
+            default:
+              // 필요하면 기본 높이 설정 가능
+              break;
           }
         }
       }  //NAVIGATE_TO
@@ -108,7 +111,15 @@
     }
   </script>
   <script>
-
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
+    });
   </script>
 </body>
 </html>
