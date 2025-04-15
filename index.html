@@ -62,13 +62,17 @@
       if (event.data.type === "NAVIGATE_TO") {
         const frame = document.getElementById("mainFrame");
         
-        frame.src = event.data.target;
-        frame.style.height = "1400px";
-
+        frame.src = event.data.target;        
+        
         console.log("target : " , event.data.target);
-        console.log("frame : ", frame);
-        console.log("height : ", event.data.height);
-        console.log("height2 : ", frame.style.height);
+        
+        if (event.data.height) {
+          if (event.data.target === "building.html") {
+            frame.style.height = "1200px";
+            console.log("height : ", event.data.height);
+            console.log("height2 : ", frame.style.height);
+          }
+        }
       }
     });
     
