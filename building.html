@@ -79,9 +79,7 @@
       });
     }
     
-    function formatValue(value) {
-      console.log(value);
-      
+    function formatValue(value) {     
       if (value >= 1_000_000_000) {
         return `${Math.ceil(value / 1_000_000_000) / 10}B`;
       } else {
@@ -135,10 +133,10 @@
             <td class="border p-1 text-xs">${levelStr}</td>
             <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
             <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
-            <td class="border p-1">${formatValue(subtotal["고기"])}</td>
-            <td class="border p-1">${formatValue(subtotal["나무"])}</td>
-            <td class="border p-1">${formatValue(subtotal["석탄"])}</td>
-            <td class="border p-1">${formatValue(subtotal["철광"])}</td>
+            <td class="border p-1">${subtotal["고기"]}</td>
+            <td class="border p-1">${subtotal["나무"]}</td>
+            <td class="border p-1">${subtotal["석탄"]}</td>
+            <td class="border p-1">${subtotal["철광"]}</td>
           </tr>
         `;
       });
@@ -148,10 +146,10 @@
           <td class="border p-1" colspan="2">총합</td>
           <td class="border p-1">${total["불수정"].toLocaleString()}</td>
           <td class="border p-1">${total["정제"].toLocaleString()}</td>
-          <td class="border p-1">${formatValue(total["고기"])}</td>
-          <td class="border p-1">${formatValue(total["나무"])}</td>
-          <td class="border p-1">${formatValue(total["석탄"])}</td>
-          <td class="border p-1">${formatValue(total["철광"])}</td>
+          <td class="border p-1">${total["고기"]}</td>
+          <td class="border p-1">${total["나무"]}</td>
+          <td class="border p-1">${total["석탄"]}</td>
+          <td class="border p-1">${total["철광"]}</td>
         </tr>
           <tr class="text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">과부족</td>
