@@ -21,19 +21,15 @@
     </div>
   </div>
   <script>
-    const frameHeights = {
-      "building.html": "1500px",
-      "gem.html":      "1125px",
-      "equip.html":    "650px",
-      "hero.html":     "550px",
-      "pet.html":      "680px",      
-    };
-    
     document.querySelectorAll(".menu-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const target = btn.getAttribute("data-target");
         window.parent.postMessage({ type: "NAVIGATE_TO", target }, "*");
       });
+    });
+
+    window.addEventListener("load", () => {
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "635px", width: "100%" }, "*");
     });
   </script>
 </body>
