@@ -80,10 +80,10 @@
     }
     
     function formatValue(value) {
-      if (value >= 1000) {
-        return `${Math.ceil(value / 1000) / 10}B`;
+      if (value >= 1_000_000_000) {
+        return `${Math.ceil(value / 1_000_000_000) / 10}B`;
       } else {
-        return `${Math.ceil(value)}B`;
+        return `${Math.ceil(value) / 10}B`;
       }
     }
     
