@@ -62,6 +62,7 @@
       if (event.data.type === "NAVIGATE_TO") {
         document.getElementById("mainFrame").src = event.data.target;
         document.getElementById("mainFrame").style.height = event.data.height + "px";
+        console.log("height : ", event.data.height);
       }
       
       if (event.data.iframeHeight) {
@@ -69,6 +70,8 @@
         
         frame.style.height = event.data.iframeHeight + "px";
         frame.style.weight = event.data.iframeWeight + "px";
+        console.log("height : ", event.data.iframeHeight);
+        console.log("weight : ", event.data.iframeWeight);
       }
     });
     
