@@ -71,18 +71,11 @@
         if (event.data.height) {
           frame.style.height = event.data.height;
         }
-        
+
+        console.log("event.data.target : " , event.data.target);
+        console.log("frame : ", frame);
         console.log("height : ", event.data.height);
         console.log("width : ", event.data.width);
-      }
-      
-      if (event.data.iframeHeight) {
-        const frame = document.getElementById("mainFrame");
-        
-        frame.style.height = event.data.iframeHeight + "px";
-        frame.style.weight = event.data.iframeWeight + "px";
-        console.log("height : ", event.data.iframeHeight);
-        console.log("weight : ", event.data.iframeWeight);
       }
     });
     
