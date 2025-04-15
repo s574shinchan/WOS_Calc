@@ -61,7 +61,7 @@
       
       if (event.data.type === "NAVIGATE_TO") {
         document.getElementById("mainFrame").src = event.data.target;
-        
+        console.log("height : ", event.data.height);
         document.getElementById("mainFrame").style.height = event.data.height + "px";
       }
       
