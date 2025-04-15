@@ -60,9 +60,20 @@
       }
       
       if (event.data.type === "NAVIGATE_TO") {
-        document.getElementById("mainFrame").src = event.data.target;
+        const frame = document.getElementById("mainFrame");
+        
+        frame.src = event.data.target;
+        // 💡 프레임 크기 적용
+        if (event.data.width) {
+          frame.style.width = event.data.width;
+        }
+        
+        if (event.data.height) {
+          frame.style.height = event.data.height;
+        }
+        
         console.log("height : ", event.data.height);
-        document.getElementById("mainFrame").style.height = event.data.height + "px";
+        console.log("width : ", event.data.width);
       }
       
       if (event.data.iframeHeight) {
