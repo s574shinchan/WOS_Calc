@@ -137,7 +137,7 @@
         `;
       });
 
-      result += `
+      const resultHTML += `
         <tr class="bg-blue-50 font-bold">
           <td class="border p-1" colspan="2">총합</td>
           <td class="border p-1">${total["불수정"].toLocaleString()}</td>
@@ -149,7 +149,8 @@
         </tr>
         </tbody></table>
       `;
-      showPopup(result);
+      
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
     }
     
     function loadPage(page) {
