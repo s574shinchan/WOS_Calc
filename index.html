@@ -58,7 +58,9 @@
         document.getElementById("popupContent").innerHTML = html;
         document.getElementById("popupModal").classList.remove("hidden");
       }  //RESULT_POPUP
-      
+    });
+
+    window.addEventListener("message", function (event) {
       if (event.data.type === "NAVIGATE_TO") {
         const frame = document.getElementById("mainFrame");
         const isMobile = window.innerWidth <= 768;
@@ -72,9 +74,15 @@
             frame.style.height = "1410px";
           }
         } else {
-          if (event.data.target === "building.html") {
-            frame.style.height = "705px";
-          } else if (event.data.target === "gem.html") {
+          switch(event.data.target) {
+            case "building.html":
+              frame.style.height = "705px";
+              break;
+            default:
+              break;
+          }
+          
+          if (event.data.target === "gem.html") {
             frame.style.height = "985px";
           } else if (event.data.target === "hero.html") {
             frame.style.height = "1055px";
@@ -86,13 +94,6 @@
         }
       }  //NAVIGATE_TO
       
-      if (event.data.type === "SET_FRAME_SIZE") {
-        const frame = document.getElementById("mainFrame");
-        const isMobile = window.innerWidth <= 768;
-        if(!isMobile) {
-          frame.style.height = "650px";
-        }
-      }  //SET_FRAME_SIZE
     });
     
     function closePopup() {
