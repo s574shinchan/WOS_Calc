@@ -151,7 +151,6 @@
         </tbody></table>
       `;
       
-      window.parent.postMessage({ type: "NAVIGATE_TO", target: "building.html", height: "1200px", width: "100%" }, "*");
       window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
     }
     
@@ -161,5 +160,8 @@
     
     fetchBuildingData();
   </script>
+<script>
+      window.parent.postMessage({ type: "NAVIGATE_TO", target: "building.html", height: "1200px", width: "100%" }, "*");
+</script>
 </body>
 </html>
