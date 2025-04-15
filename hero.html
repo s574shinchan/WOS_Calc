@@ -18,15 +18,14 @@
       <h1 class="text-2xl font-bold text-gray-800 mb-4">🧝 영웅 장비 계산기</h1>    
       <details class="bg-white border border-yellow-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-yellow-700 mb-2">📕 미스릴</summary>
-        <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>
         <form id="heroEquipForm" class="space-y-4">
+        <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>        
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-          <div><label class="block font-semibold">보유 경험치</label><input type="number" id="own-경험치" class="w-full border rounded p-2" /></div>
-          <div><label class="block font-semibold">보유 너트</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">보유 너트수</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
           <div><label class="block font-semibold">보유 미스릴</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" /></div>
           <div><label class="block font-semibold">보유 레전드장비</label><input type="number" id="own-레전드장비" class="w-full border rounded p-2" /></div>
         </div>
-        <button type="button" onclick="calculateHeroEquip()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
+        <button type="button" onclick="calcMithril()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
       </form>
       </details>
 
@@ -40,62 +39,65 @@
     </div>
    
     <script>
-      const sheetID = "1vtW4diWsB4OoSK70nYa6ve1nRPHrhWg-rf76NlsRM08";
-      const sheetName = "영웅장비재료";
-      const heroItems = ["고글", "장갑", "벨트", "신발"];
-      let heroStages = [], heroData = [];
+      const slotNames = ["고글", "장갑", "벨트", "신발"];
+      const csvUrl = "https://github.com/s574shinchan/WOS_Calc/blob/26a77e4bd33679d4642619e2097aa8de2c22a2d7/data/Hero/Mithril.csv";
+      let stageList = [];
+      let csvData = [];
       
-      async function loadHeroEquip() {
-        const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        heroData = data;
-        heroStages = data.map(r => r["레벨"]).filter(Boolean);
-        
+      async function loadCSV() {
+        const res = await fetch(csvUrl);
+        const text = await res.text();
+        const lines = text.trim().split("\n").map(l => l.split(","));
+        const headers = lines[0];
+        csvData = lines.slice(1).map(row => {
+          const obj = {};
+          headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
+          return obj;
+        });
+        stageList = csvData.map(r => r["레벨"]);
+        renderHeroEquipUI();
+      }
+      
+      function renderHeroEquipUI() {
         const grid = document.getElementById("heroEquipGridBody");
-        heroItems.forEach((item, i) => {
-          const options = heroStages.map(s => `<option value="${s}">${s}</option>`).join('');
+        slotNames.forEach((name, i) => {
+          const options = stageList.map(stage => `<option value="${stage}">${stage}</option>`).join("");
           grid.innerHTML += `
           <div class="border p-2 rounded bg-yellow-50 text-xs">
-          <label for="hero-check-${i}" class="flex items-center text-sm font-semibold mb-1">
-          <input type="checkbox" id="hero-check-${i}" class="w-4 h-4 mr-1 accent-yellow-500" />
-          ${item}
+          <label class="flex items-center text-sm font-semibold mb-1">
+          <input type="checkbox" id="check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
+          ${name}
           </label>
-          <select id="hero-cur-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
-          <select id="hero-tgt-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
-          </div>
-          `;
+          <select id="start-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
+          <select id="end-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
+          </div>`;
         });
       }
       
-      async function calculateHeroEquip() {
-        const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        const levels = data.map(d => d["레벨"]);
-        
+      async function calculateHeroGear() {
         let total = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
         let rows = "";
         
-        for (let i = 0; i < heroItems.length; i++) {
-          if (!document.getElementById(`hero-check-${i}`).checked) continue;
+        slotNames.forEach((name, i) => {
+          if (!document.getElementById(`check-${i}`).checked) return;
           
-          const cur = document.getElementById(`hero-cur-${i}`).value;
-          const tgt = document.getElementById(`hero-tgt-${i}`).value;
-          const start = levels.indexOf(cur);
-          const end = levels.indexOf(tgt);
-          if (start === -1 || end === -1 || start >= end) {
-            rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${heroItems[i]}: 잘못된 레벨 선택</td></tr>`;
-            continue;
+          const start = document.getElementById(`start-${i}`).value;
+          const end = document.getElementById(`end-${i}`).value;
+          const startIndex = stageList.indexOf(start);
+          const endIndex = stageList.indexOf(end);
+          
+          if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
+            rows += `<tr><td class="border p-1 text-center" colspan="5">⚠️ ${name}: 잘못된 단계 선택</td></tr>`;
+            return;
           }
           
           const subtotal = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
-          for (let j = start + 1; j <= end; j++) {
+          for (let j = startIndex + 1; j <= endIndex; j++) {
             const row = data[j];
-            subtotal.경험치 += parseFloat(row["경험치"] || 0);
-            subtotal.너트 += parseFloat(row["너트"] || 0);
-            subtotal.미스릴 += parseFloat(row["미스릴"] || 0);
-            subtotal.레전드장비 += parseFloat(row["레전드장비"] || 0);
+            subtotal.경험치 += parseFloat(row["경험치"] || "0");
+            subtotal.너트 += parseFloat(row["너트"] || "0");
+            subtotal.미스릴 += parseFloat(row["미스릴"] || "0");
+            subtotal.레전드장비 += parseFloat(row["레전드장비"] || "0");
           }
           
           total.경험치 += subtotal.경험치;
@@ -164,7 +166,6 @@
       
       loadHeroEquip();
     </script>
-    
     <script>
       document.addEventListener("contextmenu", event => event.preventDefault());
       document.addEventListener("keydown", function (e) {
