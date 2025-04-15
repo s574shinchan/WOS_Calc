@@ -62,7 +62,6 @@
       if (event.data.type === "NAVIGATE_TO") {
         const frame = document.getElementById("mainFrame");
         const isMobile = window.innerWidth <= 768;
-        let frameheight;
         
         frame.src = event.data.target;
         
@@ -80,6 +79,8 @@
       }  //NAVIGATE_TO
       
       if (event.data.type === "SET_FRAME_SIZE") {
+        const frame = document.getElementById("mainFrame");
+        const isMobile = window.innerWidth <= 768;
         frame.style.height = "650px";
         console.log("📏 menu.html이 요청한 프레임 크기 적용됨");
       }  //SET_FRAME_SIZE
