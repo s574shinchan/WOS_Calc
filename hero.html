@@ -197,9 +197,6 @@
         window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
       }
 
-      loadMithrilCSV();
-    </script>
-    <script>
       const masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/45c1d359d62eede1a7d9bb6dcfa0c94498e4f55c/data/Hero/Mastery.csv";
       const masterySlots = ["고글", "장갑", "벨트", "신발"];
       let masteryLevels = [];
@@ -307,7 +304,8 @@
     
         window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
       }
-    
+      
+      loadMithrilCSV();
       loadMasteryCSV();
     </script>
     <script>
