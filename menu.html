@@ -30,7 +30,7 @@
 
     window.addEventListener("load", () => {
       const isMobile = window.innerWidth <= 768;
-      if (!isMobile()) {
+      if (isMobile() === false) {
         window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "635px", width: "100%" }, "*");
       }
     });
