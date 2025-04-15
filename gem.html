@@ -26,17 +26,6 @@
     </form>
   </div>
 
-  <!-- 팝업 모달 -->
-  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
-      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
-      <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
-      <div class="text-center mt-4">
-        <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/ef3bd1665ddf73044b325143fb9fb16cf98ddcd3/data/chief/Gem.csv';
     const gemSlots = [
@@ -80,16 +69,7 @@
         `;
       });
     }
-
-    function closePopup() {
-      document.getElementById("popupModal").classList.add("hidden");
-    }
-
-    function showPopup(html) {
-      document.getElementById("popupContent").innerHTML = html;
-      document.getElementById("popupModal").classList.remove("hidden");
-    }
-
+    
     function calculateGems() {
       let total = { 매뉴얼: 0, 도면: 0, 비전: 0, 설계도: 0 };
       let rows = "";
