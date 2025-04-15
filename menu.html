@@ -10,7 +10,7 @@
   <div class="text-center space-y-6">
     <h2 class="text-3xl font-bold text-indigo-700 mb-6">📌 메뉴 선택</h2>
     <div class="flex flex-col items-center gap-4">
-      <button class="menu-btn bg-blue-600 text-white px-6 py-3 rounded-xl shadow w-72" data-target="building.html">🏗 건물계산</button>
+      <button onclick="loadBuildingPage()" class="menu-btn bg-blue-600 text-white px-6 py-3 rounded-xl shadow w-72" data-target="building.html">🏗 건물계산</button>
       <button class="menu-btn bg-purple-600 text-white px-6 py-3 rounded-xl shadow w-72" data-target="gem.html">💎 영주보석</button>
       <button class="menu-btn bg-green-600 text-white px-6 py-3 rounded-xl shadow w-72" data-target="equip.html">🛡 영주장비</button>
       <button class="menu-btn bg-yellow-500 text-white px-6 py-3 rounded-xl shadow w-72" data-target="hero.html">🧝 영웅장비</button>
@@ -29,11 +29,21 @@
     });
 
     window.addEventListener("load", () => {
-const isMobile = window.innerWidth <= 768;
-if (!isMobile()) {
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "635px", width: "100%" }, "*");
-}
+      const isMobile = window.innerWidth <= 768;
+      if (!isMobile()) {
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "635px", width: "100%" }, "*");
+      }
     });
+  </script>
+  <script>
+    function loadBuildingPage() {
+      window.parent.postMessage({
+        type: "NAVIGATE_TO",
+        target: "building.html",
+        height: "1200px",
+        width: "100%"
+      }, "*");
+    }
   </script>
 </body>
 </html>
