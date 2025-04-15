@@ -22,30 +22,10 @@
     </form>
   </div>
   
-  <!-- 팝업 모달 -->
-  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
-      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
-      <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
-      <div class="text-center mt-4">
-        <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
-      </div>
-    </div>
-  </div>
-  
   <script>
     const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
     const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광"];
     const buildingData = {};
-
-    function closePopup() {
-      document.getElementById("popupModal").classList.add("hidden");
-    }
-
-    function showPopup(html) {
-      document.getElementById("popupContent").innerHTML = html;
-      document.getElementById("popupModal").classList.remove("hidden");
-    }
 
     async function fetchBuildingData() {
       for (const name of buildingList) {
@@ -148,9 +128,14 @@
           <td class="border p-1">${total["석탄"].toLocaleString()}</td>
           <td class="border p-1">${total["철광"].toLocaleString()}</td>
         </tr>
+          <tr class="text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">과부족</td>
+          <td class="border p-1">${(owned.불수정 - total.불수정).toLocaleString()}</td>
+          <td class="border p-1">${(owned.정제 - total.정제).toLocaleString()}</td>
+          <td class="border p-1 colspan="4"></td>
+        </tr>
         </tbody></table>
       `;
-      //window.parent.postMessage({ type: "NAVIGATE_TO", target: "building.html", height: "1200px", width: "100%" }, "*");
       window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
     }
     
