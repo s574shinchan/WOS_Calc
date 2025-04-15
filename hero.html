@@ -76,12 +76,11 @@
     </script>
     <script>  
       const slotNames = ["고글", "장갑", "벨트", "신발"];
-      const csvUrl = "https://github.com/s574shinchan/WOS_Calc/blob/26a77e4bd33679d4642619e2097aa8de2c22a2d7/data/Hero/Mithril.csv";
+      const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Hero/Mithril.csv";
       let stageList = [];
       let csvData = [];
 
-      async function loadMithrilCSV()
-      {
+      async function loadMithrilCSV() {
         const res = await fetch(csvUrl);
         const text = await res.text();
         const lines = text.trim().split("\n").map(l => l.split(","));
@@ -202,7 +201,7 @@
     </script>
     
     <script>
-      const masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/45c1d359d62eede1a7d9bb6dcfa0c94498e4f55c/data/Hero/Mastery.csv";
+      const masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Hero/Mastery.csv";
       const masterySlots = ["고글", "장갑", "벨트", "신발"];
       let masteryLevels = [];
       let masteryData = [];
