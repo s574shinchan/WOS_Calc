@@ -80,10 +80,10 @@
     }
     
     function formatValue(value) {     
-      if (value >= 1_000_000_000) {
-        return `${Math.ceil(value / 1_000_000_000) / 10}B`;
+      if (value >= 1000) {
+        return `${Math.ceil(value / 1000) / 10}B`;
       } else {
-        return `${Math.ceil(value) / 10}M`;
+        return `${value}M`;
       }
     }
     
@@ -155,7 +155,7 @@
           <td class="border p-1" colspan="2">과부족</td>
           <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
           <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
-          <td class="border p-1 colspan="4"></td>
+          <td class="border p-1" colspan="4"></td>
         </tr>
         </tbody></table>
       `;
