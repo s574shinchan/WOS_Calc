@@ -63,21 +63,12 @@
         const frame = document.getElementById("mainFrame");
         
         frame.src = event.data.target;
-        // 💡 프레임 크기 적용
-        if (event.data.width) {
-          frame.style.width = "100%";
-        }
-        
-        if (event.data.height) {
-          frame.style.height = "995px";
-        }
+        frame.style.height = "1400px";
 
-        console.log("event.data.target : " , event.data.target);
+        console.log("target : " , event.data.target);
         console.log("frame : ", frame);
         console.log("height : ", event.data.height);
         console.log("height2 : ", frame.style.height);
-        console.log("width : ", event.data.width);
-        console.log("width2 : ", frame.style.width);
       }
     });
     
