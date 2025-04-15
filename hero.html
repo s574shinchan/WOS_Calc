@@ -203,7 +203,7 @@
           headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
           return obj;
         });
-        masteryLevels = masteryData.map(r => r["단계"]);
+        masteryLevels = masteryData.map(r => r["레벨"]);
         renderMasteryUI();
       }
     
