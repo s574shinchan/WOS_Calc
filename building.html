@@ -151,7 +151,7 @@
         </tbody></table>
       `;
       
-      window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
+      window.parent.postMessage({ type: "RESULT_POPUP", html: result, height: "1200px"}, "*");
     }
     
     function loadPage(page) {
