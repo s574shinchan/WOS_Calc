@@ -32,7 +32,7 @@
       <details class="bg-white border border-yellow-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-yellow-700 mb-2">📙 마스터리</summary>
         <form id="masteryForm" class="space-y-4">
-          <div id="masteryGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+          <div id="masteryGrid" class="grid grid-cols-2 md:grid-cols-2 gap-4"></div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             <div><label class="block font-semibold">보유 마스터리</label><input type="number" id="owned-마스터리" class="w-full border rounded p-2" /></div>
             <div><label class="block font-semibold">보유 레전드장비</label><input type="number" id="owned-레전드장비" class="w-full border rounded p-2" /></div>
@@ -172,113 +172,115 @@
       loadMithrilCSV();
     </script>
     <script>
-      const slotNames = ["고글", "장갑", "벨트", "신발"];
-      const csvUrl = "https://github.com/s574shinchan/WOS_Calc/blob/26a77e4bd33679d4642619e2097aa8de2c22a2d7/data/Hero/Mithril.csv";
-      let stageList = [];
-      let csvData = [];
-      
+      const masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/45c1d359d62eede1a7d9bb6dcfa0c94498e4f55c/data/Hero/Mastery.csv";
+      const masterySlots = ["고글", "장갑", "벨트", "신발"];
+      let masteryLevels = [];
+      let masteryData = [];
+    
       async function loadMasteryCSV() {
-        const res = await fetch(masteryCSV);
+        const res = await fetch(masteryUrl);
         const text = await res.text();
-        const lines = text.trim().split("\n").map(l => l.split(","));
+        const lines = text.trim().split("\n").map(row => row.split(","));
         const headers = lines[0];
         masteryData = lines.slice(1).map(row => {
           const obj = {};
           headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
           return obj;
         });
-        masteryStages = masteryData.map(r => r["단계"]);
+        masteryLevels = masteryData.map(r => r["단계"]);
         renderMasteryUI();
       }
+    
       function renderMasteryUI() {
         const grid = document.getElementById("masteryGrid");
-        ["A", "B", "C", "D", "E", "F"].forEach((s, i) => {
-          const options = masteryStages.map(stage => `<option value="${stage}">${stage}</option>`).join("");
+        masterySlots.forEach((name, i) => {
+          const options = masteryLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
           grid.innerHTML += `
-          <div class="border p-2 rounded bg-indigo-50 text-xs">
-          <label class="flex items-center text-sm font-semibold mb-1">
-          <input type="checkbox" id="m-check-${i}" class="mr-1 w-4 h-4 accent-indigo-500" />
-          마스터리${s}
-          </label>
-          <select id="m-start-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
-          <select id="m-end-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
-          </div>`;
+            <div class="border p-2 rounded bg-yellow-50 text-xs">
+              <label class="flex items-center text-sm font-semibold mb-1">
+                <input type="checkbox" id="m-check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
+                ${name}
+              </label>
+              <select id="m-start-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
+              <select id="m-end-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
+            </div>
+          `;
         });
       }
-      
-      function calculateMastery() {
-        let total = { 마스터리석: 0, 레전드장비: 0 };
+    
+      async function calcMastery() {
+        let total = { 마스터리: 0, 레전드장비: 0 };
         let rows = "";
-        
-        slotNames.forEach((name, i) => {
-          if (!document.getElementById(`check-${i}`).checked) return;
-          
-          const start = document.getElementById(`start-${i}`).value;
-          const end = document.getElementById(`end-${i}`).value;
-          const startIndex = stageList.indexOf(start);
-          const endIndex = stageList.indexOf(end);
-          
+    
+        masterySlots.forEach((name, i) => {
+          if (!document.getElementById(`m-check-${i}`).checked) return;
+    
+          const start = document.getElementById(`m-start-${i}`).value;
+          const end = document.getElementById(`m-end-${i}`).value;
+          const startIndex = masteryLevels.indexOf(start);
+          const endIndex = masteryLevels.indexOf(end);
+    
           if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
-            rows += `<tr><td class="border p-1 text-center" colspan="5">⚠️ ${name}: 잘못된 단계 선택</td></tr>`;
+            rows += `<tr><td class="border p-1 text-center" colspan="4">⚠️ ${name}: 잘못된 단계 선택</td></tr>`;
             return;
           }
-          
-          const subtotal = { 마스터리석: 0, 레전드장비: 0 };
+    
+          const subtotal = { 마스터리: 0, 레전드장비: 0 };
           for (let j = startIndex + 1; j <= endIndex; j++) {
-            const row = data[j];
-            subtotal.마스터리석 += parseFloat(row["마스터리석"] || "0");
+            const row = masteryData[j];
+            subtotal.마스터리 += parseFloat(row["마스터리"] || "0");
             subtotal.레전드장비 += parseFloat(row["레전드장비"] || "0");
           }
-          
-          total.마스터리석 += subtotal.마스터리석;
+    
+          total.마스터리 += subtotal.마스터리;
           total.레전드장비 += subtotal.레전드장비;
-          
+    
           rows += `
-          <tr class="text-center">
-          <td class="border p-1">${heroItems[i]}</td>
-          <td class="border p-1">${cur} → ${tgt}</td>
-          <td class="border p-1">${subtotal.마스터리석.toLocaleString()}</td>
-          <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
-          </tr>
+            <tr class="text-center">
+              <td class="border p-1">${name}</td>
+              <td class="border p-1">${start} → ${end}</td>
+              <td class="border p-1">${subtotal.마스터리.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
+            </tr>
           `;
-        }
-        
+        });
+    
         const own = {
-          마스터리석: parseFloat(document.getElementById("own-마스터리석").value) || 0,
-          레전드장비: parseFloat(document.getElementById("own-레전드장비").value) || 0,
+          마스터리: parseFloat(document.getElementById("owned-마스터리").value) || 0,
+          레전드장비: parseFloat(document.getElementById("owned-레전드장비").value) || 0,
         };
-        
+    
         rows += `
-        <tr class="text-center font-bold bg-yellow-100">
-        <td colspan="2" class="border p-1">총합</td>
-        <td class="border p-1">${total.마스터리석.toLocaleString()}</td>
-        <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
-        </tr>
-        <tr class="text-center font-bold bg-red-50">
-        <td colspan="2" class="border p-1">과부족</td>
-        <td class="border p-1">${(own.마스터리석 - total.마스터리석).toLocaleString()}</td>
-        <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
-        </tr>
+          <tr class="text-center font-bold bg-yellow-100">
+            <td colspan="2" class="border p-1">총합</td>
+            <td class="border p-1">${total.마스터리.toLocaleString()}</td>
+            <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
+          </tr>
+          <tr class="text-center font-bold bg-red-50">
+            <td colspan="2" class="border p-1">과부족</td>
+            <td class="border p-1">${(own.마스터리 - total.마스터리).toLocaleString()}</td>
+            <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
+          </tr>
         `;
-        
+    
         const resultHTML = `
         <table class="w-full table-auto border mt-4 text-sm text-center">
         <thead class="bg-gray-100">
         <tr>
         <th class="border p-1">장비</th>
         <th class="border p-1">레벨</th>
-        <th class="border p-1">마스터리석</th>
+        <th class="border p-1">마스터리</th>
         <th class="border p-1">레전드장비</th>
         </tr>
         </thead>
         <tbody>${rows}</tbody>
         </table>
         `;
-        
+    
         window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
       }
-      
-      loadMasteryCSV();      
+    
+      loadMasteryCSV();
     </script>
     <script>
       document.addEventListener("contextmenu", event => event.preventDefault());
