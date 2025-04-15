@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,12 +8,18 @@
 </head>
 <body class="bg-gray-100 p-4 font-sans text-sm">
   <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+    <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
+      <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      메뉴로 돌아가기
+    </button>
     <h2 class="text-2xl font-bold text-purple-600 mb-4">🛡️ 장비 계산기</h2>
     <form id="gearForm" class="space-y-6">
       <div id="gearTableBody" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         <div><label class="block font-semibold">보유 합금</label><input type="number" id="own-합금" class="w-full border rounded p-2" /></div>
-        <div><label class="block font-semibold">보유 달빛앰버면</label><input type="number" id="own-설계도면" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">보유 설계도면</label><input type="number" id="own-설계도면" class="w-full border rounded p-2" /></div>
         <div><label class="block font-semibold">보유 광택제</label><input type="number" id="own-광택제" class="w-full border rounded p-2" /></div>
         <div><label class="block font-semibold">보유 달빛앰버</label><input type="number" id="own-앰버" class="w-full border rounded p-2" /></div>
       </div>
@@ -35,11 +39,7 @@
 
   <script>
     const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/2035550da1ab0e8d4601e86c972415b02f568709/data/chief/Gear.csv';
-    const gearSlots = [
-      "무기A", "무기B", "무기C", "무기D", "무기E", "무기F",
-      "방어구A", "방어구B", "방어구C", "방어구D", "방어구E", "방어구F",
-      "장신구A", "장신구B", "장신구C", "장신구D", "장신구E", "장신구F"
-    ];
+    const gearSlots = ["장비1(창)", "장비2(창)", "장비3(방)", "장비4(방)", "장비5(궁)", "장비6(궁)"];
     let gearLevels = [];
     let gearData = [];
 
@@ -87,7 +87,7 @@
     }
 
     function calculateGear() {
-      let total = { 합금: 0, 설계도면: 0, 광택제: 0, 설계도: 0 };
+      let total = { 합금: 0, 설계도면: 0, 광택제: 0, 앰버: 0 };
       let rows = "";
 
       for (let i = 0; i < gearSlots.length; i++) {
@@ -103,20 +103,20 @@
           continue;
         }
 
-        const subtotal = { 합금: 0, 설계도면: 0, 광택제: 0, 설계도: 0 };
+        const subtotal = { 합금: 0, 설계도면: 0, 광택제: 0, 앰버: 0 };
 
         for (let j = start + 1; j <= end; j++) {
           const row = gearData[j];
           subtotal.합금 += parseFloat(row["합금"] || 0);
           subtotal.설계도면 += parseFloat(row["설계도면"] || 0);
           subtotal.광택제 += parseFloat(row["광택제"] || 0);
-          subtotal.설계도 += parseFloat(row["앰버"] || 0);
+          subtotal.앰버 += parseFloat(row["앰버"] || 0);
         }
 
         total.합금 += subtotal.합금;
         total.설계도면 += subtotal.설계도면;
         total.광택제 += subtotal.광택제;
-        total.설계도 += subtotal.설계도;
+        total.앰버 += subtotal.앰버;
 
         rows += `
           <tr class="text-center">
@@ -125,7 +125,7 @@
             <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
             <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
             <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.설계도.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.앰버.toLocaleString()}</td>
           </tr>
         `;
       }
@@ -134,7 +134,7 @@
         합금: parseFloat(document.getElementById("own-합금").value) || 0,
         설계도면: parseFloat(document.getElementById("own-설계도면").value) || 0,
         광택제: parseFloat(document.getElementById("own-광택제").value) || 0,
-        설계도: parseFloat(document.getElementById("own-앰버").value) || 0,
+        앰버: parseFloat(document.getElementById("own-앰버").value) || 0,
       };
 
       rows += `
@@ -143,14 +143,14 @@
           <td class="border p-1">${total.합금.toLocaleString()}</td>
           <td class="border p-1">${total.설계도면.toLocaleString()}</td>
           <td class="border p-1">${total.광택제.toLocaleString()}</td>
-          <td class="border p-1">${total.설계도.toLocaleString()}</td>
+          <td class="border p-1">${total.앰버.toLocaleString()}</td>
         </tr>
         <tr class="text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">과부족</td>
           <td class="border p-1">${(owned.합금 - total.합금).toLocaleString()}</td>
           <td class="border p-1">${(owned.설계도면 - total.설계도면).toLocaleString()}</td>
           <td class="border p-1">${(owned.광택제 - total.광택제).toLocaleString()}</td>
-          <td class="border p-1">${(owned.설계도 - total.설계도).toLocaleString()}</td>
+          <td class="border p-1">${(owned.앰버 - total.앰버).toLocaleString()}</td>
         </tr>
       `;
 
@@ -163,15 +163,20 @@
               <th class="border p-1">합금</th>
               <th class="border p-1">설계도면</th>
               <th class="border p-1">광택제</th>
-              <th class="border p-1">설계도</th>
+              <th class="border p-1">앰버</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
       `;
-      showPopup(resultHTML);
+      
+      window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
     }
 
+    function loadPage(page) {
+      window.location.href = page;
+    }
+    
     createGearUI();
   </script>
 </body>
