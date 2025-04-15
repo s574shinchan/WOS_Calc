@@ -81,9 +81,9 @@
     
     function formatValue(value) {
       if (value >= 1000) {
-        return value.toFixed(1) + "B";
+        return `${Math.ceil(value / 1000) / 10}B`;
       } else {
-        return value + "M";
+        return `${Math.ceil(value)}B`;
       }
     }
     
