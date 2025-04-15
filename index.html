@@ -53,11 +53,11 @@
   
   <script>
     window.addEventListener("message", function (event) {
-      if (event.data.type === "BUILDING_RESULT") {
+      if (event.data.type === "RESULT_POPUP") {
         const html = event.data.html;
         document.getElementById("popupContent").innerHTML = html;
         document.getElementById("popupModal").classList.remove("hidden");
-      }  //BUILDING_RESULT
+      }  //RESULT_POPUP
       
       if (event.data.type === "NAVIGATE_TO") {
         const frame = document.getElementById("mainFrame");
