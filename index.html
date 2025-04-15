@@ -87,7 +87,13 @@
       if (event.data.type === "SET_FRAME_SIZE") {
         const frame = document.getElementById("mainFrame");
         const isMobile = window.innerWidth <= 768;
-        frame.style.height = "650px";
+        
+        if (event.data.target === "hero.html") {
+          frame.style.height = event.data.height;
+        } else {        
+          frame.style.height = "650px";
+        }
+        
         console.log("📏 menu.html이 요청한 프레임 크기 적용됨");
       }  //SET_FRAME_SIZE
       
