@@ -130,20 +130,34 @@
     </details>
        
     <script>
-      function sendHeightToParent() {
-        const height = document.documentElement.scrollHeight + 5;
-        window.parent.postMessage({ iframeHeight: height }, "*");
+      let lastSentHeight = 0;
+      
+      function sendHeightToParent(height) {
+        lastSentHeight = height;
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height + "px" }, "*");
       }
     
-      window.addEventListener("load", sendHeightToParent);
-      document.querySelectorAll("details").forEach((detail) => {
+      function adjustFrameHeight(onOpen) {
+        const currentHeight = document.documentElement.scrollHeight;
+        const adjustedHeight = onOpen
+          ? currentHeight + 100 // 열릴 때 여유 공간 추가
+          : currentHeight - 100; // 닫힐 때는 줄임 (또는 원래대로)
+        
+        sendHeightToParent(adjustedHeight);
+      }
+    
+      window.addEventListener("load", () => {
+        sendHeightToParent(document.documentElement.scrollHeight);
+      });
+    
+      document.querySelectorAll("details").forEach(detail => {
         detail.addEventListener("toggle", () => {
-          if (detail.open) {
-            setTimeout(sendHeightToParent, 300); // 펼쳐진 후 높이 반영
-          }
+          setTimeout(() => {
+            adjustFrameHeight(detail.open); // 열림 상태에 따라 조절
+          }, 300); // 애니메이션 후 정확한 높이 반영
         });
       });
-
+      
       function loadPage(page) {
         window.location.href = page;
       }
