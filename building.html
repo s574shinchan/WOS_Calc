@@ -74,7 +74,8 @@
         const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
         container.innerHTML += `
           <div class="bg-blue-50 border p-4 rounded shadow">
-            <label><input type="checkbox" id="check-${name}" class="mr-1" /> ${name}</label>
+          <label class="flex items-center text-sm font-semibold mb-1">
+          <input type="checkbox" id="check-${name}" class="mr-1" /> ${name}</label>
             <div class="mt-2">
               <label class="text-sm">현재 레벨</label>
               <select id="start-${name}" class="w-full border rounded p-1 mt-1">${options}</select>
