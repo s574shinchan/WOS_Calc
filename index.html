@@ -62,19 +62,16 @@
       if (event.data.type === "NAVIGATE_TO") {
         const frame = document.getElementById("mainFrame");
         const isMobile = window.innerWidth <= 768;
-        const frameheight = 0;
+        let frameheight;
         
         frame.src = event.data.target;
         
         if (isMobile) {
           if (event.data.target === "building.html") {
-            frameheight = frame.style.height;
             frame.style.height = "1150px";
           }
         } else {
-          if (frame.style.height > 0) {
-            frame.style.height = frameheight;
-          } else {
+          if (event.data.target === "building.html") {
             frame.style.height = "650px";
           }
         }
