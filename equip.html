@@ -27,16 +27,6 @@
     </form>
   </div>
 
-  <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6">
-      <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
-      <div id="popupContent" class="overflow-x-auto text-sm max-h-[65vh] overflow-y-auto"></div>
-      <div class="text-center mt-4">
-        <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/2035550da1ab0e8d4601e86c972415b02f568709/data/chief/Gear.csv';
     const gearSlots = ["장비1(창)", "장비2(창)", "장비3(방)", "장비4(방)", "장비5(궁)", "장비6(궁)"];
