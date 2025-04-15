@@ -105,7 +105,11 @@
         const end = parseInt(document.getElementById("end-" + name).value);
         const data = buildingData[name].slice(start, end);
         let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
-
+        const owned = {
+          "불수정": parseInt(document.getElementById("owned-불수정").value || 0),
+          "정제": parseInt(document.getElementById("owned-정제").value || 0)
+        };
+        
         data.forEach(row => {
           resources.forEach(res => {
             subtotal[res] += parseInt(row[res] || 0);
