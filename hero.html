@@ -210,7 +210,7 @@
           }
     
           async function calcMastery() {
-            let total = { 마스터리: 0, 레전드장비: 0 };
+            let total = { 마스터리석: 0, 레전드장비: 0 };
             let rows = "";
     
             masterySlots.forEach((name, i) => {
@@ -226,40 +226,40 @@
                 return;
               }
     
-              const subtotal = { 마스터리: 0, 레전드장비: 0 };
+              const subtotal = { 마스터리석: 0, 레전드장비: 0 };
               for (let j = startIndex + 1; j <= endIndex; j++) {
                 const row = masteryData[j];
-                subtotal.마스터리 += parseFloat(row["마스터리"] || "0");
+                subtotal.마스터리석 += parseFloat(row["마스터리석"] || "0");
                 subtotal.레전드장비 += parseFloat(row["레전드장비"] || "0");
               }
     
-              total.마스터리 += subtotal.마스터리;
+              total.마스터리석 += subtotal.마스터리석;
               total.레전드장비 += subtotal.레전드장비;
     
               rows += `
                 <tr class="text-center">
                   <td class="border p-1">${name}</td>
                   <td class="border p-1">${start} → ${end}</td>
-                  <td class="border p-1">${subtotal.마스터리.toLocaleString()}</td>
+                  <td class="border p-1">${subtotal.마스터리석.toLocaleString()}</td>
                   <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
                 </tr>
               `;
             });
     
             const own = {
-              마스터리: parseFloat(document.getElementById("owned-마스터리").value) || 0,
+              마스터리석: parseFloat(document.getElementById("owned-마스터리석").value) || 0,
               레전드장비: parseFloat(document.getElementById("owned-레전드장비").value) || 0,
             };
     
             rows += `
               <tr class="text-center font-bold bg-yellow-100">
                 <td colspan="2" class="border p-1">총합</td>
-                <td class="border p-1">${total.마스터리.toLocaleString()}</td>
+                <td class="border p-1">${total.마스터리석.toLocaleString()}</td>
                 <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
               </tr>
               <tr class="text-center font-bold bg-red-50">
                 <td colspan="2" class="border p-1">과부족</td>
-                <td class="border p-1">${(own.마스터리 - total.마스터리).toLocaleString()}</td>
+                <td class="border p-1">${(own.마스터리석 - total.마스터리석).toLocaleString()}</td>
                 <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
               </tr>
             `;
@@ -270,7 +270,7 @@
             <tr>
             <th class="border p-1">장비</th>
             <th class="border p-1">레벨</th>
-            <th class="border p-1">마스터리</th>
+            <th class="border p-1">마스터리석</th>
             <th class="border p-1">레전드장비</th>
             </tr>
             </thead>
