@@ -80,37 +80,36 @@
         const isMobile = window.innerWidth <= 768;
         
         frame.src = event.data.target;
-        
-        if (isMobile) {
-          if (event.data.target === "building.html") {
-            frame.style.height = "1100px";
-          } else if (event.data.target === "gem.html") {
-            frame.style.height = "1410px";
-          }
-        } else {
-          switch (event.data.target) {
-            case "building.html":
+        switch (event.data.target) {
+          case "building.html":
+            if (isMobile) {
+              frame.style.height = "815px";
+            } else {
               frame.style.height = "560px";
-              break;
-            case "gem.html":
+            }
+            break;
+          case "gem.html":
+            if (isMobile) {
+              frame.style.height = "1430px";
+            } else {
               frame.style.height = "1010px";
-              break;
-            case "hero.html":
-              frame.style.height = "1060px";
-              break;
-            case "wrapper.html":
-              frame.style.height = "570px";
-              break;
-            case "menu.html":
-              frame.style.height = "450px";
-              break;
-            case "pet.html":
-              frame.style.height = "890px";
-              break;
-            default:
-              // 필요하면 기본 높이 설정 가능
-              break;
-          }
+            }
+            break;
+          case "hero.html":
+            frame.style.height = "1060px";
+            break;
+          case "wrapper.html":
+            frame.style.height = "570px";
+            break;
+          case "menu.html":
+            frame.style.height = "450px";
+            break;
+          case "pet.html":
+            frame.style.height = "890px";
+            break;
+          default:
+            // 필요하면 기본 높이 설정 가능
+            break;
         }
       }  //NAVIGATE_TO
       
