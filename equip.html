@@ -66,16 +66,7 @@
         `;
       });
     }
-
-    function closePopup() {
-      document.getElementById("popupModal").classList.add("hidden");
-    }
-
-    function showPopup(html) {
-      document.getElementById("popupContent").innerHTML = html;
-      document.getElementById("popupModal").classList.remove("hidden");
-    }
-
+    
     function calculateGear() {
       let total = { 합금: 0, 설계도면: 0, 광택제: 0, 앰버: 0 };
       let rows = "";
@@ -165,6 +156,8 @@
 
     function loadPage(page) {
       window.location.href = page;
+
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
     }
     
     createGearUI();
