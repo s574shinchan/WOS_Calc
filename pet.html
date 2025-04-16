@@ -28,13 +28,33 @@
     </form>
   </div>
 
-  <script> 
-    const petGrades = ["SSR", "SR", "R", "N", "UnKnown"];
+  <script>
+    const grades = ["기간토", "매머드", "호랑이", "코뿔소", "고릴라", "동굴사자", 
+                    "흑표범", "큰뿔사슴", 
+                    "티타니스", "테이퍼", 
+                    "사향소", "북극늑대",
+                    "하이에나"];
+    const gradeLabels = {
+      "기간토": "SSR",
+      "매머드": "SSR",
+      "호랑이": "SSR",
+      "코뿔소": "SSR", 
+      "고릴라": "SSR", 
+      "동굴사자": "SSR",
+      "흑표범": "SR",
+      "큰뿔사슴": "SR",
+      "티타니스": "R",
+      "테이퍼": "R", 
+      "사향소": "N,
+      "북극늑대": "N",
+      "하이에나": "UnKnown"
+    };
+
     const petGrid = document.getElementById("petGrid");
     let petDataMap = {};
 
-    async function fetchPetCSV(grade) {
-      const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Pet/Pet_${grade}.csv`;
+    async function fetchPetCSV(gradeKey) {
+      const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Pet/Pet_${gradeKey}.csv`;
       const res = await fetch(url);
       const text = await res.text();
       const lines = text.trim().split("\n");
@@ -49,32 +69,40 @@
     }
 
     async function loadPetUI() {
-      for (let i = 0; i < petGrades.length; i++) {
-        const grade = petGrades[i];
-        const data = await fetchPetCSV(grade);
-        petDataMap[grade] = data;
-        const levels = data.map(d => d["레벨"]);
+      for (let grade of grades) {
+        const gradeKey = gradeLabels[grade];
+        const displayGrade = gradeLabels[grade] === "UnKnown" ? "하이에나" : grade;
+        const data = await fetchPetCSV(gradeKey);
+        if (!data || data.length === 0) continue;
 
-        petGrid.innerHTML += `
-          <div class="border p-2 rounded bg-pink-50 text-xs">
-            <label class="flex items-center text-sm font-semibold mb-1">
-              <input type="checkbox" id="pet-check-${grade}" class="mr-1 w-4 h-4 accent-pink-500" />
-              ${grade}
-            </label>
-            <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">현재</label>
-              <select id="pet-cur-${grade}" class="flex-1 border rounded p-1 text-sm">
-                ${levels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
-              </select>
+        const petNames = [...new Set(data.map(d => d["이름"]))];
+        petDataMap[grade] = data;
+
+        petNames.forEach((petName, index) => {
+          const petId = `${grade}-${index}`;
+          const petLevels = data.filter(d => d["이름"] === petName).map(d => d["레벨"]);
+
+          petGrid.innerHTML += `
+            <div class="border p-2 rounded bg-pink-50 text-xs">
+              <label class="flex items-center text-sm font-semibold mb-1">
+                <input type="checkbox" id="pet-check-${petId}" class="mr-1 w-4 h-4 accent-pink-500" />
+                ${displayGrade}
+              </label>
+              <div class="flex items-center gap-2 mb-1">
+                <label class="text-sm whitespace-nowrap">현재</label>
+                <select id="pet-cur-${petId}" class="flex-1 border rounded p-1 text-sm">
+                  ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
+                </select>
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="text-sm whitespace-nowrap">목표</label>
+                <select id="pet-tgt-${petId}" class="flex-1 border rounded p-1 text-sm">
+                  ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
+                </select>
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <label class="text-sm whitespace-nowrap">목표</label>
-              <select id="pet-tgt-${grade}" class="flex-1 border rounded p-1 text-sm">
-                ${levels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
-              </select>
-            </div>
-          </div>
-        `;
+          `;
+        });
       }
     }
 
@@ -82,46 +110,53 @@
       let total = { 펫먹이: 0, 조련매뉴얼: 0, 활력의약: 0, 강화혈청: 0 };
       let rows = "";
 
-       petGrades.forEach(grade => {
-        const isChecked = document.getElementById(`pet-check-${grade}`).checked;
-        if (!isChecked) return;
-
-        const cur = document.getElementById(`pet-cur-${grade}`).value;
-        const tgt = document.getElementById(`pet-tgt-${grade}`).value;
+      grades.forEach(grade => {
         const data = petDataMap[grade];
-        const levels = data.map(d => d["레벨"]);
-        const start = levels.indexOf(cur);
-        const end = levels.indexOf(tgt);
+        if (!data) return;
 
-        if (start === -1 || end === -1 || start >= end) {
-          rows += `<tr><td colspan="4" class="text-center border p-1">⚠️ ${grade} 단계 선택 오류</td></tr>`;
-          return;
-        }
-         
-        const subtotal = { 펫먹이: 0, 조련매뉴얼: 0, 활력의약: 0, 강화혈청: 0 };
-        for (let j = start + 1; j <= end; j++) {
-          const row = data[j];
-          subtotal.펫먹이 += parseFloat(row["펫먹이"] || 0);
-          subtotal.조련매뉴얼 += parseFloat(row["조련매뉴얼"] || 0);
-          subtotal.활력의약 += parseFloat(row["활력의약"] || 0);
-          subtotal.강화혈청 += parseFloat(row["강화혈청"] || 0);
-        }
+        const petNames = [...new Set(data.map(d => d["이름"]))];
+        
+        petNames.forEach((petName, index) => {
+          const petId = `${grade}-${index}`;
+          const isChecked = document.getElementById(`pet-check-${petId}`)?.checked;
+          if (!isChecked) return;
 
-        total.펫먹이 += subtotal.펫먹이;
-        total.조련매뉴얼 += subtotal.조련매뉴얼;
-        total.활력의약 += subtotal.활력의약;
-        total.강화혈청 += subtotal.강화혈청;
+          const cur = document.getElementById(`pet-cur-${petId}`).value;
+          const tgt = document.getElementById(`pet-tgt-${petId}`).value;
+          const levels = data.filter(d => d["이름"] === petName).map(d => d["레벨"]);
+          const filtered = data.filter(d => d["이름"] === petName);
+          const start = levels.indexOf(cur);
+          const end = levels.indexOf(tgt);
 
-        rows += `
-          <tr class="text-center">
-            <td class="border p-1">${grade}</td>
-            <td class="border p-1">${cur} → ${tgt}</td>
-            <td class="border p-1">${subtotal.펫먹이.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.조련매뉴얼.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.활력의약.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.강화혈청.toLocaleString()}</td>
-          </tr>
-        `;
+          if (start === -1 || end === -1 || start >= end) {
+            rows += `<tr><td colspan="4" class="text-center border p-1">⚠️ ${grade} - ${petName} 선택 오류</td></tr>`;
+            return;
+          }
+          
+          const subtotal = { 펫먹이: 0, 조련매뉴얼: 0, 활력의약: 0, 강화혈청: 0 };
+          for (let i = start + 1; i <= end; i++) {
+            subtotal["펫먹이"] += parseFloat(filtered[i]["펫먹이"] || "0");
+            subtotal["조련매뉴얼"] += parseFloat(filtered[i]["조련매뉴얼"] || "0");
+            subtotal.["활력의약"] += parseFloat(filtered[i]["활력의약"] || 0);
+            subtotal.["강화혈청"] += parseFloat(filtered[i]["강화혈청"] || 0);
+          }
+          
+          total["펫먹이"] += subtotal["펫먹이"];
+          total["조련매뉴얼"] += subtotal["조련매뉴얼"];
+          total["활력의약"] += subtotal"[활력의약"];
+          total["강화혈청"] += subtotal["강화혈청"];
+          
+          rows += `
+            <tr class="text-center">
+              <td class="border p-1">${gradeLabels[grade] === "UnKnown" ? "하이에나" : gradeLabels[grade]}</td>
+              <td class="border p-1">${cur} → ${tgt}</td>
+              <td class="border p-1">${subtotal["펫먹이"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["조련매뉴얼"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["활력의약"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["강화혈청"].toLocaleString()}</td>
+            </tr>
+          `;
+        });
       });
 
       const own = {
