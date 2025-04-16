@@ -127,7 +127,6 @@
             });
     
             const own = {
-              경험치: parseFloat(document.getElementById("own-경험치").value) || 0,
               너트: parseFloat(document.getElementById("own-너트").value) || 0,
               미스릴: parseFloat(document.getElementById("own-미스릴").value) || 0,
               레전드장비: parseFloat(document.getElementById("own-레전드장비").value) || 0,
@@ -143,7 +142,7 @@
             </tr>
             <tr class="text-center font-bold bg-red-50">
             <td colspan="2" class="border p-1">과부족</td>
-            <td class="border p-1">${(own.경험치 - total.경험치).toLocaleString()}</td>
+            <td class="border p-1">${total.경험치.toLocaleString()}</td>
             <td class="border p-1">${(own.너트 - total.너트).toLocaleString()}</td>
             <td class="border p-1">${(own.미스릴 - total.미스릴).toLocaleString()}</td>
             <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
