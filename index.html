@@ -90,13 +90,17 @@
             break;
           case "gem.html":
             if (isMobile) {
-              frame.style.height = "1430px";
+              frame.style.height = "1440px";
             } else {
               frame.style.height = "1010px";
             }
             break;
           case "hero.html":
-            frame.style.height = "1060px";
+            if (isMobile) {
+              frame.style.height = "1100px";
+            } else {
+              frame.style.height = "1030px";
+            }
             break;
           case "wrapper.html":
             frame.style.height = "570px";
