@@ -67,8 +67,7 @@
             renderHeroEquipUI();
           }
           
-          function renderHeroEquipUI() 
-          {
+          function renderHeroEquipUI() {
             const grid = document.getElementById("heroEquipGridBody");
             slotNames.forEach((name, i) => {
               const options = stageList.map(stage => `<option value="${stage}">${stage}</option>`).join("");
@@ -80,13 +79,13 @@
               </label>
               <div class="flex items-center gap-2 mb-1">
               <label class="text-sm whitespace-nowrap">현재 레벨</label>
-              <select id="gem-cur-${i}" class="flex-1 border rounded p-1 text-sm">
+              <select id="m-start-${i}" class="flex-1 border rounded p-1 text-sm">
               ${options}
               </select>
               </div>
               <div class="flex items-center gap-2 mb-1">
               <label class="text-sm whitespace-nowrap">목표 레벨</label>
-              <select id="gem-cur-${i}" class="flex-1 border rounded p-1 text-sm">
+              <select id="m-end-${i}" class="flex-1 border rounded p-1 text-sm">
               ${options}
               </select>
               </div>
@@ -212,8 +211,18 @@
                     <input type="checkbox" id="m-check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
                     ${name}
                   </label>
-                  <select id="m-start-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
-                  <select id="m-end-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
+                  <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">현재 레벨</label>
+                  <select id="m-start-${i}" class="flex-1 border rounded p-1 text-sm">
+                  ${options}
+                  </select>
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">현재 레벨</label>
+                  <select id="m-end-${i}" class="flex-1 border rounded p-1 text-sm">
+                  ${options}
+                  </select>
+                  </div>
                 </div>
               `;
             });
