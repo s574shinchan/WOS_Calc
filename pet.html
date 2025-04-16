@@ -29,7 +29,7 @@
   </div>
 
   <script> 
- const petGrades = ["SSR", "SR", "R", "N", "UnKnown"];
+    const petGrades = ["SSR", "SR", "R", "N", "UnKnown"];
     const petGrid = document.getElementById("petGrid");
     let petDataMap = {};
 
@@ -122,7 +122,7 @@
             <td class="border p-1">${subtotal.강화혈청.toLocaleString()}</td>
           </tr>
         `;
-      }
+      });
 
       const own = {
         펫먹이: parseFloat(document.getElementById("own-펫먹이").value) || 0,
