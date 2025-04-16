@@ -103,7 +103,7 @@
     
               const subtotal = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
               for (let j = startIndex + 1; j <= endIndex; j++) {
-                const row = data[j];
+                const row = csvData[j];
                 subtotal.경험치 += parseFloat(row["경험치"] || "0");
                 subtotal.너트 += parseFloat(row["너트"] || "0");
                 subtotal.미스릴 += parseFloat(row["미스릴"] || "0");
