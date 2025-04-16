@@ -37,7 +37,7 @@
         id="mainFrame" 
         src="menu.html" 
         class="w-full rounded border min-h-[600px] transition-all duration-300"
-        style="height: 500px;"
+        style="height: 400px;"
         frameborder="0"
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
         ></iframe>
@@ -71,7 +71,7 @@
       if (event.data.type === "SET_FRAME_SIZE") {
         const frame = document.getElementById("mainFrame");
         const isMobile = window.innerWidth <= 768;
-        frame.style.height = "500px";
+        frame.style.height = "400px";
       }
     });
 
