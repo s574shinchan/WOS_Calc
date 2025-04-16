@@ -63,8 +63,18 @@
               <input type="checkbox" id="gem-check-${i}" class="mr-1 w-4 h-4 accent-purple-500" />
               ${slot}
             </label>
-            <select id="gem-cur-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
-            <select id="gem-tgt-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
+            <div class="flex items-center gap-2 mb-1">
+            <label class="text-sm whitespace-nowrap">현재 레벨</label>
+            <select id="gem-cur-${i}" class="flex-1 border rounded p-1 text-sm">
+            ${options}
+            </select>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+            <label class="text-sm whitespace-nowrap">목표 레벨</label>
+            <select id="gem-cur-${i}" class="flex-1 border rounded p-1 text-sm">
+            ${options}
+            </select>
+            </div>
           </div>
         `;
       });
