@@ -19,11 +19,12 @@
     </form>
   </div>
 
-  <iframe src="https://wos-giftcode.centurygame.com/" class="w-full min-h-[685px]"></iframe>
-
+  <iframe src="https://wos-giftcode.centurygame.com/" class="w-full min-h-[665px]" scrolling="no"></iframe>
+  
   <script>
     function loadPage(page) {
       window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
     }
   </script>
 </body>
