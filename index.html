@@ -67,6 +67,17 @@
       }  //RESULT_POPUP
     });
 
+    window.addEventListner("message", function (event) {
+      if (event.data.type === "SET_FRAME_SIZE") {
+        const frame = document.getElementById("mainFrame");
+        const isMobile = window.innerWidth <= 768;
+
+        if (!isMobile) {
+          frame.style.height = "650px";
+        }
+      }
+    });
+
     window.addEventListener("message", function (event) {
       if (event.data.type === "NAVIGATE_TO") {
         const frame = document.getElementById("mainFrame");
