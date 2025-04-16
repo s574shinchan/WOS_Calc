@@ -63,16 +63,16 @@
         const levels = buildingData[name].map(d => d["레벨"]);
         const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
         container.innerHTML += `
-          <div class="bg-blue-50 border p-4 rounded shadow">
+          <div class="bg-blue-50 border p-2 rounded shadow">
           <label class="flex items-center text-sm font-semibold mb-1">
-          <input type="checkbox" id="check-${name}" class="mr-1" /> ${name}</label>
-            <div class="mt-2">
+          <input type="checkbox" id="check-${name}" class="mr-1 w-4 h-4" /> ${name}</label>
+            <div class="mt-1">
               <label class="text-sm">현재 레벨</label>
-              <select id="start-${name}" class="w-full border rounded p-1 mt-1">${options}</select>
+              <select id="start-${name}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
             </div>
-            <div class="mt-2">
+            <div class="mt-1">
               <label class="text-sm">목표 레벨</label>
-              <select id="end-${name}" class="w-full border rounded p-1 mt-1">${options}</select>
+              <select id="end-${name}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
             </div>
           </div>
         `;
