@@ -89,13 +89,13 @@
                 ${displayGrade}
               <div class="flex items-center gap-2 mb-1">
                 <label class="text-sm whitespace-nowrap">현재</label>
-                <select id="pet-cur-${petId}" class="flex-1 border rounded py-0.5 px-1 text-sm">
+                <select id="pet-cur-${petId}" class="flex-1 border rounded p-0.5 text-sm">
                   ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
                 </select>
               </div>
               <div class="flex items-center gap-2">
                 <label class="text-sm whitespace-nowrap">목표</label>
-                <select id="pet-tgt-${petId}" class="flex-1 border rounded py-0.5 px-1 text-sm">
+                <select id="pet-tgt-${petId}" class="flex-1 border rounded p-0.5 text-sm">
                   ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
                 </select>
               </div>
