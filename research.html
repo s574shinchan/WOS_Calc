@@ -103,7 +103,7 @@
 
     async function calcResearch() {
       const data = await fetchCSV("https://raw.githubusercontent.com/s574shinchan/WOS_Calc/1e960927a7b4db6971bcb03227b5fa351ee9d04a/data/research_data.csv");
-
+      let rows = "";
       let total = { "불수가루": 0, "철강재": 0 };
       let result = `
           <table class="w-full border text-sm text-center table-auto mt-4">
@@ -137,7 +137,7 @@
         total["불수가루"] += subtotal["불수가루"];
         total["철강재"] += subtotal["철강재"];
 
-        row += `
+        rows += `
         <tr class="text-center">
         <td class="border p-1">${item.label}</td>
         <td class="border p-1">${start} → ${end}</td>
