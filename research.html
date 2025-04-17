@@ -106,41 +106,45 @@
 
       let total = { "불수가루": 0, "철강재": 0 };
       let result = `
-        <table class="table-auto w-full text-sm text-center border border-gray-300">
-          <thead class="bg-orange-100 font-semibold">
-            <tr>
-              <th class="border p-1">연구 항목</th>
-              <th class="border p-1">구간</th>
-              <th class="border p-1">불수가루</th>
-              <th class="border p-1">철강재</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
+          <table class="w-full border text-sm text-center table-auto mt-4">
+            <thead class="bg-orange-100">
+              <tr>
+                <th class="border p-1">항목</th>
+                <th class="border p-1">레벨</th>
+                <th class="border p-1">불수가루</th>
+                <th class="border p-1">철강재</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
 
       researchList.forEach(item => {
-        if (!document.getElementById(`check-${item.key}`).checked) return;
-        const s = parseInt(document.getElementById(`start-${item.key}`).value);
-        const e = parseInt(document.getElementById(`end-${item.key}`).value);
+        if (!document.getElementById(`check-${item.key}`).checked) 
+          return;
+        
+        const start = parseInt(document.getElementById(`start-${item.key}`).value);
+        const end = parseInt(document.getElementById(`end-${item.key}`).value);
         const col = columnMap[item.key];
 
-        let red = 0, black = 0;
-        for (let i = s - 1; i < e - 1; i++) {
+        let subtotal = { "불수가루": 0, "철강재": 0 };
+        for (let i = start - 1; i < end - 1; i++) {
           const row = data[i + 1];
-          red += parseInt(row[col.red]?.replace(/,/g, "") || 0);
-          black += parseInt(row[col.black]?.replace(/,/g, "") || 0);
+          subtotal.불수가루 += parseInt(row[불수가루]?.replace(/,/g, "") || 0);
+          subtotal.철강재 += parseInt(row[철강재]?.replace(/,/g, "") || 0);
         }
 
-        total["불수가루"] += red;
-        total["철강재"] += black;
+        total["불수가루"] += subtotal.불수가루;
+        total["철강재"] += subtotal.철강재;
 
-        result += `
-          <tr>
-            <td class="border p-1">${item.label}</td>
-            <td class="border p-1">Lv.${s} → Lv.${e}</td>
-            <td class="border p-1 text-right">${red.toLocaleString()}</td>
-            <td class="border p-1 text-right">${black.toLocaleString()}</td>
-          </tr>`;
+        rows += `
+              <tr class="text-center">
+              <td class="border p-1">${item.label}</td>
+              <td class="border p-1">${start} → ${end}</td>
+              <td class="border p-1">${subtotal.경험치.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.너트.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.미스릴.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
+              </tr>`;
       });
 
       const owned = {
@@ -160,8 +164,24 @@
           <td class="border p-1">${(owned["철강재"] - total["철강재"]).toLocaleString()}</td>
         </tr>
         </tbody></table>`;
-
-      window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
+      
+      const resultHTML = `
+      <table class="w-full table-auto border mt-4 text-sm text-center">
+      <thead class="bg-gray-100">
+      <tr>
+      <th class="border p-1">장비</th>
+      <th class="border p-1">레벨</th>
+      <th class="border p-1">경험치</th>
+      <th class="border p-1">너트</th>
+      <th class="border p-1">미스릴</th>
+      <th class="border p-1">레전드장비</th>
+      </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+      </table>
+      `;
+      
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
     }
 
     renderResearchCards();
