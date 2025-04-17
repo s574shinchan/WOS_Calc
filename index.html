@@ -24,10 +24,11 @@
     <!-- 로고 -->
     <div class="text-center mb-4">
       <img 
-          src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" 
-          alt="로고" 
-          class="mx-auto mb-6 w-64 drop-shadow-lg mt-4"
-          />
+        src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" 
+        alt="로고" 
+        class="mx-auto mb-6 w-64 drop-shadow-lg mt-4 cursor-pointer"
+        onclick="loadPage('menu.html')"
+      />
     </div>
 
     <!-- 문구 -->
@@ -59,6 +60,11 @@
   </div>
   
   <script>
+    function loadPage(page) {
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
+    }
+    
     window.addEventListener("message", function (event) {
       if (event.data.type === "RESULT_POPUP") {
         const html = event.data.html;
