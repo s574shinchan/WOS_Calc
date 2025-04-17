@@ -6,172 +6,172 @@
   <title>건물 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-4 font-sans text-sm">
-  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
-    <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
-      <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-      </svg>
-      메뉴로 돌아가기
-    </button>
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ 건물 계산기</h1>
-    <form id="calcForm" class="space-y-4">
-      <div id="buildingGridBody" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        <div>
-          <label class="block font-semibold">보유 불수정</label>
-          <input type="number" id="owned-불수정" class="w-full border rounded p-2" />
+  <body class="bg-gray-100 p-2 font-sans text-sm">
+    <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md"> 
+      <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
+        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        메뉴로 돌아가기
+      </button>
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ 건물 계산기</h1>
+      <form id="calcForm" class="space-y-4">
+        <div id="buildingGridBody" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold">보유 불수정</label>
+            <input type="number" id="owned-불수정" class="w-full border rounded p-2" />
+          </div>
+          <div>
+            <label class="block font-semibold">보유 정제</label>
+            <input type="number" id="owned-정제" class="w-full border rounded p-2" />
+          </div>
         </div>
-        <div>
-          <label class="block font-semibold">보유 정제</label>
-          <input type="number" id="owned-정제" class="w-full border rounded p-2" />
-        </div>
-      </div>
-      <div id="ownedInputArea" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
-      <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 text-lg">계산하기</button>
-    </form>
-  </div>
+        <div id="ownedInputArea" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
+        <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 text-lg">계산하기</button>
+      </form>
+    </div>
   
-  <script>
-    const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
-    const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광"];
-    const buildingData = {};
-
-    async function fetchBuildingData() {
-      for (const name of buildingList) {
-        const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
-        const res = await fetch(url);
-        const text = await res.text();
-        const lines = text.trim().split("\n");
-        const headers = lines[0].split(",");
-        const data = lines.slice(1).map(line => {
-          const obj = {};
-          const values = line.split(",");
-          headers.forEach((h, i) => {
-            obj[h.trim()] = values[i]?.trim() || "0";
+    <script>
+      const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
+      const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광"];
+      const buildingData = {};
+  
+      async function fetchBuildingData() {
+        for (const name of buildingList) {
+          const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
+          const res = await fetch(url);
+          const text = await res.text();
+          const lines = text.trim().split("\n");
+          const headers = lines[0].split(",");
+          const data = lines.slice(1).map(line => {
+            const obj = {};
+            const values = line.split(",");
+            headers.forEach((h, i) => {
+              obj[h.trim()] = values[i]?.trim() || "0";
+            });
+            return obj;
           });
-          return obj;
+          buildingData[name] = data;
+        }
+        renderBuildingSelectors();
+      }
+  
+      function renderBuildingSelectors() {
+        const container = document.getElementById("buildingGridBody");
+        buildingList.forEach(name => {
+          const levels = buildingData[name].map(d => d["레벨"]);
+          const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
+          container.innerHTML += `
+            <div class="bg-blue-50 border p-2 rounded shadow">
+            <label class="flex items-center text-sm font-semibold mb-1">
+            <input type="checkbox" id="check-${name}" class="mr-1 w-4 h-4" /> ${name}</label>
+            <div class="flex items-center gap-2 mb-1">
+            <label class="text-sm whitespace-nowrap">현재</label>
+            <select id="start-${name}" class="flex-1 border rounded p-1 text-sm">${options}</select>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+            <label class="text-sm whitespace-nowrap">목표</label>
+            <select id="end-${name}" class="flex-1 border rounded p-1 text-sm">${options}</select>
+            </div>
+            </div>
+          `;
         });
-        buildingData[name] = data;
       }
-      renderBuildingSelectors();
-    }
-
-    function renderBuildingSelectors() {
-      const container = document.getElementById("buildingGridBody");
-      buildingList.forEach(name => {
-        const levels = buildingData[name].map(d => d["레벨"]);
-        const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
-        container.innerHTML += `
-          <div class="bg-blue-50 border p-2 rounded shadow">
-          <label class="flex items-center text-sm font-semibold mb-1">
-          <input type="checkbox" id="check-${name}" class="mr-1 w-4 h-4" /> ${name}</label>
-          <div class="flex items-center gap-2 mb-1">
-          <label class="text-sm whitespace-nowrap">현재</label>
-          <select id="start-${name}" class="flex-1 border rounded p-1 text-sm">${options}</select>
-          </div>
-          <div class="flex items-center gap-2 mb-1">
-          <label class="text-sm whitespace-nowrap">목표</label>
-          <select id="end-${name}" class="flex-1 border rounded p-1 text-sm">${options}</select>
-          </div>
-          </div>
-        `;
-      });
-    }
-    
-    function formatValue(value) {     
-      const num = parseFloat(value.toString().replace(/,/g, ''));
-      if (isNaN(num)) return value;
       
-      if (num >= 1000) {
-        return (num / 1000).toFixed(1) + "B";
-      } else {
-        return num + "M";
-      }
-    }
-    
-    function calculateAll() {
-      let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
-      let result = `
-        <table class="w-full border text-sm text-center table-auto mt-4">
-          <thead class="bg-blue-100">
-            <tr>
-              <th class="border p-1">건물</th>
-              <th class="border p-1">레벨</th>
-              <th class="border p-1">불수정</th>
-              <th class="border p-1">정제</th>
-              <th class="border p-1">고기</th>
-              <th class="border p-1">나무</th>
-              <th class="border p-1">석탄</th>
-              <th class="border p-1">철광</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-      
-      const owned = {
-        "불수정": parseInt(document.getElementById("owned-불수정").value || 0),
-        "정제": parseInt(document.getElementById("owned-정제").value || 0)
-      };
-      
-      buildingList.forEach(name => {
-        if (!document.getElementById("check-" + name).checked) return;
-
-        const start = parseInt(document.getElementById("start-" + name).value);
-        const end = parseInt(document.getElementById("end-" + name).value);
-        const data = buildingData[name].slice(start, end);
-        let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+      function formatValue(value) {     
+        const num = parseFloat(value.toString().replace(/,/g, ''));
+        if (isNaN(num)) return value;
         
-        data.forEach(row => {
-          resources.forEach(res => {
-            subtotal[res] += parseInt(row[res] || 0);
-            total[res] += parseInt(row[res] || 0);
-          });
-        });
-
-        const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
-        result += `
-          <tr>
-            <td class="border p-1 font-medium">${name}</td>
-            <td class="border p-1 text-xs">${levelStr}</td>
-            <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
-            <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
-            <td class="border p-1">${formatValue(subtotal["고기"])}</td>
-            <td class="border p-1">${formatValue(subtotal["나무"])}</td>
-            <td class="border p-1">${formatValue(subtotal["석탄"])}</td>
-            <td class="border p-1">${formatValue(subtotal["철광"])}</td>
-          </tr>
+        if (num >= 1000) {
+          return (num / 1000).toFixed(1) + "B";
+        } else {
+          return num + "M";
+        }
+      }
+      
+      function calculateAll() {
+        let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+        let result = `
+          <table class="w-full border text-sm text-center table-auto mt-4">
+            <thead class="bg-blue-100">
+              <tr>
+                <th class="border p-1">건물</th>
+                <th class="border p-1">레벨</th>
+                <th class="border p-1">불수정</th>
+                <th class="border p-1">정제</th>
+                <th class="border p-1">고기</th>
+                <th class="border p-1">나무</th>
+                <th class="border p-1">석탄</th>
+                <th class="border p-1">철광</th>
+              </tr>
+            </thead>
+            <tbody>
         `;
-      });
-
-      result += `
-        <tr class="bg-blue-50 font-bold">
-          <td class="border p-1" colspan="2">총합</td>
-          <td class="border p-1">${total["불수정"].toLocaleString()}</td>
-          <td class="border p-1">${total["정제"].toLocaleString()}</td>
-          <td class="border p-1">${formatValue(total["고기"])}</td>
-          <td class="border p-1">${formatValue(total["나무"])}</td>
-          <td class="border p-1">${formatValue(total["석탄"])}</td>
-          <td class="border p-1">${formatValue(total["철광"])}</td>
-        </tr>
-          <tr class="text-center font-bold bg-red-50">
-          <td class="border p-1" colspan="2">과부족</td>
-          <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
-          <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
-          <td class="border p-1" colspan="4"></td>
-        </tr>
-        </tbody></table>
-      `;
-      window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
-    }
-    
-    function loadPage(page) {
-      window.location.href = page;
-
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
-    }
-    
-    fetchBuildingData();
-  </script>
-</body>
+        
+        const owned = {
+          "불수정": parseInt(document.getElementById("owned-불수정").value || 0),
+          "정제": parseInt(document.getElementById("owned-정제").value || 0)
+        };
+        
+        buildingList.forEach(name => {
+          if (!document.getElementById("check-" + name).checked) return;
+  
+          const start = parseInt(document.getElementById("start-" + name).value);
+          const end = parseInt(document.getElementById("end-" + name).value);
+          const data = buildingData[name].slice(start, end);
+          let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+          
+          data.forEach(row => {
+            resources.forEach(res => {
+              subtotal[res] += parseInt(row[res] || 0);
+              total[res] += parseInt(row[res] || 0);
+            });
+          });
+  
+          const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
+          result += `
+            <tr>
+              <td class="border p-1 font-medium">${name}</td>
+              <td class="border p-1 text-xs">${levelStr}</td>
+              <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
+              <td class="border p-1">${formatValue(subtotal["고기"])}</td>
+              <td class="border p-1">${formatValue(subtotal["나무"])}</td>
+              <td class="border p-1">${formatValue(subtotal["석탄"])}</td>
+              <td class="border p-1">${formatValue(subtotal["철광"])}</td>
+            </tr>
+          `;
+        });
+  
+        result += `
+          <tr class="bg-blue-50 font-bold">
+            <td class="border p-1" colspan="2">총합</td>
+            <td class="border p-1">${total["불수정"].toLocaleString()}</td>
+            <td class="border p-1">${total["정제"].toLocaleString()}</td>
+            <td class="border p-1">${formatValue(total["고기"])}</td>
+            <td class="border p-1">${formatValue(total["나무"])}</td>
+            <td class="border p-1">${formatValue(total["석탄"])}</td>
+            <td class="border p-1">${formatValue(total["철광"])}</td>
+          </tr>
+            <tr class="text-center font-bold bg-red-50">
+            <td class="border p-1" colspan="2">과부족</td>
+            <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
+            <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
+            <td class="border p-1" colspan="4"></td>
+          </tr>
+          </tbody></table>
+        `;
+        window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
+      }
+      
+      function loadPage(page) {
+        window.location.href = page;
+  
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
+      }
+      
+      fetchBuildingData();
+    </script>
+  </body>
 </html>
