@@ -10,11 +10,8 @@
 <body class="p-2 bg-gray-100 text-sm font-sans">
   <div class="max-w-4xl mx-auto bg-white p-2 rounded-xl shadow-md">
     <h1 class="text-2xl font-bold text-blue-600 mb-4 text-center">🧪 연구 계산기</h1>
-
     <div id="researchContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"></div>
-
     <button onclick="calculateAll()" class="w-full mt-4 bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">계산하기</button>
-
     <div id="result" class="mt-6 font-semibold text-gray-700 whitespace-pre-line text-center"></div>
   </div>
 
@@ -55,7 +52,7 @@
       for (const key in maxLevels) {
         const max = maxLevels[key];
         const html = `
-          <div class="border rounded p-4 shadow space-y-2 bg-white">
+          <div class="border rounded p-4 shadow space-y-2 bg-orage-50">
             <label class="inline-flex items-center space-x-2 mb-2">
               <input type="checkbox" id="check-${key}" class="accent-blue-500">
               <span class="font-bold text-blue-700">${key} 연구</span>
