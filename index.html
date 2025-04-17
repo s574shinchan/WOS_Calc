@@ -27,7 +27,7 @@
         src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" 
         alt="로고" 
         class="mx-auto mb-6 w-64 drop-shadow-lg mt-4 cursor-pointer"
-        onclick="loadPage('menu.html')"
+        onclick="ComeBackHome()"
       />
     </div>
 
@@ -60,9 +60,10 @@
   </div>
   
   <script>
-    function loadPage(page) {
-      window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
+    function ComeBackHome() {
+      const frame = document.getElementById("mainFrame");
+      frame.src = 'menu.html'
+      frame.style.height = "500px";
     }
     
     window.addEventListener("message", function (event) {
@@ -77,7 +78,7 @@
       if (event.data.type === "SET_FRAME_SIZE") {
         const frame = document.getElementById("mainFrame");
         const isMobile = window.innerWidth <= 768;
-        frame.style.height = "350px";
+        frame.style.height = event.data.height;
       }
     });
 
@@ -113,7 +114,7 @@
             frame.style.height = "570px";
             break;
           case "menu.html":
-            frame.style.height = "450px";
+            frame.style.height = "500px";
             break;
           case "pet.html":
             if (isMobile) {
