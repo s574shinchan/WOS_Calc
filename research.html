@@ -129,8 +129,8 @@
         let subtotal = { "불수가루": 0, "철강재": 0 };
         for (let i = start - 1; i < end - 1; i++) {
           const row = data[i + 1];
-          subtotal.불수가루 += parseInt(row[불수가루]?.replace(/,/g, "") || 0);
-          subtotal.철강재 += parseInt(row[철강재]?.replace(/,/g, "") || 0);
+          subtotal.불수가루 += parseInt(row["불수가루"].replace(/,/g, "") || 0);
+          subtotal.철강재 += parseInt(row["철강재"].replace(/,/g, "") || 0);
         }
 
         total["불수가루"] += subtotal.불수가루;
