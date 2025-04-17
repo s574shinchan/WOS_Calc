@@ -98,7 +98,7 @@
     async function fetchCSV(url) {
       const res = await fetch(url);
       const text = await res.text();
-      return text.trim().split("n").map(row => row.split(","));
+      return text.trim().split("\n").map(row => row.split(","));
     }
 
     async function calcResearch() {
@@ -129,12 +129,13 @@
         let subtotal = { "불수가루": 0, "철강재": 0 };
         for (let i = start - 1; i < end - 1; i++) {
           const row = data[i + 1];
-          subtotal.불수가루 += parseInt(row["불수가루"].replace(/,/g, "") || 0);
-          subtotal.철강재 += parseInt(row["철강재"].replace(/,/g, "") || 0);
+          if (!row) continue;
+          subtotal["불수가루"] += parseInt(row[col.red]?.replace(/,/g, "") || 0);
+          subtotal["철강재"] += parseInt(row[col.black]?.replace(/,/g, "") || 0);
         }
 
-        total["불수가루"] += subtotal.불수가루;
-        total["철강재"] += subtotal.철강재;
+        total["불수가루"] += subtotal["불수가루"];
+        total["철강재"] += subtotal["철강재"];
 
         rows += `
         <tr class="text-center">
