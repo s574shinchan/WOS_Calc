@@ -99,7 +99,7 @@
   
           const subtotal = { 합금: 0, 설계도면: 0, 광택제: 0, 앰버: 0 };
           for (let j = startIndex + 1; j <= endIndex; j++) {
-            const row = csvData[j];
+            const row = gearData[j];
             subtotal.합금 += parseFloat(row["합금"] || "0");
             subtotal.설계도면 += parseFloat(row["설계도면"] || "0");
             subtotal.광택제 += parseFloat(row["광택제"] || "0");
