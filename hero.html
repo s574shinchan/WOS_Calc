@@ -73,23 +73,23 @@
               const options = stageList.map(stage => `<option value="${stage}">${stage}</option>`).join("");
               grid.innerHTML += `
               <div class="border p-2 rounded bg-yellow-50 text-xs">
-              <label class="flex items-center text-sm font-semibold mb-1">
-              <input type="checkbox" id="check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
-              ${name}
-              </label>
-              <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">현재</label>
-              <select id="start-${i}" class="flex-1 border rounded p-1 text-sm">
-              ${options}
-              </select>
-              </div>
-              <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">목표</label>
-              <select id="end-${i}" class="flex-1 border rounded p-1 text-sm">
-              ${options}
-              </select>
-              </div>
-              </div>`;
+                  <label class="flex items-center text-sm font-semibold mb-1">
+                    <input type="checkbox" id="m-check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
+                    ${name}
+                  </label>
+                  <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">현재</label>
+                  <select id="start-${i}" class="flex-1 border rounded p-1 text-sm">
+                  ${options}
+                  </select>
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">현재</label>
+                  <select id="end-${i}" class="flex-1 border rounded p-1 text-sm">
+                  ${options}
+                  </select>
+                  </div>
+                </div>
             });
           }
     
