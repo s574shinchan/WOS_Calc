@@ -15,7 +15,7 @@
       </svg>
       메뉴로 돌아가기
     </button>
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">🐾 펫 계산기</h2>
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">🐾 펫 계산기</h1>
     <form id="petForm" class="space-y-4">
       <div id="petGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
@@ -57,7 +57,7 @@
       const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Pet/Pet_${gradeKey}.csv`;
       const res = await fetch(url);
       const text = await res.text();
-      const lines = text.trim().split("\n");
+      const lines = text.trim().split("n");
       const headers = lines[0].split(",");
       const data = lines.slice(1).map(line => {
         const values = line.split(",");
@@ -83,20 +83,20 @@
           const petLevels = data.filter(d => d["이름"] === petName).map(d => d["레벨"]);
 
           petGrid.innerHTML += `
-            <div class="border p-2 rounded bg-pink-50 text-xs">
+            <div class="border p-2 rounded bg-pink-50 text-xs w-full">
               <label class="flex items-center text-sm font-semibold mb-1">
                 <input type="checkbox" id="pet-check-${petId}" class="mr-1 w-4 h-4 accent-pink-500" />
                 ${displayGrade}
               </label>
               <div class="flex items-center gap-2 mb-1">
                 <label class="text-sm whitespace-nowrap">현재</label>
-                <select id="pet-cur-${petId}" class="flex-1 border rounded p-1 text-sm">
+                <select id="pet-cur-${petId}" class="w-full border rounded py-1 px-2 text-sm">
                   ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
                 </select>
               </div>
               <div class="flex items-center gap-2">
                 <label class="text-sm whitespace-nowrap">목표</label>
-                <select id="pet-tgt-${petId}" class="flex-1 border rounded p-1 text-sm">
+                <select id="pet-tgt-${petId}" class="w-full border rounded py-1 px-2 text-sm">
                   ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
                 </select>
               </div>
@@ -106,119 +106,12 @@
       }
     }
 
-    async function calculatePet() {
-      let total = { 펫먹이: 0, 조련매뉴얼: 0, 활력의약: 0, 강화혈청: 0 };
-      let rows = "";
-
-      grades.forEach(grade => {
-        const data = petDataMap[grade];
-        if (!data) return;
-
-        const petNames = [...new Set(data.map(d => d["이름"]))];
-        
-        petNames.forEach((petName, index) => {
-          const petId = `${grade}-${index}`;
-          const isChecked = document.getElementById(`pet-check-${petId}`)?.checked;
-          if (!isChecked) return;
-
-          const cur = document.getElementById(`pet-cur-${petId}`).value;
-          const tgt = document.getElementById(`pet-tgt-${petId}`).value;
-          const levels = data.filter(d => d["이름"] === petName).map(d => d["레벨"]);
-          const filtered = data.filter(d => d["이름"] === petName);
-          const start = levels.indexOf(cur);
-          const end = levels.indexOf(tgt);
-
-          if (start === -1 || end === -1 || start >= end) {
-            rows += `<tr><td colspan="4" class="text-center border p-1">⚠️ ${grade} - ${petName} 선택 오류</td></tr>`;
-            return;
-          }
-          
-          const subtotal = { 펫먹이: 0, 조련매뉴얼: 0, 활력의약: 0, 강화혈청: 0 };
-          for (let i = start + 1; i <= end; i++) {
-            subtotal["펫먹이"] += parseFloat(filtered[i]["펫먹이"] || "0");
-            subtotal["조련매뉴얼"] += parseFloat(filtered[i]["조련매뉴얼"] || "0");
-            subtotal["활력의약"] += parseFloat(filtered[i]["활력의약"] || 0);
-            subtotal["강화혈청"] += parseFloat(filtered[i]["강화혈청"] || 0);
-          }
-          
-          total["펫먹이"] += subtotal["펫먹이"];
-          total["조련매뉴얼"] += subtotal["조련매뉴얼"];
-          total["활력의약"] += subtotal["활력의약"];
-          total["강화혈청"] += subtotal["강화혈청"];
-          
-          rows += `
-            <tr class="text-center">
-              <td class="border p-1">${petName}</td>
-              <td class="border p-1">${cur} → ${tgt}</td>
-              <td class="border p-1">${subtotal["펫먹이"].toLocaleString()}</td>
-              <td class="border p-1">${subtotal["조련매뉴얼"].toLocaleString()}</td>
-              <td class="border p-1">${subtotal["활력의약"].toLocaleString()}</td>
-              <td class="border p-1">${subtotal["강화혈청"].toLocaleString()}</td>
-            </tr>
-          `;
-        });
-      });
-
-      const own = {
-        펫먹이: parseFloat(document.getElementById("own-펫먹이").value) || 0,
-        조련매뉴얼: parseFloat(document.getElementById("own-조련매뉴얼").value) || 0,
-        활력의약: parseFloat(document.getElementById("own-활력의약").value) || 0,
-        강화혈청: parseFloat(document.getElementById("own-강화혈청").value) || 0,
-      };
-
-      rows += `
-        <tr class="text-center font-bold bg-pink-100">
-          <td class="border p-1" colspan="2">총합</td>
-          <td class="border p-1">${total["펫먹이"].toLocaleString()}</td>
-          <td class="border p-1">${total["조련매뉴얼"].toLocaleString()}</td>
-          <td class="border p-1">${total["활력의약"].toLocaleString()}</td>
-          <td class="border p-1">${total["강화혈청"].toLocaleString()}</td>
-        </tr>
-        <tr class="text-center font-bold bg-red-50">
-          <td class="border p-1" colspan="2">과부족</td>
-          <td class="border p-1">${(own["펫먹이"] - total["펫먹이"]).toLocaleString()}</td>
-          <td class="border p-1">${(own["조련매뉴얼"] - total["조련매뉴얼"]).toLocaleString()}</td>
-          <td class="border p-1">${(own["활력의약"] - total["활력의약"]).toLocaleString()}</td>
-          <td class="border p-1">${(own["강화혈청"] - total["강화혈청"]).toLocaleString()}</td>
-        </tr>
-      `;
-      
-      const resultHTML = `
-      <table class="w-full table-auto border mt-4 text-sm text-center">
-      <thead class="bg-gray-100">
-      <tr>
-      <th class="border p-1">등급</th>
-      <th class="border p-1">레벨</th>
-      <th class="border p-1">펫먹이</th>
-      <th class="border p-1">조련매뉴얼</th>
-      <th class="border p-1">활력의약</th>
-      <th class="border p-1">강화혈청</th>
-      </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-      </table>
-      `;
-        
-      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
-    }
-
     function loadPage(page) {
       window.location.href = page;
       window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
     }
-    
+
     loadPetUI();
-  </script>
-  <script>
-    document.addEventListener("contextmenu", event => event.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" ||
-          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S")))
-      {
-        e.preventDefault();
-      }
-    });
   </script>
 </body>
 </html>
