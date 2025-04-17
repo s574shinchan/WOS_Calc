@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>연구 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-orange-100 p-2 text-sm font-sans">
+  <div class="max-w-5xl mx-auto bg-white p-2 rounded-xl shadow-md">
+    <h1 class="text-xl font-bold text-orange-500 mb-4 flex items-center">🧪 연구 계산기</h1>
+    <form id="researchForm" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="I">
+            <span>연구 I</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-I">
+              <option value="0">Lv.0</option>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+            </select>
+          </div>
+          <div class='flex items-center gap-2'>
+            <label class='w-16 text-gray-600'>목표</label>
+            <select class='flex-1 border rounded p-1' name='end-{key}'>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="II">
+            <span>연구 II -A</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-II">
+              <option value="0">Lv.0</option>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+            </select>
+          </div>          
+          <div class='flex items-center gap-2'>
+            <label class='w-16 text-gray-600'>목표</label>
+            <select class='flex-1 border rounded p-1' name='end-{key}'>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="II">
+            <span>연구 II -B</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-II">
+              <option value="0">Lv.0</option>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+            </select>
+          </div>          
+          <div class='flex items-center gap-2'>
+            <label class='w-16 text-gray-600'>목표</label>
+            <select class='flex-1 border rounded p-1' name='end-{key}'>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="III">
+            <span>연구 III</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-III">
+              <option value="0">Lv.0</option>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+              <option value="9">Lv.9</option>
+              <option value="10">Lv.10</option>
+              <option value="11">Lv.11</option>
+            </select>
+          </div>
+          <div class='flex items-center gap-2'>
+            <label class='w-16 text-gray-600'>목표</label>
+            <select class='flex-1 border rounded p-1' name='end-{key}'>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+              <option value="9">Lv.9</option>
+              <option value="10">Lv.10</option>
+              <option value="11">Lv.11</option>
+              <option value="12">Lv.12</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="IV">
+            <span>연구 IV -A</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-IV">
+              <option value="0">Lv.0</option>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+              <option value="9">Lv.9</option>
+              <option value="10">Lv.10</option>
+              <option value="11">Lv.11</option>
+            </select>
+          </div>
+          <div class='flex items-center gap-2'>
+            <label class='w-16 text-gray-600'>목표</label>
+            <select class='flex-1 border rounded p-1' name='end-{key}'>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+              <option value="9">Lv.9</option>
+              <option value="10">Lv.10</option>
+              <option value="11">Lv.11</option>
+              <option value="12">Lv.12</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="IV">
+            <span>연구 IV -B</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-IV">
+              <option value="0">Lv.0</option>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+              <option value="9">Lv.9</option>
+              <option value="10">Lv.10</option>
+              <option value="11">Lv.11</option>
+            </select>
+          </div>
+          <div class='flex items-center gap-2'>
+            <label class='w-16 text-gray-600'>목표</label>
+            <select class='flex-1 border rounded p-1' name='end-{key}'>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+              <option value="9">Lv.9</option>
+              <option value="10">Lv.10</option>
+              <option value="11">Lv.11</option>
+              <option value="12">Lv.12</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="V">
+            <span>연구 V</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-V">
+    <option value="0">Lv.0</option><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3">Lv.3</option><option value="4">Lv.4</option></select></div><div class='flex items-center gap-2'><label class='w-16 text-gray-600'>목표</label><select class='flex-1 border rounded p-1' name='end-{key}'><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3">Lv.3</option><option value="4">Lv.4</option><option value="5">Lv.5</option></select></div></div>
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="Healing">
+            <span>연구 Healing</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-Healing">
+    <option value="0">Lv.0</option><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3">Lv.3</option></select></div><div class='flex items-center gap-2'><label class='w-16 text-gray-600'>목표</label><select class='flex-1 border rounded p-1' name='end-{key}'><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3">Lv.3</option><option value="4">Lv.4</option></select></div></div>
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="Training">
+            <span>연구 Training</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-Training">
+    <option value="0">Lv.0</option><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3">Lv.3</option></select></div><div class='flex items-center gap-2'><label class='w-16 text-gray-600'>목표</label><select class='flex-1 border rounded p-1' name='end-{key}'><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3">Lv.3</option><option value="4">Lv.4</option></select></div></div>
+        <div class="bg-orange-50 border rounded p-3 space-y-2">
+          <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+            <input type="checkbox" class="accent-orange-500" name="research" value="HealingTime">
+            <span>연구 HealingTime</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <label class="w-16 text-gray-600">현재</label>
+            <select class="flex-1 border rounded p-1" name="start-HealingTime">
+    <option value="0">Lv.0</option><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3">Lv.3</option></select></div><div class='flex items-center gap-2'><label class='w-16 text-gray-600'>목표</label><select class='flex-1 border rounded p-1' name='end-{key}'><option value="1">Lv.1</option><option value="2">Lv.2</option><option value="3">Lv.3</option><option value="4">Lv.4</option></select></div></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 pt-4">
+        <div><label class="block font-semibold text-gray-700">보유 불수정</label>
+          <input type="number" id="own-red" class="w-full border rounded p-2" value="0">
+        </div>
+        <div><label class="block font-semibold text-gray-700">보유 정제</label>
+          <input type="number" id="own-black" class="w-full border rounded p-2" value="0">
+        </div>
+      </div>
+      <div class="pt-4 text-center">
+        <button type="button" onclick="calc()" class="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">
+          계산하기
+        </button>
+      </div>
+    </form>
+    <div class="pt-4" id="resultBox"></div>
+  </div>
+
+  <script>
+    const data = await fetchCSV("https://raw.githubusercontent.com/s574shinchan/WOS_Calc/1e960927a7b4db6971bcb03227b5fa351ee9d04a/data/research_data.csv");
+    async function fetchCSV(url) {
+      const res = await fetch(url);
+      const text = await res.text();
+      return text.trim().split("\n").map(row => row.split(","));
+    }
+    
+    const levelData = {
+"I": [[10,5], [20,10], [30,15]],
+"II": [[12,6], [24,12], [36,18], [48,24]],
+"III": [[8,4], [16,8], [24,12], [32,16], [40,20]],
+"IV": [[5,5], [10,10], [15,15], [20,20], [25,25]],
+"V": [[7,7], [14,14], [21,21], [28,28], [35,35]],
+"Healing": [[9,3], [18,6], [27,9], [36,12]],
+"Training": [[6,4], [12,8], [18,12], [24,16]],
+"HealingTime": [[3,1], [6,2], [9,3], [12,4]],
+    };
+
+    function calc() {
+      const form = document.forms['researchForm'];
+      const selected = Array.from(form.querySelectorAll('input[type=checkbox]:checked'));
+      let result = '';
+      let totalRed = 0;
+      let totalBlack = 0;
+
+      result += '<table class="table-auto w-full text-sm text-center border border-gray-300"><thead class="bg-orange-100 font-semibold"><tr><th class="border p-1">연구</th><th class="border p-1">구간</th><th class="border p-1">불수정</th><th class="border p-1">정제</th></tr></thead><tbody>';
+
+      selected.forEach(cb => {
+        const name = cb.value;
+        const start = parseInt(form['start-' + name].value);
+        const end = parseInt(form['end-' + name].value);
+        let sumRed = 0, sumBlack = 0;
+
+        for (let i = start; i < end; i++) {
+          sumRed += levelData[name][i][0];
+          sumBlack += levelData[name][i][1];
+        }
+
+        totalRed += sumRed;
+        totalBlack += sumBlack;
+
+        result += `<tr><td class="border p-1">${name}</td><td class="border p-1">Lv.${start} → Lv.${end}</td><td class="border p-1 text-right">${sumRed.toLocaleString()}</td><td class="border p-1 text-right">${sumBlack.toLocaleString()}</td></tr>`;
+      });
+
+      const ownRed = parseInt(document.getElementById("own-red").value || "0");
+      const ownBlack = parseInt(document.getElementById("own-black").value || "0");
+
+      result += `<tr class="bg-blue-50 font-bold"><td class="border p-1" colspan="2">총합</td><td class="border p-1 text-right">${totalRed.toLocaleString()}</td><td class="border p-1 text-right">${totalBlack.toLocaleString()}</td></tr>`;
+      result += `<tr class="bg-red-50 font-bold"><td class="border p-1" colspan="2">과부족</td><td class="border p-1 text-right">${(ownRed - totalRed).toLocaleString()}</td><td class="border p-1 text-right">${(ownBlack - totalBlack).toLocaleString()}</td></tr>`;
+      result += "</tbody></table>";
+
+      document.getElementById("resultBox").innerHTML = result;
+    }
+  </script>
+</body>
+</html>
