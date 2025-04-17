@@ -129,7 +129,7 @@
           const end = levels.indexOf(tgt);
 
           if (start === -1 || end === -1 || start >= end) {
-            rows += `<tr><td colspan="4" class="text-center border p-1">⚠️ ${grade} - ${petName} 선택 오류</td></tr>`;
+            rows += `<tr><td colspan="4" class="text-center border p-1">⚠️ ${grade} 선택 오류</td></tr>`;
             return;
           }
 
@@ -148,7 +148,7 @@
 
           rows += `
             <tr class="text-center">
-              <td class="border p-1">${petName}</td>
+              <td class="border p-1">${grade}</td>
               <td class="border p-1">${cur} → ${tgt}</td>
               <td class="border p-1">${subtotal["펫먹이"].toLocaleString()}</td>
               <td class="border p-1">${subtotal["조련매뉴얼"].toLocaleString()}</td>
