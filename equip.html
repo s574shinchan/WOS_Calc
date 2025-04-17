@@ -89,8 +89,8 @@
           
           const start = document.getElementById(`start-${i}`).value;
           const end = document.getElementById(`end-${i}`).value;
-          const startIndex = stageList.indexOf(start);
-          const endIndex = stageList.indexOf(end);
+          const startIndex = gearLevels.indexOf(start);
+          const endIndex = gearLevels.indexOf(end);
   
           if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
             rows += `<tr><td class="border p-1 text-center" colspan="5">⚠️ ${name}: 잘못된 단계 선택</td></tr>`;
