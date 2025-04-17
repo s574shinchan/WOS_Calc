@@ -87,13 +87,18 @@
               <label class="flex items-center text-sm font-semibold mb-1">
                 <input type="checkbox" id="pet-check-${petId}" class="mr-1 w-4 h-4 accent-pink-500" />
                 ${displayGrade}
-              </label>
-                <select id="pet-cur-${petId}" class="flex-1 border rounded p-1 text-sm">
+              <div class="flex items-center gap-2 mb-1">
+                <label class="text-sm whitespace-nowrap">현재</label>
+                <select id="pet-cur-${petId}" class="flex-1 border rounded py-0.5 px-1 text-sm">
                   ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
                 </select>
-                <select id="pet-tgt-${petId}" class="flex-1 border rounded p-1 text-sm">
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="text-sm whitespace-nowrap">목표</label>
+                <select id="pet-tgt-${petId}" class="flex-1 border rounded py-0.5 px-1 text-sm">
                   ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
                 </select>
+              </div>
             </div>
           `;
         });
