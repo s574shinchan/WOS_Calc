@@ -28,70 +28,82 @@
   </div>
 
   <script>
+    function loadPage(page) {
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
+    }
+    
     const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/2035550da1ab0e8d4601e86c972415b02f568709/data/chief/Gear.csv';
     const gearSlots = ["장비1(창)", "장비2(창)", "장비3(방)", "장비4(방)", "장비5(궁)", "장비6(궁)"];
     let gearLevels = [];
     let gearData = [];
 
     async function fetchCSVData() {
-      const response = await fetch(csvUrl);
-      const csvText = await response.text();
-      const lines = csvText.trim().split('n');
-      const headers = lines[0].split(',');
-      gearData = lines.slice(1).map(line => {
-        const values = line.split(',');
-        const entry = {};
-        headers.forEach((header, index) => {
-          entry[header] = values[index];
-        });
-        return entry;
+      const res = await fetch(csvUrl);
+      const text = await res.text();
+      const lines = text.trim().split("\n").map(l => l.split(","));
+      const headers = lines[0];
+      gearData = lines.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
+        return obj;
       });
-      gearLevels = gearData.map(d => d["단계"]);
+      gearLevels = gearData.map(r => r["레벨"]);
+      createGearUI();
     }
 
     async function createGearUI() {
-      await fetchCSVData();
       const grid = document.getElementById("gearTableBody");
-      gearSlots.forEach((slot, i) => {
-        const options = gearLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+      gearSlots.forEach((name, i) => {
+        const options = gearLevels.map(stage => `<option value="${stage}">${stage}</option>`).join("");
         grid.innerHTML += `
-          <div class="border p-2 rounded bg-purple-50 text-xs">
+        <div class="border p-2 rounded bg-yellow-50 text-xs">
             <label class="flex items-center text-sm font-semibold mb-1">
-              <input type="checkbox" id="gear-check-${i}" class="mr-1 w-4 h-4 accent-purple-500" />
-              ${slot}
+              <input type="checkbox" id="check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
+              ${name}
             </label>
-            <select id="gear-cur-${i}" class="w-full border rounded p-1 mb-1 text-sm">${options}</select>
-            <select id="gear-tgt-${i}" class="w-full border rounded p-1 text-sm">${options}</select>
+            <div class="flex items-center gap-2 mb-1">
+            <label class="text-sm whitespace-nowrap">현재</label>
+            <select id="start-${i}" class="w-full border rounded py-1 px-2 text-sm">
+            ${options}
+            </select>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+            <label class="text-sm whitespace-nowrap">현재</label>
+            <select id="end-${i}" class="w-full border rounded py-1 px-2 text-sm">
+            ${options}
+            </select>
+            </div>
           </div>
-        `;
+          `
       });
     }
     
-    function calculateGear() {
+    async function calculateGear() {
       let total = { 합금: 0, 설계도면: 0, 광택제: 0, 앰버: 0 };
       let rows = "";
 
-      for (let i = 0; i < gearSlots.length; i++) {
-        if (!document.getElementById(`gear-check-${i}`).checked) continue;
+      gearSlots.forEach((name, i) => {
+        if (!document.getElementById(`check-${i}`).checked) 
+          return;
+        
+        const start = document.getElementById(`start-${i}`).value;
+        const end = document.getElementById(`end-${i}`).value;
+        const startIndex = stageList.indexOf(start);
+        const endIndex = stageList.indexOf(end);
 
-        const cur = document.getElementById(`gear-cur-${i}`).value;
-        const tgt = document.getElementById(`gear-tgt-${i}`).value;
-        const start = gearLevels.indexOf(cur);
-        const end = gearLevels.indexOf(tgt);
-
-        if (start === -1 || end === -1 || start >= end) {
-          rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${gearSlots[i]}: 잘못된 레벨 선택</td></tr>`;
-          continue;
+        if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
+          rows += `<tr><td class="border p-1 text-center" colspan="5">⚠️ ${name}: 잘못된 단계 선택</td></tr>`;
+          return;
         }
 
         const subtotal = { 합금: 0, 설계도면: 0, 광택제: 0, 앰버: 0 };
-
-        for (let j = start + 1; j <= end; j++) {
-          const row = gearData[j];
-          subtotal.합금 += parseFloat(row["합금"] || 0);
-          subtotal.설계도면 += parseFloat(row["설계도면"] || 0);
-          subtotal.광택제 += parseFloat(row["광택제"] || 0);
-          subtotal.앰버 += parseFloat(row["앰버"] || 0);
+        for (let j = startIndex + 1; j <= endIndex; j++) {
+          const row = csvData[j];
+          subtotal.합금 += parseFloat(row["합금"] || "0");
+          subtotal.설계도면 += parseFloat(row["설계도면"] || "0");
+          subtotal.광택제 += parseFloat(row["광택제"] || "0");
+          subtotal.앰버 += parseFloat(row["앰버"] || "0");
         }
 
         total.합금 += subtotal.합금;
@@ -100,24 +112,23 @@
         total.앰버 += subtotal.앰버;
 
         rows += `
-          <tr class="text-center">
-            <td class="border p-1">${gearSlots[i]}</td>
-            <td class="border p-1">${cur} → ${tgt}</td>
-            <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
-            <td class="border p-1">${subtotal.앰버.toLocaleString()}</td>
-          </tr>
-        `;
-      }
+        <tr class="text-center">
+        <td class="border p-1">${name}</td>
+        <td class="border p-1">${start} → ${end}</td>
+        <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.앰버.toLocaleString()}</td>
+        </tr>`;
+      });
 
-      const owned = {
+      const own = {
         합금: parseFloat(document.getElementById("own-합금").value) || 0,
         설계도면: parseFloat(document.getElementById("own-설계도면").value) || 0,
         광택제: parseFloat(document.getElementById("own-광택제").value) || 0,
         앰버: parseFloat(document.getElementById("own-앰버").value) || 0,
       };
-
+      
       rows += `
         <tr class="text-center font-bold bg-purple-100">
           <td class="border p-1" colspan="2">총합</td>
@@ -151,13 +162,7 @@
         </table>
       `;
       
-      window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
-    }
-
-    function loadPage(page) {
-      window.location.href = page;
-
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "650px", width: "100%"}, "*");
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
     }
     
     createGearUI();
