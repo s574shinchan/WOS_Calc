@@ -137,14 +137,12 @@
         total["철강재"] += subtotal.철강재;
 
         rows += `
-              <tr class="text-center">
-              <td class="border p-1">${item.label}</td>
-              <td class="border p-1">${start} → ${end}</td>
-              <td class="border p-1">${subtotal.경험치.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.너트.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.미스릴.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
-              </tr>`;
+        <tr class="text-center">
+        <td class="border p-1">${item.label}</td>
+        <td class="border p-1">${start} → ${end}</td>
+        <td class="border p-1">${subtotal.불수가루.toLocaleString()}</td>
+        <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
+        </tr>`;
       });
 
       const owned = {
@@ -169,12 +167,10 @@
       <table class="w-full table-auto border mt-4 text-sm text-center">
       <thead class="bg-gray-100">
       <tr>
-      <th class="border p-1">장비</th>
+      <th class="border p-1">항목</th>
       <th class="border p-1">레벨</th>
-      <th class="border p-1">경험치</th>
-      <th class="border p-1">너트</th>
-      <th class="border p-1">미스릴</th>
-      <th class="border p-1">레전드장비</th>
+      <th class="border p-1">불수가루</th>
+      <th class="border p-1">철강재</th>
       </tr>
       </thead>
       <tbody>${rows}</tbody>
