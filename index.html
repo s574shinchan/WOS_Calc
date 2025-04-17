@@ -39,7 +39,7 @@
         id="mainFrame" 
         src="menu.html" 
         class="w-full rounded border transition-all duration-300"
-        style="height: 500px;"
+        style="height: 650px;"
         frameborder="0"
         ></iframe>
     </div>
@@ -130,6 +130,13 @@
               frame.style.height = "490px";
             }
             break;
+          case "research.html":
+            if (isMobile) {
+              frame.style.height = "1160px";
+            } else {
+              frame.style.height = "1160px";
+            }
+            break;
           default:
             // 필요하면 기본 높이 설정 가능
             break;
@@ -143,6 +150,7 @@
     }
   </script>
   <script>
+    /*
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
       if (e.key === "F12" ||
@@ -152,6 +160,7 @@
         e.preventDefault();
       }
     });
+    */
   </script>
 </body>
 </html>
