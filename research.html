@@ -1,115 +1,170 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>연구 계산기 (모바일 최적화)</title>
+  <title>연구 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="p-2 bg-gray-100 text-sm font-sans">
-  <div class="max-w-4xl mx-auto bg-white p-2 rounded-xl shadow-md">
-    <h1 class="text-2xl font-bold text-blue-600 mb-4 text-center">🧪 연구 계산기</h1>
-    <div id="researchContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"></div>
-    <button onclick="calculateAll()" class="w-full mt-4 bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">계산하기</button>
-    <div id="result" class="mt-6 font-semibold text-gray-700 whitespace-pre-line text-center"></div>
+<body class="bg-orange-100 p-2 text-sm font-sans">
+  <div class="max-w-5xl mx-auto bg-white p-2 rounded-xl shadow-md">
+    <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline text-sm">
+      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      메뉴로 돌아가기
+    </button>
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">🧪 헬리오스 계산기</h1>
+    <form id="researchForm" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="researchCards"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+        <div><label class="block font-semibold text-gray-700">보유 불수정</label>
+          <input type="number" id="owned-불수가루" class="w-full border rounded p-2" value="0" />
+        </div>
+        <div><label class="block font-semibold text-gray-700">보유 철강재</label>
+          <input type="number" id="owned-철강재" class="w-full border rounded p-2" value="0" />
+        </div>
+      </div>
+        <button type="button" onclick="calcResearch()" class="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">계산하기</button>
+      </div>
+    </form>
   </div>
 
   <script>
-    const maxLevels = {
-      I: 5,
-      II: 8,
-      III: 12,
-      IV: 12,
-      V: 1,
-      Healing: 10,
-      Training: 10,
-      HealingTime: 10
-    };
+    function loadPage(page) {
+        window.location.href = page;
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "550px", width: "100%"}, "*");
+    }
+
+    const researchList = [
+      { key: 'I', label: '연구 I', max: 5 },
+      { key: 'II-A', label: '연구 II (1)', max: 8 },
+      { key: 'II-B', label: '연구 II (2)', max: 8 },
+      { key: 'III', label: '연구 III', max: 12 },
+      { key: 'IV-A', label: '연구 IV (1)', max: 12 },
+      { key: 'IV-B', label: '연구 IV (2)', max: 12 },
+      { key: 'V', label: '연구 V', max: 12 },
+      { key: 'Healing', label: '치유 연구', max: 10 },
+      { key: 'Training', label: '훈련 연구', max: 10 },
+      { key: 'HealingTime', label: '치유시간 연구', max: 10 }
+    ];
 
     const columnMap = {
-      I: { red: 1, black: 2 },
-      II: { red: 3, black: 4 },
+      I: { red: 1, black: 2 }, 
+      "II-A": { red: 3, black: 4 }, 
+      "II-B": { red: 3, black: 4 },
       III: { red: 5, black: 6 },
-      IV: { red: 7, black: 8 },
+      "IV-A": { red: 7, black: 8 }, 
+      "IV-B": { red: 7, black: 8 },
       V: { red: 9, black: 10 },
       Healing: { red: 12, black: 13 },
       Training: { red: 14, black: 15 },
       HealingTime: { red: 16, black: 17 }
     };
 
-    function generateLevelOptions(start, end) {
-      let options = "";
-      for (let i = start; i <= end; i++) {
-        options += `<option value="${i}">Lv.${i}</option>`;
-      }
-      return options;
+    function generateOptions(min, max) {
+      return Array.from({ length: max - min + 1 }, (_, i) => {
+        const lv = i + min;
+        return `<option value="${lv}">Lv.${lv}</option>`;
+      }).join('');
     }
 
-    function createResearchUI() {
-      const container = document.getElementById("researchContainer");
-
-      for (const key in maxLevels) {
-        const max = maxLevels[key];
-        const html = `
-          <div class="border rounded p-4 shadow space-y-2 bg-orage-50">
-            <label class="inline-flex items-center space-x-2 mb-2">
-              <input type="checkbox" id="check-${key}" class="accent-blue-500">
-              <span class="font-bold text-blue-700">${key} 연구</span>
+    function renderResearchCards() {
+      const container = document.getElementById("researchCards");
+      researchList.forEach((item, idx) => {
+        container.innerHTML += `
+          <div class="bg-orange-50 border rounded p-2 space-y-2">
+            <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
+              <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4 accent-orange-500" />
+              <span>${item.label}</span>
             </label>
-            <div class="space-y-2">
-              <div>
-                <label class="block">현재</label>
-                <select id="start-${key}" class="w-full border rounded p-2">
-                  ${generateLevelOptions(1, max - 1)}
-                </select>
-              </div>
-              <div>
-                <label class="block">목표</label>
-                <select id="end-${key}" class="w-full border rounded p-2">
-                  ${generateLevelOptions(2, max)}
-                </select>
-              </div>
+            <div class="flex items-center gap-2">
+              <label for="start-${item.key}" class="text-sm whitespace-nowrap">현재</label>
+              <select class="flex-1 border rounded p-1" id="start-${item.key}">
+                ${generateOptions(1, item.max - 1)}
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <label for="end-${item.key}" class="text-sm whitespace-nowrap">목표</label>
+              <select class="flex-1 border rounded p-1" id="end-${item.key}">
+                ${generateOptions(2, item.max)}
+              </select>
             </div>
           </div>
         `;
-        container.insertAdjacentHTML("beforeend", html);
-      }
+      });
     }
 
     async function fetchCSV(url) {
       const res = await fetch(url);
       const text = await res.text();
-      return text.trim().split("\n").map(row => row.split(","));
+      return text.trim().split("n").map(row => row.split(","));
     }
 
-    async function calculateAll() {
+    async function calcResearch() {
       const data = await fetchCSV("https://raw.githubusercontent.com/s574shinchan/WOS_Calc/1e960927a7b4db6971bcb03227b5fa351ee9d04a/data/research_data.csv");
-      let totalRed = 0, totalBlack = 0;
 
-      for (const key in maxLevels) {
-        if (!document.getElementById(`check-${key}`).checked) continue;
+      let total = { "불수가루": 0, "철강재": 0 };
+      let result = `
+        <table class="table-auto w-full text-sm text-center border border-gray-300">
+          <thead class="bg-orange-100 font-semibold">
+            <tr>
+              <th class="border p-1">연구 항목</th>
+              <th class="border p-1">구간</th>
+              <th class="border p-1">불수가루</th>
+              <th class="border p-1">철강재</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
 
-        const s = parseInt(document.getElementById(`start-${key}`).value);
-        const e = parseInt(document.getElementById(`end-${key}`).value);
-        if (s >= e) continue;
+      researchList.forEach(item => {
+        if (!document.getElementById(`check-${item.key}`).checked) return;
+        const s = parseInt(document.getElementById(`start-${item.key}`).value);
+        const e = parseInt(document.getElementById(`end-${item.key}`).value);
+        const col = columnMap[item.key];
 
-        const col = columnMap[key];
+        let red = 0, black = 0;
         for (let i = s - 1; i < e - 1; i++) {
           const row = data[i + 1];
-          totalRed += parseInt(row[col.red]?.replace(/,/g, "") || 0);
-          totalBlack += parseInt(row[col.black]?.replace(/,/g, "") || 0);
+          red += parseInt(row[col.red]?.replace(/,/g, "") || 0);
+          black += parseInt(row[col.black]?.replace(/,/g, "") || 0);
         }
-      }
 
-      document.getElementById("result").innerText = 
-        totalRed + totalBlack === 0 
-        ? "⚠️ 선택된 항목이 없거나 레벨 설정이 잘못되었습니다." 
-        : `✅ 선택한 항목 합계\n🔴 불수정: ${totalRed.toLocaleString()}개\n⚫ 철강재: ${totalBlack.toLocaleString()}개`;
+        total["불수가루"] += red;
+        total["철강재"] += black;
+
+        result += `
+          <tr>
+            <td class="border p-1">${item.label}</td>
+            <td class="border p-1">Lv.${s} → Lv.${e}</td>
+            <td class="border p-1 text-right">${red.toLocaleString()}</td>
+            <td class="border p-1 text-right">${black.toLocaleString()}</td>
+          </tr>`;
+      });
+
+      const owned = {
+        "불수가루": parseInt(document.getElementById("owned-불수가루").value || 0),
+        "철강재": parseInt(document.getElementById("owned-철강재").value || 0)
+      };
+
+      result += `
+        <tr class="bg-blue-50 font-bold">
+          <td class="border p-1" colspan="2">총합</td>
+          <td class="border p-1">${total["불수가루"].toLocaleString()}</td>
+          <td class="border p-1">${total["철강재"].toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">과부족</td>
+          <td class="border p-1">${(owned["불수가루"] - total["불수가루"]).toLocaleString()}</td>
+          <td class="border p-1">${(owned["철강재"] - total["철강재"]).toLocaleString()}</td>
+        </tr>
+        </tbody></table>`;
+
+      window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
     }
 
-    // 초기 UI 생성
-    window.onload = createResearchUI;
+    renderResearchCards();
   </script>
 </body>
 </html>
