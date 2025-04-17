@@ -39,7 +39,7 @@
         id="mainFrame" 
         src="menu.html" 
         class="w-full rounded border transition-all duration-300"
-        style="min-height: 500px;"
+        style="height: 500px;"
         frameborder="0"
         ></iframe>
     </div>
@@ -89,38 +89,38 @@
         
         frame.src = event.data.target;
         switch (event.data.target) {
-          case "building.html":
+          case "building.html":  //건물계산기
             if (isMobile) {
-              frame.style.height = "815px";
+              frame.style.height = "765px";
             } else {
-              frame.style.height = "560px";
+              frame.style.height = "512px";
             }
             break;
-          case "gem.html":
+          case "gem.html":       //영주보석
             if (isMobile) {
-              frame.style.height = "1440px";
+              frame.style.height = "1352px";
             } else {
-              frame.style.height = "1010px";
+              frame.style.height = "937px";
             }
             break;
-          case "hero.html":
+          case "hero.html":      //영웅장비
             if (isMobile) {
-              frame.style.height = "1100px";
+              frame.style.height = "1055px";
             } else {
-              frame.style.height = "1030px";
+              frame.style.height = "980px";
             }
             break;
-          case "wrapper.html":
+          case "wrapper.html":   //교환코드
             frame.style.height = "570px";
             break;
-          case "menu.html":
+          case "menu.html":      //메뉴
             frame.style.height = "500px";
             break;
-          case "pet.html":
+          case "pet.html":       //펫강화
             if (isMobile) {
-              frame.style.height = "1205px";
+              frame.style.height = "1160px";
             } else {
-              frame.style.height = "890px";
+              frame.style.height = "840px";
             }
             break;
           default:
