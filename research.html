@@ -152,7 +152,7 @@
       };
 
       result += `
-        <tr class="bg-blue-50 font-bold">
+        <tr class=class="text-center font-bold bg-blue-50">
           <td class="border p-1" colspan="2">총합</td>
           <td class="border p-1">${total["불수가루"].toLocaleString()}</td>
           <td class="border p-1">${total["철강재"].toLocaleString()}</td>
@@ -162,7 +162,7 @@
           <td class="border p-1">${(owned["불수가루"] - total["불수가루"]).toLocaleString()}</td>
           <td class="border p-1">${(owned["철강재"] - total["철강재"]).toLocaleString()}</td>
         </tr>
-        </tbody></table>`;
+        `;
       
       const resultHTML = `
       <table class="w-full table-auto border mt-4 text-sm text-center">
