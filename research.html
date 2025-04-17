@@ -14,7 +14,11 @@
       </svg>
       메뉴로 돌아가기
     </button>
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">🧪 헬리오스 계산기</h1>
+
+    <h1 class="text-xl font-bold text-orange-500 mb-4 flex items-center">
+      🧪 <span class="ml-2">연구 계산기</span>
+    </h1>
+
     <form id="researchForm" class="space-y-4">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="researchCards"></div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
@@ -25,7 +29,10 @@
           <input type="number" id="owned-철강재" class="w-full border rounded p-2" value="0" />
         </div>
       </div>
-        <button type="button" onclick="calcResearch()" class="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">계산하기</button>
+      <div class="pt-4 text-center">
+        <button type="button" onclick="calcResearch()" class="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">
+          계산하기
+        </button>
       </div>
     </form>
   </div>
@@ -73,19 +80,19 @@
       const container = document.getElementById("researchCards");
       researchList.forEach((item, idx) => {
         container.innerHTML += `
-          <div class="bg-orange-50 border rounded p-2 space-y-2">
+          <div class="bg-orange-50 border rounded p-3 space-y-2">
             <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
-              <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4 accent-orange-500" />
+              <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4" />
               <span>${item.label}</span>
             </label>
             <div class="flex items-center gap-2">
-              <label for="start-${item.key}" class="text-sm whitespace-nowrap">현재</label>
+              <label for="start-${item.key}" class="w-16 text-gray-600">현재</label>
               <select class="flex-1 border rounded p-1" id="start-${item.key}">
                 ${generateOptions(1, item.max - 1)}
               </select>
             </div>
             <div class="flex items-center gap-2">
-              <label for="end-${item.key}" class="text-sm whitespace-nowrap">목표</label>
+              <label for="end-${item.key}" class="w-16 text-gray-600">목표</label>
               <select class="flex-1 border rounded p-1" id="end-${item.key}">
                 ${generateOptions(2, item.max)}
               </select>
@@ -103,47 +110,45 @@
 
     async function calcResearch() {
       const data = await fetchCSV("https://raw.githubusercontent.com/s574shinchan/WOS_Calc/1e960927a7b4db6971bcb03227b5fa351ee9d04a/data/research_data.csv");
-      let rows = "";
+
       let total = { "불수가루": 0, "철강재": 0 };
       let result = `
-          <table class="w-full border text-sm text-center table-auto mt-4">
-            <thead class="bg-orange-100">
-              <tr>
-                <th class="border p-1">항목</th>
-                <th class="border p-1">레벨</th>
-                <th class="border p-1">불수가루</th>
-                <th class="border p-1">철강재</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
+        <table class="table-auto w-full text-sm text-center border border-gray-300">
+          <thead class="bg-orange-100 font-semibold">
+            <tr>
+              <th class="border p-1">연구 항목</th>
+              <th class="border p-1">구간</th>
+              <th class="border p-1">불수가루</th>
+              <th class="border p-1">철강재</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
 
       researchList.forEach(item => {
-        if (!document.getElementById(`check-${item.key}`).checked) 
-          return;
-        
-        const start = parseInt(document.getElementById(`start-${item.key}`).value);
-        const end = parseInt(document.getElementById(`end-${item.key}`).value);
+        if (!document.getElementById(`check-${item.key}`).checked) return;
+        const s = parseInt(document.getElementById(`start-${item.key}`).value);
+        const e = parseInt(document.getElementById(`end-${item.key}`).value);
         const col = columnMap[item.key];
 
-        let subtotal = { "불수가루": 0, "철강재": 0 };
-        for (let i = start - 1; i < end - 1; i++) {
+        let red = 0, black = 0;
+        for (let i = s - 1; i < e - 1; i++) {
           const row = data[i + 1];
           if (!row) continue;
-          subtotal["불수가루"] += parseInt(row[col.red]?.replace(/,/g, "") || 0);
-          subtotal["철강재"] += parseInt(row[col.black]?.replace(/,/g, "") || 0);
+          red += parseInt(row[col.red]?.replace(/,/g, "") || 0);
+          black += parseInt(row[col.black]?.replace(/,/g, "") || 0);
         }
 
-        total["불수가루"] += subtotal["불수가루"];
-        total["철강재"] += subtotal["철강재"];
+        total["불수가루"] += red;
+        total["철강재"] += black;
 
-        rows += `
-        <tr class="text-center">
-        <td class="border p-1">${item.label}</td>
-        <td class="border p-1">${start} → ${end}</td>
-        <td class="border p-1">${subtotal.불수가루.toLocaleString()}</td>
-        <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
-        </tr>`;
+        result += `
+          <tr>
+            <td class="border p-1">${item.label}</td>
+            <td class="border p-1">Lv.${s} → Lv.${e}</td>
+            <td class="border p-1 text-right">${red.toLocaleString()}</td>
+            <td class="border p-1 text-right">${black.toLocaleString()}</td>
+          </tr>`;
       });
 
       const owned = {
@@ -152,7 +157,7 @@
       };
 
       result += `
-        <tr class=class="text-center font-bold bg-blue-50">
+        <tr class="bg-blue-50 font-bold">
           <td class="border p-1" colspan="2">총합</td>
           <td class="border p-1">${total["불수가루"].toLocaleString()}</td>
           <td class="border p-1">${total["철강재"].toLocaleString()}</td>
@@ -162,26 +167,13 @@
           <td class="border p-1">${(owned["불수가루"] - total["불수가루"]).toLocaleString()}</td>
           <td class="border p-1">${(owned["철강재"] - total["철강재"]).toLocaleString()}</td>
         </tr>
+        </tbody></table>
         `;
-      
-      const resultHTML = `
-      <table class="w-full table-auto border mt-4 text-sm text-center">
-      <thead class="bg-gray-100">
-      <tr>
-      <th class="border p-1">항목</th>
-      <th class="border p-1">레벨</th>
-      <th class="border p-1">불수가루</th>
-      <th class="border p-1">철강재</th>
-      </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-      </table>
-      `;
-      
-      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+
+      window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
     }
 
-    renderResearchCards();
+    window.onload = renderResearchCards;
   </script>
 </body>
 </html>
