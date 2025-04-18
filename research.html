@@ -6,39 +6,22 @@
   <title>연구 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-2 text-sm font-sans">
-  <div class="max-w-5xl mx-auto bg-white p-2 rounded-xl shadow-md">
-    <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline text-sm">
-      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-      </svg>
-      메뉴로 돌아가기
-    </button>
-    <h1 class="text-xl font-bold text-orange-500 mb-4 flex items-center">🧪헬리오스 계산기</h1>
-    <form id="researchForm" class="space-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="researchCards"></div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-        <div><label class="block font-semibold text-gray-700">보유 불수가루</label>
-          <input type="number" id="owned-불수가루" class="w-full border rounded p-2" value="0" />
-        </div>
-        <div><label class="block font-semibold text-gray-700">보유 철강재</label>
-          <input type="number" id="owned-철강재" class="w-full border rounded p-2" value="0" />
-        </div>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-blue-600 mb-6">🧪 연구 계산기</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6" id="researchGrid"></div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div><label class="block font-semibold">보유 가루</label>
+        <input type="number" id="own-가루" class="w-full border rounded p-2" />
       </div>
-      <div class="pt-4 text-center">
-        <button type="button" onclick="calcResearch()" class="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">
-          계산하기
-        </button>
+      <div><label class="block font-semibold">보유 철강재</label>
+        <input type="number" id="own-철강재" class="w-full border rounded p-2" />
       </div>
-    </form>
+    </div>
+    <button onclick="calculateResearch()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg">계산하기</button>
   </div>
 
   <script>
-    function loadPage(page) {
-        window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "550px", width: "100%"}, "*");
-    }
-
     const researchList = [
       { key: 'I', label: '연구 I', max: 5 },
       { key: 'II-A', label: '연구 II (1)', max: 8 },
@@ -49,127 +32,122 @@
       { key: 'V', label: '연구 V', max: 12 },
       { key: 'Healing', label: '치유 연구', max: 10 },
       { key: 'Training', label: '훈련 연구', max: 10 },
-      { key: 'HealingTime', label: '치유시간 연구', max: 10 }
+      { key: 'HealingTime', label: '치유시간 연구', max: 10 },
     ];
 
-    const columnMap = {
-      I: { red: 1, black: 2 }, 
-      "II-A": { red: 3, black: 4 }, 
-      "II-B": { red: 3, black: 4 },
-      III: { red: 5, black: 6 },
-      "IV-A": { red: 7, black: 8 }, 
-      "IV-B": { red: 7, black: 8 },
-      V: { red: 9, black: 10 },
-      Healing: { red: 12, black: 13 },
-      Training: { red: 14, black: 15 },
-      HealingTime: { red: 16, black: 17 }
-    };
+    const researchData = {};
+    researchList.forEach(item => {
+      const data = [];
+      for (let i = 1; i <= item.max; i++) {
+        data.push({ level: i, 가루: i * 20 + 10, 철강재: i * 5000 + 3000 });
+      }
+      researchData[item.key] = data;
+    });
 
-    function generateOptions(min, max) {
-      return Array.from({ length: max - min + 1 }, (_, i) => {
-        const lv = i + min;
-        return `<option value="${lv}">Lv.${lv}</option>`;
-      }).join('');
+    function createLevelOptions(max) {
+      return Array.from({ length: max + 1 }, (_, i) => `<option value="${i}">${i}</option>`).join('');
     }
 
     function renderResearchCards() {
-      const container = document.getElementById("researchCards");
-      researchList.forEach((item, idx) => {
-        container.innerHTML += `
-          <div class="bg-orange-50 border rounded p-3 space-y-2">
-            <label class="inline-flex items-center space-x-2 font-bold text-gray-700">
-              <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4" />
-              <span>${item.label}</span>
-            </label>
-            <div class="flex items-center gap-2">
-              <label for="start-${item.key}" class="w-16 text-gray-600">현재</label>
-              <select class="flex-1 border rounded p-1" id="start-${item.key}">
-                ${generateOptions(1, item.max - 1)}
-              </select>
-            </div>
-            <div class="flex items-center gap-2">
-              <label for="end-${item.key}" class="w-16 text-gray-600">목표</label>
-              <select class="flex-1 border rounded p-1" id="end-${item.key}">
-                ${generateOptions(2, item.max)}
-              </select>
-            </div>
+      const container = document.getElementById("researchGrid");
+      researchList.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "bg-gray-50 border border-gray-300 p-4 rounded-xl shadow";
+
+        div.innerHTML = `
+          <div class="flex items-center mb-2">
+            <input type="checkbox" id="check-${item.key}" class="mr-2">
+            <label for="check-${item.key}" class="font-bold text-lg text-gray-800">${item.label}</label>
+          </div>
+          <div class="mb-2">
+            <label class="block text-gray-700 font-semibold mb-1">현재 레벨</label>
+            <select id="current-${item.key}" class="w-full border rounded px-2 py-1">
+              ${createLevelOptions(item.max)}
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-semibold mb-1">목표 레벨</label>
+            <select id="target-${item.key}" class="w-full border rounded px-2 py-1">
+              ${createLevelOptions(item.max)}
+            </select>
           </div>
         `;
+
+        container.appendChild(div);
       });
     }
 
-    async function fetchCSV(url) {
-      const res = await fetch(url);
-      const text = await res.text();
-      return text.trim().split("\n").map(row => row.split(","));
-    }
-
-    async function calcResearch() {
-      const data = await fetchCSV("https://raw.githubusercontent.com/s574shinchan/WOS_Calc/1e960927a7b4db6971bcb03227b5fa351ee9d04a/data/research_data.csv");
-
-      let total = { "불수가루": 0, "철강재": 0 };
-      let result = `
-        <table class="table-auto w-full text-sm text-center border border-gray-300">
-          <thead class="bg-orange-100 font-semibold">
-            <tr>
-              <th class="border p-1">연구 항목</th>
-              <th class="border p-1">구간</th>
-              <th class="border p-1">불수가루</th>
-              <th class="border p-1">철강재</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
+    function calculateResearch() {
+      let total = { 가루: 0, 철강재: 0 };
+      let rows = "";
 
       researchList.forEach(item => {
-        if (!document.getElementById(`check-${item.key}`).checked) return;
-        const s = parseInt(document.getElementById(`start-${item.key}`).value);
-        const e = parseInt(document.getElementById(`end-${item.key}`).value);
-        const col = columnMap[item.key];
+        const checked = document.getElementById(`check-${item.key}`).checked;
+        if (!checked) return;
 
-        let red = 0, black = 0;
-        for (let i = s - 1; i < e - 1; i++) {
-          const row = data[i + 1];
+        const cur = parseInt(document.getElementById(`current-${item.key}`).value);
+        const tgt = parseInt(document.getElementById(`target-${item.key}`).value);
+        if (cur >= tgt) return;
+
+        const data = researchData[item.key];
+        const subtotal = { 가루: 0, 철강재: 0 };
+
+        for (let i = cur + 1; i <= tgt; i++) {
+          const row = data.find(r => r.level === i);
           if (!row) continue;
-          red += parseInt(row[col.red]?.replace(/,/g, "") || 0);
-          black += parseInt(row[col.black]?.replace(/,/g, "") || 0);
+          subtotal.가루 += parseFloat(row.가루 || 0);
+          subtotal.철강재 += parseFloat(row.철강재 || 0);
         }
 
-        total["불수가루"] += red;
-        total["철강재"] += black;
+        total.가루 += subtotal.가루;
+        total.철강재 += subtotal.철강재;
 
-        result += `
-          <tr>
+        rows += `
+          <tr class="text-center">
             <td class="border p-1">${item.label}</td>
-            <td class="border p-1">Lv.${s} → Lv.${e}</td>
-            <td class="border p-1 text-right">${red.toLocaleString()}</td>
-            <td class="border p-1 text-right">${black.toLocaleString()}</td>
-          </tr>`;
+            <td class="border p-1">${cur} → ${tgt}</td>
+            <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
+          </tr>
+        `;
       });
 
       const owned = {
-        "불수가루": parseInt(document.getElementById("owned-불수가루").value || 0),
-        "철강재": parseInt(document.getElementById("owned-철강재").value || 0)
+        가루: parseFloat(document.getElementById("own-가루").value) || 0,
+        철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
       };
 
-      result += `
-        <tr class="bg-blue-50 font-bold">
+      rows += `
+        <tr class="text-center font-bold bg-purple-100">
           <td class="border p-1" colspan="2">총합</td>
-          <td class="border p-1">${total["불수가루"].toLocaleString()}</td>
-          <td class="border p-1">${total["철강재"].toLocaleString()}</td>
+          <td class="border p-1">${total.가루.toLocaleString()}</td>
+          <td class="border p-1">${total.철강재.toLocaleString()}</td>
         </tr>
         <tr class="text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">과부족</td>
-          <td class="border p-1">${(owned["불수가루"] - total["불수가루"]).toLocaleString()}</td>
-          <td class="border p-1">${(owned["철강재"] - total["철강재"]).toLocaleString()}</td>
+          <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
+          <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
         </tr>
-        </tbody></table>
-        `;
+      `;
 
-      window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
+      const resultHTML = `
+        <table class="w-full table-auto border text-sm text-center mt-4">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-1">연구</th>
+              <th class="border p-1">레벨</th>
+              <th class="border p-1">가루</th>
+              <th class="border p-1">철강재</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
     }
 
-    window.onload = renderResearchCards;
+    renderResearchCards();
   </script>
 </body>
 </html>
