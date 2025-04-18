@@ -160,6 +160,7 @@
       
       function loadPage(page) {
         window.location.href = page;
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "550px", width: "100%"}, "*");
       }
     </script>
     
