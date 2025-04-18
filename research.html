@@ -8,6 +8,12 @@
 </head>
 <body class="bg-gray-100 p-2 font-sans text-sm">
   <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
+    <button onclick="loadPage('menu.html')" class="mb-4 flex items-center text-blue-600 hover:underline">
+      <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      메뉴로 돌아가기
+    </button>
     <h1 class="text-2xl font-bold text-blue-600 mb-6">🧪 헬리오스 연구 계산기</h1>
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6" id="researchGrid"></div>
     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -22,6 +28,11 @@
   </div>
 
   <script>
+    function loadPage(page) {
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "550px", width: "100%"}, "*");
+    }
+    
     const researchList = [
       { key: 'I', label: '불꽃 부대', max: 5 },
       { key: 'II-A', label: '파괴력 연구', max: 8 },
