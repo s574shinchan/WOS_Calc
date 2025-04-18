@@ -52,10 +52,8 @@
       const container = document.getElementById("researchGrid");
       researchList.forEach(item => {
         const div = document.createElement("div");
-        div.className = "border p-2 rounded bg-orange-50 text-xs";
-
         div.innerHTML = `
-          <div class="border p-2 rounded bg-orange-200 text-xs">
+          <div class="border p-2 rounded bg-orange-50 text-xs">
             <input type="checkbox" id="check-${item.key}" class="mr-2">
             <label for="check-${item.key}" class="flex items-center text-sm font-semibold mb-1">${item.label}</label>
             <div class="flex items-center gap-2 mb-1">
@@ -71,9 +69,7 @@
               </select>
             </div>
           </div>
-        `;
-
-        container.appendChild(div);
+          `
       });
     }
 
