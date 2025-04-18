@@ -55,21 +55,21 @@
         div.className = "bg-gray-50 border border-gray-300 p-4 rounded-xl shadow";
 
         div.innerHTML = `
-          <div class="border p-2 rounded bg-purple-50 text-xs">
+          <div class="border p-2 rounded bg-orange-200 text-xs">
             <input type="checkbox" id="check-${item.key}" class="mr-2">
             <label for="check-${item.key}" class="mr-1 w-4 h-4 ext-gray-800">${item.label}</label>
-          </div>
-          <div class="flex items-center gap-2 mb-1">
-            <label class="block text-gray-700 font-semibold mb-1">현재 레벨</label>
-            <select id="current-${item.key}" class="w-full border rounded px-2 text-sm">
-              ${createLevelOptions(item.max)}
-            </select>
-          </div>
-          <div class="flex items-center gap-2 mb-1">
-            <label class="block text-gray-700 font-semibold mb-1">목표 레벨</label>
-            <select id="target-${item.key}" class="w-full border rounded px-2 py-1 text-sm">
-              ${createLevelOptions(item.max)}
-            </select>
+            <div class="flex items-center gap-2 mb-1">
+              <label class="block text-gray-700 font-semibold mb-1">현재 레벨</label>
+              <select id="current-${item.key}" class="w-full border rounded px-2 text-sm">
+                ${createLevelOptions(item.max)}
+              </select>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+              <label class="block text-gray-700 font-semibold mb-1">목표 레벨</label>
+              <select id="target-${item.key}" class="w-full border rounded px-2 py-1 text-sm">
+                ${createLevelOptions(item.max)}
+              </select>
+            </div>
           </div>
         `;
 
