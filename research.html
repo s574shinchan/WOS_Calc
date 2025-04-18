@@ -23,16 +23,16 @@
 
   <script>
     const researchList = [
-      { key: 'I', label: '연구 I', max: 5 },
-      { key: 'II-A', label: '연구 II (1)', max: 8 },
-      { key: 'II-B', label: '연구 II (2)', max: 8 },
-      { key: 'III', label: '연구 III', max: 12 },
-      { key: 'IV-A', label: '연구 IV (1)', max: 12 },
-      { key: 'IV-B', label: '연구 IV (2)', max: 12 },
-      { key: 'V', label: '연구 V', max: 12 },
-      { key: 'Healing', label: '치유 연구', max: 10 },
-      { key: 'Training', label: '훈련 연구', max: 10 },
-      { key: 'HealingTime', label: '치유시간 연구', max: 10 },
+      { key: 'I', label: '불꽃 부대', max: 5 },
+      { key: 'II-A', label: '파괴력 연구', max: 8 },
+      { key: 'II-B', label: 'HP 연구)', max: 8 },
+      { key: 'III', label: '불꽃 군단', max: 12 },
+      { key: 'IV-A', label: '공격력 연구', max: 12 },
+      { key: 'IV-B', label: '방어력 연구', max: 12 },
+      { key: 'V', label: '헬리오스 병사', max: 12 },
+      { key: 'Healing', label: '치료', max: 10 },
+      { key: 'Training', label: '훈련', max: 10 },
+      { key: 'HealingTime', label: '구급', max: 10 },
     ];
 
     const researchData = {};
@@ -146,8 +146,22 @@
 
       window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
     }
-
+    
+    function loadPage(page) {
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "550px", width: "100%"}, "*");
+    }
     renderResearchCards();
+  </script>
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+        (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
+    });
   </script>
 </body>
 </html>
