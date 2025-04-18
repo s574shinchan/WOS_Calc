@@ -167,11 +167,22 @@
       
       function loadPage(page) {
         window.location.href = page;
-  
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "500px", width: "100%"}, "*");
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "550px", width: "100%"}, "*");
       }
       
       fetchBuildingData();
+    </script>
+    <script>      
+      document.addEventListener("contextmenu", event => event.preventDefault());
+      document.addEventListener("keydown", function (e) {
+        if (
+          e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))
+        ) {
+          e.preventDefault();
+        }
+      });
     </script>
   </body>
 </html>
