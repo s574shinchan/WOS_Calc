@@ -8,19 +8,35 @@
   </head>
   <body class="bg-white p-6 font-sans">
     <div class="text-center space-y-6">
-      <div class="flex flex-col items-center gap-4 max-w-2xl mx-auto px-4">
-        <button class="menu-btn bg-blue-600 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72 max-w-xs" data-target="building.html">🏗 건물계산</button>
-        <button class="menu-btn bg-purple-600 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72 max-w-xs" data-target="gem.html">💎 영주보석</button>
-        <button class="menu-btn bg-green-600 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72 max-w-xs" data-target="equip.html">🛡 영주장비</button>
-        <button class="menu-btn bg-yellow-500 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72 max-w-xs" data-target="hero.html">🧝 영웅장비</button>
-        <button class="menu-btn bg-pink-500 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72 max-w-xs" data-target="pet.html">🐶 펫돌파</button>
-        <button class="menu-btn bg-neutral-500 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72 max-w-xs" data-target="research.html">🧪 T11 연구</button>
-        <button class="menu-btn bg-gray-700 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72 max-w-xs" data-target="guide.html">📚 자료모음</button>          
-        <button class="menu-btn bg-lime-700 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72 max-w-xs" data-target="wrapper.html">🎁 교환코드입력</button>
+      <!-- ✅ 모바일 전용: 1열 세로 정렬 -->
+      <div class="block md:hidden text-center space-y-4">
+        <div class="flex flex-col items-center gap-4 max-w-md mx-auto px-4">
+          <button class="menu-btn bg-blue-600 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72" data-target="building.html">🏗 건물계산</button>
+          <button class="menu-btn bg-purple-600 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72" data-target="gem.html">💎 영주보석</button>
+          <button class="menu-btn bg-green-600 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72" data-target="equip.html">🛡 영주장비</button>
+          <button class="menu-btn bg-yellow-500 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72" data-target="hero.html">🧝 영웅장비</button>
+          <button class="menu-btn bg-pink-500 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72" data-target="pet.html">🐶 펫돌파</button>
+          <button class="menu-btn bg-gray-700 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72" data-target="guide.html">📚 자료모음</button>
+          <button class="menu-btn bg-neutral-500 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72" data-target="research.html">🧪 T11 연구</button>
+          <button class="menu-btn bg-lime-700 text-white px-6 py-3 rounded-xl shadow w-full sm:w-72" data-target="wrapper.html">🎁 교환코드입력</button>
+        </div>
+      </div>
+      
+      <!-- ✅ 데스크탑 전용: 2열 그리드 정렬 -->
+      <div class="hidden md:grid grid-cols-2 gap-4 max-w-2xl mx-auto px-4 text-center">
+        <button class="menu-btn bg-blue-600 text-white px-6 py-3 rounded-xl shadow w-full" data-target="building.html">🏗 건물계산</button>
+        <button class="menu-btn bg-green-600 text-white px-6 py-3 rounded-xl shadow w-full" data-target="equip.html">🛡 영주장비</button>
+        <button class="menu-btn bg-purple-600 text-white px-6 py-3 rounded-xl shadow w-full" data-target="gem.html">💎 영주보석</button>
+        <button class="menu-btn bg-yellow-500 text-white px-6 py-3 rounded-xl shadow w-full" data-target="hero.html">🧝 영웅장비</button>
+        <button class="menu-btn bg-pink-500 text-white px-6 py-3 rounded-xl shadow w-full" data-target="pet.html">🐶 펫돌파</button>
+        <button class="menu-btn bg-neutral-500 text-white px-6 py-3 rounded-xl shadow w-full" data-target="research.html">🧪 T11 연구</button>
+        <button class="menu-btn bg-gray-700 text-white px-6 py-3 rounded-xl shadow w-full" data-target="guide.html">📚 자료모음</button>
+        <button class="menu-btn bg-lime-700 text-white px-6 py-3 rounded-xl shadow w-full" data-target="wrapper.html">🎁 교환코드입력</button>
       </div>
     </div>
     
     <script>
+      const isMobile = window.innerWidth <= 768;
       document.querySelectorAll(".menu-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const target = btn.getAttribute("data-target");
