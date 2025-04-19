@@ -107,7 +107,7 @@
       
       <script>
         function sendHeightToParent() {
-          const height = document.documentElement.scrollHeight;
+          const height = document.body.scrollHeight;
           console.log(height);
           window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
         }
