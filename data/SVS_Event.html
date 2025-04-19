@@ -1,0 +1,97 @@
+<!-- event.html: 요일별 임무 테이블만 포함 -->
+<div class="overflow-x-auto">
+  <table class="table-auto border w-full text-xs text-center">
+    <thead class="bg-blue-100">
+      <tr>
+        <th class="border p-1">요일</th>
+        <th class="border p-1">임무</th>
+        <th class="border p-1">포인트</th>
+      </tr>
+    </thead>
+    <tbody id="missionTableBody">
+      <!-- JavaScript로 행 자동 생성 -->
+    </tbody>
+  </table>
+</div>
+<script>
+  const missions = {
+    '월요일': [
+      ['영주 보석', '1pt당 70pt'],
+      ['불수정 건물 업그레이드', '1개 2,000pt'],
+      ['불수정 가루 연구', '1개 1,000pt'],
+      ['제련으로 건물 업그레이드', '1개 30,000pt']
+    ],
+    '화요일': [
+      ['행운룰렛', '1회 8,000pt'],
+      ['불수정 건물 업그레이드', '1개 2,000pt'],
+      ['불수정 가루 연구', '1개 1,000pt'],
+      ['제련으로 건물 업그레이드', '1개 30,000pt'],
+      ['건설/연구/훈련 가속', '1분 30pt'],
+      ['레어 영웅 성급업', '1개 350pt'],
+      ['에픽 영웅 성급업', '1개 1,220pt'],
+      ['레전드 영웅 성급업', '1개 3,040pt'],
+      ['채집', '2pt']
+    ],
+    '수요일': [
+      ['영주 보석', '1pt당 70pt'],
+      ['행운룰렛', '1회 8,000pt'],
+      ['펫 돌파', '1개 50pt'],
+      ['고급 펫 단련', '1개 15,000pt'],
+      ['일반 펫 단련', '1개 1,150pt'],
+      ['레어 영웅 성급업', '1개 350pt'],
+      ['에픽 영웅 성급업', '1개 1,220pt'],
+      ['레전드 영웅 성급업', '1개 3,040pt'],
+      ['빙원괴수집결', '1마리당 30,000pt'],
+      ['야수처치', '1마리당 9,000 ~ 12,000pt']
+    ],
+    '목요일': [
+      ['영주 보석', '1pt당 70pt'],
+      ['마스터리석 소모', '1개 4,000pt'],
+      ['영웅전용무기 소모', '1개 8,000pt'],
+      ['미스릴 소모', '1개 40,000pt'],
+      ['병사 훈련', '3 ~ 75pt']
+    ],
+    '금요일': [
+      ['영주 장비', '1종 36pt'],
+      ['마스터리석 소모', '1개 4,000pt'],
+      ['영웅전용무기 소모', '1개 8,000pt'],
+      ['미스릴 소모', '1개 40,000pt'],
+      ['불수정 건물 업그레이드', '1개 2,000pt'],
+      ['불수정 가루 연구', '1개 1,000pt'],
+      ['제련으로 건물 업그레이드', '1개 30,000pt'],
+      ['펫 돌파', '1개 50pt'],
+      ['고급 펫 단련', '1개 15,000pt'],
+      ['일반 펫 단련', '1개 1,150pt'],
+      ['건설/연구/훈련 가속', '1분 30pt']
+    ]
+  };
+
+  const days = ['월요일', '화요일', '수요일', '목요일', '금요일'];
+  const today = new Date().getDay(); // 0 = Sunday, 1 = Monday ...
+  const tableBody = document.getElementById('missionTableBody');
+
+  days.forEach((day, index) => {
+    const isToday = (index + 1) === today;
+    const rows = missions[day];
+
+    rows.forEach((row, i) => {
+      const tr = document.createElement('tr');
+      if (i === 0) {
+        const tdDay = document.createElement('td');
+        tdDay.textContent = day;
+        tdDay.className = `border p-1 font-semibold ${isToday ? 'bg-yellow-100 text-red-600' : ''}`;
+        tdDay.rowSpan = rows.length;
+        tr.appendChild(tdDay);
+      }
+      const tdTask = document.createElement('td');
+      const tdPoint = document.createElement('td');
+      tdTask.textContent = row[0];
+      tdPoint.textContent = row[1];
+      tdTask.className = 'border p-1';
+      tdPoint.className = 'border p-1';
+      tr.appendChild(tdTask);
+      tr.appendChild(tdPoint);
+      tableBody.appendChild(tr);
+    });
+  });
+</script>
