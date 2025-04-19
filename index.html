@@ -90,7 +90,7 @@
     window.addEventListener("message", function (event) {
       if (event.data.type === "SET_FRAME_SIZE") {
         const frame = document.getElementById("mainFrame");
-        frame.style.height = `${event.data.height}px`;
+        frame.style.height = event.data.height;
       }
 
       if (event.data.type === "FRAME_CHANGE") {
