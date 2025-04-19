@@ -30,9 +30,9 @@
   <script>
     function loadPage(page) {
       const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
+      let isHeight = isMobile ? "550px" : "345px"
       window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
     }
     
     const researchData = {
