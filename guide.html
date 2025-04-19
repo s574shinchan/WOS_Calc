@@ -175,12 +175,14 @@
         // [ID] => 로딩 여부 저장
         const loadState = {};
         Object.keys(fileMap).forEach(id => loadState[id] = false);
+        console.log(loadState[id]);
 
         // 모든 <details> 요소에 toggle 이벤트 바인딩
         document.querySelectorAll('details').forEach(detail => {
           detail.addEventListener('toggle', async () => {
             for (const id in fileMap) {
               const target = detail.querySelector(`#${id}`);
+              console.log(target);
               if (target && !loadState[id] && detail.open) {
                 try {
                   const res = await fetch(`${baseUrl}${fileMap[id]}`);
