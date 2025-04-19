@@ -110,9 +110,10 @@
             if (isMobile) {
               frame.style.height = "765px";
             } else {
-              frame.style.height = `${document.body.scrollHeight + 10}px`;
+              //frame.style.height = `${element.clientHeight}px`;
               console.log(document.body.scrollHeight);
-              //frame.style.height = "512px";
+              console.log(element.clientHeight);
+              frame.style.height = "512px";
             }
             break;
           case "gem.html":       //영주보석
