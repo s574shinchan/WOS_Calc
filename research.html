@@ -29,11 +29,13 @@
 
   <script>
     function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
       window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "550px", width: "100%"}, "*");
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
     
-      const researchData = {
+    const researchData = {
       "I": [
         { level: 1, 가루: 16, 철강재: 5000 },
         { level: 2, 가루: 25, 철강재: 8000 },
