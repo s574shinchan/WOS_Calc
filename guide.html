@@ -109,7 +109,7 @@
         function sendHeightToParent() {
           const height = document.documentElement.scrollHeight;
           console.log(height);
-          window.parent.postMessage({ type: "SET_FRAME_SIZE", height }, "*");
+          window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
         }
       
         window.addEventListener("load", sendHeightToParent);           // 페이지 최초 로드 시
