@@ -154,10 +154,10 @@
         "IV-A" : "공격력 연구",
         "IV-B" : "방어력 연구",
         "V" : "헬리오스 병사",
-        "Healing" : "치료",
-        "Training" : "훈련",
-        "HealingTime" : "구급",
-      }[key] || `연구 ${key.replace('-', ' ')}`,
+        "Healing" : "치료 연구",
+        "Training" : "훈련 연구",
+        "HealingTime" : "구급 연구",
+      }[key],
       max: Math.max(...value.map(v => v.level))
     }));
 
