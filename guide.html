@@ -25,6 +25,14 @@
           <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
         </div>
       </details>
+
+      <!-- ⚔️ SVS_Event -->
+      <details class="bg-white border border-amber-400 rounded-md p-4">
+        <summary class="cursor-pointer text-lg font-bold text-amber-700 mb-2">🧬 세대별 영웅 특성</summary>
+        <div id="SVSTable" class="mt-3 overflow-x-auto">
+          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+        </div>
+      </details>
       
       <!-- 🛫 이민 시스템 안내 -->
       <details class="bg-white border border-gray-300 rounded-md p-4">
@@ -176,6 +184,7 @@
         let gemPakage = false;
         let visionPakage = false;
         let customPakage = false;
+        let svstable = false;
         
         // 모든 summary 요소에 대해 이벤트 바인딩
         document.querySelectorAll('details').forEach(detail => {
@@ -191,6 +200,21 @@
                 const html = await response.text();
                 container.innerHTML = html;
                 herotable = true;
+              } catch (e) {
+                container.innerHTML = `<p class="text-red-500">⚠️ 테이블 데이터를 불러오는 데 실패했습니다.</p>`;
+              }
+            }
+
+            //SVS
+            if (detail.querySelector('#SVSTable') && !svstable && detail.open) {
+              const container = document.getElementById('SVSTable');
+              try {
+                const response = await fetch('https://s574shinchan.github.io/WOS_Calc/data/SVS_Event.html');
+                if (!response.ok) throw new Error('파일 요청 실패');
+      
+                const html = await response.text();
+                container.innerHTML = html;
+                svstable = true;
               } catch (e) {
                 container.innerHTML = `<p class="text-red-500">⚠️ 테이블 데이터를 불러오는 데 실패했습니다.</p>`;
               }
