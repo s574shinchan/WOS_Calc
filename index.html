@@ -111,8 +111,9 @@
               frame.style.height = "765px";
             } else {
               //frame.style.height = `${element.clientHeight}px`;
-              console.log(document.body.scrollHeight);
-              console.log(element.clientHeight);
+              console.log("body.scrollHeight:", document.body.scrollHeight);
+              console.log("body.offsetHeight:", document.body.offsetHeight);
+              console.log("html.scrollHeight:", document.documentElement.scrollHeight);
               frame.style.height = "512px";
             }
             break;
