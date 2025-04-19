@@ -108,6 +108,7 @@
       <script>
         function sendHeightToParent() {
           const height = document.documentElement.scrollHeight;
+          console.log(height);
           window.parent.postMessage({ type: "SET_FRAME_SIZE", height }, "*");
         }
       
