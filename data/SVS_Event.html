@@ -9,89 +9,66 @@
       </tr>
     </thead>
     <tbody id="missionTableBody">
-      <!-- JavaScript로 행 자동 생성 -->
+      <!-- 월요일 -->
+      <tr><td class="border p-1 font-semibold" rowspan="4">월요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+      <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+      <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+      <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+
+      <!-- 화요일 -->
+      <tr><td class="border p-1 font-semibold" rowspan="9">화요일</td><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
+      <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+      <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+      <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+      <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
+      <tr><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
+      <tr><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
+      <tr><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
+      <tr><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
+
+      <!-- 수요일 -->
+      <tr><td class="border p-1 font-semibold" rowspan="10">수요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+      <tr><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
+      <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
+      <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
+      <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
+      <tr><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
+      <tr><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
+      <tr><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
+      <tr><td class="border p-1">빙원괴수집결</td><td class="border p-1">1마리당 30,000pt</td></tr>
+      <tr><td class="border p-1">야수처치</td><td class="border p-1">1마리당 9,000 ~ 12,000pt</td></tr>
+
+      <!-- 목요일 -->
+      <tr><td class="border p-1 font-semibold" rowspan="5">목요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+      <tr><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
+      <tr><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
+      <tr><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 40,000pt</td></tr>
+      <tr><td class="border p-1">병사 훈련</td><td class="border p-1">3 ~ 75pt</td></tr>
+
+      <!-- 금요일 -->
+      <tr><td class="border p-1 font-semibold" rowspan="11">금요일</td><td class="border p-1">영주 장비</td><td class="border p-1">1종 36pt</td></tr>
+      <tr><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
+      <tr><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
+      <tr><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 40,000pt</td></tr>
+      <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+      <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+      <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+      <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
+      <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
+      <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
+      <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
     </tbody>
   </table>
 </div>
 <script>
-  const missions = {
-    '월요일': [
-      ['영주 보석', '1pt당 70pt'],
-      ['불수정 건물 업그레이드', '1개 2,000pt'],
-      ['불수정 가루 연구', '1개 1,000pt'],
-      ['제련으로 건물 업그레이드', '1개 30,000pt']
-    ],
-    '화요일': [
-      ['행운룰렛', '1회 8,000pt'],
-      ['불수정 건물 업그레이드', '1개 2,000pt'],
-      ['불수정 가루 연구', '1개 1,000pt'],
-      ['제련으로 건물 업그레이드', '1개 30,000pt'],
-      ['건설/연구/훈련 가속', '1분 30pt'],
-      ['레어 영웅 성급업', '1개 350pt'],
-      ['에픽 영웅 성급업', '1개 1,220pt'],
-      ['레전드 영웅 성급업', '1개 3,040pt'],
-      ['채집', '2pt']
-    ],
-    '수요일': [
-      ['영주 보석', '1pt당 70pt'],
-      ['행운룰렛', '1회 8,000pt'],
-      ['펫 돌파', '1개 50pt'],
-      ['고급 펫 단련', '1개 15,000pt'],
-      ['일반 펫 단련', '1개 1,150pt'],
-      ['레어 영웅 성급업', '1개 350pt'],
-      ['에픽 영웅 성급업', '1개 1,220pt'],
-      ['레전드 영웅 성급업', '1개 3,040pt'],
-      ['빙원괴수집결', '1마리당 30,000pt'],
-      ['야수처치', '1마리당 9,000 ~ 12,000pt']
-    ],
-    '목요일': [
-      ['영주 보석', '1pt당 70pt'],
-      ['마스터리석 소모', '1개 4,000pt'],
-      ['영웅전용무기 소모', '1개 8,000pt'],
-      ['미스릴 소모', '1개 40,000pt'],
-      ['병사 훈련', '3 ~ 75pt']
-    ],
-    '금요일': [
-      ['영주 장비', '1종 36pt'],
-      ['마스터리석 소모', '1개 4,000pt'],
-      ['영웅전용무기 소모', '1개 8,000pt'],
-      ['미스릴 소모', '1개 40,000pt'],
-      ['불수정 건물 업그레이드', '1개 2,000pt'],
-      ['불수정 가루 연구', '1개 1,000pt'],
-      ['제련으로 건물 업그레이드', '1개 30,000pt'],
-      ['펫 돌파', '1개 50pt'],
-      ['고급 펫 단련', '1개 15,000pt'],
-      ['일반 펫 단련', '1개 1,150pt'],
-      ['건설/연구/훈련 가속', '1분 30pt']
-    ]
-  };
+  const todayIndex = new Date().getDay(); // 0: 일요일 ~ 6: 토요일
+  const todayKo = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'][todayIndex];
 
-  const days = ['월요일', '화요일', '수요일', '목요일', '금요일'];
-  const today = new Date().getDay(); // 0 = Sunday, 1 = Monday ...
-  const tableBody = document.getElementById('missionTableBody');
-
-  days.forEach((day, index) => {
-    const isToday = (index + 1) === today;
-    const rows = missions[day];
-
-    rows.forEach((row, i) => {
-      const tr = document.createElement('tr');
-      if (i === 0) {
-        const tdDay = document.createElement('td');
-        tdDay.textContent = day;
-        tdDay.className = `border p-1 font-semibold ${isToday ? 'bg-yellow-100 text-red-600' : ''}`;
-        tdDay.rowSpan = rows.length;
-        tr.appendChild(tdDay);
-      }
-      const tdTask = document.createElement('td');
-      const tdPoint = document.createElement('td');
-      tdTask.textContent = row[0];
-      tdPoint.textContent = row[1];
-      tdTask.className = 'border p-1';
-      tdPoint.className = 'border p-1';
-      tr.appendChild(tdTask);
-      tr.appendChild(tdPoint);
-      tableBody.appendChild(tr);
-    });
+  // 해당 요일이 있는 셀에 bold 스타일 추가
+  document.querySelectorId('missionTableBody').forEach(tr => {
+    const firstCell = tr.querySelector('td');
+    if (firstCell && firstCell.textContent === todayKo) {
+      firstCell.classList.add('font-bold', 'text-red-600');
+    }
   });
 </script>
