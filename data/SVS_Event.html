@@ -58,17 +58,16 @@
       <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
       <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
     </tbody>
+    <script>
+      const todayIndex = new Date().getDay(); // 1 = 월요일, ..., 5 = 금요일
+      const todayKo = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'][todayIndex];
+
+      document.querySelectorAll("table tbody tr").forEach(tr => {
+        const firstCell = tr.querySelector("td");
+        if (firstCell && firstCell.textContent.trim() === todayKo) {
+          firstCell.classList.add("bg-yellow-100", "text-black", "font-semibold");
+        }
+      });
+    </script>
   </table>
 </div>
-<script>
-  const todayIndex = new Date().getDay(); // 0: 일요일 ~ 6: 토요일
-  const todayKo = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'][todayIndex];
-
-  // 해당 요일이 있는 셀에 bold 스타일 추가
-  document.querySelectorId('missionTableBody').forEach(tr => {
-    const firstCell = tr.querySelector('td');
-    if (firstCell && firstCell.textContent === todayKo) {
-      firstCell.classList.add('font-bold', 'text-red-600');
-    }
-  });
-</script>
