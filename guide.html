@@ -118,12 +118,8 @@
         // 각 details 토글 시 높이 재전송
         document.querySelectorAll("details").forEach(detail => {
           detail.addEventListener("toggle", () => {
-            // 열릴 경우 약간 딜레이 후 정확한 높이 측정
-            if (detail.open) {
-              setTimeout(sendHeightToParent, 300); // 애니메이션 시간 고려
-            } else {
-              sendHeightToParent(); // 즉시 전송
-            }
+            // 약간 딜레이 후 정확한 높이 측정
+            setTimeout(sendHeightToParent, 300);
           });
         });
         
