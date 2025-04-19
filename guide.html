@@ -49,20 +49,7 @@
           <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
         </div>
       </details>
-      
-      <!-- 🧪 헬리오스 연구 참고자료 섹션 -->
-      <!--
-      <details class="bg-white border border-red-300 rounded-md p-4">
-        <summary class="cursor-pointer text-lg font-bold text-red-600 mb-2">🧪 헬리오스(T11)</summary>
-        <div class="mt-3">
-          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/7b8601795ff8a85932540f79e4bda456044026e8/images/T11Research.png"
-               alt="헬리오스 참고 이미지"
-               class="w-full mx-auto rounded shadow"
-            />
-        </div>
-      </details>    
-      -->
-      
+            
       <!-- 📦 각종 패키지 구성 섹션 -->
       <details class="bg-white border border-gray-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-purple-700 mb-2">📦 각종 패키지 구성</summary>
@@ -119,31 +106,23 @@
       </details>
       
       <script>
-        let lastSentHeight = 0;
+        function sendHeightToParent() {
+          const height = document.documentElement.scrollHeight;
+          window.parent.postMessage({ type: "SET_FRAME_SIZE", height }, "*");
+        }
+      
+        window.addEventListener("load", sendHeightToParent);           // 페이지 최초 로드 시
+        window.addEventListener("resize", sendHeightToParent);         // 화면 크기 변경 시
         
-        function sendHeightToParent(height) {
-          lastSentHeight = height;
-          window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height + "px" }, "*");
-        }
-      
-        function adjustFrameHeight(onOpen) {
-          const currentHeight = document.documentElement.scrollHeight;
-          const adjustedHeight = onOpen
-            ? currentHeight + 100 // 열릴 때 여유 공간 추가
-            : currentHeight - 100; // 닫힐 때는 줄임 (또는 원래대로)
-          
-          sendHeightToParent(adjustedHeight);
-        }
-      
-        window.addEventListener("load", () => {
-          sendHeightToParent(document.documentElement.scrollHeight);
-        });
-              
+        // 각 details 토글 시 높이 재전송
         document.querySelectorAll("details").forEach(detail => {
-          detail.addEventListener("toggle", () => {          
-            setTimeout(() => {
-              adjustFrameHeight(detail.open); // 열림 상태에 따라 조절
-            }, 300); // 애니메이션 후 정확한 높이 반영
+          detail.addEventListener("toggle", () => {
+            // 열릴 경우 약간 딜레이 후 정확한 높이 측정
+            if (detail.open) {
+              setTimeout(sendHeightToParent, 300); // 애니메이션 시간 고려
+            } else {
+              sendHeightToParent(); // 즉시 전송
+            }
           });
         });
         
