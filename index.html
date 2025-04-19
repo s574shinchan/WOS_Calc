@@ -126,9 +126,6 @@
           case "wrapper.html":   //교환코드
             frame.style.height = "570px";
             break;
-          case "menu.html":      //메뉴
-            frame.style.height = "485px";
-            break;
           case "pet.html":       //펫강화
             if (isMobile) {
               frame.style.height = "1160px";
@@ -136,14 +133,14 @@
               frame.style.height = "840px";
             }
             break;
-          case "equip.html":
+          case "equip.html":    //영주장비
             if (isMobile) {
               frame.style.height = "680px";
             } else {
               frame.style.height = "490px";
             }
             break;
-          case "research.html":
+          case "research.html":    //헬리연구
             if (isMobile) {
               frame.style.height = "885px";
             } else {
@@ -155,7 +152,6 @@
             break;
         }
       }  //NAVIGATE_TO
-      
     });
     
     function closePopup() {
@@ -163,7 +159,6 @@
     }
   </script>
   <script>
-    /*
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
       if (e.key === "F12" ||
@@ -173,7 +168,6 @@
         e.preventDefault();
       }
     });
-    */
   </script>
 </body>
 </html>
