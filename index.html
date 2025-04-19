@@ -74,8 +74,9 @@
     
     function ComeBackHome() {
       const frame = document.getElementById("mainFrame");
+      const isMobile = window.innerWidth <= 768;
       frame.src = 'menu.html'
-      frame.style.height = "550px";
+      iframe.style.height = isMobile ? "550px" : "345px";
     }
     
     window.addEventListener("message", function (event) {
