@@ -111,9 +111,11 @@
           console.log(height);
           window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
         }
-      
-        window.addEventListener("load", sendHeightToParent);           // 페이지 최초 로드 시
-        window.addEventListener("resize", sendHeightToParent);         // 화면 크기 변경 시
+
+        // 페이지 최초 로드 시
+        window.addEventListener("load", () => {
+          setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+        });
         
         // 각 details 토글 시 높이 재전송
         document.querySelectorAll("details").forEach(detail => {
