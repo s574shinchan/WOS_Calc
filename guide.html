@@ -19,7 +19,7 @@
       <div id="GuideGridBody" class="grid grid-cols-2 gap-4"></div>
       <details class="bg-white border border-indigo-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-indigo-700 mb-2">🧬 세대별 영웅 특성</summary>
-        <div id="heroTableContainer" class="mt-3 overflow-x-auto">
+        <div id="HeroTable" class="mt-3 overflow-x-auto">
           <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
         </div>
       </details>
@@ -27,8 +27,8 @@
       <!-- 🛫 이민 시스템 안내 -->
       <details class="bg-white border border-gray-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
-        <div id="StatusTranferContainer" class="mt-3 space-y-4 text-sm text-gray-800">
-          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+        <div id="Tranfer" class="mt-3 space-y-4 text-sm text-gray-800">
+          <!--<p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>-->
         </div>
       </details>
       
@@ -51,7 +51,7 @@
         <!-- 💎 보석마스터 패키지 구성 -->
         <details class="bg-white border border-purple-300 rounded-md p-4">
           <summary class="cursor-pointer text-lg font-bold text-purple-700 mb-2">💎 보석마스터 패키지</summary>
-          <div id="gemPakageContainer" class="space-y-4 text-sm text-gray-800 mt-2">
+          <div id="gemPakage" class="space-y-4 text-sm text-gray-800 mt-2">
             <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
           </div>
         </details>
@@ -59,7 +59,7 @@
         <!-- 💠 보석비전 패키지 -->
         <details class="bg-white border border-purple-300 rounded-md p-4">
           <summary class="cursor-pointer text-lg font-bold text-purple-700 mb-2">💠 보석비전 패키지</summary>
-          <div id="visionContainer" class="mt-2">
+          <div id="visionPakage" class="mt-2">
             <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
           </div>
         </details>
@@ -149,12 +149,34 @@
       window.addEventListener("load", () => {
         sendHeightToParent(document.documentElement.scrollHeight);
       });
-    
+      
+      const iframeMap = {
+        'HeroTable': 'data/genhero.html',
+        'Tranfer': 'data/StatusTransfer.html',
+        'gemPakage': 'data/gempakage.html',
+        'visionPakage': 'data/visionpakage.html',
+        'customContianer': 'data/custompakage.html'
+      };
+      
       document.querySelectorAll("details").forEach(detail => {
         detail.addEventListener("toggle", () => {
+          if (detail.open) {
+            const contentDiv = detail.querySelector('div[id^="content-"]');
+            const contentId = contentDiv.id;
+  
+            if (!contentDiv.innerHTML && iframeMap[contentId]) {
+              const iframe = document.createElement('iframe');
+              iframe.src = iframeMap[contentId];
+              iframe.className = "w-full h-96 border rounded";
+              iframe.loading = "lazy";
+              contentDiv.appendChild(iframe);
+            }
+          }
+          /*
           setTimeout(() => {
             adjustFrameHeight(detail.open); // 열림 상태에 따라 조절
           }, 300); // 애니메이션 후 정확한 높이 반영
+          */
         });
       });
       
@@ -168,7 +190,7 @@
       let heroTableLoaded = false;
 
       document.querySelector('summary').addEventListener('click', async () => {
-        const container = document.getElementById('heroTableContainer');
+        const container = document.getElementById('HeroTable');
         if (heroTableLoaded) return;
     
         try {
@@ -185,7 +207,7 @@
 
       let StatusTranferLoaded = false;
       document.querySelector('summary').addEventListener('click', async () => {
-        const container = document.getElementById('StatusTranferContainer');
+        const container = document.getElementById('Tranfer');
         if (StatusTranferLoaded) return;
     
         try {
@@ -202,7 +224,7 @@
 
       let gemPakageLoaded = false;
       document.querySelector('summary').addEventListener('click', async () => {
-        const container = document.getElementById('gemPakageContainer');
+        const container = document.getElementById('gemPakage');
         if (gemPakageLoaded) return;
     
         try {
@@ -219,7 +241,7 @@
     
       let visionPakageLoaded = false;
       document.querySelector('summary').addEventListener('click', async () => {
-        const container = document.getElementById('visionContainer');
+        const container = document.getElementById('visionPakage');
         if (visionPakageLoaded) return;
     
         try {
