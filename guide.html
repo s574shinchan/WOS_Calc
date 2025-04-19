@@ -161,8 +161,6 @@
           detail.addEventListener('toggle', async () => {
             for (const id in fileMap) {
               const target = detail.querySelector(`#${id}`);
-              console.log(target);
-              console.log(loadState[id]);
               if (target && !loadState[id] && detail.open) {
                 try {
                   const res = await fetch(`${baseUrl}${fileMap[id]}`);
