@@ -143,13 +143,20 @@
         { level: 10, 가루: 765, 철강재: 220000 },
       ]
     };
-    
+  
     const researchList = Object.entries(researchData).map(([key, value]) => ({
       key,
       label: {
-        "Healing": "치유 연구",
-        "Training": "훈련 연구",
-        "HealingTime": "치유시간 연구"
+        "I": "불꽃 부대",
+        "II-A": "파괴력 연구",
+        "II-B" : "HP 연구",
+        "III" : "불꽃 군단",
+        "IV-A" : "공격력 연구",
+        "IV-B" : "방어력 연구",
+        "V" : "헬리오스 병사",
+        "Healing" : "치료",
+        "Training" : "훈련",
+        "HealingTime" : "구급",
       }[key] || `연구 ${key.replace('-', ' ')}`,
       max: Math.max(...value.map(v => v.level))
     }));
