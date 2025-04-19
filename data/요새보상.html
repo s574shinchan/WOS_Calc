@@ -1,4 +1,4 @@
-<table id="fortressTable" class="min-w-full table-fixed border border-gray-400 text-center">
+<table id="fortress" class="min-w-full table-fixed border border-gray-400 text-center">
   <thead class="bg-blue-100 font-semibold">
     <tr>
       <th class="border p-1 w-10">요새</th>
@@ -168,21 +168,60 @@
       <td class="border p-1">공용 가속</td>
       <td class="border p-1">공용 가속</td>
     </tr>
+    
+    <!-- 빈 줄 삽입 -->
+    <tr><td colspan="9" class="border p-1 bg-white h-4"></td></tr>
+    
+    <!-- 성채 1 -->
+    <tr>
+      <td class="border p-1">성채 1</td>
+      <td class="border p-1">SSR 파편</td>
+      <td class="border p-1">펫 돌파 재료 상자</td>
+      <td class="border p-1">장비 상자</td>
+      <td class="border p-1">SSR 파편</td>
+      <td class="border p-1">SSR 파편</td>
+      <td class="border p-1">펫 돌파 재료 상자</td>
+      <td class="border p-1">장비 상자</td>
+      <td class="border p-1">SSR 파편</td>
+    </tr>
+
+    <!-- 성채 2 -->
+    <tr>
+      <td class="border p-1">성채 2</td>
+      <td class="border p-1">불의 수정</td>
+      <td class="border p-1">SSR 파편</td>
+      <td class="border p-1">펫 돌파 재료 상자</td>
+      <td class="border p-1">불의 수정</td>
+      <td class="border p-1">불의 수정</td>
+      <td class="border p-1">SSR 파편</td>
+      <td class="border p-1">펫 돌파 재료 상자</td>
+      <td class="border p-1">불의 수정</td>
+    </tr>
+
+    <!-- 성채 3 -->
+    <tr>
+      <td class="border p-1">성채 3</td>
+      <td class="border p-1">장비 상자</td>
+      <td class="border p-1">불의 수정</td>
+      <td class="border p-1">SSR 파편</td>
+      <td class="border p-1">펫 돌파 재료 상자</td>
+      <td class="border p-1">장비 상자</td>
+      <td class="border p-1">불의 수정</td>
+      <td class="border p-1">불의 수정</td>
+      <td class="border p-1">펫 돌파 재료 상자</td>
+    </tr>
+
+    <!-- 성채 4 -->
+    <tr>
+      <td class="border p-1">성채 4</td>
+      <td class="border p-1">펫 돌파 재료 상자</td>
+      <td class="border p-1">장비 상자</td>
+      <td class="border p-1">불의 수정</td>
+      <td class="border p-1">SSR 파편</td>
+      <td class="border p-1">펫 돌파 재료 상자</td>
+      <td class="border p-1">장비 상자</td>
+      <td class="border p-1">SSR 파편</td>
+      <td class="border p-1">SSR 파편</td>
+    </tr>
   </tbody>
 </table>
-<script>
-  const baseDate = new Date("2024-04-01");
-  const now = new Date();
-  const diffDays = Math.floor((now - baseDate) / (1000 * 60 * 60 * 24));
-  const currentWeek = Math.min(Math.floor(diffDays / 7) + 1, 8);
-
-  const table = document.getElementById("fortressTable");
-  const rows = table.querySelectorAll("tbody tr");
-
-  rows.forEach(row => {
-    const cells = row.querySelectorAll("td");
-    if (cells[currentWeek]) {
-      cells[currentWeek].classList.add("highlight");
-    }
-  });
-</script>
