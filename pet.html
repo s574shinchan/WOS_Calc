@@ -29,6 +29,13 @@
   </div>
 
   <script>
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      let isHeight = isMobile ? "550px" : "345px"
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
+    }
+    
     const grades = ["기간토", "매머드", "호랑이", "코뿔소", "고릴라", "동굴사자", 
                     "흑표범", "큰뿔사슴", 
                     "티타니스", "테이퍼", 
@@ -200,13 +207,6 @@
       `;
 
       window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
-    }
-
-    function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
-      window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
 
     loadPetUI();
