@@ -40,9 +40,7 @@
       document.querySelectorAll(".menu-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const target = btn.getAttribute("data-target");
-          const height = document.body.scrollHeight;
-          console.log(document.body.scrollHeight);
-          window.parent.postMessage({ type: "NAVIGATE_TO", target, height: height }, "*");
+          window.parent.postMessage({ type: "NAVIGATE_TO", target}, "*");
         });
       });
     </script>
