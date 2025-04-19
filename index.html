@@ -110,8 +110,8 @@
             if (isMobile) {
               frame.style.height = "765px";
             } else {
-              frame.style.height = `${event.data.height + 10}px`;
-              console.log(event.data.height);
+              frame.style.height = `${document.body.scrollHeight + 10}px`;
+              console.log(document.body.scrollHeight);
               //frame.style.height = "512px";
             }
             break;
