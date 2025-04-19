@@ -151,11 +151,11 @@
       });
       
       const iframeMap = {
-        'HeroTable': 'data/genhero.html',
-        'Tranfer': 'data/StatusTransfer.html',
-        'gemPakage': 'data/gempakage.html',
-        'visionPakage': 'data/visionpakage.html',
-        'customContianer': 'data/custompakage.html'
+        'HeroTable': 'https://s574shinchan.github.io/WOS_Calc/data/genhero.html',
+        'Tranfer': 'https://s574shinchan.github.io/WOS_Calc/data/StatusTransfer.html',
+        'gemPakage': 'https://s574shinchan.github.io/WOS_Calc/data/gempakage.html',
+        'visionPakage': 'https://s574shinchan.github.io/WOS_Calc/data/visionpakage.html',
+        'customContianer': 'https://s574shinchan.github.io/WOS_Calc/data/custompakage.html'
       };
       
       document.querySelectorAll("details").forEach(detail => {
@@ -172,11 +172,10 @@
               contentDiv.appendChild(iframe);
             }
           }
-          /*
+          
           setTimeout(() => {
             adjustFrameHeight(detail.open); // 열림 상태에 따라 조절
           }, 300); // 애니메이션 후 정확한 높이 반영
-          */
         });
       });
       
@@ -237,7 +236,8 @@
         } catch (e) {
           container.innerHTML = `<p class="text-red-500">⚠️ 테이블 데이터를 불러오는 데 실패했습니다.</p>`;
         }
-      });*/
+      });
+      */
     
       let visionPakageLoaded = false;
       document.querySelector('summary').addEventListener('click', async () => {
