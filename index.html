@@ -90,8 +90,12 @@
     window.addEventListener("message", function (event) {
       if (event.data.type === "SET_FRAME_SIZE") {
         const frame = document.getElementById("mainFrame");
-        const isMobile = window.innerWidth <= 768;
         frame.style.height = `${event.data.height}px`;
+      }
+
+      if (event.data.type === "FRAME_CHANGE") {
+        const frame = document.getElementById("mainFrame");
+        frame.style.height = `${event.data.height + 10}px`;
       }
     });
 
