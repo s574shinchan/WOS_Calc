@@ -162,8 +162,10 @@
     }
     
     function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
       window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: "550px", width: "100%"}, "*");
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
     
     createGemUI();
