@@ -91,40 +91,88 @@
       }
       
       function calculateAll() {
-        const selectedBuildings = document.querySelectorAll(".building-select:checked");
-        const results = [];
-        const materialTotals = {};
-      
-        for (const checkbox of selectedBuildings) {
-          const name = checkbox.value;
-          const start = document.getElementById(`${name}-current`).value;
-          const end = document.getElementById(`${name}-target`).value;
-          if (!start || !end || start === end) continue;
-      
-          const res = await fetch(`data/building/${name}.csv`);
-          const text = await res.text();
-          const data = Papa.parse(text, { header: true }).data.filter(row => row["레벨"]);
-      
-          const levelList = data.map(row => row["레벨"]);
-          const startIdx = levelList.indexOf(start);
-          const endIdx = levelList.indexOf(end);
-          if (startIdx === -1 || endIdx === -1 || startIdx >= endIdx) continue;
-      
-          const materialKeys = Object.keys(data[0]).filter(k => k !== "레벨");
-          const subtotal = {};
-          for (let i = startIdx + 1; i <= endIdx; i++) {
-            const row = data[i];
-            materialKeys.forEach(key => {
-              subtotal[key] = (subtotal[key] || 0) + parseFloat(row[key] || 0);
-              materialTotals[key] = (materialTotals[key] || 0) + parseFloat(row[key] || 0);
+        let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+        let result = `
+          <table class="w-full border text-sm text-center table-auto mt-4">
+            <thead class="bg-blue-100">
+              <tr>
+                <th class="border p-1">건물</th>
+                <th class="border p-1">레벨</th>
+                <th class="border p-1">불수정</th>
+                <th class="border p-1">정제</th>
+                <th class="border p-1">고기</th>
+                <th class="border p-1">나무</th>
+                <th class="border p-1">석탄</th>
+                <th class="border p-1">철광</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
+        const owned = {
+          "불수정": parseInt(document.getElementById("owned-불수정").value || 0),
+          "정제": parseInt(document.getElementById("owned-정제").value || 0)
+        };
+        
+        buildingList.forEach(name => {
+          if (!document.getElementById("check-" + name).checked) return;
+  
+          const start = parseInt(document.getElementById("start-" + name).value);
+          const end = parseInt(document.getElementById("end-" + name).value);
+          const data = buildingData[name].slice(start, end+1);
+          let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+          
+          data.forEach(row => {
+            resources.forEach(res => {
+              subtotal[res] += parseInt(row[res] || 0);
+              total[res] += parseInt(row[res] || 0);
             });
-          }
-      
-          results.push({ name, start, end, subtotal });
-        }
-      
-        showPopup(results, materialTotals);
+          });
+  
+          const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
+          result += `
+            <tr>
+              <td class="border p-1 font-medium">${name}</td>
+              <td class="border p-1 text-xs">${levelStr}</td>
+              <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
+              <td class="border p-1">${formatValue(subtotal["고기"])}</td>
+              <td class="border p-1">${formatValue(subtotal["나무"])}</td>
+              <td class="border p-1">${formatValue(subtotal["석탄"])}</td>
+              <td class="border p-1">${formatValue(subtotal["철광"])}</td>
+            </tr>
+          `;
+        });
+  
+        result += `
+          <tr class="bg-blue-50 font-bold">
+            <td class="border p-1" colspan="2">총합</td>
+            <td class="border p-1">${total["불수정"].toLocaleString()}</td>
+            <td class="border p-1">${total["정제"].toLocaleString()}</td>
+            <td class="border p-1">${formatValue(total["고기"])}</td>
+            <td class="border p-1">${formatValue(total["나무"])}</td>
+            <td class="border p-1">${formatValue(total["석탄"])}</td>
+            <td class="border p-1">${formatValue(total["철광"])}</td>
+          </tr>
+            <tr class="text-center font-bold bg-red-50">
+            <td class="border p-1" colspan="2">과부족</td>
+            <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
+            <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
+            <td class="border p-1" colspan="4"></td>
+          </tr>
+          </tbody></table>
+        `;
+        window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
       }
+      
+      function loadPage(page) {
+        const isMobile = window.innerWidth <= 768;
+        const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+      }
+      
+      fetchBuildingData();
     </script>
     <script>      
       document.addEventListener("contextmenu", event => event.preventDefault());
