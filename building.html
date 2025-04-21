@@ -91,7 +91,7 @@
       }
       
       function calculateAll() {
-        let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+       /* let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
         let result = `
           <table class="w-full border text-sm text-center table-auto mt-4">
             <thead class="bg-blue-100">
@@ -173,6 +173,43 @@
       }
       
       fetchBuildingData();
+      */
+        async function calc() {
+  const selectedBuildings = document.querySelectorAll(".building-select:checked");
+  const results = [];
+  const materialTotals = {};
+
+  for (const checkbox of selectedBuildings) {
+    const name = checkbox.value;
+    const start = document.getElementById(`${name}-current`).value;
+    const end = document.getElementById(`${name}-target`).value;
+    if (!start || !end || start === end) continue;
+
+    const res = await fetch(`data/building/${name}.csv`);
+    const text = await res.text();
+    const data = Papa.parse(text, { header: true }).data.filter(row => row["레벨"]);
+
+    const levelList = data.map(row => row["레벨"]);
+    const startIdx = levelList.indexOf(start);
+    const endIdx = levelList.indexOf(end);
+    if (startIdx === -1 || endIdx === -1 || startIdx >= endIdx) continue;
+
+    const materialKeys = Object.keys(data[0]).filter(k => k !== "레벨");
+    const subtotal = {};
+    for (let i = startIdx + 1; i <= endIdx; i++) {
+      const row = data[i];
+      materialKeys.forEach(key => {
+        subtotal[key] = (subtotal[key] || 0) + parseFloat(row[key] || 0);
+        materialTotals[key] = (materialTotals[key] || 0) + parseFloat(row[key] || 0);
+      });
+    }
+
+    results.push({ name, start, end, subtotal });
+  }
+
+  showPopup(results, materialTotals);
+}
+
     </script>
     <script>      
       document.addEventListener("contextmenu", event => event.preventDefault());
