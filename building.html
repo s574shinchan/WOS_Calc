@@ -117,7 +117,7 @@
         buildingList.forEach(name => {
           if (!document.getElementById("check-" + name).checked) return;
   
-          /*const start = parseInt(document.getElementById("start-" + name).value);
+          const start = parseInt(document.getElementById("start-" + name).value);
           const end = parseInt(document.getElementById("end-" + name).value);
           const data = buildingData[name].slice(start + 1, end + 1);
           let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
@@ -128,29 +128,6 @@
               total[res] += parseInt(row[res] || 0);
             });
           });
-          */
-          const start = document.getElementById(`start-${name}`).value;
-          const end = document.getElementById(`end-${name}`).value;
-          const startIndex = stageList.indexOf(start);
-          const endIndex = stageList.indexOf(end);
-          
-          let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
-          for (let j = startIndex + 1; j <= endIndex; j++) {
-            const row = data[j];
-            subtotal.불수정 += parseFloat(row["불수정"] || "0");
-            subtotal.정제 += parseFloat(row["정제"] || "0");
-            subtotal.고기 += parseFloat(row["고기"] || "0");
-            subtotal.나무 += parseFloat(row["나무"] || "0");
-            subtotal.석탄 += parseFloat(row["석탄"] || "0");
-            subtotal.철광 += parseFloat(row["철광"] || "0");
-          }
-
-          total.불수정 += subtotal.불수정;
-          total.정제 += subtotal.정제;
-          total.고기 += subtotal.고기;
-          total.나무 += subtotal.나무;
-          total.석탄 += subtotal.석탄;
-          total.철광 += subtotal.철광;
   
           const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
           result += `
