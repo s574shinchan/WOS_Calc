@@ -119,7 +119,7 @@
   
           const start = parseInt(document.getElementById("start-" + name).value);
           const end = parseInt(document.getElementById("end-" + name).value);
-          const data = buildingData[name].slice(start, end+1);
+          const data = buildingData[name].slice(start + 1, end + 1);
           let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
           
           data.forEach(row => {
