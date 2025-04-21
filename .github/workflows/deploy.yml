@@ -10,65 +10,69 @@ on:
       - '**.css'
       - '!README.md'
       - '!LICENSE'
-      - 'version.txt'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    env:
-      BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-      DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Read and bump version
-      id: bump
-      run: |
-        VERSION=$(cat version.txt)
-        echo "Current version: $VERSION"
-        
-        BASE=$(echo "$VERSION" | cut -d. -f1,2)
-        PATCH=$(echo "$VERSION" | cut -d. -f3)
-        NEXT_PATCH=$((PATCH + 1))
-        NEXT_VERSION="$BASE.$NEXT_PATCH"
+      ###########################################
+      # 1. 버전 읽고 다음 버전 만들기
+      ###########################################
+      - name: Read and bump version
+        id: version
+        run: |
+          VERSION=$(cat version.txt)
+          BASE=$(echo "$VERSION" | cut -d. -f1,2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+          NEXT_PATCH=$((PATCH + 1))
+          NEXT_VERSION="$BASE.$NEXT_PATCH"
+          echo "$NEXT_VERSION" > version.txt
+          echo "VERSION_TAG=$NEXT_VERSION" >> $GITHUB_ENV
 
-        echo "$NEXT_VERSION" > version.txt
-        echo "VERSION_TAG=$NEXT_VERSION" >> $GITHUB_ENV
+      ###########################################
+      # 2. index.html 내부 버전 태그 삽입
+      ###########################################
+      - name: Inject version into index.html
+        run: |
+          sed -i "s/main.js/main.js?v=${{ env.VERSION_TAG }}/g" index.html
+          sed -i "s/style.css/style.css?v=${{ env.VERSION_TAG }}/g" index.html
 
-    - name: Inject version into index.html
-      run: |
-        sed -i "s/main.js/main.js?v=$VERSION_TAG/g" index.html
-        sed -i "s/style.css/style.css?v=$VERSION_TAG/g" index.html
+      ###########################################
+      # 3. S3에 파일 동기화
+      ###########################################
+      - name: Sync files to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_DIR: ./
 
-    - name: Sync files to S3
-      uses: jakejarvis/s3-sync-action@master
-      with:
-        args: --delete
-      env:
-        AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        SOURCE_DIR: ./
+      ###########################################
+      # 4. CloudFront 캐시 무효화 (전체 or 일부)
+      ###########################################
+      - name: Invalidate CloudFront Cache
+        uses: chetan/invalidate-cloudfront-action@v2
+        env:
+          DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          PATHS: "/index.html"  # 원하면 "/*"로 복구 가능
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-    - name: Invalidate only index.html on CloudFront
-      run: |
-        aws cloudfront create-invalidation \
-          --distribution-id $DISTRIBUTION_ID \
-          --paths "/index.html"
-      env:
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-    - name: Commit bumped version
-      run: |
-        git config user.name "github-actions"
-        git config user.email "actions@github.com"
-        git add version.txt
-        git commit -m "🔄 Bump version to $VERSION_TAG"
-        git push
+      ###########################################
+      # 5. version.txt 커밋 & 푸시
+      ###########################################
+      - name: Commit and push bumped version
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add version.txt
+          git commit -m "🔄 Bump version to $VERSION_TAG" || echo "No changes"
+          git push
