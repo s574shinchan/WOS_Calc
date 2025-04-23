@@ -139,6 +139,13 @@
             <td class="border p-1">${total.광택제.toLocaleString()}</td>
             <td class="border p-1">${total.달빛앰버.toLocaleString()}</td>
           </tr>
+          <tr class="text-center font-bold bg-orange-50">
+            <td class="border p-1" colspan="2">보유량</td>
+            <td class="border p-1">${owned.합금.toLocaleString()}</td>
+            <td class="border p-1">${owned.설계도면.toLocaleString()}</td>
+            <td class="border p-1">${owned.광택제.toLocaleString()}</td>
+            <td class="border p-1">${owned.달빛앰버.toLocaleString()}</td>
+          </tr>
           <tr class="text-center font-bold bg-red-50">
             <td class="border p-1" colspan="2">과부족</td>
             <td class="border p-1">${(owned.합금 - total.합금).toLocaleString()}</td>
