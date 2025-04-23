@@ -57,6 +57,17 @@
       </div>
     </div>
     
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn"
+      class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
+      aria-label="Top">
+      <!-- Up arrow SVG icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+    
     <!-- 카피라이트 -->  
     <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 및 배포 금지 | © S574 ShinChan</footer>
   </div>
@@ -189,6 +200,23 @@
       .catch(err => {
         console.error("ads.txt fetch 에러", err);
       });
+  </script>
+  <script>
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+  
+    // 스크롤 위치에 따라 버튼 보이기
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 200) {
+        scrollToTopBtn.classList.remove("hidden");
+      } else {
+        scrollToTopBtn.classList.add("hidden");
+      }
+    });
+  
+    // 클릭 시 맨 위로 부드럽게 스크롤
+    scrollToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   </script>
 </body>
 </html>
