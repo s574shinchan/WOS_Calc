@@ -177,5 +177,18 @@
     });
     */
   </script>
+  <script>
+    fetch("/ads.txt", { cache: "no-store" })
+      .then(res => {
+        if (res.ok) {
+          console.log("ads.txt 유입 트리거 성공");
+        } else {
+          console.warn("ads.txt 접근 실패", res.status);
+        }
+      })
+      .catch(err => {
+        console.error("ads.txt fetch 에러", err);
+      });
+  </script>
 </body>
 </html>
