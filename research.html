@@ -232,11 +232,6 @@
 
         total.가루 += subtotal.가루;
         total.철강재 += subtotal.철강재;
-
-        const owned = {
-          가루: parseFloat(document.getElementById("own-가루").value) || 0,
-          철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
-        };
         
         rows += `
           <tr class="text-center">
@@ -245,25 +240,30 @@
             <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
             <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
           </tr>
-          <tr class="text-center font-bold bg-orange-50">
-            <td class="border p-1" colspan="2">보유량</td>
-            <td class="border p-1">${owned.가루.toLocaleString()}</td>
-            <td class="border p-1">${owned.철강재.toLocaleString()}</td>
-          </tr>
-          <tr class="text-center font-bold bg-red-50">
-          <td class="border p-1" colspan="2">과부족</td>
-          <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
-          <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
-          </tr>
-        `;
-      });
-
+          `;
+        });
+      
+      const owned = {
+        가루: parseFloat(document.getElementById("own-가루").value) || 0,
+        철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
+      };
+      
       rows += `
-        <tr class="text-center font-bold bg-purple-100">
-          <td class="border p-1" colspan="2">총합</td>
-          <td class="border p-1">${total.가루.toLocaleString()}</td>
-          <td class="border p-1">${total.철강재.toLocaleString()}</td>
-        </tr>
+      <tr class="text-center font-bold bg-purple-100">
+        <td class="border p-1" colspan="2">총합</td>
+        <td class="border p-1">${total.가루.toLocaleString()}</td>
+        <td class="border p-1">${total.철강재.toLocaleString()}</td>
+      </tr>
+      <tr class="text-center font-bold bg-orange-50">
+        <td class="border p-1" colspan="2">보유량</td>
+        <td class="border p-1">${owned.가루.toLocaleString()}</td>
+        <td class="border p-1">${owned.철강재.toLocaleString()}</td>
+      </tr>
+      <tr class="text-center font-bold bg-red-50">
+        <td class="border p-1" colspan="2">과부족</td>
+        <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
+        <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
+      </tr>
       `;
 
       const resultHTML = `
