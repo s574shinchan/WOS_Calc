@@ -36,11 +36,21 @@
 
     <!-- 문구 -->
     <h1 class="text-xl font-bold mb-2 text-center">WOS 계산기 & 정보모음</h1>
+    
+    <div class="flex flex-wrap gap-2 justify-center mb-4">
+      <button onclick="switchTab('guide')" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">🏠 가이드</button>
+      <button onclick="switchTab('building')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🏗 건물계산</button>
+      <button onclick="switchTab('equip')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🛡 영주장비</button>
+      <button onclick="switchTab('gem')" class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded">💎 영주보석</button>
+      <button onclick="switchTab('hero')" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">🦸 영웅장비</button>
+      <button onclick="switchTab('pet')" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded">🐾 펫돌파</button>
+      <button onclick="switchTab('research')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🔬 연구</button>
+    </div>
 
     <div id="content" class="max-w-6xl mx-auto bg-white p-2 rounded shadow flex justify-center">
       <iframe 
         id="mainFrame" 
-        src="menu.html" 
+        src="guide.html" 
         class="w-full rounded border transition-all duration-300"
         style="height: auto;"
         frameborder="0"
@@ -105,6 +115,16 @@
       const isMobile = window.innerWidth <= 768;
       frame.src = 'menu.html'
       frame.style.height = isMobile ? "550px" : "345px";
+    }
+    
+    function switchTab(page) {
+      const frame = document.getElementById('mainFrame');
+      if (page === 'guide') frame.src = 'guide.html';
+      else if (page === 'building') frame.src = 'building.html';
+      else if (page === 'gem') frame.src = 'gem.html';
+      else if (page === 'hero') frame.src = 'hero.html';
+      else if (page === 'pet') frame.src = 'pet.html';
+      else if (page === 'research') frame.src = 'research.html';
     }
     
     window.addEventListener("message", function (event) {
