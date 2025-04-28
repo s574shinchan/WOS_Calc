@@ -74,9 +74,6 @@
         <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
         <div id="popupContent" class="overflow-auto max-h-[65vh] text-center"></div>
         <div class="text-center mt-4">
-          <!--
-          <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">확인</button>
-          -->
           <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"> 확인
           </button>
         </div>
@@ -121,51 +118,51 @@
       const frame = document.getElementById('mainFrame');
       const isMobile = window.innerWidth <= 768;
       frame.src = page + '.html';
-      switch (frame.src) 
+      switch (page) 
       {
-        case "building.html":  //건물계산기
+        case 'building':  //건물계산기
           if (isMobile) {
-            frame.style.height = "815px";
+            frame.style.height = '815px';
           } else {
-            frame.style.height = "545px";
+            frame.style.height = '545px';
           }
           break;
-        case "gem.html":       //영주보석
+        case 'gem':       //영주보석
           if (isMobile) {
-            frame.style.height = "1521px";
+            frame.style.height = '1521px';
           } else {
-            frame.style.height = "984px";
+            frame.style.height = '984px';
           }
           break;
-        case "hero.html":      //영웅장비
+        case 'hero':      //영웅장비
           if (isMobile) {
-            frame.style.height = "1115px";
+            frame.style.height = '1115px';
           } else {
-            frame.style.height = "1020px";
+            frame.style.height = '1020px';
           }
           break;
-        case "wrapper.html":   //교환코드
-          frame.style.height = "570px";
+        case 'wrapper':   //교환코드
+          frame.style.height = '570px';
           break;
-        case "pet.html":       //펫강화
+        case 'pet':       //펫강화
           if (isMobile) {
-            frame.style.height = "1225px";
+            frame.style.height = '1225px';
           } else {
-            frame.style.height = "895px";
+            frame.style.height = '895px';
           }
           break;
-        case "equip.html":    //영주장비
+        case 'equip':    //영주장비
           if (isMobile) {
-            frame.style.height = "745px";
+            frame.style.height = '745px';
           } else {
-            frame.style.height = "535px";
+            frame.style.height = '535px';
           }
           break;
-        case "research.html":    //헬리연구
+        case 'research':    //헬리연구
           if (isMobile) {
-            frame.style.height = "950px";
+            frame.style.height = '950px';
           } else {
-            frame.style.height = "805px";
+            frame.style.height = '805px';
           }
           break;
         default:
@@ -174,15 +171,7 @@
       }
       /*
       if (page === 'guide') frame.src = 'guide.html';
-      else if (page === 'building') 
-      {
-        frame.src = 'building.html';
-        if (isMobile) {
-          frame.style.height = "815px";
-        } else {
-          frame.style.height = "545px";
-        }
-      }
+      else if (page === 'building') frame.src = 'building.html';
       else if (page === 'gem') frame.src = 'gem.html';
       else if (page === 'hero') frame.src = 'hero.html';
       else if (page === 'pet') frame.src = 'pet.html';
