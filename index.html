@@ -119,12 +119,75 @@
     
     function switchTab(page) {
       const frame = document.getElementById('mainFrame');
+      const isMobile = window.innerWidth <= 768;
+      frame.src = page + '.html';
+      switch (frame.src) 
+      {
+        case "building.html":  //건물계산기
+          if (isMobile) {
+            frame.style.height = "815px";
+          } else {
+            frame.style.height = "545px";
+          }
+          break;
+        case "gem.html":       //영주보석
+          if (isMobile) {
+            frame.style.height = "1521px";
+          } else {
+            frame.style.height = "984px";
+          }
+          break;
+        case "hero.html":      //영웅장비
+          if (isMobile) {
+            frame.style.height = "1115px";
+          } else {
+            frame.style.height = "1020px";
+          }
+          break;
+        case "wrapper.html":   //교환코드
+          frame.style.height = "570px";
+          break;
+        case "pet.html":       //펫강화
+          if (isMobile) {
+            frame.style.height = "1225px";
+          } else {
+            frame.style.height = "895px";
+          }
+          break;
+        case "equip.html":    //영주장비
+          if (isMobile) {
+            frame.style.height = "745px";
+          } else {
+            frame.style.height = "535px";
+          }
+          break;
+        case "research.html":    //헬리연구
+          if (isMobile) {
+            frame.style.height = "950px";
+          } else {
+            frame.style.height = "805px";
+          }
+          break;
+        default:
+          // 필요하면 기본 높이 설정 가능
+          break;
+      }
+      /*
       if (page === 'guide') frame.src = 'guide.html';
-      else if (page === 'building') frame.src = 'building.html';
+      else if (page === 'building') 
+      {
+        frame.src = 'building.html';
+        if (isMobile) {
+          frame.style.height = "815px";
+        } else {
+          frame.style.height = "545px";
+        }
+      }
       else if (page === 'gem') frame.src = 'gem.html';
       else if (page === 'hero') frame.src = 'hero.html';
       else if (page === 'pet') frame.src = 'pet.html';
       else if (page === 'research') frame.src = 'research.html';
+      */
     }
     
     window.addEventListener("message", function (event) {
@@ -145,65 +208,6 @@
         const frame = document.getElementById("mainFrame");
         frame.style.height = `${event.data.height + 10}px`;
       }
-    });
-
-    window.addEventListener("message", function (event) {
-      if (event.data.type === "NAVIGATE_TO") {
-        const frame = document.getElementById("mainFrame");
-        const isMobile = window.innerWidth <= 768;
-        
-        frame.src = event.data.target;
-        switch (event.data.target) {
-          case "building.html":  //건물계산기
-            if (isMobile) {
-              frame.style.height = "815px";
-            } else {
-              frame.style.height = "545px";
-            }
-            break;
-          case "gem.html":       //영주보석
-            if (isMobile) {
-              frame.style.height = "1521px";
-            } else {
-              frame.style.height = "984px";
-            }
-            break;
-          case "hero.html":      //영웅장비
-            if (isMobile) {
-              frame.style.height = "1115px";
-            } else {
-              frame.style.height = "1020px";
-            }
-            break;
-          case "wrapper.html":   //교환코드
-            frame.style.height = "570px";
-            break;
-          case "pet.html":       //펫강화
-            if (isMobile) {
-              frame.style.height = "1225px";
-            } else {
-              frame.style.height = "895px";
-            }
-            break;
-          case "equip.html":    //영주장비
-            if (isMobile) {
-              frame.style.height = "745px";
-            } else {
-              frame.style.height = "535px";
-            }
-            break;
-          case "research.html":    //헬리연구
-            if (isMobile) {
-              frame.style.height = "950px";
-            } else {
-              frame.style.height = "805px";
-            }
-            break;
-          default:
-            // 필요하면 기본 높이 설정 가능
-            break;
-        }
-      }  //NAVIGATE_TO
     });
     
     function closePopup() {
