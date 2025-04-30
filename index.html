@@ -1162,18 +1162,11 @@
   </div>
   
   <script>
-    function adjustIframeHeight() {
-      const iframe = document.getElementById('mainFrame');
-      const isMobile = window.innerWidth <= 768;
-      
-      // 원하는 높이 설정
-      iframe.style.height = isMobile ? "550px" : "635px";
+    function showGuide() {
+      document.getElementById("guideDetails").style.display = "block";
+      document.getElementById("frameWrapper").style.display = "none";
     }
-    
-    // 페이지 로드 시 & 창 크기 변경 시 호출
-    window.addEventListener("load", adjustIframeHeight);
-    window.addEventListener("resize", adjustIframeHeight);
-    
+        
     function ComeBackHome() {
       const frame = document.getElementById("mainFrame");
       const isMobile = window.innerWidth <= 768;
