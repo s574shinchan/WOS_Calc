@@ -1183,8 +1183,11 @@
     
     function switchTab(page) {
       const frame = document.getElementById('mainFrame');
+      document.getElementById("guideDetails").style.display = "none";
+      document.getElementById("frameWrapper").style.display = "block";
       const isMobile = window.innerWidth <= 768;
-      frame.src = page + '.html';
+      frame.src = page + ".html";
+
       switch (page) {
         case 'building': frame.style.height = isMobile ? '815px' : '545px'; break;
         case 'gem': frame.style.height = isMobile ? '1521px' : '984px'; break;
