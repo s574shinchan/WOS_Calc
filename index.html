@@ -1295,6 +1295,19 @@
     function ComeBackHome() {
       const frame = document.getElementById("mainFrame");
       const isMobile = window.innerWidth <= 768;
+      
+      // 먼저 onload 이벤트 설정
+      frame.onload = function () {
+        try {
+          const guideDetails = frame.contentWindow.document.getElementById("guideDetails");
+          if (guideDetails) {
+            guideDetails.style.display = "none";
+          }
+        } catch (e) {
+          console.error("guideDetails를 숨기는 데 실패함:", e);
+        }
+      };
+      
       frame.src = 'guide.html'
       frame.style.height = isMobile ? "550px" : "635px";
     }
