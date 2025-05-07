@@ -23,29 +23,45 @@
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4">
-  <div class="max-w-4xl mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3">
-    <!-- 로고 + 버튼 -->
-    <div class="relative text-center mb-4">
-      <!-- 우측 상단 버튼 -->
+  <div class="max-w-4xl mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3 relative">
+    <!-- 모바일 버튼: 중앙 가로 정렬 -->
+    <div class="flex justify-center gap-2 sm:hidden mb-4">
       <button 
         onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')" 
-        class="absolute top-0 right-0 bg-blue-600 text-white text-m px-2 py-2 rounded hover:bg-blue-700 shadow">
+        class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 shadow">
         💬 컨설팅문의
       </button>
+    
       <button 
         onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
-        class="absolute top-12 right-0 bg-blue-600 text-white text-m px-2 py-2 rounded hover:bg-blue-700 shadow">
+        class="bg-teal-600 text-white text-sm px-4 py-2 rounded hover:bg-gray-800 shadow">
         📬 건의／문의
       </button>
-      <!-- 로고 -->
-      <div class="text-center mb-4">
-        <img 
-          src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" 
-          alt="로고" 
-          class="mx-auto mb-6 w-64 drop-shadow-lg mt-4 cursor-pointer"
-          onclick="ComeBackHome()"
-          />
-      </div>
+    </div>
+    
+    <!-- PC 버튼: 우측 상단 세로 정렬 -->
+    <div class="relative text-center mb-4 hidden sm:block">
+      <button 
+        onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')" 
+        class="absolute top-0 right-0 bg-blue-600 text-white text-sm px-3 py-2 rounded hover:bg-blue-700 shadow">
+        💬 컨설팅문의
+      </button>
+      
+      <button 
+        onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
+        class="absolute top-12 right-0 bg-teal-600 text-white text-sm px-3 py-2 rounded hover:bg-gray-800 shadow">
+        📬 건의／문의
+      </button>
+    </div>
+    
+    <!-- 로고 -->
+    <div class="text-center mb-4 mt-6 sm:mt-4">
+      <img 
+        src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png" 
+        alt="로고" 
+        class="mx-auto w-64 drop-shadow-lg cursor-pointer"
+        onclick="ComeBackHome()"
+      />
     </div>
     
     <!-- 문구 -->
