@@ -1381,7 +1381,33 @@
     <!-- 카피라이트 -->  
     <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 금지 | © Made By S574 ShinChan</footer>
   </div>
+
+  <!-- 왼쪽 광고 (PC 전용) -->
+  <ins class="adsbygoogle side-ad"
+       style="display:inline-block; width:160px; height:600px; position:fixed; top:100px; left:0; z-index:9999;"
+       data-ad-client="ca-pub-8205102847358210"
+       data-ad-slot="8804962791"></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
   
+  <!-- 오른쪽 광고 (PC 전용) -->
+  <ins class="adsbygoogle side-ad"
+       style="display:inline-block; width:160px; height:600px; position:fixed; top:100px; right:0; z-index:9999;"
+       data-ad-client="ca-pub-8205102847358210"
+       data-ad-slot="9326856916"></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  
+  <!-- 모바일 대응: 1024px 이하일 경우 광고 숨김 -->
+  <style>
+    @media screen and (max-width: 1024px) {
+      .side-ad {
+        display: none !important;
+      }
+    }
+  </style>
   <script>
     function showGuide() {
       document.getElementById("guideDetails").style.display = "block";
@@ -1450,7 +1476,6 @@
     }
   </script>
   <script>
-    
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
       if (e.key === "F12" ||
@@ -1460,20 +1485,6 @@
         e.preventDefault();
       }
     });
-  
-  </script>
-  <script>
-    fetch("/ads.txt", { cache: "no-store" })
-      .then(res => {
-        if (res.ok) {
-          console.log("ads.txt 유입 트리거 성공");
-        } else {
-          console.warn("ads.txt 접근 실패", res.status);
-        }
-      })
-      .catch(err => {
-        console.error("ads.txt fetch 에러", err);
-      });
   </script>
   <script>
     const scrollToTopBtn = document.getElementById("scrollToTopBtn");
@@ -1489,26 +1500,6 @@
     scrollToTopBtn.addEventListener("click", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
-  </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"
-     crossorigin="anonymous"></script>
-  <!-- 광고1 -->
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-8205102847358210"
-       data-ad-slot="8804962791"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <!-- 광고2 -->
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-8205102847358210"
-       data-ad-slot="9326856916"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 </body>
 </html>
