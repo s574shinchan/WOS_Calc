@@ -2,52 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/index.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/menu.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/building.html</loc>
+    <lastmod>2025-05-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://d1xsb5o91gjadf.cloudfront.net/equip.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://d1xsb5o91gjadf.cloudfront.net/equip.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/gem.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/guide.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/pet.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/research.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/hero.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://d1xsb5o91gjadf.cloudfront.net/wrapper.html</loc>
+    <lastmod>2025-05-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
 </urlset>
