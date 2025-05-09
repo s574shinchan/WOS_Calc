@@ -1066,19 +1066,31 @@
     }
     
     function switchTab(page) {
-      const frame = document.getElementById('mainFrame');
-      document.getElementById("guideDetails").style.display = "none";
-      document.getElementById("frameWrapper").style.display = "block";
+      const guide = document.getElementById("guideDetails");
+      const wrapper = document.getElementById("frameWrapper");
+      const frame = document.getElementById("mainFrame");
       const isMobile = window.innerWidth <= 768;
-      frame.src = page + ".html";
-
-      switch (page) {
-        case 'building': frame.style.height = isMobile ? '815px' : '504px'; break;
-        case 'equip': frame.style.height = isMobile ? '745px' : '496px'; break;
-        case 'gem': frame.style.height = isMobile ? '1521px' : '945px'; break;
-        case 'hero': frame.style.height = isMobile ? '1115px' : '978px'; break;
-        case 'pet': frame.style.height = isMobile ? '1225px' : '846px'; break;        
-        case 'research': frame.style.height = isMobile ? '950px' : '765px'; break;
+    
+      if (page === 'guide') {
+        guide.style.display = "block";
+        wrapper.style.display = "none";
+      } else {
+        guide.style.display = "none";
+        wrapper.style.display = "block";
+        frame.src = `${page}.html`;
+    
+        const heights = {
+          building: [815, 504],
+          equip: [745, 496],
+          gem: [1521, 945],
+          hero: [1115, 978],
+          pet: [1225, 846],
+          research: [950, 765]
+        };
+    
+        if (heights[page]) {
+          frame.style.height = isMobile ? `${heights[page][0]}px` : `${heights[page][1]}px`;
+        }
       }
     }
     
