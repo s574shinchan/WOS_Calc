@@ -15,6 +15,28 @@
         보석 업그레이드에 필요한 재료량을 계산할 수 있는 페이지입니다.
       </p>
       
+      <!-- 번호 체크박스 추가 -->
+      <div class="mb-6 text-center text-sm text-gray-700">
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-S3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('S3')" /> 방패 * 3
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-S6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('S6')" /> 방패 * 6
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-L3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('L3')" /> 창병 * 3
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-L6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('L6')" /> 창병 * 6
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-M3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('M3')" /> 궁병 * 3
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-M6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('M6')" /> 궁병 * 6
+        </label>
+      </div>
+      
       <form id="gemForm" class="space-y-6">
         <div id="gemTableBody" class="grid grid-cols-2 md:grid-cols-3 gap-2"></div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
@@ -165,6 +187,24 @@
         
         window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
         //showPopup(resultHTML);
+      }
+
+      function syncGemCheck(group) {
+        const groups = {
+          S3: [0, 1, 2],       // 방패 A~C
+          S6: [0, 1, 2, 3, 4, 5], // 방패 A~F
+          L3: [6, 7, 8],       // 창병 A~C
+          L6: [6, 7, 8, 9, 10, 11], // 창병 A~F
+          M3: [12, 13, 14],    // 궁병 A~C
+          M6: [12, 13, 14, 15, 16, 17], // 궁병 A~F
+        };
+      
+        const checked = document.getElementById(`extra-check-${group}`).checked;
+        const indices = groups[group] || [];
+        indices.forEach(i => {
+          const checkbox = document.getElementById(`gem-check-${i}`);
+          if (checkbox) checkbox.checked = checked;
+        });
       }
       
       function loadPage(page) {
