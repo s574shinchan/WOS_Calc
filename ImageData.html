@@ -68,8 +68,18 @@
       </div>
     </div>
   </div>
-
-<script>
+  
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn"
+    class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
+    aria-label="Scroll to top">
+    <!-- Up arrow SVG icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+    </svg>
+  </button>
+  
+  <script>
     let currentScale = 1;
 
     function openModal(imageSrc) {
@@ -112,6 +122,34 @@
     // 배경 클릭 시 닫기
     document.getElementById("imageModal").addEventListener("click", function (e) {
       if (e.target === this) closeModal();
+    });
+  </script>
+  
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+  
+  <script>
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 200) {
+        scrollToTopBtn.classList.remove("hidden");
+      } else {
+        scrollToTopBtn.classList.add("hidden");
+      }
+    });
+
+    scrollToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   </script>
 </body>
