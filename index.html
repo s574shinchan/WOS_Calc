@@ -1002,9 +1002,19 @@
       </svg>
     </button>
     
+    <!-- 부모에 위치한 모달 -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+      <div class="max-w-4xl w-full flex items-center justify-center p-4">
+        <img id="modalImage" src="" alt="확대 이미지"
+             class="rounded shadow-lg border-4 border-white transform transition-transform duration-100"
+             style="max-height: 90vh; max-width: 100%; scale: 1;" />
+      </div>
+    </div>
+    
     <!-- 카피라이트 -->  
     <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 금지 | © Made By S574 ShinChan</footer>
   </div>
+  
   <script>
     const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/';
     
@@ -1128,6 +1138,7 @@
       document.getElementById("popupModal").classList.add("hidden");
     }
   </script>
+  
   <script>
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
@@ -1139,6 +1150,7 @@
       }
     });
   </script>
+  
   <script>
     const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
@@ -1154,5 +1166,35 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   </script>
+  
+  <script>
+    let currentScale = 1;
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+  
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'SHOW_IMAGE_MODAL') {
+        modalImg.src = event.data.url;
+        currentScale = 1;
+        modalImg.style.scale = currentScale;
+        modal.classList.remove('hidden');
+      }
+    });
+  
+    modalImg.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      currentScale += (e.deltaY < 0 ? 0.05 : -0.05);
+      currentScale = Math.max(0.1, Math.min(3, currentScale));
+      modalImg.style.scale = currentScale;
+    });
+  
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        modalImg.src = '';
+      }
+    });
+  </script>
+
 </body>
 </html>
