@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WOS 재료모음</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 이미지 확대 시 커서 변경 */
+    #modalImage {
+      cursor: grab;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-4 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-4 rounded-xl shadow-md space-y-6">
+    <h1 class="text-2xl font-bold text-gray-800">📘 각종재료수 이미지 자료</h1>
+
+    <!-- 이미지 섹션 -->
+    <!-- FC 1 ~ 10 -->
+    <details class="bg-white border border-blue-300 rounded-md p-4">
+      <summary class="text-lg font-bold text-blue-700 mb-2">🏤 FC1 ~ 10 재료</summary>
+      <div id="불의수정" class="mt-3">
+        <img src="images/FC1-10.png" alt="FC1~10"
+             class="w-full h-auto rounded shadow cursor-pointer"
+             onclick="openModal('images/FC1-10.png')" />
+      </div>
+    </details>
+
+    <!-- 영주장비 -->
+    <details class="bg-white border border-blue-300 rounded-md p-4">
+      <summary class="text-lg font-bold text-blue-700 mb-2">🛡 영주장비재료</summary>
+      <div id="영주장비재료" class="mt-3">
+        <img src="images/영주장비.png" alt="영주장비재료"
+             class="w-full h-auto rounded shadow cursor-pointer"
+             onclick="openModal('images/영주장비.png')" />
+      </div>
+    </details>
+
+    <!-- 영주보석 -->
+    <details class="bg-white border border-blue-300 rounded-md p-4">
+      <summary class="text-lg font-bold text-blue-700 mb-3">💎 영주보석재료</summary>
+      <div class="overflow-hidden">
+        <img src="images/영주보석.png" alt="영주보석재료"
+             class="w-full h-auto rounded shadow cursor-pointer"
+             onclick="openModal('images/영주보석.png')" />
+      </div>
+    </details>
+
+    <!-- 영웅장비 -->
+    <details class="bg-white border border-blue-300 rounded-md p-4">
+      <summary class="text-lg font-bold text-blue-700 mb-3">🦸 영웅장비재료</summary>
+      <div class="overflow-hidden">
+        <img src="images/영웅장비단련_상세.png" alt="영웅장비재료"
+             class="w-full h-auto rounded shadow cursor-pointer"
+             onclick="openModal('images/영웅장비단련_상세.png')" />
+      </div>
+    </details>
+  </div>
+
+  <!-- 모달 -->
+  <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+    <div class="relative max-w-4xl w-full">
+      <div class="flex items-center justify-center p-4">
+        <img id="modalImage" src="" alt="확대 이미지"
+             class="rounded shadow-lg border-4 border-white transform transition-transform duration-200"
+             style="max-height: 80vh; max-width: 100%; scale: 1;" />
+      </div>
+    </div>
+  </div>
+
+<script>
+    let currentScale = 1;
+
+    function openModal(imageSrc) {
+      document.getElementById("modalImage").src = imageSrc;
+      document.getElementById("imageModal").classList.remove("hidden");
+      currentScale = 1;
+      updateScale();
+    }
+
+    function closeModal() {
+      document.getElementById("imageModal").classList.add("hidden");
+      document.getElementById("modalImage").src = "";
+    }
+
+    function zoomIn() {
+      currentScale += 0.1;
+      updateScale();
+    }
+
+    function zoomOut() {
+      currentScale = Math.max(0.1, currentScale - 0.1);
+      updateScale();
+    }
+
+    function updateScale() {
+      document.getElementById("modalImage").style.scale = currentScale;
+    }
+
+    // 마우스 휠로 확대/축소
+    document.getElementById("modalImage").addEventListener("wheel", function (e) {
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        currentScale += 0.05;
+      } else {
+        currentScale = Math.max(0.1, currentScale - 0.05);
+      }
+      updateScale();
+    });
+
+    // 배경 클릭 시 닫기
+    document.getElementById("imageModal").addEventListener("click", function (e) {
+      if (e.target === this) closeModal();
+    });
+  </script>
+</body>
+</html>
