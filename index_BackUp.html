@@ -43,7 +43,7 @@
 <body class="bg-gray-100 min-h-screen p-4">
   <div class="max-w-4xl mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3 relative">
     <!-- 모바일 버튼: 중앙 가로 정렬 -->
-    <div class="flex justify-center gap-2 sm:hidden mb-4">
+    <div class="flex flex-col items-center gap-2 sm:hidden mb-4">
       <button 
         onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')" 
         class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 shadow">
@@ -55,41 +55,33 @@
         class="bg-teal-600 text-white text-sm px-4 py-2 rounded hover:bg-gray-800 shadow">
         📬 건의／문의
       </button>
-
-      <!-- 추가: 언어 선택 콤보박스 -->
-      <div class="mt-2">
-        <select id="langSelect" class="p-1 border border-gray-300 rounded text-sm">
-          <option value="index.html">🌐 한국어</option>
-          <option value="index_en.html">🇺🇸 English</option>
-          <option value="index_ja.html">🇯🇵 日本語</option>
-          <option value="index_zh.html">🇨🇳 中文</option>
-        </select>
-      </div>
+    
+      <!-- 언어 선택 콤보박스 -->
+      <select id="langSelectMobile" class="p-1 border border-gray-300 rounded text-sm mt-1">
+        <option value="index.html">🌐 한국어</option>
+        <option value="index_en.html">🇺🇸 English</option>
+      </select>
     </div>
     
     <!-- PC 버튼: 우측 상단 세로 정렬 -->
-    <div class="relative text-center mb-4 hidden sm:block">
+    <div class="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
       <button 
         onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')" 
-        class="absolute top-0 right-0 bg-blue-600 text-white text-sm px-3 py-2 rounded hover:bg-blue-700 shadow">
+        class="bg-blue-600 text-white text-sm px-3 py-2 rounded hover:bg-blue-700 shadow">
         💬 컨설팅문의
       </button>
-      
+    
       <button 
         onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
-        class="absolute top-12 right-0 bg-teal-600 text-white text-sm px-3 py-2 rounded hover:bg-gray-800 shadow">
+        class="bg-teal-600 text-white text-sm px-3 py-2 rounded hover:bg-gray-800 shadow">
         📬 건의／문의
       </button>
-
-      <!-- 추가: 언어 선택 콤보박스 -->
-      <div class="mt-2">
-        <select id="langSelect" class="p-1 border border-gray-300 rounded text-sm">
-          <option value="index.html">🌐 한국어</option>
-          <option value="index_en.html">🇺🇸 English</option>
-          <option value="index_ja.html">🇯🇵 日本語</option>
-          <option value="index_zh.html">🇨🇳 中文</option>
-        </select>
-      </div>
+    
+      <!-- 언어 선택 콤보박스 -->
+      <select id="langSelectPC" class="p-1 border border-gray-300 rounded text-sm mt-1">
+        <option value="index.html">🌐 한국어</option>
+        <option value="index_en.html">🇺🇸 English</option>
+      </select>
     </div>
     
     <!-- 로고 -->
@@ -1898,6 +1890,7 @@
       document.getElementById("popupModal").classList.add("hidden");
     }
   </script>
+  
   <script>
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
@@ -1909,6 +1902,7 @@
       }
     });
   </script>
+  
   <script>
     const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
@@ -1924,5 +1918,23 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   </script>
+  
+  <script>
+    function setupLangSelect(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', function () {
+          const langCode = this.value; // 예: index_en.html
+          const lang = langCode.split('_')[1]?.split('.')[0] || 'ko';
+          localStorage.setItem('lang', lang);
+          window.location.href = langCode;
+        });
+      }
+    }
+  
+    setupLangSelect('langSelectMobile');
+    setupLangSelect('langSelectPC');
+  </script>
+  
 </body>
 </html>
