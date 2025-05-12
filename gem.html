@@ -100,6 +100,15 @@
             </div>
           `;
         });
+        
+        for (let i = 0; i < gemSlots.length; i++) {
+          const curSelect = document.getElementById(`gem-cur-${i}`);
+          const tgtSelect = document.getElementById(`gem-tgt-${i}`);
+        
+          curSelect.addEventListener("change", () => {
+            tgtSelect.value = curSelect.value;
+          });
+        }
       }
       
       function calculateGems() {
@@ -169,6 +178,69 @@
             <td class="border p-1">${(owned.비전 - total.비전).toLocaleString()}</td>
           </tr>
         `;
+
+        const chkS3 = document.getElementById(`extra-check-S3`);
+        const chkS6 = document.getElementById(`extra-check-S6`);
+        const chkL3 = document.getElementById(`extra-check-L3`);
+        const chkL6 = document.getElementById(`extra-check-L6`);
+        const chkM3 = document.getElementById(`extra-check-M3`);
+        const chkM6 = document.getElementById(`extra-check-M6`);
+
+        if(chkS3 && chkS3.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">방패A ~ C</td>
+              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if (chkS6 && chkS6.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">방패A ~ F</td>
+              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if(chkL3 && chkL3.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">창병A ~ C</td>
+              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if (chkL6 && chkL6.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">창병A ~ F</td>
+              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if(chkM3 && chkM3.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">궁병A ~ C</td>
+              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if (chkM6 && chkM6.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">궁병A ~ F</td>
+              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
+            </tr>
+          `;
+        }
   
         const resultHTML = `
           <table class="w-full table-auto border text-sm text-center mt-4">
@@ -190,21 +262,19 @@
       }
 
       function syncGemCheck(group) {
-        const groups = {
-          S3: [0, 1, 2],       // 방패 A~C
-          S6: [0, 1, 2, 3, 4, 5], // 방패 A~F
-          L3: [6, 7, 8],       // 창병 A~C
-          L6: [6, 7, 8, 9, 10, 11], // 창병 A~F
-          M3: [12, 13, 14],    // 궁병 A~C
-          M6: [12, 13, 14, 15, 16, 17], // 궁병 A~F
-        };
-      
-        const checked = document.getElementById(`extra-check-${group}`).checked;
-        const indices = groups[group] || [];
-        indices.forEach(i => {
-          const checkbox = document.getElementById(`gem-check-${i}`);
-          if (checkbox) checkbox.checked = checked;
-        });
+        if(group === "S3") {
+          document.getElementById(`extra-check-S6`).checked = false;
+        } else if(group === "S6") {
+          document.getElementById(`extra-check-S3`).checked = false;
+        } else if(group === "L3") {
+          document.getElementById(`extra-check-L6`).checked = false;
+        } else if(group === "L6") {
+          document.getElementById(`extra-check-L3`).checked = false;
+        } else if(group === "M3") {
+          document.getElementById(`extra-check-M6`).checked = false;
+        } else if(group === "M6") {
+          document.getElementById(`extra-check-M3`).checked = false;
+        } 
       }
       
       function loadPage(page) {
