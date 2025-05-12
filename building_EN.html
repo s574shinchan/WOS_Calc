@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+  <body class="bg-gray-100 p-2 font-sans text-sm">
+    <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md"> 
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ Building Calculator</h1>
+      
+      <!-- 설명 추가 -->
+      <p class="text-gray-600 mb-6 text-center text-sm">
+        This page allows you to calculate the material and resource consumption required to upgrade a building.
+      </p>
+      
+      <form id="calcForm" class="space-y-4">
+        <div id="buildingGridBody" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold">Owned Fire Crystals</label>
+            <input type="number" id="owned-불수정" class="w-full border rounded p-2" />
+          </div>
+          <div>
+            <label class="block font-semibold">Owned Refind Fire Crystals</label>
+            <input type="number" id="owned-정제" class="w-full border rounded p-2" />
+          </div>
+        </div>
+        <div id="ownedInputArea" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
+        <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Calc</button>
+      </form>
+    </div>
+  
+    <script>
+      const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
+      const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광"];
+      const buildingData = {};
+      const nameAliasMap = {
+        "용광로": "Furnace",
+        "대사관": "Embassy",
+        "지휘부": "Command Center",
+        "의무실": "Infirmary",
+        "방패병": "Infantry Camp",
+        "창병": "Lancer Camp",
+        "궁병": "Marksman Camp",
+        "아카데미": "War Academy"
+      };
+      async function fetchBuildingData() {
+        for (const name of buildingList) {
+          const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
+          const res = await fetch(url);
+          const text = await res.text();
+          const lines = text.trim().split("\n");
+          const headers = lines[0].split(",");
+          const data = lines.slice(1).map(line => {
+            const obj = {};
+            const values = line.split(",");
+            headers.forEach((h, i) => {
+              obj[h.trim()] = values[i]?.trim() || "0";
+            });
+            return obj;
+          });
+          buildingData[name] = data;
+        }
+        renderBuildingSelectors();
+      }
+  
+      function renderBuildingSelectors() {
+        const container = document.getElementById("buildingGridBody");
+        buildingList.forEach(name => {
+          const displayName = nameAliasMap[name] || name
+          const levels = buildingData[name].map(d => d["레벨"]);
+          const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
+          container.innerHTML += `
+            <div class="bg-blue-50 border p-2 rounded shadow">
+            <label class="flex items-center text-sm font-semibold mb-1">
+            <input type="checkbox" id="check-${name}" class="mr-1 w-4 h-4" /> ${displayName}</label>
+            <div class="flex items-center gap-2 mb-1">
+            <label class="text-sm whitespace-nowrap">Current</label>
+            <select id="start-${name}" class="w-full border rounded p-1 text-sm">${options}</select>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+            <label class="text-sm whitespace-nowrap">Target</label>
+            <select id="end-${name}" class="w-full border rounded p-1 text-sm">${options}</select>
+            </div>
+            </div>
+          `;
+        });
+        
+        // 현재값 변경 시 목표값 자동 반영
+        buildingList.forEach(name => {
+          const startSelect = document.getElementById(`start-${name}`);
+          const endSelect = document.getElementById(`end-${name}`);
+          if (startSelect && endSelect) {
+            startSelect.addEventListener("change", () => {
+              endSelect.value = startSelect.value;
+            });
+          }
+        });
+      }
+      
+      function formatValue(value) {     
+        const num = parseFloat(value.toString().replace(/,/g, ''));
+        if (isNaN(num)) return value;
+        
+        if (num >= 1000) {
+          return (num / 1000).toFixed(1) + "B";
+        } else {
+          return num + "M";
+        }
+      }
+      
+      function calculateAll() {
+        let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+        let result = `
+          <table class="w-full border text-sm text-center table-auto mt-4">
+            <thead class="bg-blue-100">
+              <tr>
+                <th class="border p-1">Building</th>
+                <th class="border p-1">Level</th>
+                <th class="border p-1">Fire Crystals</th>
+                <th class="border p-1">Refind Fire Crystals</th>
+                <th class="border p-1">Meet</th>
+                <th class="border p-1">Wood</th>
+                <th class="border p-1">Coal</th>
+                <th class="border p-1">Iron</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
+        const owned = {
+          "불수정": parseInt(document.getElementById("owned-불수정").value || 0),
+          "정제": parseInt(document.getElementById("owned-정제").value || 0)
+        };
+        
+        buildingList.forEach(name => {
+          if (!document.getElementById("check-" + name).checked) return;
+  
+          const start = parseInt(document.getElementById("start-" + name).value);
+          const end = parseInt(document.getElementById("end-" + name).value);
+          const data = buildingData[name].slice(start + 1, end + 1);
+          let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+          
+          data.forEach(row => {
+            resources.forEach(res => {
+              subtotal[res] += parseInt(row[res] || 0);
+              total[res] += parseInt(row[res] || 0);
+            });
+          });
+  
+          const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
+          const displayName = nameAliasMap[name] || name
+          result += `
+            <tr>
+              <td class="border p-1 font-medium">${displayName}</td>
+              <td class="border p-1 text-xs">${levelStr}</td>
+              <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
+              <td class="border p-1">${formatValue(subtotal["고기"])}</td>
+              <td class="border p-1">${formatValue(subtotal["나무"])}</td>
+              <td class="border p-1">${formatValue(subtotal["석탄"])}</td>
+              <td class="border p-1">${formatValue(subtotal["철광"])}</td>
+            </tr>
+          `;
+        });
+  
+        result += `
+          <tr class="bg-blue-50 font-bold">
+          <td class="border p-1" colspan="2">Total</td>
+          <td class="border p-1">${total["불수정"].toLocaleString()}</td>
+          <td class="border p-1">${total["정제"].toLocaleString()}</td>
+          <td class="border p-1">${formatValue(total["고기"])}</td>
+          <td class="border p-1">${formatValue(total["나무"])}</td>
+          <td class="border p-1">${formatValue(total["석탄"])}</td>
+          <td class="border p-1">${formatValue(total["철광"])}</td>
+          </tr>
+          <tr class="text-center font-bold bg-orange-50">
+          <td class="border p-1" colspan="2">Stock</td>
+          <td class="border p-1">${owned["불수정"].toLocaleString()}</td>
+          <td class="border p-1">${owned["정제"].toLocaleString()}</td>
+          <td class="border p-1" colspan="4"></td>
+          </tr>
+          <tr class="text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">Required quantity</td>
+          <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
+          <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
+          <td class="border p-1" colspan="4"></td>
+          </tr>
+          </tbody></table>
+        `;
+        window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
+      }
+      
+      function loadPage(page) {
+        const isMobile = window.innerWidth <= 768;
+        const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+      }
+      
+      fetchBuildingData();
+    </script>
+    <script>      
+      document.addEventListener("contextmenu", event => event.preventDefault());
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+        {
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>
