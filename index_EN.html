@@ -258,7 +258,7 @@
       const wrapper = document.getElementById("frameWrapper");
       const frame = document.getElementById("mainFrame");
       const isMobile = window.innerWidth <= 768;
-      const lang = (localStorage.getItem('lang') || 'ko').toLowerCase();
+      const lang = (localStorage.getItem('lang') || 'ko').toUpperCase();
       
       if (page === 'guide') {
         guide.style.display = "block";
@@ -371,7 +371,7 @@
       if (el) {
         el.addEventListener('change', function () {
           const langCode = this.value; // 예: index_en.html
-          const lang = langCode.split('_')[1]?.split('.')[0] || 'ko';
+          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
           localStorage.setItem('lang', lang);
           window.location.href = langCode;
         });
