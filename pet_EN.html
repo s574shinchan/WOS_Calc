@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pet</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">🐾 Pet</h2>
+
+    <!-- 설명 추가 -->
+    <p class="text-gray-600 mb-6 text-center text-sm">
+      This page allows you to calculate the amount of material consumption required for breakthrough & level up for each pet type.
+    </p>
+    
+    <form id="petForm" class="space-y-4">
+      <div id="petGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+        <div><label class="block font-semibold">Owend Pet Food</label><input type="number" id="own-펫먹이" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">Owend Manual</label><input type="number" id="own-조련매뉴얼" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">Owend Potion</label><input type="number" id="own-활력의약" class="w-full border rounded p-2" /></div>
+        <div><label class="block font-semibold">Owend Serum</label><input type="number" id="own-강화혈청" class="w-full border rounded p-2" /></div>
+      </div>
+      <button type="button" onclick="calculatePet()" class="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600">Calc</button>
+    </form>
+  </div>
+
+  <script>
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      let isHeight = isMobile ? "550px" : "345px"
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
+    }
+    
+    const grades = ["기간토", "매머드", "호랑이", "코뿔소", "고릴라", "동굴사자", 
+                    "흑표범", "큰뿔사슴", 
+                    "티타니스", "테이퍼", 
+                    "사향소", "북극늑대",
+                    "하이에나"];
+    const gradeLabels = {
+      "기간토": "SSR",
+      "매머드": "SSR",
+      "호랑이": "SSR",
+      "코뿔소": "SSR", 
+      "고릴라": "SSR", 
+      "동굴사자": "SSR",
+      "흑표범": "SR",
+      "큰뿔사슴": "SR",
+      "티타니스": "R",
+      "테이퍼": "R", 
+      "사향소": "N",
+      "북극늑대": "N",
+      "하이에나": "UnKnown"
+    };
+
+    const nameAlias = {
+      "기간토": "Frost Gorilla",
+      "매머드": "Mammoth",
+      "호랑이": "Saber-tooth Tiger",
+      "코뿔소": "Iron Rhino", 
+      "고릴라": "Snoe Ape", 
+      "동굴사자": "Cave Lion",
+      "흑표범": "Snow Leopard",
+      "큰뿔사슴": "Giant Elk",
+      "티타니스": "Titan Roc",
+      "테이퍼": "Giant Tapir", 
+      "사향소": "Musk Ox",
+      "북극늑대": "Arctic Wolf",
+      "하이에나": "Cave Hyena"
+    };
+
+    const petGrid = document.getElementById("petGrid");
+    let petDataMap = {};
+
+    async function fetchPetCSV(gradeKey) {
+      const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Pet/Pet_${gradeKey}.csv`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const lines = text.trim().split("\n");
+      const headers = lines[0].split(",");
+      const data = lines.slice(1).map(line => {
+        const values = line.split(",");
+        const obj = {};
+        headers.forEach((h, i) => obj[h.trim()] = values[i]?.trim() || "0");
+        return obj;
+      });
+      return data;
+    }
+
+    async function loadPetUI() {
+      for (let grade of grades) {
+        const gradeKey = gradeLabels[grade];
+        const displayGrade = gradeKey === "UnKnown" ? "하이에나" : grade;
+        const data = await fetchPetCSV(gradeKey);
+        if (!data || data.length === 0) continue;
+
+        const petNames = [...new Set(data.map(d => d["이름"]))];
+        petDataMap[grade] = data;
+
+        petNames.forEach((petName, index) => {
+          const petId = `${grade}-${index}`;
+          const petLevels = data.filter(d => d["이름"] === petName).map(d => d["레벨"]);
+          const displayName = nameAlias[displayGrade] || displayGrade;
+          const wrapper = document.createElement("div");
+          wrapper.className = "border p-2 rounded bg-pink-50 text-xs";
+          wrapper.innerHTML = `
+            <label class="flex items-center text-sm font-semibold mb-1">
+              <input type="checkbox" id="pet-check-${petId}" class="mr-1 w-4 h-4 accent-pink-500" />
+              ${displayName}
+            </label>
+            <div class="flex items-center gap-2 mb-1">
+              <label class="text-sm whitespace-nowrap">Current</label>
+              <select id="pet-cur-${petId}" class="w-full border rounded py-1 px-2 text-sm">
+                ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="text-sm whitespace-nowrap">Target</label>
+              <select id="pet-tgt-${petId}" class="w-full border rounded py-1 px-2 text-sm">
+                ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
+              </select>
+            </div>
+          `;
+          petGrid.appendChild(wrapper);
+
+          // 현재 선택 시 목표 자동 설정
+          const curSelect = wrapper.querySelector(`#pet-cur-${petId}`);
+          const tgtSelect = wrapper.querySelector(`#pet-tgt-${petId}`);
+          if (curSelect && tgtSelect) {
+            curSelect.addEventListener("change", () => {
+              tgtSelect.value = curSelect.value;
+            });
+          }
+        });
+      }
+    }
+
+    async function calculatePet() {
+      let total = { 펫먹이: 0, 조련매뉴얼: 0, 활력의약: 0, 강화혈청: 0 };
+      let rows = "";
+
+      grades.forEach(grade => {
+        const data = petDataMap[grade];
+        if (!data) return;
+
+        const petNames = [...new Set(data.map(d => d["이름"]))];
+
+        petNames.forEach((petName, index) => {
+          const petId = `${grade}-${index}`;
+          const isChecked = document.getElementById(`pet-check-${petId}`)?.checked;
+          if (!isChecked) return;
+
+          const cur = document.getElementById(`pet-cur-${petId}`).value;
+          const tgt = document.getElementById(`pet-tgt-${petId}`).value;
+          const levels = data.filter(d => d["이름"] === petName).map(d => d["레벨"]);
+          const filtered = data.filter(d => d["이름"] === petName);
+          const start = levels.indexOf(cur);
+          const end = levels.indexOf(tgt);
+
+          if (start === -1 || end === -1 || start >= end) {
+            rows += `<tr><td colspan="4" class="text-center border p-1">⚠️ ${grade} 선택 오류</td></tr>`;
+            return;
+          }
+
+          const displayName = nameAlias[grade] || grade;
+          const subtotal = { 펫먹이: 0, 조련매뉴얼: 0, 활력의약: 0, 강화혈청: 0 };
+          for (let i = start + 1; i <= end; i++) {
+            subtotal["펫먹이"] += parseFloat(filtered[i]["펫먹이"] || "0");
+            subtotal["조련매뉴얼"] += parseFloat(filtered[i]["조련매뉴얼"] || "0");
+            subtotal["활력의약"] += parseFloat(filtered[i]["활력의약"] || 0);
+            subtotal["강화혈청"] += parseFloat(filtered[i]["강화혈청"] || 0);
+          }
+
+          total["펫먹이"] += subtotal["펫먹이"];
+          total["조련매뉴얼"] += subtotal["조련매뉴얼"];
+          total["활력의약"] += subtotal["활력의약"];
+          total["강화혈청"] += subtotal["강화혈청"];
+
+          rows += `
+            <tr class="text-center">
+              <td class="border p-1">${displayName}</td>
+              <td class="border p-1">${cur} → ${tgt}</td>
+              <td class="border p-1">${subtotal["펫먹이"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["조련매뉴얼"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["활력의약"].toLocaleString()}</td>
+              <td class="border p-1">${subtotal["강화혈청"].toLocaleString()}</td>
+            </tr>
+          `;
+        });
+      });
+
+      const own = {
+        펫먹이: parseFloat(document.getElementById("own-펫먹이").value) || 0,
+        조련매뉴얼: parseFloat(document.getElementById("own-조련매뉴얼").value) || 0,
+        활력의약: parseFloat(document.getElementById("own-활력의약").value) || 0,
+        강화혈청: parseFloat(document.getElementById("own-강화혈청").value) || 0,
+      };
+
+      rows += `
+        <tr class="text-center font-bold bg-pink-100">
+          <td class="border p-1" colspan="2">Total</td>
+          <td class="border p-1">${total["펫먹이"].toLocaleString()}</td>
+          <td class="border p-1">${total["조련매뉴얼"].toLocaleString()}</td>
+          <td class="border p-1">${total["활력의약"].toLocaleString()}</td>
+          <td class="border p-1">${total["강화혈청"].toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-orange-50">
+          <td class="border p-1" colspan="2">Stock</td>
+          <td class="border p-1">${own["펫먹이"].toLocaleString()}</td>
+          <td class="border p-1">${own["조련매뉴얼"].toLocaleString()}</td>
+          <td class="border p-1">${own["활력의약"].toLocaleString()}</td>
+          <td class="border p-1">${own["강화혈청"].toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">Required quantity</td>
+          <td class="border p-1">${(own["펫먹이"] - total["펫먹이"]).toLocaleString()}</td>
+          <td class="border p-1">${(own["조련매뉴얼"] - total["조련매뉴얼"]).toLocaleString()}</td>
+          <td class="border p-1">${(own["활력의약"] - total["활력의약"]).toLocaleString()}</td>
+          <td class="border p-1">${(own["강화혈청"] - total["강화혈청"]).toLocaleString()}</td>
+        </tr>
+      `;
+
+      const resultHTML = `
+      <table class="w-full table-auto border mt-4 text-sm text-center">
+      <thead class="bg-gray-100">
+      <tr>
+      <th class="border p-1">Grade</th>
+      <th class="border p-1">Level</th>
+      <th class="border p-1">Pet Food</th>
+      <th class="border p-1">Manual</th>
+      <th class="border p-1">Potion</th>
+      <th class="border p-1">Serum</th>
+      </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+      </table>
+      `;
+
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+    }
+
+    loadPetUI();
+  </script>
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S")))
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
