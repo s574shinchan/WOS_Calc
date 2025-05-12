@@ -77,7 +77,7 @@
     async function loadPetUI() {
       for (let grade of grades) {
         const gradeKey = gradeLabels[grade];
-        const displayGrade = gradeLabels[grade] === "UnKnown" ? "하이에나" : grade;
+        const displayGrade = gradeKey === "UnKnown" ? "하이에나" : grade;
         const data = await fetchPetCSV(gradeKey);
         if (!data || data.length === 0) continue;
 
@@ -88,30 +88,40 @@
           const petId = `${grade}-${index}`;
           const petLevels = data.filter(d => d["이름"] === petName).map(d => d["레벨"]);
 
-          petGrid.innerHTML += `
-            <div class="border p-2 rounded bg-pink-50 text-xs">
-              <label class="flex items-center text-sm font-semibold mb-1">
-                <input type="checkbox" id="pet-check-${petId}" class="mr-1 w-4 h-4 accent-pink-500" />
-                ${displayGrade}
-              </label>
-              <div class="flex items-center gap-2 mb-1">
-                <label class="text-sm whitespace-nowrap">현재</label>
-                <select id="pet-cur-${petId}" class="w-full border rounded py-1 px-2 text-sm">
-                  ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
-                </select>
-              </div>
-              <div class="flex items-center gap-2">
-                <label class="text-sm whitespace-nowrap">목표</label>
-                <select id="pet-tgt-${petId}" class="w-full border rounded py-1 px-2 text-sm">
-                  ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
-                </select>
-              </div>
+          const wrapper = document.createElement("div");
+          wrapper.className = "border p-2 rounded bg-pink-50 text-xs";
+          wrapper.innerHTML = `
+            <label class="flex items-center text-sm font-semibold mb-1">
+              <input type="checkbox" id="pet-check-${petId}" class="mr-1 w-4 h-4 accent-pink-500" />
+              ${displayGrade}
+            </label>
+            <div class="flex items-center gap-2 mb-1">
+              <label class="text-sm whitespace-nowrap">현재</label>
+              <select id="pet-cur-${petId}" class="w-full border rounded py-1 px-2 text-sm">
+                ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="text-sm whitespace-nowrap">목표</label>
+              <select id="pet-tgt-${petId}" class="w-full border rounded py-1 px-2 text-sm">
+                ${petLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("")}
+              </select>
             </div>
           `;
+          petGrid.appendChild(wrapper);
+
+          // 현재 선택 시 목표 자동 설정
+          const curSelect = wrapper.querySelector(`#pet-cur-${petId}`);
+          const tgtSelect = wrapper.querySelector(`#pet-tgt-${petId}`);
+          if (curSelect && tgtSelect) {
+            curSelect.addEventListener("change", () => {
+              tgtSelect.value = curSelect.value;
+            });
+          }
         });
       }
     }
-
+    
     async function calculatePet() {
       let total = { 펫먹이: 0, 조련매뉴얼: 0, 활력의약: 0, 강화혈청: 0 };
       let rows = "";
