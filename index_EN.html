@@ -58,7 +58,7 @@
     <!-- 문구 -->
     <h1 class="text-xl font-bold mb-2 text-center">WOS Calculator & Data Collection</h1>
     
-    <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 justify-center mb-4">
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 justify-center mb-4">
       <button onclick="switchTab('guide')" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">🏠 Data</button>
       <button onclick="switchTab('building')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🏗 Building</button>
       <button onclick="switchTab('equip')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🛡 Cheif Gear</button>
@@ -641,66 +641,88 @@
       
             <!-- ⚔️ SVS_Event -->
             <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS 준비단계</summary>
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS Preparation</summary>
                 <!-- event.html: 요일별 임무 테이블만 포함 -->
                 <div class="overflow-x-auto">
                   <table class="table-auto border w-full text-xs text-center">
                     <thead class="bg-amber-100">
                       <tr>
-                        <th class="border p-1">Day</th>
-                        <th class="border p-1">Mission</th>
-                        <th class="border p-1">Point</th>
+                        <th class="border p-1">Phase</th>
+                        <th class="border p-1">Task</th>
+                        <th class="border p-1">Points</th>
                       </tr>
                     </thead>
                     <tbody id="missionTableBody">
-                      <!-- 월요일 -->
-                      <tr><td class="border p-1 font-semibold" rowspan="4">1st</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
-                      <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
-                      <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
-                      <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
-                
-                      <!-- 화요일 --> 
-                      <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="9">2nd</td><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
-                
-                      <!-- 수요일 -->
-                      <tr><td class="border p-1 font-semibold" rowspan="10">3rd</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
-                      <tr><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
-                      <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
-                      <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
-                      <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
-                      <tr><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
-                      <tr><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
-                      <tr><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
-                      <tr><td class="border p-1">빙원괴수집결</td><td class="border p-1">1마리당 30,000pt</td></tr>
-                      <tr><td class="border p-1">야수처치</td><td class="border p-1">1마리당 9,000 ~ 12,000pt</td></tr>
-                
-                      <!-- 목요일 -->
-                      <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="5">4th</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 40,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">병사 훈련</td><td class="border p-1">3 ~ 75pt</td></tr>
-                      
-                      <!-- 금요일 -->
-                      <tr><td class="border p-1 font-semibold" rowspan="11">5th</td><td class="border p-1">영주 장비</td><td class="border p-1">1종 36pt</td></tr>
-                      <tr><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
-                      <tr><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
-                      <tr><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 40,000pt</td></tr>
-                      <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
-                      <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
-                      <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
-                      <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
-                      <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
-                      <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
-                      <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
+                      <!-- Phase 1 -->
+                      <tr><td class="border p-1 font-semibold" rowspan="7">1st</td><td class="border p-1">Raise max Chief Gear Charm score by 1</td><td class="border p-1">70pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Fire Crystal(s) to upgrade buildings</td><td class="border p-1">2,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Fire Crystal Shards for Research</td><td class="border p-1">1,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Refind Fire Crystal(s) to upgrade buildings</td><td class="border p-1">30,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 minute of Speedups for Construction</td><td class="border p-1">30pt</td></tr>
+                      <tr><td class="border p-1">Use 1 minute of Speedups for Research</td><td class="border p-1">30pt</td></tr>
+                      <tr><td class="border p-1">Use 1 minute of Speedups for Training (Training, Promotion)</td><td class="border p-1">30pt</td></tr>
+                  
+                      <!-- Phase 2 -->
+                      <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="14">2nd</td><td class="border p-1">Use 1 Fire Crystal(s) to upgrade the building</td><td class="border p-1">2,000pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 Fire Crystal Shard(s) for Tech Research</td><td class="border p-1">1,000pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 Refind Fire Crystal(s) to upgrade buildings</td><td class="border p-1">30,000pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 minute of Speedups for Construction</td><td class="border p-1">30pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 minute of Speedups for Research</td><td class="border p-1">30pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 minute of Speedups for Training (Training, Promotion)</td><td class="border p-1">30pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Play Lucky Wheel 1 Time(s)</td><td class="border p-1">8,000pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 Rare Hero Shard(s) to ascend the Hero</td><td class="border p-1">350pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 Epic Hero Shard(s) to ascend the Hero</td><td class="border p-1">1,220pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 Mythic Hero Shard(s) to ascend the Hero</td><td class="border p-1">3,040pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Gather 1,000 Meat in the Wilderness</td><td class="border p-1">2pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Gather 1,000 Wood in the Wilderness</td><td class="border p-1">2pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Gather 200 Coal in the Wilderness</td><td class="border p-1">2pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Gather 50 Iron in the Wilderness</td><td class="border p-1">2pt</td></tr>
+                  
+                      <!-- Phase 3 -->
+                      <tr><td class="border p-1 font-semibold" rowspan="14">3rd</td><td class="border p-1">Pet advancement score increases by 1</td><td class="border p-1">50pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Advanced Wild Marks to refine pets</td><td class="border p-1">15,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Common Wild Marks to refine pets</td><td class="border p-1">1,150pt</td></tr>
+                      <tr><td class="border p-1">Raise max Chief Gear Charm score by 1</td><td class="border p-1">70pt</td></tr>
+                      <tr><td class="border p-1">Play Lucky Wheel 1 Time(s)</td><td class="border p-1">8,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Rare Hero Shard(s) to ascend the Hero</td><td class="border p-1">350pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Epic Hero Shard(s) to ascend the Hero</td><td class="border p-1">1,220pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Mythic Hero Shard(s) to ascend the Hero</td><td class="border p-1">3,040pt</td></tr>
+                      <tr><td class="border p-1">Call rally and hunt down 1 Polar Terror(s)</td><td class="border p-1">30,000pt</td></tr>
+                      <tr><td class="border p-1">Defeat 1 Lv. 1 to 10 Beast</td><td class="border p-1">9,000pt</td></tr>
+                      <tr><td class="border p-1">Defeat 1 Lv. 11 to 15 Beast</td><td class="border p-1">9,750pt</td></tr>
+                      <tr><td class="border p-1">Defeat 1 Lv. 16 to 20 Beast</td><td class="border p-1">10,500pt</td></tr>
+                      <tr><td class="border p-1">Defeat 1 Lv. 21 to 25 Beast</td><td class="border p-1">11,250pt</td></tr>
+                      <tr><td class="border p-1">Defeat 1 Lv. 26 to 30 Beast</td><td class="border p-1">12,000pt</td></tr>
+                  
+                      <!-- Phase 4 -->
+                      <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="14">4th</td><td class="border p-1">Raise max Chief Gear Charm score by 1</td><td class="border p-1">70pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 Hero Gear Essence Stone(s)</td><td class="border p-1">4,000pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Use 1 Widget(s) of any Hero Exclusive Gear</td><td class="border p-1">8,000pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 1 Troop(s)</td><td class="border p-1">3pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 2 Troop(s)</td><td class="border p-1">4pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 3 Troop(s)</td><td class="border p-1">5pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 4 Troop(s)</td><td class="border p-1">8pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 5 Troop(s)</td><td class="border p-1">12pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 6 Troop(s)</td><td class="border p-1">18pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 7 Troop(s)</td><td class="border p-1">25pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 8 Troop(s)</td><td class="border p-1">35pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 9 Troop(s)</td><td class="border p-1">45pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 10 Troop(s)</td><td class="border p-1">60pt</td></tr>
+                      <tr class="bg-amber-50"><td class="border p-1">Train 1 Lv. 11 Troop(s)</td><td class="border p-1">75pt</td></tr>
+                  
+                      <!-- Phase 5 -->
+                      <tr><td class="border p-1 font-semibold" rowspan="12">5th</td><td class="border p-1">Pet advancement score increases by 1</td><td class="border p-1">50pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Advanced Wild Marks to refine pets</td><td class="border p-1">15,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Common Wild Marks to refine pets</td><td class="border p-1">1,150pt</td></tr>
+                      <tr><td class="border p-1">Raise max Chief Gear score by 1</td><td class="border p-1">36pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Hero Gear Essence Stone(s)</td><td class="border p-1">4,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Widget(s) of any Hero Exclusive Gear</td><td class="border p-1">8,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Fire Crystal(s) to upgrade buildings</td><td class="border p-1">2,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Fire Crystal Shards for Research</td><td class="border p-1">1,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1 Refind Fire Crystal(s) to upgrade buildings</td><td class="border p-1">30,000pt</td></tr>
+                      <tr><td class="border p-1">Use 1m of Speedups for Construction</td><td class="border p-1">30pt</td></tr>
+                      <tr><td class="border p-1">Use 1m of Speedups for Research</td><td class="border p-1">30pt</td></tr>
+                      <tr><td class="border p-1">Use 1m of Speedups for Training (Training, Promotion)</td><td class="border p-1">30pt</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -728,7 +750,7 @@
                 <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
                   <li><strong>1st</strong>: Power limit Setting & advertisement</li>
                   <li><strong>2nd</strong>: Special invite + General invite</li>
-                  <li><strong>3th</strong>: <u>UTC 00:00 ~</u> Freedom</li>      
+                  <li><strong>3rd</strong>: <u>UTC 00:00- </u> Freedom</li>      
                 </ul>
               </section>
               
@@ -745,12 +767,12 @@
               <section>
                 <h3 class="font-semibold text-blue-600 mb-1">🔹 Other</h3>
                 <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                  <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
-                  <li>이민권: <u>alliance store</u> or <u>Pakage</u></li>
-                  <li><strong>Disbanding Troop</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
-                  <li>모병소/의무실 병사도 전투력 포함</li>
+                  <li>Use Item<strong>Transfer Pass</strong></li>
+                  <li>Transfer Pass: <u>alliance store</u> or <u>Pakage</u></li>
+                  <li><strong>Disbanding Troops</strong>: Available from Wednesday (Profile → Troop → Soldier → Dismiss)</li>
+                  <li>Includes Power of Soldiers in Enlistment Office & Infirmary</li>
                   <li>If you lose a server battle and there is no Supreme President, a former President can invite an opponent</li>
-                  <li><u>Special invite</u>: Day 4th ~ Day 7th | <u>General invite</u>: Day 4th/Day 5th</li>
+                  <li><u>Special invite</u>: Wed ~ Sat | <u>General invite</u>: Wed/Thur</li>
                 </ul>
               </section>
             </details>
@@ -869,9 +891,10 @@
     const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/';
     
     // [ID] => [파일명] 매핑
+    const lang = (localStorage.getItem('lang') || 'ko').toLowerCase();
     const fileMap = {
       용어안내: 'ward.html',
-      영웅성급: '영웅성급업.html',
+      영웅성급: lang === 'ko' ? '영웅성급업.html' : '영웅성급업_EN.html',
       제련불수: 'refinde.html',
       전용무기: '전용무기.html',
       미스릴: '미스릴.html',
@@ -936,22 +959,32 @@
     }
     
     function switchTab(page) {
-      const frame = document.getElementById('mainFrame');
-      document.getElementById("guideDetails").style.display = "none";
-      document.getElementById("frameWrapper").style.display = "block";
+      const guide = document.getElementById("guideDetails");
+      const wrapper = document.getElementById("frameWrapper");
+      const frame = document.getElementById("mainFrame");
       const isMobile = window.innerWidth <= 768;
       const lang = (localStorage.getItem('lang') || 'ko').toLowerCase();
       
-      frame.src = (lang === 'ko') ? `${page}.html` : `${page}_EN.html`;
-      //frame.src = page + ".html";
-
-      switch (page) {
-        case 'building': frame.style.height = isMobile ? '815px' : '504px'; break;
-        case 'equip': frame.style.height = isMobile ? '745px' : '496px'; break;
-        case 'gem': frame.style.height = isMobile ? '1521px' : '945px'; break;
-        case 'hero': frame.style.height = isMobile ? '1115px' : '978px'; break;
-        case 'pet': frame.style.height = isMobile ? '1225px' : '846px'; break;        
-        case 'research': frame.style.height = isMobile ? '950px' : '765px'; break;
+      if (page === 'guide') {
+        guide.style.display = "block";
+        wrapper.style.display = "none";
+      } else {
+        guide.style.display = "none";
+        wrapper.style.display = "block";
+        frame.src = (lang === 'ko') ? `${page}.html` : `${page}_EN.html`;
+        //frame.src = page + ".html";
+        const heights = {
+          building: [815, 504],
+          equip: [745, 496],
+          gem: [1450, 990],
+          hero: [1115, 978],
+          pet: [1225, 846],
+          research: [950, 765]
+        };
+    
+        if (heights[page]) {
+          frame.style.height = isMobile ? `${heights[page][0]}px` : `${heights[page][1]}px`;
+        }
       }
     }
     
