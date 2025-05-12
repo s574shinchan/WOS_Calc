@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chief Gem</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+  <body class="bg-gray-100 p-2 font-sans text-sm">
+    <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md"> 
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">💎 Chief Gem</h2>
+      
+      <!-- 설명 추가 -->
+      <p class="text-gray-600 mb-6 text-center text-sm">
+        This page allows you to calculate the materials needed to upgrade your Chief Gem.
+      </p>
+      
+      <!-- 번호 체크박스 추가 -->
+      <div class="mb-6 text-center text-sm text-gray-700">
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-S3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('S3')" /> Infantry * 3
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-S6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('S6')" /> Infantry * 6
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-L3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('L3')" /> Lancer * 3
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-L6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('L6')" /> Lancer * 6
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-M3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('M3')" /> Marksman * 3
+        </label>
+        <label class="inline-flex items-center text-sm font-semibold mx-1">
+          <input type="checkbox" id="extra-check-M6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('M6')" /> Marksman * 6
+        </label>
+      </div>
+      
+      <form id="gemForm" class="space-y-6">
+        <div id="gemTableBody" class="grid grid-cols-2 md:grid-cols-3 gap-2"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div><label class="block font-semibold">Owned Charm Guide</label><input type="number" id="own-매뉴얼" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">Owned Charm Design</label><input type="number" id="own-도면" class="w-full border rounded p-2" /></div>
+          <div><label class="block font-semibold">Owned Charm Secrets</label><input type="number" id="own-비전" class="w-full border rounded p-2" /></div>
+        </div>
+        <button type="button" onclick="calculateGems()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">Calc</button>
+      </form>
+    </div>
+    
+    <script>
+      const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/ef3bd1665ddf73044b325143fb9fb16cf98ddcd3/data/chief/Gem.csv';
+      const gemSlots = [
+        "방패A", "방패B", "방패C", "방패D", "방패E", "방패F",
+        "창병A", "창병B", "창병C", "창병D", "창병E", "창병F",
+        "궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F"
+      ];
+      let gemLevels = [];
+      let gemData = [];
+
+      const nameAliasMap = {};
+      ["A", "B", "C", "D", "E", "F"].forEach(ch => {
+        nameAliasMap[`방패${ch}`] = `Infantry ${ch}`;
+        nameAliasMap[`창병${ch}`] = `Lancer ${ch}`;
+        nameAliasMap[`궁병${ch}`] = `Marksman ${ch}`;
+      });
+  
+      async function fetchCSVData() {
+        const response = await fetch(csvUrl);
+        const csvText = await response.text();
+        const lines = csvText.trim().split('\n');
+        const headers = lines[0].split(',');
+        gemData = lines.slice(1).map(line => {
+          const values = line.split(',');
+          const entry = {};
+          headers.forEach((header, index) => {
+            entry[header] = values[index];
+          });
+          return entry;
+        });
+        gemLevels = gemData.map(d => d["레벨"]);
+      }
+  
+      async function createGemUI() {
+        await fetchCSVData();
+        const grid = document.getElementById("gemTableBody");
+        gemSlots.forEach((slot, i) => {
+          const displayName = nameAliasMap[slot] || slot
+          const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+          grid.innerHTML += `
+            <div class="border p-2 rounded bg-purple-50 text-xs">
+              <label class="flex items-center text-sm font-semibold mb-1">
+                <input type="checkbox" id="gem-check-${i}" class="mr-1 w-4 h-4 accent-purple-500" />
+                ${displayName}
+              </label>
+              <div class="flex items-center gap-2 mb-1">
+              <label class="text-sm whitespace-nowrap">Current</label>
+              <select id="gem-cur-${i}" class="flex-1 border rounded p-1 text-xs">
+              ${options}
+              </select>
+              </div>
+              <div class="flex items-center gap-2 mb-1">
+              <label class="text-sm whitespace-nowrap">Target</label>
+              <select id="gem-tgt-${i}" class="flex-1 border rounded p-1 text-xs">
+              ${options}
+              </select>
+              </div>
+            </div>
+          `;
+        });
+
+for (let i = 0; i < gemSlots.length; i++) {
+  const curSelect = document.getElementById(`gem-cur-${i}`);
+  const tgtSelect = document.getElementById(`gem-tgt-${i}`);
+
+  curSelect.addEventListener("change", () => {
+    tgtSelect.value = curSelect.value;
+  });
+}
+      }
+      
+      function calculateGems() {
+        let total = { 매뉴얼: 0, 도면: 0, 비전: 0 };
+        let rows = "";
+  
+        for (let i = 0; i < gemSlots.length; i++) {
+          if (!document.getElementById(`gem-check-${i}`).checked) continue;
+  
+          const cur = document.getElementById(`gem-cur-${i}`).value;
+          const tgt = document.getElementById(`gem-tgt-${i}`).value;
+          const start = gemLevels.indexOf(cur);
+          const end = gemLevels.indexOf(tgt);
+  
+          if (start === -1 || end === -1 || start >= end) {
+            rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${gemSlots[i]}: 잘못된 레벨 선택</td></tr>`;
+            continue;
+          }
+  
+          const subtotal = { 매뉴얼: 0, 도면: 0, 비전: 0 };
+          const displayName = nameAliasMap[gemSlots[i]] || gemSlots[i];
+  
+          for (let j = start + 1; j <= end; j++) {
+            const row = gemData[j];
+            subtotal.매뉴얼 += parseFloat(row["매뉴얼"] || 0);
+            subtotal.도면 += parseFloat(row["도면"] || 0);
+            subtotal.비전 += parseFloat(row["비전"] || 0);
+          }
+  
+          total.매뉴얼 += subtotal.매뉴얼;
+          total.도면 += subtotal.도면;
+          total.비전 += subtotal.비전;
+  
+          rows += `
+            <tr class="text-center">
+              <td class="border p-1">${displayName}</td>
+              <td class="border p-1">${cur} → ${tgt}</td>
+              <td class="border p-1">${subtotal.매뉴얼.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.도면.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.비전.toLocaleString()}</td>
+            </tr>
+          `;
+        }
+  
+        const owned = {
+          매뉴얼: parseFloat(document.getElementById("own-매뉴얼").value) || 0,
+          도면: parseFloat(document.getElementById("own-도면").value) || 0,
+          비전: parseFloat(document.getElementById("own-비전").value) || 0,
+        };
+  
+        rows += `
+          <tr class="text-center font-bold bg-purple-100">
+            <td class="border p-1" colspan="2">Total</td>
+            <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
+            <td class="border p-1">${total.도면.toLocaleString()}</td>
+            <td class="border p-1">${total.비전.toLocaleString()}</td>
+          </tr>
+          <tr class="text-center font-bold bg-orange-50">
+            <td class="border p-1" colspan="2">Stock</td>
+            <td class="border p-1">${owned.매뉴얼.toLocaleString()}</td>
+            <td class="border p-1">${owned.도면.toLocaleString()}</td>
+            <td class="border p-1">${owned.비전.toLocaleString()}</td>
+          </tr>
+          <tr class="text-center font-bold bg-red-50">
+            <td class="border p-1" colspan="2">Required quantity</td>
+            <td class="border p-1">${(owned.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
+            <td class="border p-1">${(owned.도면 - total.도면).toLocaleString()}</td>
+            <td class="border p-1">${(owned.비전 - total.비전).toLocaleString()}</td>
+          </tr>
+        `;
+
+        const chkS3 = document.getElementById(`extra-check-S3`);
+        const chkS6 = document.getElementById(`extra-check-S6`);
+        const chkL3 = document.getElementById(`extra-check-L3`);
+        const chkL6 = document.getElementById(`extra-check-L6`);
+        const chkM3 = document.getElementById(`extra-check-M3`);
+        const chkM6 = document.getElementById(`extra-check-M6`);
+
+        if(chkS3 && chkS3.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">Infantry A ~ C</td>
+              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if (chkS6 && chkS6.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">Infantry A ~ F</td>
+              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if(chkL3 && chkL3.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">Lancer A ~ C</td>
+              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if (chkL6 && chkL6.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">Lancer A ~ F</td>
+              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if(chkM3 && chkM3.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">Marksman A ~ C</td>
+              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
+            </tr>
+          `;
+        } else if (chkM6 && chkM6.checked) {
+          rows += `
+            <tr class="text-center font-bold bg-purple-100">
+              <td class="border p-1" colspan="2">Marksman A ~ F</td>
+              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
+              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
+            </tr>
+          `;
+        }
+  
+        const resultHTML = `
+          <table class="w-full table-auto border text-sm text-center mt-4">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="border p-1">Slot</th>
+                <th class="border p-1">Level</th>
+                <th class="border p-1">Charm Guide</th>
+                <th class="border p-1">Charm Design</th>
+                <th class="border p-1">Charm Secrets</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+        
+        window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+        //showPopup(resultHTML);
+      }
+
+      function syncGemCheck(group) {
+        if(group === "S3") {
+          document.getElementById(`extra-check-S6`).checked = false;
+        } else if(group === "S6") {
+          document.getElementById(`extra-check-S3`).checked = false;
+        } else if(group === "L3") {
+          document.getElementById(`extra-check-L6`).checked = false;
+        } else if(group === "L6") {
+          document.getElementById(`extra-check-L3`).checked = false;
+        } else if(group === "M3") {
+          document.getElementById(`extra-check-M6`).checked = false;
+        } else if(group === "M6") {
+          document.getElementById(`extra-check-M3`).checked = false;
+        } 
+      }
+      
+      function loadPage(page) {
+        const isMobile = window.innerWidth <= 768;
+        const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+      }
+      
+      createGemUI();
+    </script>
+    <script>
+      document.addEventListener("contextmenu", event => event.preventDefault());
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) 
+            || (e.ctrlKey && (e.key === "U" || e.key === "S")))
+        {
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>
