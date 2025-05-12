@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Gear</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+  <body class="bg-gray-100 p-2 font-sans text-sm">
+    <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md space-y-5"> 
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">🧝 Hero Gear</h1>    
+
+      <!-- 설명 추가 -->
+      <p class="text-gray-600 mb-6 text-center text-sm">
+        This page allows you to calculate the materials needed to upgrade your Hero Gear
+      </p>
+      
+      <div class="bg-white border border-yellow-300 rounded-md p-2">
+        <div class="cursor-pointer text-lg font-bold text-yellow-700 mb-2">📕 Gear Empowerment</div>
+          <form id="heroEquipForm" class="space-y-4">
+            <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+              <div><label class="block font-semibold">Owned 100 Enhancement XP Component</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
+              <div><label class="block font-semibold">Owned Mithril</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" /></div>
+              <div><label class="block font-semibold">Owned Mythic Gear</label><input type="number" id="own-레전드장비" class="w-full border rounded p-2" /></div>
+            </div>
+            <button type="button" onclick="calcMithril()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">Calc</button>
+          </form>
+        </div>
+        
+        <div class="bg-white border border-yellow-300 rounded-md p-2">
+          <div class="cursor-pointer text-lg font-bold text-yellow-700 mb-2">📙 Mastery Forging</div>
+            <form id="masteryForm" class="space-y-4">
+              <div id="masteryGrid" class="grid grid-cols-2 md:grid-cols-2 gap-4"></div>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                <div><label class="block font-semibold">Owned Essence Stones</label><input type="number" id="owned-마스터리석" class="w-full border rounded p-2" /></div>
+                <div><label class="block font-semibold">Owned Mythic Gear</label><input type="number" id="owned-레전드장비" class="w-full border rounded p-2" /></div>
+              </div>
+              <button type="button" onclick="calcMastery()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">Calc</button>
+            </form>
+          </div>
+        </div>
+        
+        <script> 
+          function loadPage(page) {
+            const isMobile = window.innerWidth <= 768;
+            const height = isMobile ? "550px" : "345px"
+            window.location.href = page;
+            window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+          }
+          
+          const slotNames = ["고글", "장갑", "벨트", "신발"];
+          const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Hero/Mithril.csv";
+          let stageList = [];
+          let csvData = [];
+
+     const nameAliasMap = {
+        "고글": "Goggles",
+        "장갑": "Gauntlets",
+        "벨트": "Belt",
+        "신발": "Boots"
+      };
+    
+          async function loadMithrilCSV() {
+            const res = await fetch(csvUrl);
+            const text = await res.text();
+            const lines = text.trim().split("\n").map(l => l.split(","));
+            const headers = lines[0];
+            csvData = lines.slice(1).map(row => {
+              const obj = {};
+              headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
+              return obj;
+            });
+            stageList = csvData.map(r => r["레벨"]);
+            renderHeroEquipUI();
+          }
+          
+          function renderHeroEquipUI() {
+            const grid = document.getElementById("heroEquipGridBody");
+            slotNames.forEach((name, i) => {
+              const displayName = nameAliasMap[name] || name
+              const options = stageList.map(stage => `<option value="${stage}">${stage}</option>`).join("");
+              grid.innerHTML += `
+              <div class="border p-2 rounded bg-yellow-50 text-xs">
+                  <label class="flex items-center text-sm font-semibold mb-1">
+                    <input type="checkbox" id="check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
+                    ${displayName}
+                  </label>
+                  <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">Current</label>
+                  <select id="start-${i}" class="w-full border rounded py-1 px-2 text-sm">
+                  ${options}
+                  </select>
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">Target</label>
+                  <select id="end-${i}" class="w-full border rounded py-1 px-2 text-sm">
+                  ${options}
+                  </select>
+                  </div>
+                </div>
+                `;
+              setTimeout(() => {
+                const curSelect = document.getElementById(`start-${i}`);
+                const tgtSelect = document.getElementById(`end-${i}`);
+                if (curSelect && tgtSelect) {
+                  curSelect.addEventListener("change", () => {
+                    tgtSelect.value = curSelect.value;
+                  });
+                }
+              }, 0);
+            });
+          }
+    
+          async function calcMithril() {
+            let total = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
+            let rows = "";
+    
+            slotNames.forEach((name, i) => {
+              if (!document.getElementById(`check-${i}`).checked) 
+                return;
+    
+              const start = document.getElementById(`start-${i}`).value;
+              const end = document.getElementById(`end-${i}`).value;
+              const startIndex = stageList.indexOf(start);
+              const endIndex = stageList.indexOf(end);
+              const displayName = nameAliasMap[name] || name;
+
+              if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
+                rows += `<tr><td class="border p-1 text-center" colspan="5">⚠️ ${displayName}: Choosing the wrong step</td></tr>`;
+                return;
+              }
+    
+              const subtotal = { 경험치: 0, 너트: 0, 미스릴: 0, 레전드장비: 0 };
+              for (let j = startIndex + 1; j <= endIndex; j++) {
+                const row = csvData[j];
+                subtotal.경험치 += parseFloat(row["경험치"] || "0");
+                subtotal.너트 += parseFloat(row["너트"] || "0");
+                subtotal.미스릴 += parseFloat(row["미스릴"] || "0");
+                subtotal.레전드장비 += parseFloat(row["레전드장비"] || "0");
+              }
+    
+              total.경험치 += subtotal.경험치;
+              total.너트 += subtotal.너트;
+              total.미스릴 += subtotal.미스릴;
+              total.레전드장비 += subtotal.레전드장비;
+    
+              rows += `
+              <tr class="text-center">
+              <td class="border p-1">${displayName}</td>
+              <td class="border p-1">${start} → ${end}</td>
+              <td class="border p-1">${subtotal.경험치.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.너트.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.미스릴.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
+              </tr>`;
+            });
+    
+            const own = {
+              너트: parseFloat(document.getElementById("own-너트").value) || 0,
+              미스릴: parseFloat(document.getElementById("own-미스릴").value) || 0,
+              레전드장비: parseFloat(document.getElementById("own-레전드장비").value) || 0,
+            };
+    
+            rows += `
+            <tr class="text-center font-bold bg-yellow-100">
+              <td colspan="2" class="border p-1">Total</td>
+              <td class="border p-1">${total.경험치.toLocaleString()}</td>
+              <td class="border p-1">${total.너트.toLocaleString()}</td>
+              <td class="border p-1">${total.미스릴.toLocaleString()}</td>
+              <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
+            </tr>
+            <tr class="text-center font-bold bg-orange-50">
+              <td colspan="2" class="border p-1">Stock</td>
+              <td class="border p-1"></td>
+              <td class="border p-1">${own.너트.toLocaleString()}</td>
+              <td class="border p-1">${own.미스릴.toLocaleString()}</td>
+              <td class="border p-1">${own.레전드장비.toLocaleString()}</td>
+            </tr>
+            <tr class="text-center font-bold bg-red-50">
+              <td colspan="2" class="border p-1">Required quantity</td>
+              <td class="border p-1">${total.경험치.toLocaleString()}</td>
+              <td class="border p-1">${(own.너트 - total.너트).toLocaleString()}</td>
+              <td class="border p-1">${(own.미스릴 - total.미스릴).toLocaleString()}</td>
+              <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
+            </tr>
+            `;
+    
+            const resultHTML = `
+            <table class="w-full table-auto border mt-4 text-sm text-center">
+            <thead class="bg-gray-100">
+            <tr>
+            <th class="border p-1">Gear</th>
+            <th class="border p-1">Level</th>
+            <th class="border p-1">EXP</th>
+            <th class="border p-1">100 Enhancement XP Component</th>
+            <th class="border p-1">Mithril</th>
+            <th class="border p-1">Mythic Gear</th>
+            </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+            </table>
+            `;
+    
+            window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+          }
+    
+          loadMithrilCSV();
+        </script>
+        
+        <script>
+          const masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Hero/Mastery.csv";
+          const masterySlots = ["고글", "장갑", "벨트", "신발"];
+          let masteryLevels = [];
+          let masteryData = [];
+
+          async function loadMasteryCSV() {
+            const res = await fetch(masteryUrl);
+            const text = await res.text();
+            const lines = text.trim().split("\n").map(row => row.split(","));
+            const headers = lines[0];
+            masteryData = lines.slice(1).map(row => {
+              const obj = {};
+              headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
+              return obj;
+            });
+            masteryLevels = masteryData.map(r => r["레벨"]);
+            renderMasteryUI();
+          }
+    
+          function renderMasteryUI() {
+            const grid = document.getElementById("masteryGrid");
+            masterySlots.forEach((name, i) => {
+              const displayName = nameAliasMap[name] || name;
+              const options = masteryLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+              grid.innerHTML += `
+                <div class="border p-2 rounded bg-yellow-50 text-xs">
+                  <label class="flex items-center text-sm font-semibold mb-1">
+                    <input type="checkbox" id="m-check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
+                    ${displayName}
+                  </label>
+                  <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">Current</label>
+                  <select id="m-start-${i}" class="w-full border rounded py-1 px-2 text-sm">
+                  ${options}
+                  </select>
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">Target</label>
+                  <select id="m-end-${i}" class="w-full border rounded py-1 px-2 text-sm">
+                  ${options}
+                  </select>
+                  </div>
+                </div>
+              `;
+              setTimeout(() => {
+                const curSelect = document.getElementById(`m-start-${i}`);
+                const tgtSelect = document.getElementById(`m-end-${i}`);
+                if (curSelect && tgtSelect) {
+                  curSelect.addEventListener("change", () => {
+                    tgtSelect.value = curSelect.value;
+                  });
+                }
+              }, 0);
+            });
+          }
+    
+          async function calcMastery() {
+            let total = { 마스터리석: 0, 레전드장비: 0 };
+            let rows = "";
+    
+            masterySlots.forEach((name, i) => {
+              if (!document.getElementById(`m-check-${i}`).checked) return;
+    
+              const start = document.getElementById(`m-start-${i}`).value;
+              const end = document.getElementById(`m-end-${i}`).value;
+              const startIndex = masteryLevels.indexOf(start);
+              const endIndex = masteryLevels.indexOf(end);
+              const displayName2 = nameAliasMap[name] || name;
+
+              if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
+                rows += `<tr><td class="border p-1 text-center" colspan="4">⚠️ ${displayName2}: Choosing the wrong step</td></tr>`;
+                return;
+              }
+    
+              const subtotal = { 마스터리석: 0, 레전드장비: 0 };
+              for (let j = startIndex + 1; j <= endIndex; j++) {
+                const row = masteryData[j];
+                subtotal.마스터리석 += parseFloat(row["마스터리석"] || "0");
+                subtotal.레전드장비 += parseFloat(row["레전드장비"] || "0");
+              }
+    
+              total.마스터리석 += subtotal.마스터리석;
+              total.레전드장비 += subtotal.레전드장비;
+    
+              rows += `
+                <tr class="text-center">
+                  <td class="border p-1">${displayName2}</td>
+                  <td class="border p-1">${start} → ${end}</td>
+                  <td class="border p-1">${subtotal.마스터리석.toLocaleString()}</td>
+                  <td class="border p-1">${subtotal.레전드장비.toLocaleString()}</td>
+                </tr>
+              `;
+            });
+    
+            const own = {
+              마스터리석: parseFloat(document.getElementById("owned-마스터리석").value) || 0,
+              레전드장비: parseFloat(document.getElementById("owned-레전드장비").value) || 0,
+            };
+    
+            rows += `
+              <tr class="text-center font-bold bg-yellow-100">
+                <td colspan="2" class="border p-1">Total</td>
+                <td class="border p-1">${total.마스터리석.toLocaleString()}</td>
+                <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
+              </tr>
+              <tr class="text-center font-bold bg-orange-50">
+                <td colspan="2" class="border p-1">Stock</td>
+                <td class="border p-1">${own.마스터리석.toLocaleString()}</td>
+                <td class="border p-1">${own.레전드장비.toLocaleString()}</td>
+              </tr>
+              <tr class="text-center font-bold bg-red-50">
+                <td colspan="2" class="border p-1">Required quantity</td>
+                <td class="border p-1">${(own.마스터리석 - total.마스터리석).toLocaleString()}</td>
+                <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
+              </tr>
+            `;
+    
+            const resultHTML = `
+            <table class="w-full table-auto border mt-4 text-sm text-center">
+            <thead class="bg-gray-100">
+            <tr>
+            <th class="border p-1">Gear</th>
+            <th class="border p-1">Level</th>
+            <th class="border p-1">Essence Stones</th>
+            <th class="border p-1">Mythic Gear</th>
+            </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+            </table>
+            `;
+    
+            window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+          }
+          
+          loadMasteryCSV();
+          
+        </script>
+        
+        <script>      
+          document.addEventListener("contextmenu", event => event.preventDefault());
+          document.addEventListener("keydown", function (e) {
+            if (
+              e.key === "F12" ||
+              (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+              (e.ctrlKey && (e.key === "U" || e.key === "S"))
+            ) {
+              e.preventDefault();
+            }
+          });
+        </script>
+    
+  </body>
+</html>
