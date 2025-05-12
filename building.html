@@ -77,6 +77,17 @@
             </div>
           `;
         });
+        
+        // 현재값 변경 시 목표값 자동 반영
+        buildingList.forEach(name => {
+          const startSelect = document.getElementById(`start-${name}`);
+          const endSelect = document.getElementById(`end-${name}`);
+          if (startSelect && endSelect) {
+            startSelect.addEventListener("change", () => {
+              endSelect.value = startSelect.value;
+            });
+          }
+        });
       }
       
       function formatValue(value) {     
