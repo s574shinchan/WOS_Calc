@@ -79,6 +79,17 @@
             </div>
             `
         });
+
+        // 현재 선택 시 목표도 동일하게 자동 설정
+        gearSlots.forEach((_, i) => {
+          const start = document.getElementById(`start-${i}`);
+          const end = document.getElementById(`end-${i}`);
+          if (start && end) {
+              start.addEventListener("change", () => {
+              end.value = start.value;
+              });
+          }
+        });
       }
       
       async function calculateGear() {
