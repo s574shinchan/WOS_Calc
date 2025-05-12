@@ -23,20 +23,43 @@
   <link rel="canonical" href="https://d1xsb5o91gjadf.cloudfront.net/" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <title>WOS 계산기 - 건물, 보석, 장비, 펫 계산기 모음</title>
-  <div class="fixed top-2 right-2 z-50">
-    <div id="google_translate_element"></div>
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-2 bg-white border border-gray-300 rounded px-2 py-1 shadow text-sm">
+    <img src="https://img.icons8.com/color/24/google-translate.png" alt="Translate Icon" class="w-5 h-5">
+    <div id="google_translate_element" class="translate-custom"></div>
   </div>
   <script type="text/javascript">
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({
         pageLanguage: 'ko',
-        includedLanguages: 'en',
+        includedLanguages: 'en,ja,zh-CN,zh-TW,fr,de,es,vi,th,ru,pt,id',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
       }, 'google_translate_element');
     }
   </script>
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <style>
+    .translate-custom .goog-te-gadget {
+      font-family: 'sans-serif';
+      font-size: 0.875rem;
+      color: #333;
+    }
+  
+    .goog-te-gadget img {
+      display: none !important;
+    }
+  
+    .goog-logo-link,
+    .goog-te-gadget span {
+      display: none !important;
+    }
+  
+    .goog-te-combo {
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+  </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"
      crossorigin="anonymous"></script>
