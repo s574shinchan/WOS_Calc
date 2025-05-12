@@ -108,6 +108,8 @@
               </div>
             </div>
           `;
+          petGrid.insertAdjacentHTML("beforeend", html);
+
           // 현재 선택 시 목표 자동 설정
           const curSelect = document.getElementById(`pet-cur-${petId}`);
           const tgtSelect = document.getElementById(`pet-tgt-${petId}`);
