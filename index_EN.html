@@ -31,7 +31,8 @@
     <div class="flex flex-col items-center gap-2 sm:hidden mb-4">
       <!-- 언어 선택 콤보박스 -->
       <select id="langSelectMobile" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1">
-        <option value="index.html">🇰🇷 한국어</option>
+        <option value="index.html">🌐 Language</option>
+        <option value="index.html">🇰🇷 한국어　</option>
         <option value="index_en.html" selected>🇺🇸 English</option>
       </select>
     </div>
@@ -40,7 +41,8 @@
     <div class="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
       <!-- 언어 선택 콤보박스 -->
       <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1">
-        <option value="index.html">🇰🇷 한국어</option>
+        <option value="index.html">🌐 Language</option>
+        <option value="index.html">🇰🇷 한국어　</option>
         <option value="index_en.html" selected>🇺🇸 English</option>
       </select>
     </div>
@@ -152,16 +154,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
       </svg>
     </button>
-    
-    <!-- 부모에 위치한 모달 -->
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
-      <div class="max-w-4xl w-full flex items-center justify-center p-4">
-        <img id="modalImage" src="" alt="확대 이미지"
-             class="rounded shadow-lg border-4 border-white transform transition-transform duration-100"
-             style="max-height: 90vh; max-width: 100%; scale: 1;" />
-      </div>
-    </div>
-    
+
     <!-- 카피라이트 -->  
     <footer class="text-center text-xs text-gray-500 mt-5">⛔ Unauthorized copying prohibited | © Made By S574 ShinChan</footer>
   </div>
@@ -258,7 +251,7 @@
       const wrapper = document.getElementById("frameWrapper");
       const frame = document.getElementById("mainFrame");
       const isMobile = window.innerWidth <= 768;
-      const lang = (localStorage.getItem('lang') || 'ko').toUpperCase();
+      const lang = localStorage.getItem('lang').toUpperCase();
       
       if (page === 'guide') {
         guide.style.display = "block";
@@ -337,41 +330,12 @@
   </script>
   
   <script>
-    let currentScale = 1;
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-  
-    window.addEventListener('message', (event) => {
-      if (event.data.type === 'SHOW_IMAGE_MODAL') {
-        modalImg.src = event.data.url;
-        currentScale = 1;
-        modalImg.style.scale = currentScale;
-        modal.classList.remove('hidden');
-      }
-    });
-  
-    modalImg.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      currentScale += (e.deltaY < 0 ? 0.05 : -0.05);
-      currentScale = Math.max(0.1, Math.min(3, currentScale));
-      modalImg.style.scale = currentScale;
-    });
-  
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.add('hidden');
-        modalImg.src = '';
-      }
-    });
-  </script>
-  
-  <script>
     function setupLangSelect(id) {
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener('change', function () {
           const langCode = this.value; // 예: index_en.html
-          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
+          const lang = (langCode.split('_')[1]?.split('.')[0]).toUpperCase();
           localStorage.setItem('lang', lang);
           window.location.href = langCode;
         });
@@ -381,6 +345,5 @@
     setupLangSelect('langSelectMobile');
     setupLangSelect('langSelectPC');
   </script>
-  
 </body>
 </html>
