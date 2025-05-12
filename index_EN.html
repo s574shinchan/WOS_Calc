@@ -332,14 +332,28 @@
   <script>
     function setupLangSelect(id) {
       const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('change', function () {
-          const langCode = this.value; // 예: index_en.html
-          const lang = (langCode.split('_')[1]?.split('.')[0]).toUpperCase();
-          localStorage.setItem('lang', lang);
-          window.location.href = langCode;
-        });
-      }
+      if (!el) return;
+          
+      // 현재 파일명 감지    
+      const currentPath = window.location.pathname;
+      const currentFile = currentPath.split("/").pop() || "index.html";
+      
+      // 현재 언어 설정에 따라 기본값 자동 선택
+      const currentLang = currentFile.includes("_") ? currentFile.split("_")[1].split(".")[0].toLowerCase() : "ko";
+      el.value = currentLang === "ko" ? "index.html" : `index_${currentLang}.html`;
+  
+      el.addEventListener("change", function () {
+        const selectedFile = this.value; // ex: index_en.html or index.html
+        const selectedLang = selectedFile.includes("_") ? selectedFile.split("_")[1].split(".")[0].toUpperCase() : "ko";
+        localStorage.setItem("lang", selectedLang);
+  
+        // 동일 페이지 선택 시 강제 새로고침
+        if (currentFile === selectedFile || (currentFile === "" && selectedFile === "index.html")) {
+          window.location.href = selectedFile; // 강제 이동
+        } else {
+          window.location.href = selectedFile;
+        }
+      });
     }
   
     setupLangSelect('langSelectMobile');
