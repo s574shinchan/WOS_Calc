@@ -43,6 +43,24 @@
 
 <body class="bg-gray-100 min-h-screen p-4">
   <div class="max-w-4xl mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3 relative">
+    <!-- 모바일 버튼: 중앙 가로 정렬 -->
+    <div class="flex flex-col items-center gap-2 sm:hidden mb-4">
+      <!-- 언어 선택 콤보박스 -->
+      <select id="langSelectMobile" class="p-1 border border-gray-300 rounded text-sm mt-1">
+        <option value="index.html">🌐 한국어</option>
+        <option value="index_en.html" selected>🇺🇸 English</option>
+      </select>
+    </div>
+    
+    <!-- PC 버튼: 우측 상단 세로 정렬 -->
+    <div class="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
+      <!-- 언어 선택 콤보박스 -->
+      <select id="langSelectPC" class="p-1 border border-gray-300 rounded text-sm mt-1">
+        <option value="index.html">🌐 한국어</option>
+        <option value="index_en.html" selected>🇺🇸 English</option>
+      </select>
+    </div>
+    
     <!-- 로고 -->
     <div class="text-center mb-4 mt-6 sm:mt-4">
       <img 
@@ -669,7 +687,7 @@
                       <tr class="bg-amber-50"><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
                 
                       <!-- 수요일 -->
-                      <tr><td class="border p-1 font-semibold" rowspan="10">3th</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+                      <tr><td class="border p-1 font-semibold" rowspan="10">3rd</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
                       <tr><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
                       <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
                       <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
@@ -712,10 +730,10 @@
                 <h3 class="font-semibold text-blue-600 mb-1">🔹 Kind of State</h3>
                 <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
                   <li><span class="text-blue-500">Normal</span><br>
-                    - Total: <strong>55</strong> | Special invite: <strong>Max-3</strong> | Normal invite: <strong>35</strong> | Freedom: <strong>20 (First come first served)</strong>
+                    - Total: <strong>55</strong> | Special invite: <strong>Max-3</strong> | General invite: <strong>35</strong> | Freedom: <strong>20 (First come first served)</strong>
                   </li>
                   <li><span class="text-red-500">강성서버</span><br>
-                    - Total: <strong>30</strong> | Special invite: <strong>None</strong> | Normal invite: <strong>20</strong> | Freedom: <strong>10 (First come first served)</strong>
+                    - Total: <strong>30</strong> | Special invite: <strong>None</strong> | General invite: <strong>20</strong> | Freedom: <strong>10 (First come first served)</strong>
                   </li>
                 </ul>
               </section>
@@ -725,7 +743,7 @@
                 <h3 class="font-semibold text-blue-600 mb-1">🔹 Schedule</h3>
                 <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
                   <li><strong>1st</strong>: Power limit Setting & advertisement</li>
-                  <li><strong>2nd</strong>: Special invite + Normal invite</li>
+                  <li><strong>2nd</strong>: Special invite + General invite</li>
                   <li><strong>3th</strong>: <u>UTC 00:00 ~</u> Freedom</li>      
                 </ul>
               </section>
@@ -734,28 +752,28 @@
               <section>
                 <h3 class="font-semibold text-blue-600 mb-1">🔹 Word</h3>
                 <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                  <li>Special invite: <strong>Not limited by the set power</strong>, <u>첫 이민 시 3장</u>, <u>Add 1 chapter per month</u>, <strong>Max -3</strong></li>
-                  <li>Normal invite: <strong>Within the set power</strong></li>
+                  <li>Special invite: <strong>Not limited by the set power</strong>, <u>Add 1 chapter per month</u>, <strong>Max -3</strong></li>
+                  <li>General invite: <strong>Within the set power</strong></li>
                 </ul>
               </section>
               
               <!-- 그 외 -->
               <section>
-                <h3 class="font-semibold text-blue-600 mb-1">🔹 그 외</h3>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 Other</h3>
                 <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
                   <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
-                  <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
-                  <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
+                  <li>이민권: <u>alliance store</u> or <u>Pakage</u></li>
+                  <li><strong>Disbanding Troop</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
                   <li>모병소/의무실 병사도 전투력 포함</li>
-                  <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
-                  <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
+                  <li>If you lose a server battle and there is no Supreme President, a former President can invite an opponent</li>
+                  <li><u>Special invite</u>: Day 4th ~ Day 7th | <u>General invite</u>: Day 4th/Day 5th</li>
                 </ul>
               </section>
             </details>
       
             <!-- 단어번역 -->
             <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 각종 용어 안내</summary>
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 Any Word</summary>
               <div id="용어안내" class="mt-3 space-y-4 text-sm text-gray-800">
                 <p class="text-gray-500 text-sm">📦 Data Loding...</p>
               </div>
@@ -763,16 +781,8 @@
 
             <!-- 영웅 성급업 -->
             <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 영웅성급업표</summary>
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 Hero Tier</summary>
               <div id="영웅성급" class="mt-3 space-y-4 text-sm text-gray-800">
-                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-              </div>
-            </details>
-      
-            <!-- 정제불수 기댓값 -->
-            <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 제련불수 기대값</summary>
-              <div id="제련불수" class="mt-3 space-y-4 text-sm text-gray-800">
                 <p class="text-gray-500 text-sm">📦 Data Loding...</p>
               </div>
             </details>
@@ -942,31 +952,21 @@
     }
     
     function switchTab(page) {
-      const guide = document.getElementById("guideDetails");
-      const wrapper = document.getElementById("frameWrapper");
-      const frame = document.getElementById("mainFrame");
+      const frame = document.getElementById('mainFrame');
+      document.getElementById("guideDetails").style.display = "none";
+      document.getElementById("frameWrapper").style.display = "block";
       const isMobile = window.innerWidth <= 768;
-    
-      if (page === 'guide') {
-        guide.style.display = "block";
-        wrapper.style.display = "none";
-      } else {
-        guide.style.display = "none";
-        wrapper.style.display = "block";
-        frame.src = `${page}.html`;
-    
-        const heights = {
-          building: [815, 504],
-          equip: [745, 496],
-          gem: [1450, 990],
-          hero: [1115, 978],
-          pet: [1225, 846],
-          research: [950, 765]
-        };
-    
-        if (heights[page]) {
-          frame.style.height = isMobile ? `${heights[page][0]}px` : `${heights[page][1]}px`;
-        }
+      const lang = (localStorage.getItem('lang') || 'ko').toLowerCase();
+      frame.src = (lang === 'ko') ? `${page}.html` : `${page}_EN.html`;
+      //frame.src = page + ".html";
+
+      switch (page) {
+        case 'building': frame.style.height = isMobile ? '815px' : '504px'; break;
+        case 'equip': frame.style.height = isMobile ? '745px' : '496px'; break;
+        case 'gem': frame.style.height = isMobile ? '1521px' : '945px'; break;
+        case 'hero': frame.style.height = isMobile ? '1115px' : '978px'; break;
+        case 'pet': frame.style.height = isMobile ? '1225px' : '846px'; break;        
+        case 'research': frame.style.height = isMobile ? '950px' : '765px'; break;
       }
     }
     
@@ -1051,6 +1051,23 @@
       }
     });
   </script>
-
+  
+  <script>
+    function setupLangSelect(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', function () {
+          const langCode = this.value; // 예: index_en.html
+          const lang = langCode.split('_')[1]?.split('.')[0] || 'ko';
+          localStorage.setItem('lang', lang);
+          window.location.href = langCode;
+        });
+      }
+    }
+  
+    setupLangSelect('langSelectMobile');
+    setupLangSelect('langSelectPC');
+  </script>
+  
 </body>
 </html>
