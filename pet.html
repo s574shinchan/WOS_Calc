@@ -109,6 +109,17 @@
             </div>
           `;
         });
+        
+        // 현재 선택 시 목표 자동 설정
+        setTimeout(() => {
+          const curSelect = document.getElementById(`pet-cur-${petId}`);
+          const tgtSelect = document.getElementById(`pet-tgt-${petId}`);
+          if (curSelect && tgtSelect) {
+            curSelect.addEventListener("change", () => {
+              tgtSelect.value = curSelect.value;
+            });
+          }
+        }, 0); // DOM 삽입 직후 이벤트 바인딩
       }
     }
 
