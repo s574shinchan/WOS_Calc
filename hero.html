@@ -70,40 +70,42 @@
           
           function renderHeroEquipUI() {
             const grid = document.getElementById("heroEquipGridBody");
+            grid.innerHTML = ""; // 기존 초기화
+          
             slotNames.forEach((name, i) => {
               const options = stageList.map(stage => `<option value="${stage}">${stage}</option>`).join("");
               grid.innerHTML += `
-              <div class="border p-2 rounded bg-yellow-50 text-xs">
+                <div class="border p-2 rounded bg-yellow-50 text-xs">
                   <label class="flex items-center text-sm font-semibold mb-1">
                     <input type="checkbox" id="check-${i}" class="mr-1 w-4 h-4 accent-yellow-500" />
                     ${name}
                   </label>
                   <div class="flex items-center gap-2 mb-1">
-                  <label class="text-sm whitespace-nowrap">현재</label>
-                  <select id="start-${i}" class="w-full border rounded py-1 px-2 text-sm">
-                  ${options}
-                  </select>
+                    <label class="text-sm whitespace-nowrap">현재</label>
+                    <select id="start-${i}" class="w-full border rounded py-1 px-2 text-sm">
+                      ${options}
+                    </select>
                   </div>
                   <div class="flex items-center gap-2 mb-1">
-                  <label class="text-sm whitespace-nowrap">목표</label>
-                  <select id="end-${i}" class="w-full border rounded py-1 px-2 text-sm">
-                  ${options}
-                  </select>
+                    <label class="text-sm whitespace-nowrap">목표</label>
+                    <select id="end-${i}" class="w-full border rounded py-1 px-2 text-sm">
+                      ${options}
+                    </select>
                   </div>
                 </div>
-                `
+              `;
+          
+              // ✅ 이 위치에서 바로 이벤트 바인딩
+              setTimeout(() => {
+                const curSelect = document.getElementById(`start-${i}`);
+                const tgtSelect = document.getElementById(`end-${i}`);
+                if (curSelect && tgtSelect) {
+                  curSelect.addEventListener("change", () => {
+                    tgtSelect.value = curSelect.value;
+                  });
+                }
+              }, 0);
             });
-            
-            // 현재 선택 시 목표 자동 설정
-            setTimeout(() => {
-              const curSelect = document.getElementById(`start-${i}`);
-              const tgtSelect = document.getElementById(`end-${i}`);
-              if (curSelect && tgtSelect) {
-                curSelect.addEventListener("change", () => {
-                  tgtSelect.value = curSelect.value;
-                });
-              }
-            }, 0); // DOM 삽입 직후 이벤트 바인딩
           }
     
           async function calcMithril() {
@@ -245,8 +247,6 @@
                   </div>
                 </div>
               `;
-            });
-            
             // 현재 선택 시 목표 자동 설정
             setTimeout(() => {
               const curSelect = document.getElementById(`start-${i}`);
@@ -257,6 +257,7 @@
                 });
               }
             }, 0); // DOM 삽입 직후 이벤트 바인딩
+            });          
           }
     
           async function calcMastery() {
