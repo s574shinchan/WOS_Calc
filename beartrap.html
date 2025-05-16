@@ -277,5 +277,24 @@
     document.getElementById('resultBody').innerHTML = html;
   }
 </script>
+
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight;
+      console.log(height);
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+    
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S")))
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+  
 </body>
 </html>
