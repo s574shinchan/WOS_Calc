@@ -1185,13 +1185,6 @@
       }
     });
     
-    window.addEventListener("message", (event) => {
-      if (event.data && event.data.type === "FRAME_CHANGE" && event.data.height) {
-        const frame = document.getElementById("calcFrame");
-        frame.style.height = `${event.data.height}px`;
-      }
-    });
-    
     function closePopup() {
       document.getElementById("popupModal").classList.add("hidden");
     }
