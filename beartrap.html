@@ -26,12 +26,6 @@
         <input type="text" id="Lancer" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
         <label>총 보유 궁병</label>
         <input type="text" id="Marksmen" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
-        <label>총 보유 헬리오스 방패병</label>
-        <input type="text" id="heliosInfantry" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
-        <label>총 보유 헬리오스 창병</label>
-        <input type="text" id="heliosLancer" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
-        <label>총 보유 헬리오스 궁병</label>
-        <input type="text" id="heliosMarksmen" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
       </div>
     </div>
 
@@ -73,20 +67,29 @@
             <option value="10">Lv.10</option>
           </select>
         </div>
-        <label><input type="radio" name="cityBuff" value="0" checked> 도시버프 없음</label><br>
-        <label><input type="radio" name="cityBuff" value="10"> 출정 수용량증가 2h (+10%)</label><br>
-        <label><input type="radio" name="cityBuff" value="20"> 출정 수용량증가 12h (+20%)</label><br>
-        <button type="button" onclick="calculate()" class="bg-blue-500 text-white mt-3 p-2 rounded hover:bg-blue-600">계산하기</button>
+        <div class="space-y-1">
+          <label><input type="radio" name="cityBuff" value="0" checked> 도시버프 없음</label><br>
+          <label><input type="radio" name="cityBuff" value="10"> 출정 수용량증가 2h (+10%)</label><br>
+          <label><input type="radio" name="cityBuff" value="20"> 출정 수용량증가 12h (+20%)</label><br>
+          <button type="button" onclick="calculate()" class="bg-blue-500 text-white mt-3 p-2 rounded hover:bg-blue-600">계산하기</button>
+        </div>
       </div>
 
       <div>
         <strong>결과</strong>
-        <table class="w-full mt-2 border-collapse">
+        <table class="w-full mt-2 border border-gray-300">
           <thead>
-            <tr class="bg-gray-100"><th>행군</th><th>방패병</th><th>창병</th><th>궁병</th></tr>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-2 py-1">행군</th>
+              <th class="border border-gray-300 px-2 py-1">방패병</th>
+              <th class="border border-gray-300 px-2 py-1">창병</th>
+              <th class="border border-gray-300 px-2 py-1">궁병</th>
+            </tr>
           </thead>
           <tbody id="resultBody">
-            <tr><td colspan="4">결과 없음</td></tr>
+            <tr>
+              <td class="border border-gray-200 px-2 py-1" colspan="4">결과 없음</td>
+            </tr>
           </tbody>
         </table>
       </div>
