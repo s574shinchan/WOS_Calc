@@ -5,162 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
   <script src="https://cdn.tailwindcss.com"></script>
   <title>곰사냥 부대 계산기</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f6f8;
-      padding: 30px;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-
-    .input-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      border: 2px solid #000;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 30px;
-    }
-
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-
-    input[type="text"], select {
-      width: 100%;
-      padding: 10px 15px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-
-    input[readonly] {
-      background-color: #f0f0f0;
-    }
-
-    .bottom-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 30px;
-    }
-
-    .ratio-inputs {
-      background: #e9f0f7;
-      padding: 10px;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-
-    .warning {
-      color: red;
-      font-weight: bold;
-      display: none;
-      margin-top: 5px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #f0f0f0;
-    }
-
-    button {
-      background-color: #3498db;
-      color: white;
-      padding: 12px 24px;
-      border: none;
-      font-size: 16px;
-      margin-top: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #2c80b4;
-    }
-
-    @media (max-width: 768px) {
-      .input-grid, .bottom-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
 </head>
 <body class="bg-gray-100 p-2 font-sans text-sm">
   <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md"> 
     <h1 class="text-2xl font-bold text-gray-800 mb-4">🐻 곰사냥 부대 계산기</h1>
-    <div class="input-grid">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-2 border-black p-5 rounded mb-6">
       <div>
         <label>출정부대 수용량</label>
-        <input type="text" id="baseMarch" oninput="formatInput(this); updateCalculatedCapacity()">
+        <input type="text" id="baseMarch" oninput="formatInput(this); updateCalculatedCapacity()" class="w-full border rounded p-2 mt-1">
         <label>출정부대 수용량 (버프적용 - 자동계산)</label>
-        <input type="text" id="finalMarch" readonly>
+        <input type="text" id="finalMarch" readonly class="w-full border rounded p-2 mt-1 bg-gray-100">
         <label>총 행군수</label>
-        <input type="text" id="marchCount" oninput="formatInput(this)">
+        <input type="text" id="marchCount" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
       </div>
       <div>
         <label>총 보유 방패병</label>
-        <input type="text" id="Infantry" oninput="formatInput(this)">
+        <input type="text" id="Infantry" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
         <label>총 보유 창병</label>
-        <input type="text" id="Lancer" oninput="formatInput(this)">
+        <input type="text" id="Lancer" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
         <label>총 보유 궁병</label>
-        <input type="text" id="Marksmen" oninput="formatInput(this)">
+        <input type="text" id="Marksmen" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
         <label>총 보유 헬리오스 방패병</label>
-        <input type="text" id="heliosInfantry" oninput="formatInput(this)">
+        <input type="text" id="heliosInfantry" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
         <label>총 보유 헬리오스 창병</label>
-        <input type="text" id="heliosLancer" oninput="formatInput(this)">
+        <input type="text" id="heliosLancer" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
         <label>총 보유 헬리오스 궁병</label>
-        <input type="text" id="heliosMarksmen" oninput="formatInput(this)">
+        <input type="text" id="heliosMarksmen" oninput="formatInput(this)" class="w-full border rounded p-2 mt-1">
       </div>
     </div>
-    <div class="bottom-grid">
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div>
         <strong>비율적용</strong><br>
-        <label><input type="radio" name="strategy" value="equal" checked onclick="toggleCustom(false)"> 34/33/33</label>
-        <label><input type="radio" name="strategy" value="20/40/40" onclick="toggleCustom(false)"> 20/40/40</label>
-        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)"> 10/30/60</label>
+        <label><input type="radio" name="strategy" value="equal" checked onclick="toggleCustom(false)"> 34/33/33</label><br>
+        <label><input type="radio" name="strategy" value="20/40/40" onclick="toggleCustom(false)"> 20/40/40</label><br>
+        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)"> 10/30/60</label><br>
         <label><input type="radio" name="strategy" value="custom" onclick="toggleCustom(true)"> 사용자지정비율</label>
-  
-        <div class="ratio-inputs" id="customRatio" style="display: none;">
+
+        <div class="bg-blue-50 p-3 mt-2 rounded" id="customRatio" style="display: none;">
           <label>방패병 (%)</label>
-          <input type="text" id="ratioInf" oninput="formatInput(this); validateCustomRatio()">
+          <input type="text" id="ratioInf" oninput="formatInput(this); validateCustomRatio()" class="w-full border rounded p-1 mt-1">
           <label>창병 (%)</label>
-          <input type="text" id="ratioLan" oninput="formatInput(this); validateCustomRatio()">
+          <input type="text" id="ratioLan" oninput="formatInput(this); validateCustomRatio()" class="w-full border rounded p-1 mt-1">
           <label>궁병 (%)</label>
-          <input type="text" id="ratioMar" oninput="formatInput(this); validateCustomRatio()">
-          <div class="warning" id="ratioWarning">⚠ 총 100%가 되어야합니다.</div>
+          <input type="text" id="ratioMar" oninput="formatInput(this); validateCustomRatio()" class="w-full border rounded p-1 mt-1">
+          <div class="text-red-600 font-bold mt-1" id="ratioWarning" style="display:none;">⚠ 총 100%가 되어야합니다.</div>
         </div>
       </div>
 
       <div>
         <strong>버프</strong><br>
         <label><input type="checkbox" id="buffTumbling" onchange="toggleTumbling()">프로스타 고릴라 버프</label>
-        <div id="tumblingLevelGroup" style="display:none; margin-left: 0;">
+        <div id="tumblingLevelGroup" style="display:none;" class="mt-2">
           <label>버프레벨</label>
-          <select id="tumblingLevel" onchange="updateCalculatedCapacity()">
+          <select id="tumblingLevel" onchange="updateCalculatedCapacity()" class="w-full border rounded p-2">
             <option value="0">버프없음</option>
             <option value="1">Lv.1</option>
             <option value="2">Lv.2</option>
@@ -174,86 +73,86 @@
             <option value="10">Lv.10</option>
           </select>
         </div>
-        <label><input type="radio" name="cityBuff" value="0" checked> 도시버프 없음</label>
-        <label><input type="radio" name="cityBuff" value="10"> 출정 수용량증가 2h (+10%)</label>
-        <label><input type="radio" name="cityBuff" value="20"> 출정 수용량증가 12h (+20%)</label>
-        <button type="button" onclick="calculate()" class="bg-blue-500 text-white mt-2 p-4 py-2 rounded hover:bg-blue-600">계산하기</button>
+        <label><input type="radio" name="cityBuff" value="0" checked> 도시버프 없음</label><br>
+        <label><input type="radio" name="cityBuff" value="10"> 출정 수용량증가 2h (+10%)</label><br>
+        <label><input type="radio" name="cityBuff" value="20"> 출정 수용량증가 12h (+20%)</label><br>
+        <button type="button" onclick="calculate()" class="bg-blue-500 text-white mt-3 p-2 rounded hover:bg-blue-600">계산하기</button>
       </div>
-  
+
       <div>
         <strong>결과</strong>
-        <table>
+        <table class="w-full mt-2 border-collapse">
           <thead>
-          <tr><th>행군</th><th>방패병</th><th>창병</th><th>궁병</th></tr>
+            <tr class="bg-gray-100"><th>행군</th><th>방패병</th><th>창병</th><th>궁병</th></tr>
           </thead>
           <tbody id="resultBody">
-          <tr><td colspan="4">결과 없음</td></tr>
+            <tr><td colspan="4">결과 없음</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
-  
+
   <script>
     function cleanValue(val) {
       return val.replace(/,/g, '');
     }
-  
+
     function formatInput(el) {
       const value = cleanValue(el.value);
       if (!value) return el.value = '';
       el.value = parseInt(value).toLocaleString();
     }
-  
+
     function toggleCustom(show) {
       document.getElementById('customRatio').style.display = show ? 'block' : 'none';
       document.getElementById('ratioWarning').style.display = 'none';
     }
-  
+
     function validateCustomRatio() {
       const inf = parseFloat(cleanValue(document.getElementById('ratioInf').value)) || 0;
       const lan = parseFloat(cleanValue(document.getElementById('ratioLan').value)) || 0;
       const mar = parseFloat(cleanValue(document.getElementById('ratioMar').value)) || 0;
       document.getElementById('ratioWarning').style.display = (inf + lan + mar === 100) ? 'none' : 'block';
     }
-  
+
     function toggleTumbling() {
       const show = document.getElementById("buffTumbling").checked;
       document.getElementById("tumblingLevelGroup").style.display = show ? "block" : "none";
       updateCalculatedCapacity();
     }
-  
+
     function getTumblingValue() {
       if (!document.getElementById("buffTumbling").checked) return 0;
       const level = parseInt(document.getElementById("tumblingLevel").value) || 0;
       return level * 1500;
     }
-  
+
     function getCityBuffMultiplier() {
       const selected = document.querySelector('input[name="cityBuff"]:checked');
       return selected ? 1 + (parseFloat(selected.value) / 100) : 1;
     }
-  
+
     function updateCalculatedCapacity() {
-      const baseInput = document.getElementById('baseMarch');
-      const base = parseInt(cleanValue(baseInput.value)) || 0;
+      const base = parseInt(cleanValue(document.getElementById('baseMarch').value)) || 0;
       let capacity = base + getTumblingValue();
       capacity *= getCityBuffMultiplier();
       document.getElementById('finalMarch').value = Math.floor(capacity).toLocaleString();
+      sendHeightToParent();
     }
-  
+
     function calculate() {
       const base = parseInt(cleanValue(document.getElementById('baseMarch').value)) || 0;
       const marches = parseInt(cleanValue(document.getElementById('marchCount').value)) || 0;
-  
+
       let capacity = base + getTumblingValue();
       capacity *= getCityBuffMultiplier();
       capacity = Math.floor(capacity);
       document.getElementById('finalMarch').value = capacity.toLocaleString();
-  
+
       const strategy = document.querySelector('input[name="strategy"]:checked').value;
       let inf = 0, lan = 0, mar = 0;
-  
+
       if (strategy === "equal") {
         inf = 34; lan = 33; mar = 33;
       } else if (strategy === "20/40/40") {
@@ -269,7 +168,7 @@
           return;
         }
       }
-  
+
       let html = '';
       for (let i = 1; i <= marches; i++) {
         html += `<tr>
@@ -280,45 +179,40 @@
         </tr>`;
       }
       document.getElementById('resultBody').innerHTML = html;
+      sendHeightToParent();
     }
-  </script>
 
-  <script>
     function sendHeightToParent() {
       const height = document.body.scrollHeight;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
 
-    // 페이지 최초 로드 시
     window.addEventListener("load", () => {
-      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+      setTimeout(sendHeightToParent, 100);
     });
-    
-    // 각 details 토글 시 높이 재전송
-    document.querySelectorAll("details").forEach(detail => {
-      detail.addEventListener("toggle", () => {
-        // 약간 딜레이 후 정확한 높이 측정
-        setTimeout(sendHeightToParent, 300);
-      });
+
+    const observer = new MutationObserver(() => {
+      sendHeightToParent();
     });
-    
-    function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
-      window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-    }
-    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      characterData: true,
+    });
+
+    window.addEventListener("resize", () => {
+      setTimeout(sendHeightToParent, 200);
+    });
+
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
       if (e.key === "F12" ||
           (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S")))
-      {
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
         e.preventDefault();
       }
     });
   </script>
-  
 </body>
 </html>
