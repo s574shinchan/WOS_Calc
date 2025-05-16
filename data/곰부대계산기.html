@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>곰사냥 부대 계산기</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      border: 2px solid #000;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 10px 15px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    input[readonly] {
+      background-color: #f0f0f0;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
+    }
+
+    .ratio-inputs {
+      background: #e9f0f7;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .warning {
+      color: red;
+      font-weight: bold;
+      display: none;
+      margin-top: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2c80b4;
+    }
+
+    @media (max-width: 768px) {
+      .input-grid, .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>곰사냥 부대 계산기</h2>
+
+  <div class="input-grid">
+    <div>
+      <label>출정부대 수용량</label>
+      <input type="text" id="baseMarch" oninput="formatInput(this); updateCalculatedCapacity()">
+      <label>출정부대 수용량 (버프적용 - 자동계산)</label>
+      <input type="text" id="finalMarch" readonly>
+      <label>총 행군수</label>
+      <input type="text" id="marchCount" oninput="formatInput(this)">
+    </div>
+    <div>
+      <label>총 보유 헬리오스 방패병</label>
+      <input type="text" id="heliosInfantry" oninput="formatInput(this)">
+      <label>총 보유 헬리오스 창병</label>
+      <input type="text" id="heliosLancer" oninput="formatInput(this)">
+      <label>총 보유 헬리오스 궁병</label>
+      <input type="text" id="heliosMarksmen" oninput="formatInput(this)">
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div>
+      <strong>비율적용</strong><br>
+      <label><input type="radio" name="strategy" value="equal" checked onclick="toggleCustom(false)"> 34/33/33</label>
+      <label><input type="radio" name="strategy" value="20/40/40" onclick="toggleCustom(false)"> 20/40/40</label>
+      <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)"> 10/30/60</label>
+      <label><input type="radio" name="strategy" value="custom" onclick="toggleCustom(true)"> 사용자지정비율</label>
+
+      <div class="ratio-inputs" id="customRatio" style="display: none;">
+        <label>방패병 (%)</label>
+        <input type="text" id="ratioInf" oninput="formatInput(this); validateCustomRatio()">
+        <label>창병 (%)</label>
+        <input type="text" id="ratioLan" oninput="formatInput(this); validateCustomRatio()">
+        <label>궁병 (%)</label>
+        <input type="text" id="ratioMar" oninput="formatInput(this); validateCustomRatio()">
+        <div class="warning" id="ratioWarning">⚠ 총 100%가 되어야합니다.</div>
+      </div>
+    </div>
+
+    <div>
+      <strong>버프</strong><br>
+      <label><input type="checkbox" id="buffTumbling" onchange="toggleTumbling()">프로스타 고릴라 버프</label>
+      <div id="tumblingLevelGroup" style="display:none; margin-left: 0;">
+        <label>버프레벨</label>
+        <select id="tumblingLevel" onchange="updateCalculatedCapacity()">
+          <option value="0">버프없음</option>
+          <option value="1">Lv.1</option>
+          <option value="2">Lv.2</option>
+          <option value="3">Lv.3</option>
+          <option value="4">Lv.4</option>
+          <option value="5">Lv.5</option>
+          <option value="6">Lv.6</option>
+          <option value="7">Lv.7</option>
+          <option value="8">Lv.8</option>
+          <option value="9">Lv.9</option>
+          <option value="10">Lv.10</option>
+        </select>
+      </div>
+      <label><input type="radio" name="cityBuff" value="0" checked> 도시버프 없음</label>
+      <label><input type="radio" name="cityBuff" value="10"> 출정 수용량증가 2h (+10%)</label>
+      <label><input type="radio" name="cityBuff" value="20"> 출정 수용량증가 12h (+20%)</label>
+      <button onclick="calculate()">계산하기</button>
+    </div>
+
+    <div>
+      <strong>결과</strong>
+      <table>
+        <thead>
+        <tr><th>행군</th><th>방패병</th><th>창병</th><th>궁병</th></tr>
+        </thead>
+        <tbody id="resultBody">
+        <tr><td colspan="4">결과 없음</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  function cleanValue(val) {
+    return val.replace(/,/g, '');
+  }
+
+  function formatInput(el) {
+    const value = cleanValue(el.value);
+    if (!value) return el.value = '';
+    el.value = parseInt(value).toLocaleString();
+  }
+
+  function toggleCustom(show) {
+    document.getElementById('customRatio').style.display = show ? 'block' : 'none';
+    document.getElementById('ratioWarning').style.display = 'none';
+  }
+
+  function validateCustomRatio() {
+    const inf = parseFloat(cleanValue(document.getElementById('ratioInf').value)) || 0;
+    const lan = parseFloat(cleanValue(document.getElementById('ratioLan').value)) || 0;
+    const mar = parseFloat(cleanValue(document.getElementById('ratioMar').value)) || 0;
+    document.getElementById('ratioWarning').style.display = (inf + lan + mar === 100) ? 'none' : 'block';
+  }
+
+  function toggleTumbling() {
+    const show = document.getElementById("buffTumbling").checked;
+    document.getElementById("tumblingLevelGroup").style.display = show ? "block" : "none";
+    updateCalculatedCapacity();
+  }
+
+  function getTumblingValue() {
+    if (!document.getElementById("buffTumbling").checked) return 0;
+    const level = parseInt(document.getElementById("tumblingLevel").value) || 0;
+    return level * 1500;
+  }
+
+  function getCityBuffMultiplier() {
+    const selected = document.querySelector('input[name="cityBuff"]:checked');
+    return selected ? 1 + (parseFloat(selected.value) / 100) : 1;
+  }
+
+  function updateCalculatedCapacity() {
+    const baseInput = document.getElementById('baseMarch');
+    const base = parseInt(cleanValue(baseInput.value)) || 0;
+    let capacity = base + getTumblingValue();
+    capacity *= getCityBuffMultiplier();
+    document.getElementById('finalMarch').value = Math.floor(capacity).toLocaleString();
+  }
+
+  function calculate() {
+    const base = parseInt(cleanValue(document.getElementById('baseMarch').value)) || 0;
+    const marches = parseInt(cleanValue(document.getElementById('marchCount').value)) || 0;
+
+    let capacity = base + getTumblingValue();
+    capacity *= getCityBuffMultiplier();
+    capacity = Math.floor(capacity);
+    document.getElementById('finalMarch').value = capacity.toLocaleString();
+
+    const strategy = document.querySelector('input[name="strategy"]:checked').value;
+    let inf = 0, lan = 0, mar = 0;
+
+    if (strategy === "equal") {
+      inf = 34; lan = 33; mar = 33;
+    } else if (strategy === "20/40/40") {
+      inf = 20; lan = 40; mar = 40;
+    } else if (strategy === "10/30/60") {
+      inf = 10; lan = 30; mar = 60;
+    } else {
+      inf = parseFloat(cleanValue(document.getElementById('ratioInf').value)) || 0;
+      lan = parseFloat(cleanValue(document.getElementById('ratioLan').value)) || 0;
+      mar = parseFloat(cleanValue(document.getElementById('ratioMar').value)) || 0;
+      if (inf + lan + mar !== 100) {
+        alert("사용자 지정 비율의 합이 100%여야 합니다.");
+        return;
+      }
+    }
+
+    let html = '';
+    for (let i = 1; i <= marches; i++) {
+      html += `<tr>
+        <td>${i}</td>
+        <td>${Math.floor(capacity * inf / 100).toLocaleString()}</td>
+        <td>${Math.floor(capacity * lan / 100).toLocaleString()}</td>
+        <td>${Math.floor(capacity * mar / 100).toLocaleString()}</td>
+      </tr>`;
+    }
+    document.getElementById('resultBody').innerHTML = html;
+  }
+</script>
+</body>
+</html>
