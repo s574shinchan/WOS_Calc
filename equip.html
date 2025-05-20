@@ -59,7 +59,7 @@
         gearSlots.forEach((name, i) => {
           const options = gearLevels.map(stage => `<option value="${stage}">${stage}</option>`).join("");
           grid.innerHTML += `
-          <div class="border p-2 rounded bg-green-300 text-xs">
+          <div class="border p-2 rounded bg-blue-50 text-xs">
               <label class="flex items-center text-sm font-semibold mb-1">
                 <input type="checkbox" id="check-${i}" class="mr-1 w-4 h-4 accent-green-500" />
                 ${name}
