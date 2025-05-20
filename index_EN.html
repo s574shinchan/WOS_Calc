@@ -61,11 +61,41 @@
     <h1 class="text-xl font-bold mb-2 text-center">WOS Calculator & Data Collection</h1>
     
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-center mb-4">
-      <button onclick="switchTab('guide')" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">🏠 Data</button>
-      <button onclick="switchTab('building')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🏗 Building</button>
-      <button onclick="switchTab('equip')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🛡 Cheif Gear</button>
-      <button onclick="switchTab('gem')" class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded">💎 Cheif Charm</button>
-      <button onclick="switchTab('hero')" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">🦸 Hero Gear</button>
+      <button onclick="switchTab('guide')"
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(32, 201, 151);" 
+        onmouseover="this.style.backgroundColor='rgb(120, 220, 200)'" 
+        onmouseout="this.style.backgroundColor='rgb(32, 201, 151)'">
+        🏠 Data
+      </button>
+      <button onclick="switchTab('building')"
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(59, 201, 219);" 
+        onmouseover="this.style.backgroundColor='rgb(45, 170, 190)'" 
+        onmouseout="this.style.backgroundColor='rgb(59, 201, 219)'">
+        🏗 Building
+      </button>
+      <button onclick="switchTab('equip')"
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(151, 117, 250);" 
+        onmouseover="this.style.backgroundColor='rgb(131, 97, 230)'" 
+        onmouseout="this.style.backgroundColor='rgb(151, 117, 250)'">
+        🛡 Cheif Gear
+      </button>
+      <button onclick="switchTab('gem')"
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(151, 117, 250);" 
+        onmouseover="this.style.backgroundColor='rgb(131, 97, 230)'" 
+        onmouseout="this.style.backgroundColor='rgb(151, 117, 250)'">
+        💎 Cheif Charm
+      </button>
+      <button onclick="switchTab('hero')" 
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(252, 196, 25);" 
+        onmouseover="this.style.backgroundColor='rgb(235, 192, 39)'" 
+        onmouseout="this.style.backgroundColor='rgb(252, 196, 25)'">
+        🦸 Hero Gear
+      </button>
       <button onclick="switchTab('pet')" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded">🐾 Pet</button>
       <!-- <button onclick="switchTab('research')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🔬 Helios</button> -->
     </div>
