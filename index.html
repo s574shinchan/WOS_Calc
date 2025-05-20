@@ -100,6 +100,71 @@
     <h1 class="text-xl font-bold mb-2 text-center">WOS 계산기 & 자료모음</h1>
     
     <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 justify-center mb-4">
+      <button onclick="switchTab('guide')" 
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(32, 201, 151);" 
+        onmouseover="this.style.backgroundColor='rgb(120, 220, 200)'" 
+        onmouseout="this.style.backgroundColor='rgb(32, 201, 151)'">
+        🏠 자료모음
+      </button>
+      <button onclick="switchTab('building')" 
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(59, 201, 219);" 
+        onmouseover="this.style.backgroundColor='rgb(45, 170, 190)'" 
+        onmouseout="this.style.backgroundColor='rgb(59, 201, 219)'">
+        🏗 건물계산
+      </button>
+      <button onclick="switchTab('equip')" 
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(151, 117, 250);" 
+        onmouseover="this.style.backgroundColor='rgb(131, 97, 230)'" 
+        onmouseout="this.style.backgroundColor='rgb(151, 117, 250)'">
+        🛡 영주장비
+      </button>
+      <button onclick="switchTab('gem')" 
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(151, 117, 250);" 
+        onmouseover="this.style.backgroundColor='rgb(131, 97, 230)'" 
+        onmouseout="this.style.backgroundColor='rgb(151, 117, 250)'">
+        💎 영주보석
+      </button>
+      <button onclick="switchTab('hero')" 
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(252, 196, 25);" 
+        onmouseover="this.style.backgroundColor='rgb(235, 192, 39)'" 
+        onmouseout="this.style.backgroundColor='rgb(252, 196, 25)'">
+        🦸 영웅장비
+      </button>
+      <button onclick="switchTab('pet')" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded">🐾 펫돌파</button>
+      <button onclick="switchTab('helios')"
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(116, 143, 252);" 
+        onmouseover="this.style.backgroundColor='rgb(96, 123, 232)'" 
+        onmouseout="this.style.backgroundColor='rgb(116, 143, 252)'">
+        🔬 헬리오스
+      </button>
+      <button onclick="switchTab('imagedata')"
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(116, 143, 252);" 
+        onmouseover="this.style.backgroundColor='rgb(96, 123, 232)'" 
+        onmouseout="this.style.backgroundColor='rgb(116, 143, 252)'">
+        📷 재료표
+      </button>
+      <button onclick="switchTab('beartrap')"
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(116, 143, 252);" 
+        onmouseover="this.style.backgroundColor='rgb(96, 123, 232)'" 
+        onmouseout="this.style.backgroundColor='rgb(116, 143, 252)'">
+        🐻 부대계산
+      </button>
+      <button onclick="switchTab('research')" 
+        class="text-white font-bold py-2 px-4 rounded"
+        style="background-color: rgb(116, 143, 252);" 
+        onmouseover="this.style.backgroundColor='rgb(96, 123, 232)'" 
+        onmouseout="this.style.backgroundColor='rgb(116, 143, 252)'">
+        🧪 일반연구
+      </button>
+      <!-- 
       <button onclick="switchTab('guide')" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">🏠 자료모음</button>
       <button onclick="switchTab('building')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🏗 건물계산</button>
       <button onclick="switchTab('equip')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🛡 영주장비</button>
@@ -109,7 +174,7 @@
       <button onclick="switchTab('helios')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🔬 11T연구</button>
       <button onclick="switchTab('imagedata')" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">📷 재료표</button>
       <button onclick="switchTab('beartrap')" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">🐻 부대계산</button>
-      
+      -->
     </div>
 
     <!-- guideDetails: 처음에만 표시됨 -->
@@ -1001,19 +1066,6 @@
     </div>
     -->
     
-    <!-- 사이트 소개글 추가 (크기 줄인 버전) -->
-    <!--
-    <section class="max-w-4xl w-full p-4 bg-gray-100 rounded-lg shadow-md mt-8 text-gray-700 text-sm">
-      <h2 class="text-lg font-bold mb-3 text-center text-gray-800">🔎 사이트 소개</h2>
-      <p class="mb-2 leading-relaxed text-center">
-        본 사이트는 "화이트아웃 서바이벌(Whiteout Survival)" 게임을 즐기는 유저를 위한 통합 계산기 및 정보 제공 플랫폼입니다.
-      </p>
-      <p class="leading-relaxed text-center">
-        별도의 회원가입 없이 무료로 이용할 수 있으며, 효율적인 플레이를 지원하기 위해 제작되었습니다.
-      </p>
-    </section>
-    -->
-    
     <!-- 결과 팝업 -->
     <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
       <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 text-sm">
@@ -1046,7 +1098,7 @@
     </div>
     
     <!-- 카피라이트 -->  
-    <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 금지 | © Made By S574 ShinChan</footer>
+    <footer class="text-center text-xs text-gray-500 mt-5">⛔ 무단 복제 금지 | © Made By S580 ShinChan</footer>
   </div>
   
   <!-- 콘텐츠 전체 폭 제한 -->
