@@ -175,10 +175,10 @@
       let html = '';
       for (let i = 1; i <= marches; i++) {
         html += `<tr>
-          <td>${i}</td>
-          <td>${Math.floor(capacity * inf / 100).toLocaleString()}</td>
-          <td>${Math.floor(capacity * lan / 100).toLocaleString()}</td>
-          <td>${Math.floor(capacity * mar / 100).toLocaleString()}</td>
+          <td class="text-center border p-1">${i}</td>
+          <td class="text-center border p-1">${Math.floor(capacity * inf / 100).toLocaleString()}</td>
+          <td class="text-center border p-1">${Math.floor(capacity * lan / 100).toLocaleString()}</td>
+          <td class="text-center border p-1">${Math.floor(capacity * mar / 100).toLocaleString()}</td>
         </tr>`;
       }
       document.getElementById('resultBody').innerHTML = html;
