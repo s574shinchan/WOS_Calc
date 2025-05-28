@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>주간 일정표</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-4 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">📅 주간일정표</h1>
+
+    <!-- Week 1~4 반복 -->
+    <div class="space-y-8">
+
+      <!-- Week 1 -->
+      <div>
+        <h2 class="text-xl font-semibold text-yellow-500 mb-2">1주차</h2>
+        <div class="grid grid-cols-7 gap-px bg-gray-300">
+          <!-- 요일 헤더 -->
+          <div class="bg-gray-700 text-white text-center py-1">월요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">화요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">수요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">목요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">금요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">토요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">일요일</div>
+
+          <!-- 이벤트들 (각 row에 col-span/col-start로 배치) -->
+          <div class="bg-red-500 text-center text-xs text-white py-1 col-span-6">연맹대작전</div>
+          <div class="bg-purple-500 text-center text-xs text-white py-1 col-start-7">무기공장</div>
+          <div class="bg-blue-500 text-center text-xs text-white py-1 col-start-1 row-start-3">군의관 패키지</div>
+          <div class="bg-green-500 text-center text-xs text-white py-1 col-start-3 col-span-2 row-start-3">장인의 보물창고(영주보석)</div>
+          <div class="bg-blue-500 text-center text-xs text-white py-1 col-start-5 col-span-3 row-start-3">Dawn Market</div>
+          <div class="bg-orange-400 text-center text-xs text-white py-1 col-start-1 col-span-3 row-start-4">커스텀 상자<br>불의수정</div>
+          <div class="bg-green-500 text-center text-xs text-white py-1 col-start-4 col-span-2 row-start-4">커스텀 상자<br>영주장비</div>
+          <div class="bg-orange-500 text-center text-xs text-white py-1 col-start-7 row-start-4">커스텀 상자<br>영주보석</div>
+          <div class="bg-yellow-800 text-center text-xs text-white py-1 col-start-4 col-span-4 row-start-5">빙원의 정복자</div>
+          <div class="bg-purple-500 text-center text-xs text-white py-1 col-start-5 col-span-4 row-start-6">장인의 보물창고(영주장비)</div>
+        </div>
+      </div>
+
+      <!-- Week 2 -->
+      <div>
+        <h2 class="text-xl font-semibold text-yellow-500 mb-2">2주차</h2>
+        <div class="grid grid-cols-7 gap-px bg-gray-300">
+          <div class="bg-gray-700 text-white text-center py-1">월요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">화요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">수요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">목요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">금요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">토요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">일요일</div>
+
+          <div class="bg-orange-500 text-center text-xs text-white py-1 col-start-1 col-span-5 row-start-2">빙원의 왕</div>
+          <div class="bg-cyan-400 text-center text-xs text-black py-1 col-start-6 row-start-2">내부솔라</div>
+          <div class="bg-red-500 text-center text-xs text-white py-1 col-start-1 col-span-2 row-start-3">Custom Artistry</div>
+          <div class="bg-green-500 text-center text-xs text-white py-1 col-start-3 col-span-2 row-start-3">부대 훈련 패키지</div>
+          <div class="bg-green-500 text-center text-xs text-white py-1 col-start-5 col-span-3 row-start-3">장인의 보물창고(영주장비)</div>
+          <div class="bg-orange-400 text-center text-xs text-white py-1 col-start-1 col-span-6 row-start-4">불의 수정 인기팩</div>
+          <div class="bg-blue-500 text-center text-xs text-white py-1 col-start-7 row-start-4">군의관 패키지</div>
+          <div class="bg-green-500 text-center text-xs text-white py-1 col-start-2 col-span-2 row-start-5">스태미나 패키지</div>
+          <div class="bg-pink-500 text-center text-xs text-white py-1 col-start-4 col-span-2 row-start-5">Tech Storm</div>
+          <div class="bg-green-500 text-center text-xs text-white py-1 col-start-3 col-span-3 row-start-6">장인의 보물창고(영주보석)</div>
+          <div class="bg-yellow-800 text-center text-xs text-white py-1 col-start-4 col-span-3 row-start-7">빙원의 정복자</div>
+          <div class="bg-blue-500 text-center text-xs text-white py-1 col-start-4 col-span-3 row-start-8">빙원의 여행자</div>
+          <div class="bg-green-500 text-center text-xs text-white py-1 col-start-4 col-span-3 row-start-9">Custom Armament</div>
+          <div class="bg-purple-500 text-center text-xs text-white py-1 col-start-5 col-span-4 row-start-10">Hall of Chiefs</div>
+        </div>
+      </div>
+
+      <!-- Week 3 -->
+      <div>
+        <h2 class="text-xl font-semibold text-yellow-500 mb-2">3주차</h2>
+        <div class="grid grid-cols-7 gap-px bg-gray-300">
+          <div class="bg-gray-700 text-white text-center py-1">월요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">화요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">수요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">목요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">금요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">토요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">일요일</div>
+
+          <div class="bg-blue-500 text-xs text-center text-white py-1 col-start-1 col-span-5">연맹총동원</div>
+          <div class="bg-orange-500 text-xs text-center text-white py-1 col-start-6">협곡</div>
+          <div class="bg-purple-500 text-xs text-center text-white py-1 col-start-7">무기공장</div>
+          <div class="bg-orange-400 text-xs text-center text-white py-1 col-start-1 col-span-3 row-start-3">커스텀 상자 패키지</div>
+          <div class="bg-green-500 text-xs text-center text-white py-1 col-start-4 col-span-2 row-start-3">Custom Armament</div>
+          <div class="bg-blue-500 text-center text-xs text-white py-1 col-start-7 row-start-3">군의관 패키지</div>
+          <div class="bg-blue-500 text-xs text-center text-white py-1 col-start-5 col-span-3 row-start-4">Dawn Market</div>
+          <div class="bg-green-500 text-xs text-center text-white py-1 col-start-3 col-span-2 row-start-4">장인의 보물창고(영주보석)</div>
+          <div class="bg-yellow-800 text-xs text-center text-white py-1 col-start-4 col-span-3 row-start-5">빙원의 정복자</div>
+          <div class="bg-orange-500 text-xs text-center text-white py-1 col-start-7 row-start-5">Custom Artistry</div>
+          <div class="bg-purple-500 text-xs text-center text-white py-1 col-start-5 col-span-3 row-start-6">장인의 보물창고(영주장비)</div>
+        </div>
+      </div>
+
+      <!-- Week 4 -->
+      <div>
+        <h2 class="text-xl font-semibold text-yellow-500 mb-2">4주차</h2>
+        <div class="grid grid-cols-7 gap-px bg-gray-300">
+          <div class="bg-gray-700 text-white text-center py-1">월요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">화요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">수요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">목요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">금요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">토요일</div>
+          <div class="bg-gray-700 text-white text-center py-1">일요일</div>
+
+          <div class="bg-red-500 text-xs text-center text-white py-1 col-start-1 col-span-5 row-start-2">SVS 준비단계</div>
+          <div class="bg-gray-400 text-xs text-center text-black py-1 col-start-6 row-start-2">SVS 전쟁단계</div>
+          <div class="bg-red-500 text-xs text-center text-white py-1 col-start-1 row-start-3">Custom Artistry</div>
+          <div class="bg-green-500 text-xs text-center text-white py-1 col-start-2 col-span-2 row-start-3">스태미나 패키지</div>
+          <div class="bg-green-500 text-xs text-center text-white py-1 col-start-4 col-span-2 row-start-3">Custom Armament</div>
+          <div class="bg-blue-500 text-xs text-center text-white py-1 col-start-7 row-start-3">소원상점</div>
+          <div class="bg-yellow-500 text-xs text-center text-white py-1 col-start-1 col-span-6 row-start-4">불의 수정 인기팩</div>
+          <div class="bg-blue-500 text-xs text-center text-white py-1 col-start-7 row-start-4">군의관 패키지</div>
+          <div class="bg-green-500 text-xs text-center text-white py-1 col-start-3 col-span-2 row-start-5">장인의 보물창고(영주보석)</div>
+          <div class="bg-purple-500 text-xs text-center text-white py-1 col-start-5 col-span-3 row-start-5">장인의 보물창고(영주장비)</div>
+          <div class="bg-green-500 text-xs text-center text-white py-1 col-start-3 col-span-2 row-start-6">부대 훈련 패키지</div>
+          <div class="bg-purple-500 text-xs text-center text-white py-1 col-start-5 col-span-3 row-start-6">Hall of Chiefs</div>
+          <div class="bg-pink-500 text-xs text-center text-white py-1 col-start-4 col-span-2 row-start-7">Tech Storm</div>
+          <div class="bg-yellow-800 text-xs text-center text-white py-1 col-start-4 col-span-3 row-start-8">빙원의 정복자</div>
+          <div class="bg-blue-500 text-xs text-center text-white py-1 col-start-4 col-span-3 row-start-9">빙원의 여행자</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+    
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
