@@ -169,6 +169,10 @@
           selectType.dispatchEvent(new Event("change"));
         });
     }
+
+    function cleanInt(str) {
+      return parseInt((str || "0").replace(/,/g, ""), 10) || 0;
+    }
   
     document.addEventListener("DOMContentLoaded", () => {
       setupMutualExclusionCheckboxes("chkVP10", "chkVP15");
@@ -256,9 +260,13 @@
               const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
               const headers = lines[0].split(",");
               const idx = {
-                연구: headers.indexOf("연구"), 고기: headers.indexOf("고기"),
-                목재: headers.indexOf("목재"), 석탄: headers.indexOf("석탄"),
-                철광: headers.indexOf("철광"), 철강재: headers.indexOf("철강재"), 시간: headers.indexOf("시간")
+                연구: headers.indexOf("연구"), 
+                고기: headers.indexOf("고기"),
+                목재: headers.indexOf("목재"), 
+                석탄: headers.indexOf("석탄"),
+                철광: headers.indexOf("철광"), 
+                철강재: headers.indexOf("철강재"), 
+                시간: headers.indexOf("시간")
               };
   
               let sum = { 고기: 0, 목재: 0, 석탄: 0, 철광: 0, 철강재: 0, 시간: 0 };
@@ -267,14 +275,17 @@
                 const cols = lines[i].split(",");
                 const name = cols[idx.연구];
                 if (!name || !name.includes(type)) continue;
+                
                 const [_, levelStr] = name.split("-");
                 const level = parseInt(levelStr);
-                if (level > s && level <= e) {
-                  sum.고기 += parseInt(cols[idx.고기]) || 0;
-                  sum.목재 += parseInt(cols[idx.목재]) || 0;
-                  sum.석탄 += parseInt(cols[idx.석탄]) || 0;
-                  sum.철광 += parseInt(cols[idx.철광]) || 0;
-                  sum.철강재 += parseInt(cols[idx.철강재]) || 0;
+                
+                //if (level > s && level <= e) {
+                if (name === `${type}-${e}`) {
+                  sum.고기 += cleanInt(cols[idx.고기]) || 0;
+                  sum.목재 += cleanInt(cols[idx.목재]) || 0;
+                  sum.석탄 += cleanInt(cols[idx.석탄]) || 0;
+                  sum.철광 += cleanInt(cols[idx.철광]) || 0;
+                  sum.철강재 += cleanInt(cols[idx.철강재]) || 0;
                   sum.시간 += parseTimeToSeconds(cols[idx.시간]);
                 }
               }
