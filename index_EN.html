@@ -128,37 +128,37 @@
           </div>
         </div>
       </div>
-    </div>
     
-    <!-- iframe 영역: 기본은 숨김 -->
-    <div id="frameWrapper" class="max-w-4xl w-full hidden bg-white mt-4 rounded shadow p-2">
-      <iframe id="mainFrame" class="w-full rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
-    </div>
-        
-    <!-- 결과 팝업 -->
-    <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-      <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 text-sm">
-        <h3 class="text-xl font-bold mb-4 text-center">📊 Result</h3>
-        <div id="popupContent" class="overflow-auto max-h-[65vh] text-center"></div>
-        <div class="text-center mt-4">
-          <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"> OK
-          </button>
+      <!-- iframe 영역: 기본은 숨김 -->
+      <div id="frameWrapper" class="max-w-4xl w-full hidden bg-white mt-4 rounded shadow p-2">
+        <iframe id="mainFrame" class="w-full rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
+      </div>
+          
+      <!-- 결과 팝업 -->
+      <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 text-sm">
+          <h3 class="text-xl font-bold mb-4 text-center">📊 Result</h3>
+          <div id="popupContent" class="overflow-auto max-h-[65vh] text-center"></div>
+          <div class="text-center mt-4">
+            <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"> OK
+            </button>
+          </div>
         </div>
       </div>
+      
+      <!-- Scroll to Top Button -->
+      <button id="scrollToTopBtn"
+        class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
+        aria-label="Scroll to top">
+        <!-- Up arrow SVG icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
+  
+      <!-- 카피라이트 -->  
+      <footer class="text-center text-xs text-gray-500 mt-5">⛔ Unauthorized copying prohibited | © Made By S574 ShinChan</footer>
     </div>
-    
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTopBtn"
-      class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
-      aria-label="Scroll to top">
-      <!-- Up arrow SVG icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-      </svg>
-    </button>
-
-    <!-- 카피라이트 -->  
-    <footer class="text-center text-xs text-gray-500 mt-5">⛔ Unauthorized copying prohibited | © Made By S574 ShinChan</footer>
   </div>
   
   <!-- 콘텐츠 전체 폭 제한 -->
@@ -258,6 +258,7 @@
       if (page === 'guide') {
         guide.style.display = "block";
         wrapper.style.display = "none";
+        document.body.style.overflowX = "hidden";
       } else {
         guide.style.display = "none";
         wrapper.style.display = "block";
