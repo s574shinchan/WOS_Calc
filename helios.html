@@ -238,6 +238,13 @@
           </div>
         `;
         container.appendChild(div);
+
+        // 여기서 JS로 이벤트를 연결
+        const currentSelect = div.querySelector(`#current-${item.key}`);
+        const targetSelect = div.querySelector(`#target-${item.key}`);
+        currentSelect.addEventListener("change", () => {
+          targetSelect.value = currentSelect.value;
+        });
       });
     }
 
