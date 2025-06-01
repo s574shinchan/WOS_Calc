@@ -10,7 +10,20 @@
   <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">🧪 헬리오스 연구 계산기</h1>
     <!-- 설명 추가 -->
-    <p class="text-gray-600 mb-6 text-center text-sm"> 헬리오스 연구에 필요한 재료량을 계산할 수 있는 페이지입니다.</p>
+    <div class="text-gray-600 mb-4 text-center text-sm">
+      <div class="grid grid-cols-6 gap-x-4 px-0">
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkInf" checked = true onchange="handleCheck('chkInf')" class="mr-1 w-4 h-4" /> 방패병
+        </div>
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkLan" onchange="handleCheck('chkLan')" class="mr-1 w-4 h-4" /> 창병
+        </div>
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkMask" onchange="handleCheck('chkMask')" class="mr-1 w-4 h-4" /> 궁병
+        </div>
+      </div>
+    </div>
+    
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6" id="researchGrid"></div>
     <div class="grid grid-cols-2 gap-4 mb-4">
       <div><label class="block font-semibold">보유 가루</label>
@@ -141,69 +154,113 @@
         { level: 10, 가루: 765, 철강재: 220000 },
       ]
     };
-  
-    const researchList = Object.entries(researchData).map(([key, value]) => ({
-      key,
-      label: {
-        "I": "불꽃 부대",
-        "II-A": "파괴력 연구",
-        "II-B" : "HP 연구",
-        "III" : "불꽃 군단",
-        "IV-A" : "공격력 연구",
-        "IV-B" : "방어력 연구",
-        "V" : "헬리오스 병사",
-        "Healing" : "치료 연구",
-        "Training" : "훈련 연구",
-        "HealingTime" : "구급 연구",
-      }[key],
-      max: Math.max(...value.map(v => v.level))
-    }));
+
+    let researchList = []; // 전역 변수로 선언
+    
+    function updateResearchList() {
+      const chkInf = document.getElementById("chkInf");
+      const chkLan = document.getElementById("chkLan");
+      const chkMask = document.getElementById("chkMask");
+
+      researchList = Object.entries(researchData).map(([key, value]) => {
+        let label = {
+          "I": "불꽃 부대",
+          "II-A": "파괴력 연구",
+          "II-B" : "HP 연구",
+          "III" : "불꽃 군단",
+          "IV-A" : "공격력 연구",
+          "IV-B" : "방어력 연구",
+          "V" : "헬리오스 병사",
+          "Healing" : "치료 연구",
+          "Training" : "훈련 연구",
+          "HealingTime" : "구급 연구",
+        }[key];
+
+        switch (key) {
+          case "II-A":
+            if (chkInf.checked) label = "불꽃 공격";
+            else if (chkLan.checked) label = "불의 돌격";
+            else if (chkMask.checked) label = "수정의 시야";
+            break;
+          case "II-B":
+            if (chkInf.checked) label = "불꽃 방패";
+            else if (chkLan.checked) label = "불의 방어";
+            else if (chkMask.checked) label = "수정 갑옷";
+            break;
+          case "IV-A":
+            if (chkInf.checked) label = "불꽃 도끼";
+            else if (chkLan.checked) label = "불의 창";
+            else if (chkMask.checked) label = "수정 화살";
+            break;
+          case "IV-B":
+            if (chkInf.checked) label = "불꽃 수호";
+            else if (chkLan.checked) label = "불의 수호";
+            else if (chkMask.checked) label = "수정의 가호";
+            break;
+          default:
+            break;
+        }
+
+        return {
+          key,
+          label,
+          max: Math.max(...value.map(v => v.level))
+        };
+      });
+    }
 
     function createLevelOptions(max) {
       return Array.from({ length: max + 1 }, (_, i) => `<option value="${i}">${i}</option>`).join('');
     }
-    
+
     function renderResearchCards() {
       const container = document.getElementById("researchGrid");
+      container.innerHTML = ""; // Clear previous content
       researchList.forEach(item => {
         const div = document.createElement("div");
-        div.innerHTML += `
+        div.innerHTML = `
           <div class="border p-2 rounded bg-purple-50 text-xs">
             <label for="check-${item.key}" class="flex items-center text-sm font-semibold mb-1">
-            <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4 ">${item.label}
+              <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4 ">${item.label}
             </label>
             <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">현재</label>
+              <label class="text-sm whitespace-nowrap">Current</label>
               <select id="current-${item.key}" class="w-full border rounded py-1 px-2 text-sm">
                 ${createLevelOptions(item.max)}
               </select>
             </div>
             <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">목표</label>
+              <label class="text-sm whitespace-nowrap">Target</label>
               <select id="target-${item.key}" class="w-full border rounded py-1 px-2 text-sm">
                 ${createLevelOptions(item.max)}
               </select>
             </div>
           </div>
-          `;
+        `;
         container.appendChild(div);
       });
     }
-    
-    function calcResearchMaterials(key, current, target) {
-      const data = researchData[key] || [];
-      const filtered = data.filter(row => row.level > current && row.level <= target);
 
-      const subtotal = {};
-      filtered.forEach(row => {
-        for (let [resource, value] of Object.entries(row)) {
-          if (resource === "level") continue;
-          subtotal[resource] = (subtotal[resource] || 0) + parseFloat(value);
-        }
-      });
-      return subtotal;
+    function handleCheck(toggleId) {
+      const chkInf = document.getElementById("chkInf");
+      const chkLan = document.getElementById("chkLan");
+      const chkMask = document.getElementById("chkMask");
+
+      if (toggleId === "chkInf" && chkInf.checked) {
+        chkLan.checked = false;
+        chkMask.checked = false;
+      } else if (toggleId === "chkLan" && chkLan.checked) {
+        chkInf.checked = false;
+        chkMask.checked = false;
+      } else if (toggleId === "chkMask" && chkMask.checked) {
+        chkInf.checked = false;
+        chkLan.checked = false;
+      }
+
+      updateResearchList();
+      renderResearchCards();
     }
-    
+
     function calculateResearch() {
       let total = { 가루: 0, 철강재: 0 };
       let rows = "";
@@ -222,44 +279,43 @@
         for (let i = cur + 1; i <= tgt; i++) {
           const row = data.find(r => r.level === i);
           if (!row) continue;
-          subtotal.가루 += parseFloat(row.가루 || 0);
-          subtotal.철강재 += parseFloat(row.철강재 || 0);
+          subtotal.가루 += row.가루 || 0;
+          subtotal.철강재 += row.철강재 || 0;
         }
 
         total.가루 += subtotal.가루;
         total.철강재 += subtotal.철강재;
-        
+
         rows += `
           <tr class="text-center">
             <td class="border p-1">${item.label}</td>
             <td class="border p-1">${cur} → ${tgt}</td>
             <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
             <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
-          </tr>
-          `;
-        });
-      
+          </tr>`;
+      });
+
       const owned = {
         가루: parseFloat(document.getElementById("own-가루").value) || 0,
         철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
       };
-      
+
       rows += `
-      <tr class="text-center font-bold bg-purple-100">
-        <td class="border p-1" colspan="2">총합</td>
-        <td class="border p-1">${total.가루.toLocaleString()}</td>
-        <td class="border p-1">${total.철강재.toLocaleString()}</td>
-      </tr>
-      <tr class="text-center font-bold bg-orange-50">
-        <td class="border p-1" colspan="2">보유량</td>
-        <td class="border p-1">${owned.가루.toLocaleString()}</td>
-        <td class="border p-1">${owned.철강재.toLocaleString()}</td>
-      </tr>
-      <tr class="text-center font-bold bg-red-50">
-        <td class="border p-1" colspan="2">과부족</td>
-        <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
-        <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
-      </tr>
+        <tr class="text-center font-bold bg-purple-100">
+          <td class="border p-1" colspan="2">Total</td>
+          <td class="border p-1">${total.가루.toLocaleString()}</td>
+          <td class="border p-1">${total.철강재.toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-orange-50">
+          <td class="border p-1" colspan="2">Stock</td>
+          <td class="border p-1">${owned.가루.toLocaleString()}</td>
+          <td class="border p-1">${owned.철강재.toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">Required quantity</td>
+          <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
+          <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
+        </tr>
       `;
 
       const resultHTML = `
@@ -268,17 +324,18 @@
             <tr>
               <th class="border p-1">연구</th>
               <th class="border p-1">레벨</th>
-              <th class="border p-1">가루</th>
+              <th class="border p-1">불수가루</th>
               <th class="border p-1">철강재</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
       `;
-      //alert("총 필요한 자원:\n" + Object.entries(total).map(([k, v]) => `${k}: ${v.toLocaleString()}`).join("\n"));
       window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
     }
 
+    // 최초 실행
+    updateResearchList();
     renderResearchCards();
   </script>
   <script>
