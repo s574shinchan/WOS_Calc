@@ -224,13 +224,13 @@
               <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4 ">${item.label}
             </label>
             <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">Current</label>
+              <label class="text-sm whitespace-nowrap">현재</label>
               <select id="current-${item.key}" class="w-full border rounded py-1 px-2 text-sm">
                 ${createLevelOptions(item.max)}
               </select>
             </div>
             <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">Target</label>
+              <label class="text-sm whitespace-nowrap">목표</label>
               <select id="target-${item.key}" class="w-full border rounded py-1 px-2 text-sm">
                 ${createLevelOptions(item.max)}
               </select>
