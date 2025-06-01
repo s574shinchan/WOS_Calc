@@ -238,15 +238,6 @@
           </div>
         `;
         container.appendChild(div);
-        
-        // 현재 선택 시 목표 자동 설정
-        const curSelect = wrapper.querySelector(`#current-${item.key}`);
-        const tgtSelect = wrapper.querySelector(`#target-${item.key}`);
-        if (curSelect && tgtSelect) {
-          curSelect.addEventListener("change", () => {
-            tgtSelect.value = curSelect.value;
-          });
-        }
       });
     }
 
