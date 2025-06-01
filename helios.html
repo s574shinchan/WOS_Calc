@@ -243,7 +243,9 @@
         const currentSelect = div.querySelector(`#current-${item.key}`);
         const targetSelect = div.querySelector(`#target-${item.key}`);
         currentSelect.addEventListener("change", () => {
-          targetSelect.value = currentSelect.value;
+          let nextValue = parseInt(currentSelect.value) + 1;
+          if (nextValue > item.max) nextValue = item.max; // 최대값 초과 방지
+          targetSelect.value = nextValue;
         });
       });
     }
