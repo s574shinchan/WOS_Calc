@@ -238,6 +238,15 @@
           </div>
         `;
         container.appendChild(div);
+        
+        // 현재 선택 시 목표 자동 설정
+        const curSelect = wrapper.querySelector(`#current-${item.key}`);
+        const tgtSelect = wrapper.querySelector(`#target-${item.key}`);
+        if (curSelect && tgtSelect) {
+          curSelect.addEventListener("change", () => {
+            tgtSelect.value = curSelect.value;
+          });
+        }
       });
     }
 
@@ -302,17 +311,17 @@
 
       rows += `
         <tr class="text-center font-bold bg-purple-100">
-          <td class="border p-1" colspan="2">Total</td>
+          <td class="border p-1" colspan="2">총합</td>
           <td class="border p-1">${total.가루.toLocaleString()}</td>
           <td class="border p-1">${total.철강재.toLocaleString()}</td>
         </tr>
         <tr class="text-center font-bold bg-orange-50">
-          <td class="border p-1" colspan="2">Stock</td>
+          <td class="border p-1" colspan="2">보유량</td>
           <td class="border p-1">${owned.가루.toLocaleString()}</td>
           <td class="border p-1">${owned.철강재.toLocaleString()}</td>
         </tr>
         <tr class="text-center font-bold bg-red-50">
-          <td class="border p-1" colspan="2">Required quantity</td>
+          <td class="border p-1" colspan="2">과부족</td>
           <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
           <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
         </tr>
