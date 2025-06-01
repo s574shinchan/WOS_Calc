@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>연구 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">🧪 Heilos</h1>
+    <!-- 설명 추가 -->
+     <div class="text-gray-600 mb-4 text-center text-sm">
+      <div class="grid grid-cols-4 gap-x-4 px-0">
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkInf" checked = true onchange="handleCheck('chkInf')" class="mr-1 w-4 h-4" /> Infantry
+        </div>
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkLan" onchange="handleCheck('chkLan')" class="mr-1 w-4 h-4" /> Lancer
+        </div>
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkMask" onchange="handleCheck('chkMask')" class="mr-1 w-4 h-4" /> Marksman
+        </div>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6" id="researchGrid"></div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div><label class="block font-semibold">Owned Fire Crystal Shard</label>
+        <input type="number" id="own-가루" class="w-full border rounded p-2" />
+      </div>
+      <div><label class="block font-semibold">Owned Steel</label>
+        <input type="number" id="own-철강재" class="w-full border rounded p-2" />
+      </div>
+    </div>
+    <button onclick="calculateResearch()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg">계산하기</button>
+  </div>
+
+  <script>
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      let isHeight = isMobile ? "550px" : "345px"
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
+    }
+    
+    const researchData = {
+      "I": [
+        { level: 1, 가루: 16, 철강재: 5000 },
+        { level: 2, 가루: 25, 철강재: 8000 },
+        { level: 3, 가루: 41, 철강재: 13000 },
+        { level: 4, 가루: 68, 철강재: 21000 },
+        { level: 5, 가루: 102, 철강재: 33000 },
+      ],
+      "II-A": [
+        { level: 1, 가루: 40, 철강재: 10000 },
+        { level: 2, 가루: 56, 철강재: 14000 },
+        { level: 3, 가루: 74, 철강재: 18000 },
+        { level: 4, 가루: 102, 철강재: 25000 },
+        { level: 5, 가루: 136, 철강재: 24000 },
+        { level: 6, 가루: 184, 철강재: 46000 },
+        { level: 7, 가루: 248, 철강재: 62000 },
+        { level: 8, 가루: 334, 철강재: 83000 },
+      ],
+      "II-B": [
+        { level: 1, 가루: 40, 철강재: 10000 },
+        { level: 2, 가루: 56, 철강재: 14000 },
+        { level: 3, 가루: 74, 철강재: 18000 },
+        { level: 4, 가루: 102, 철강재: 25000 },
+        { level: 5, 가루: 136, 철강재: 24000 },
+        { level: 6, 가루: 184, 철강재: 46000 },
+        { level: 7, 가루: 248, 철강재: 62000 },
+        { level: 8, 가루: 334, 철강재: 83000 },
+      ],
+      "III": [
+        { level: 1, 가루: 83, 철강재: 23000 },
+        { level: 2, 가루: 102, 철강재: 28000 },
+        { level: 3, 가루: 125, 철강재: 34000 },
+        { level: 4, 가루: 150, 철강재: 41000 },
+        { level: 5, 가루: 184, 철강재: 51000 },
+        { level: 6, 가루: 225, 철강재: 62000 },
+        { level: 7, 가루: 276, 철강재: 76000 },
+        { level: 8, 가루: 334, 철강재: 93000 },
+        { level: 9, 가루: 418, 철강재: 110000 },
+        { level: 10, 가루: 502, 철강재: 130000 },
+        { level: 11, 가루: 602, 철강재: 160000 },
+        { level: 12, 가루: 744, 철강재: 200000 },
+      ],
+      "IV-A": [
+        { level: 1, 가루: 54, 철강재: 15000 },
+        { level: 2, 가루: 66, 철강재: 18000 },
+        { level: 3, 가루: 81, 철강재: 22000 },
+        { level: 4, 가루: 97, 철강재: 27000 },
+        { level: 5, 가루: 118, 철강재: 33000 },
+        { level: 6, 가루: 145, 철강재: 40000 },
+        { level: 7, 가루: 178, 철강재: 49000 },
+        { level: 8, 가루: 216, 철강재: 60000 },
+        { level: 9, 가루: 270, 철강재: 75000 },
+        { level: 10, 가루: 324, 철강재: 90000 },
+        { level: 11, 가루: 388, 철강재: 100000 },
+        { level: 12, 가루: 480, 철강재: 130000 },
+      ],
+      "IV-B": [
+        { level: 1, 가루: 54, 철강재: 15000 },
+        { level: 2, 가루: 66, 철강재: 18000 },
+        { level: 3, 가루: 81, 철강재: 22000 },
+        { level: 4, 가루: 97, 철강재: 27000 },
+        { level: 5, 가루: 118, 철강재: 33000 },
+        { level: 6, 가루: 145, 철강재: 40000 },
+        { level: 7, 가루: 178, 철강재: 49000 },
+        { level: 8, 가루: 216, 철강재: 60000 },
+        { level: 9, 가루: 270, 철강재: 75000 },
+        { level: 10, 가루: 324, 철강재: 90000 },
+        { level: 11, 가루: 388, 철강재: 100000 },
+        { level: 12, 가루: 480, 철강재: 130000 },
+      ],
+      "V": [
+        { level: 1, 가루: 2236, 철강재: 1000000 },
+      ],
+      "Healing": [
+        { level: 1, 가루: 102, 철강재: 30000 },
+        { level: 2, 가루: 137, 철강재: 40000 },
+        { level: 3, 가루: 188, 철강재: 55000 },
+        { level: 4, 가루: 255, 철강재: 75000 },
+        { level: 5, 가루: 341, 철강재: 100000 },
+        { level: 6, 가루: 459, 철강재: 130000 },
+        { level: 7, 가루: 612, 철강재: 180000 },
+        { level: 8, 가루: 836, 철강재: 240000 },
+        { level: 9, 가루: 1122, 철강재: 330000 },
+        { level: 10, 가루: 1530, 철강재: 450000 },
+      ],
+      "Training": [
+        { level: 1, 가루: 102, 철강재: 30000 },
+        { level: 2, 가루: 137, 철강재: 40000 },
+        { level: 3, 가루: 188, 철강재: 55000 },
+        { level: 4, 가루: 255, 철강재: 75000 },
+        { level: 5, 가루: 341, 철강재: 100000 },
+        { level: 6, 가루: 459, 철강재: 130000 },
+        { level: 7, 가루: 612, 철강재: 180000 },
+        { level: 8, 가루: 836, 철강재: 240000 },
+        { level: 9, 가루: 1122, 철강재: 330000 },
+        { level: 10, 가루: 1530, 철강재: 450000 },
+      ],
+      "HealingTime": [
+        { level: 1, 가루: 51, 철강재: 15000 },
+        { level: 2, 가루: 68, 철강재: 20000 },
+        { level: 3, 가루: 94, 철강재: 27000 },
+        { level: 4, 가루: 127, 철강재: 37000 },
+        { level: 5, 가루: 170, 철강재: 50000 },
+        { level: 6, 가루: 229, 철강재: 67000 },
+        { level: 7, 가루: 306, 철강재: 90000 },
+        { level: 8, 가루: 418, 철강재: 120000 },
+        { level: 9, 가루: 561, 철강재: 160000 },
+        { level: 10, 가루: 765, 철강재: 220000 },
+      ]
+    };
+
+    let researchList = []; // 전역 변수로 선언
+
+    function updateResearchList() {
+      const chkInf = document.getElementById("chkInf");
+      const chkLan = document.getElementById("chkLan");
+      const chkMask = document.getElementById("chkMask");
+
+      researchList = Object.entries(researchData).map(([key, value]) => {
+        let label = {
+          "I": "Flame Squad",
+          "II-A": "Flame Strike",
+          "II-B" : "Flame Shield",
+          "III" : "Flame Legion",
+          "IV-A" : "Flame Tomahawk",
+          "IV-B" : "Flame Protection",
+          "V" : "Helios Infantry",
+          "Healing" : "Healing",
+          "Training" : "Trainning",
+          "HealingTime" : "First Aid",
+        }[key];
+
+        switch (key) {
+          case "II-A":
+            if (chkInf.checked) label = "Flame Strike";
+            else if (chkLan.checked) label = "Blazing Charge";
+            else if (chkMask.checked) label = "Crystal Vision";
+            break;
+          case "II-B":
+            if (chkInf.checked) label = "Flame Shield";
+            else if (chkLan.checked) label = "Blazing Armor";
+            else if (chkMask.checked) label = "Crystal Armor";
+            break;
+          case "IV-A":
+            if (chkInf.checked) label = "Flame Tomahawk";
+            else if (chkLan.checked) label = "Blazing Lance";
+            else if (chkMask.checked) label = "Crystal Arrow";
+            break;
+          case "IV-B":
+            if (chkInf.checked) label = "Flame Protection";
+            else if (chkLan.checked) label = "Blazing Protection";
+            else if (chkMask.checked) label = "Crystal Protection";
+            break;
+          default:
+            break;
+        }
+
+        return {
+          key,
+          label,
+          max: Math.max(...value.map(v => v.level))
+        };
+      });
+    }
+
+    function createLevelOptions(max) {
+      return Array.from({ length: max + 1 }, (_, i) => `<option value="${i}">${i}</option>`).join('');
+    }
+
+    function renderResearchCards() {
+      const container = document.getElementById("researchGrid");
+      container.innerHTML = ""; // Clear previous content
+      researchList.forEach(item => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <div class="border p-2 rounded bg-purple-50 text-xs">
+            <label for="check-${item.key}" class="flex items-center text-sm font-semibold mb-1">
+              <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4 ">${item.label}
+            </label>
+            <div class="flex items-center gap-2 mb-1">
+              <label class="text-sm whitespace-nowrap">Current</label>
+              <select id="current-${item.key}" class="w-full border rounded py-1 px-2 text-sm">
+                ${createLevelOptions(item.max)}
+              </select>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+              <label class="text-sm whitespace-nowrap">Target</label>
+              <select id="target-${item.key}" class="w-full border rounded py-1 px-2 text-sm">
+                ${createLevelOptions(item.max)}
+              </select>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function handleCheck(toggleId) {
+      const chkInf = document.getElementById("chkInf");
+      const chkLan = document.getElementById("chkLan");
+      const chkMask = document.getElementById("chkMask");
+
+      if (toggleId === "chkInf" && chkInf.checked) {
+        chkLan.checked = false;
+        chkMask.checked = false;
+      } else if (toggleId === "chkLan" && chkLan.checked) {
+        chkInf.checked = false;
+        chkMask.checked = false;
+      } else if (toggleId === "chkMask" && chkMask.checked) {
+        chkInf.checked = false;
+        chkLan.checked = false;
+      }
+
+      updateResearchList();
+      renderResearchCards();
+    }
+
+    function calculateResearch() {
+      let total = { 가루: 0, 철강재: 0 };
+      let rows = "";
+
+      researchList.forEach(item => {
+        const checked = document.getElementById(`check-${item.key}`).checked;
+        if (!checked) return;
+
+        const cur = parseInt(document.getElementById(`current-${item.key}`).value);
+        const tgt = parseInt(document.getElementById(`target-${item.key}`).value);
+        if (cur >= tgt) return;
+
+        const data = researchData[item.key];
+        const subtotal = { 가루: 0, 철강재: 0 };
+
+        for (let i = cur + 1; i <= tgt; i++) {
+          const row = data.find(r => r.level === i);
+          if (!row) continue;
+          subtotal.가루 += row.가루 || 0;
+          subtotal.철강재 += row.철강재 || 0;
+        }
+
+        total.가루 += subtotal.가루;
+        total.철강재 += subtotal.철강재;
+
+        rows += `
+          <tr class="text-center">
+            <td class="border p-1">${item.label}</td>
+            <td class="border p-1">${cur} → ${tgt}</td>
+            <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
+          </tr>`;
+      });
+
+      const owned = {
+        가루: parseFloat(document.getElementById("own-가루").value) || 0,
+        철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
+      };
+
+      rows += `
+        <tr class="text-center font-bold bg-purple-100">
+          <td class="border p-1" colspan="2">Total</td>
+          <td class="border p-1">${total.가루.toLocaleString()}</td>
+          <td class="border p-1">${total.철강재.toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-orange-50">
+          <td class="border p-1" colspan="2">Stock</td>
+          <td class="border p-1">${owned.가루.toLocaleString()}</td>
+          <td class="border p-1">${owned.철강재.toLocaleString()}</td>
+        </tr>
+        <tr class="text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">Required quantity</td>
+          <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
+          <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
+        </tr>
+      `;
+
+      const resultHTML = `
+        <table class="w-full table-auto border text-sm text-center mt-4">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-1">Research</th>
+              <th class="border p-1">Level</th>
+              <th class="border p-1">Fire Crystal Shard</th>
+              <th class="border p-1">Steel</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+    }
+
+    // 최초 실행
+    updateResearchList();
+    renderResearchCards();
+  </script>
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+        (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
