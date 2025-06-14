@@ -22,6 +22,21 @@
           <input type="checkbox" id="chkMask" onchange="handleCheck('chkMask')" class="mr-1 w-4 h-4" /> 궁병
         </div>
       </div>
+      <div class="grid grid-cols-2 md:flex md:flex-wrap md:items-center gap-4">
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkVP10" onchange="handleVPCheck('chkVP10')" class="mr-2 w-4 h-4">일반)부집행관 (10%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkVP15" onchange="handleVPCheck('chkVP15')" class="mr-2 w-4 h-4">최집)부집행관 (15%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkServerBuff" class="mr-2 w-4 h-4">연구서버버프 (10%)
+        </label>
+        <div class="flex items-center gap-2">
+          <label for="speedPercent" class="font-semibold whitespace-nowrap">연구속도 (%)</label>
+          <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
+        </div>
+      </div>
     </div>
     
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6" id="researchGrid"></div>
@@ -39,119 +54,119 @@
   <script>
     function loadPage(page) {
       const isMobile = window.innerWidth <= 768;
-      let isHeight = isMobile ? "550px" : "345px"
+      let isHeight = isMobile ? "550px" : "375px"
       window.location.href = page;
       window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
     }
     
     const researchData = {
       "I": [
-        { level: 1, 가루: 16, 철강재: 5000 },
-        { level: 2, 가루: 25, 철강재: 8000 },
-        { level: 3, 가루: 41, 철강재: 13000 },
-        { level: 4, 가루: 68, 철강재: 21000 },
-        { level: 5, 가루: 102, 철강재: 33000 },
+        { level: 1, 가루: 16, 철강재: 5000, 시간: "0d 08:00:00" },
+        { level: 2, 가루: 25, 철강재: 8000, 시간: "0d 12:48:00" },
+        { level: 3, 가루: 41, 철강재: 13000, 시간: "0d 20:48:00" },
+        { level: 4, 가루: 68, 철강재: 21000, 시간: "1d 10:24:00" },
+        { level: 5, 가루: 102, 철강재: 33000, 시간: "2d 06:00:00" },
       ],
       "II-A": [
-        { level: 1, 가루: 40, 철강재: 10000 },
-        { level: 2, 가루: 56, 철강재: 14000 },
-        { level: 3, 가루: 74, 철강재: 18000 },
-        { level: 4, 가루: 102, 철강재: 25000 },
-        { level: 5, 가루: 136, 철강재: 24000 },
-        { level: 6, 가루: 184, 철강재: 46000 },
-        { level: 7, 가루: 248, 철강재: 62000 },
-        { level: 8, 가루: 334, 철강재: 83000 },
+        { level: 1, 가루: 40, 철강재: 10000, 시간: "0d 20:00:00" },
+        { level: 2, 가루: 56, 철강재: 14000, 시간: "1d 04:00:00" },
+        { level: 3, 가루: 74, 철강재: 18000, 시간: "1d 13:00:00" },
+        { level: 4, 가루: 102, 철강재: 25000, 시간: "2d 03:00:00" },
+        { level: 5, 가루: 136, 철강재: 24000, 시간: "2d 20:00:00" },
+        { level: 6, 가루: 184, 철강재: 46000, 시간: "3d 20:00:00" },
+        { level: 7, 가루: 248, 철강재: 62000, 시간: "5d 04:00:00" },
+        { level: 8, 가루: 334, 철강재: 83000, 시간: "6d 23:00:00" },
       ],
       "II-B": [
-        { level: 1, 가루: 40, 철강재: 10000 },
-        { level: 2, 가루: 56, 철강재: 14000 },
-        { level: 3, 가루: 74, 철강재: 18000 },
-        { level: 4, 가루: 102, 철강재: 25000 },
-        { level: 5, 가루: 136, 철강재: 24000 },
-        { level: 6, 가루: 184, 철강재: 46000 },
-        { level: 7, 가루: 248, 철강재: 62000 },
-        { level: 8, 가루: 334, 철강재: 83000 },
+        { level: 1, 가루: 40, 철강재: 10000, 시간: "0d 20:00:00" },
+        { level: 2, 가루: 56, 철강재: 14000, 시간: "1d 04:00:00" },
+        { level: 3, 가루: 74, 철강재: 18000, 시간: "1d 13:00:00" },
+        { level: 4, 가루: 102, 철강재: 25000, 시간: "2d 03:00:00" },
+        { level: 5, 가루: 136, 철강재: 24000, 시간: "2d 20:00:00" },
+        { level: 6, 가루: 184, 철강재: 46000, 시간: "3d 20:00:00" },
+        { level: 7, 가루: 248, 철강재: 62000, 시간: "5d 04:00:00" },
+        { level: 8, 가루: 334, 철강재: 83000, 시간: "6d 23:00:00" },
       ],
       "III": [
-        { level: 1, 가루: 83, 철강재: 23000 },
-        { level: 2, 가루: 102, 철강재: 28000 },
-        { level: 3, 가루: 125, 철강재: 34000 },
-        { level: 4, 가루: 150, 철강재: 41000 },
-        { level: 5, 가루: 184, 철강재: 51000 },
-        { level: 6, 가루: 225, 철강재: 62000 },
-        { level: 7, 가루: 276, 철강재: 76000 },
-        { level: 8, 가루: 334, 철강재: 93000 },
-        { level: 9, 가루: 418, 철강재: 110000 },
-        { level: 10, 가루: 502, 철강재: 130000 },
-        { level: 11, 가루: 602, 철강재: 160000 },
-        { level: 12, 가루: 744, 철강재: 200000 },
+        { level: 1, 가루: 83, 철강재: 23000, 시간: "1d 05:20:17" },
+        { level: 2, 가루: 102, 철강재: 28000, 시간: "1d 12:05:08" },
+        { level: 3, 가루: 125, 철강재: 34000, 시간: "1d 20:00:25" },
+        { level: 4, 가루: 150, 철강재: 41000, 시간: "2d 04:48:30" },
+        { level: 5, 가루: 184, 철강재: 51000, 시간: "2d 16:32:37" },
+        { level: 6, 가루: 225, 철강재: 62000, 시간: "3d 07:12:45" },
+        { level: 7, 가루: 276, 철강재: 76000, 시간: "4d 00:58:56" },
+        { level: 8, 가루: 334, 철강재: 93000, 시간: "4d 21:21:08" },
+        { level: 9, 가루: 418, 철강재: 110000, 시간: "6d 02:41:25" },
+        { level: 10, 가루: 502, 철강재: 130000, 시간: "7d 08:01:42" },
+        { level: 11, 가루: 602, 철강재: 160000, 시간: "8d 19:14:02" },
+        { level: 12, 가루: 744, 철강재: 200000, 시간: "10d 21:06:31" },
       ],
       "IV-A": [
-        { level: 1, 가루: 54, 철강재: 15000 },
-        { level: 2, 가루: 66, 철강재: 18000 },
-        { level: 3, 가루: 81, 철강재: 22000 },
-        { level: 4, 가루: 97, 철강재: 27000 },
-        { level: 5, 가루: 118, 철강재: 33000 },
-        { level: 6, 가루: 145, 철강재: 40000 },
-        { level: 7, 가루: 178, 철강재: 49000 },
-        { level: 8, 가루: 216, 철강재: 60000 },
-        { level: 9, 가루: 270, 철강재: 75000 },
-        { level: 10, 가루: 324, 철강재: 90000 },
-        { level: 11, 가루: 388, 철강재: 100000 },
-        { level: 12, 가루: 480, 철강재: 130000 },
+        { level: 1, 가루: 54, 철강재: 15000, 시간: "0d 18:55:40" },
+        { level: 2, 가루: 66, 철강재: 18000, 시간: "0d 23:16:52" },
+        { level: 3, 가루: 81, 철강재: 22000, 시간: "1d 04:23:30" },
+        { level: 4, 가루: 97, 철강재: 27000, 시간: "1d 10:04:12" },
+        { level: 5, 가루: 118, 철강재: 33000, 시간: "1d 17:38:28" },
+        { level: 6, 가루: 145, 철강재: 40000, 시간: "2d 03:06:18" },
+        { level: 7, 가루: 178, 철강재: 49000, 시간: "2d 14:27:42" },
+        { level: 8, 가루: 216, 철강재: 60000, 시간: "3d 03:42:20" },
+        { level: 9, 가루: 270, 철강재: 75000, 시간: "3d 22:38:20" },
+        { level: 10, 가루: 324, 철강재: 90000, 시간: "4d 17:34:00" },
+        { level: 11, 가루: 388, 철강재: 100000, 시간: "5d 16:16:48" },
+        { level: 12, 가루: 480, 철강재: 130000, 시간: "7d 00:27:26" },
       ],
       "IV-B": [
-        { level: 1, 가루: 54, 철강재: 15000 },
-        { level: 2, 가루: 66, 철강재: 18000 },
-        { level: 3, 가루: 81, 철강재: 22000 },
-        { level: 4, 가루: 97, 철강재: 27000 },
-        { level: 5, 가루: 118, 철강재: 33000 },
-        { level: 6, 가루: 145, 철강재: 40000 },
-        { level: 7, 가루: 178, 철강재: 49000 },
-        { level: 8, 가루: 216, 철강재: 60000 },
-        { level: 9, 가루: 270, 철강재: 75000 },
-        { level: 10, 가루: 324, 철강재: 90000 },
-        { level: 11, 가루: 388, 철강재: 100000 },
-        { level: 12, 가루: 480, 철강재: 130000 },
+        { level: 1, 가루: 54, 철강재: 15000, 시간: "0d 18:55:40" },
+        { level: 2, 가루: 66, 철강재: 18000, 시간: "0d 23:16:52" },
+        { level: 3, 가루: 81, 철강재: 22000, 시간: "1d 04:23:30" },
+        { level: 4, 가루: 97, 철강재: 27000, 시간: "1d 10:04:12" },
+        { level: 5, 가루: 118, 철강재: 33000, 시간: "1d 17:38:28" },
+        { level: 6, 가루: 145, 철강재: 40000, 시간: "2d 03:06:18" },
+        { level: 7, 가루: 178, 철강재: 49000, 시간: "2d 14:27:42" },
+        { level: 8, 가루: 216, 철강재: 60000, 시간: "3d 03:42:20" },
+        { level: 9, 가루: 270, 철강재: 75000, 시간: "3d 22:38:20" },
+        { level: 10, 가루: 324, 철강재: 90000, 시간: "4d 17:34:00" },
+        { level: 11, 가루: 388, 철강재: 100000, 시간: "5d 16:16:48" },
+        { level: 12, 가루: 480, 철강재: 130000, 시간: "7d 00:27:26" },
       ],
       "V": [
-        { level: 1, 가루: 2236, 철강재: 1000000 },
+        { level: 1, 가루: 2236, 철강재: 1000000, 시간: "54d 23:50:14" },
       ],
       "Healing": [
-        { level: 1, 가루: 102, 철강재: 30000 },
-        { level: 2, 가루: 137, 철강재: 40000 },
-        { level: 3, 가루: 188, 철강재: 55000 },
-        { level: 4, 가루: 255, 철강재: 75000 },
-        { level: 5, 가루: 341, 철강재: 100000 },
-        { level: 6, 가루: 459, 철강재: 130000 },
-        { level: 7, 가루: 612, 철강재: 180000 },
-        { level: 8, 가루: 836, 철강재: 240000 },
-        { level: 9, 가루: 1122, 철강재: 330000 },
-        { level: 10, 가루: 1530, 철강재: 450000 },
+        { level: 1, 가루: 102, 철강재: 30000, 시간: "2d 02:00:00" },
+        { level: 2, 가루: 137, 철강재: 40000, 시간: "2d 19:30:00" },
+        { level: 3, 가루: 188, 철강재: 55000, 시간: "3d 20:30:00" },
+        { level: 4, 가루: 255, 철강재: 75000, 시간: "5d 05:00:00" },
+        { level: 5, 가루: 341, 철강재: 100000, 시간: "6d 23:30:00" },
+        { level: 6, 가루: 459, 철강재: 130000, 시간: "9d 09:00:00" },
+        { level: 7, 가루: 612, 철강재: 180000, 시간: "12d 12:00:00" },
+        { level: 8, 가루: 836, 철강재: 240000, 시간: "17d 02:00:00" },
+        { level: 9, 가루: 1122, 철강재: 330000, 시간: "22d 22:00:00" },
+        { level: 10, 가루: 1530, 철강재: 450000, 시간: "31d 06:00:00" },
       ],
       "Training": [
-        { level: 1, 가루: 102, 철강재: 30000 },
-        { level: 2, 가루: 137, 철강재: 40000 },
-        { level: 3, 가루: 188, 철강재: 55000 },
-        { level: 4, 가루: 255, 철강재: 75000 },
-        { level: 5, 가루: 341, 철강재: 100000 },
-        { level: 6, 가루: 459, 철강재: 130000 },
-        { level: 7, 가루: 612, 철강재: 180000 },
-        { level: 8, 가루: 836, 철강재: 240000 },
-        { level: 9, 가루: 1122, 철강재: 330000 },
-        { level: 10, 가루: 1530, 철강재: 450000 },
+        { level: 1, 가루: 102, 철강재: 30000, 시간: "2d 02:00:00" },
+        { level: 2, 가루: 137, 철강재: 40000, 시간: "2d 19:30:00" },
+        { level: 3, 가루: 188, 철강재: 55000, 시간: "3d 20:30:00" },
+        { level: 4, 가루: 255, 철강재: 75000, 시간: "5d 05:00:00" },
+        { level: 5, 가루: 341, 철강재: 100000, 시간: "6d 23:30:00" },
+        { level: 6, 가루: 459, 철강재: 130000, 시간: "9d 09:00:00" },
+        { level: 7, 가루: 612, 철강재: 180000, 시간: "12d 12:00:00" },
+        { level: 8, 가루: 836, 철강재: 240000, 시간: "17d 02:00:00" },
+        { level: 9, 가루: 1122, 철강재: 330000, 시간: "22d 22:00:00" },
+        { level: 10, 가루: 1530, 철강재: 450000, 시간: "31d 06:00:00" },
       ],
       "HealingTime": [
-        { level: 1, 가루: 51, 철강재: 15000 },
-        { level: 2, 가루: 68, 철강재: 20000 },
-        { level: 3, 가루: 94, 철강재: 27000 },
-        { level: 4, 가루: 127, 철강재: 37000 },
-        { level: 5, 가루: 170, 철강재: 50000 },
-        { level: 6, 가루: 229, 철강재: 67000 },
-        { level: 7, 가루: 306, 철강재: 90000 },
-        { level: 8, 가루: 418, 철강재: 120000 },
-        { level: 9, 가루: 561, 철강재: 160000 },
-        { level: 10, 가루: 765, 철강재: 220000 },
+        { level: 1, 가루: 51, 철강재: 15000, 시간: "1d 01:00:00" },
+        { level: 2, 가루: 68, 철강재: 20000, 시간: "1d 09:45:00" },
+        { level: 3, 가루: 94, 철강재: 27000, 시간: "1d 22:15:00" },
+        { level: 4, 가루: 127, 철강재: 37000, 시간: "2d 14:30:00" },
+        { level: 5, 가루: 170, 철강재: 50000, 시간: "3d 11:45:00" },
+        { level: 6, 가루: 229, 철강재: 67000, 시간: "4d 16:30:00" },
+        { level: 7, 가루: 306, 철강재: 90000, 시간: "6d 06:00:00" },
+        { level: 8, 가루: 418, 철강재: 120000, 시간: "8d 13:00:00" },
+        { level: 9, 가루: 561, 철강재: 160000, 시간: "11d 11:00:00" },
+        { level: 10, 가루: 765, 철강재: 220000, 시간: "15d 15:00:00" },
       ]
     };
 
@@ -270,9 +285,42 @@
       renderResearchCards();
     }
 
+    function handleVPCheck(toggleId) {
+      const chkVP10 = document.getElementById("chkVP10");
+      const chkVP15 = document.getElementById("chkVP15");
+
+      if (toggleId === "chkVP10" && chkVP10.checked) {
+        chkVP15.checked = false;
+      } else if (toggleId === "chkVP15" && chkVP15.checked) {
+        chkVP10.checked = false;
+      }
+    }
+
+    function formatTime(sec) {
+      const d = Math.floor(sec / 86400);
+      sec %= 86400;
+      const h = Math.floor(sec / 3600);
+      sec %= 3600;
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${d}d ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function parseTimeToSeconds(timeStr) {
+      const [d, hms] = timeStr.split(" ");
+      const [h, m, s] = hms.split(":").map(Number);
+      return (parseInt(d) || 0) * 86400 + h * 3600 + m * 60 + s;
+    }
+
     function calculateResearch() {
-      let total = { 가루: 0, 철강재: 0 };
+      let total = { 가루: 0, 철강재: 0, 시간: 0 };
       let rows = "";
+
+      let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+
+      if (document.getElementById("chkVP10").checked) factor += 0.10;
+      if (document.getElementById("chkVP15").checked) factor += 0.15;
+      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
 
       researchList.forEach(item => {
         const checked = document.getElementById(`check-${item.key}`).checked;
@@ -283,17 +331,19 @@
         if (cur >= tgt) return;
 
         const data = researchData[item.key];
-        const subtotal = { 가루: 0, 철강재: 0 };
+        const subtotal = { 가루: 0, 철강재: 0, 시간: 0 };
 
         for (let i = cur + 1; i <= tgt; i++) {
           const row = data.find(r => r.level === i);
           if (!row) continue;
           subtotal.가루 += row.가루 || 0;
           subtotal.철강재 += row.철강재 || 0;
+          subtotal.시간 += parseTimeToSeconds(row.시간 || 0);
         }
 
         total.가루 += subtotal.가루;
         total.철강재 += subtotal.철강재;
+        total.시간 += subtotal.시간;
 
         rows += `
           <tr class="text-center">
@@ -301,6 +351,7 @@
             <td class="border p-1">${cur} → ${tgt}</td>
             <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
             <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
+            <td class="border p-1">${formatTime(Math.round(subtotal.시간 / factor))}</td>
           </tr>`;
       });
 
@@ -314,16 +365,19 @@
           <td class="border p-1" colspan="2">총합</td>
           <td class="border p-1">${total.가루.toLocaleString()}</td>
           <td class="border p-1">${total.철강재.toLocaleString()}</td>
+          <td class="border p-1">${formatTime(Math.round(total.시간 / factor))}</td>
         </tr>
         <tr class="text-center font-bold bg-orange-50">
           <td class="border p-1" colspan="2">보유량</td>
           <td class="border p-1">${owned.가루.toLocaleString()}</td>
           <td class="border p-1">${owned.철강재.toLocaleString()}</td>
+          <td class="border p-1"></td>
         </tr>
         <tr class="text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">과부족</td>
           <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
           <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
+          <td class="border p-1"></td>
         </tr>
       `;
 
@@ -335,6 +389,7 @@
               <th class="border p-1">레벨</th>
               <th class="border p-1">불수가루</th>
               <th class="border p-1">철강재</th>
+              <th class="border p-1">소요시간</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
