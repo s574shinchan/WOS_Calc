@@ -22,6 +22,7 @@
           <input type="checkbox" id="chkMask" onchange="handleCheck('chkMask')" class="mr-1 w-4 h-4" /> 궁병
         </div>
       </div>
+      <!--
       <div class="grid grid-cols-2 md:flex md:flex-wrap md:items-center gap-4">
         <label class="inline-flex items-center font-semibold">
           <input type="checkbox" id="chkVP10" onchange="handleVPCheck('chkVP10')" class="mr-2 w-4 h-4">일반)부집행관 (10%)
@@ -37,6 +38,7 @@
           <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
         </div>
       </div>
+      -->
     </div>
     
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6" id="researchGrid"></div>
@@ -365,19 +367,16 @@
           <td class="border p-1" colspan="2">총합</td>
           <td class="border p-1">${total.가루.toLocaleString()}</td>
           <td class="border p-1">${total.철강재.toLocaleString()}</td>
-          <td class="border p-1">${formatTime(Math.round(total.시간 / factor))}</td>
         </tr>
         <tr class="text-center font-bold bg-orange-50">
           <td class="border p-1" colspan="2">보유량</td>
           <td class="border p-1">${owned.가루.toLocaleString()}</td>
           <td class="border p-1">${owned.철강재.toLocaleString()}</td>
-          <td class="border p-1"></td>
         </tr>
         <tr class="text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">과부족</td>
           <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
           <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
-          <td class="border p-1"></td>
         </tr>
       `;
 
@@ -389,7 +388,6 @@
               <th class="border p-1">레벨</th>
               <th class="border p-1">불수가루</th>
               <th class="border p-1">철강재</th>
-              <th class="border p-1">소요시간</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
