@@ -319,11 +319,11 @@
       let total = { 가루: 0, 철강재: 0, 시간: 0 };
       let rows = "";
       
-      let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+      //let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
 
-      if (document.getElementById("chkVP10").checked) factor += 0.10;
-      if (document.getElementById("chkVP15").checked) factor += 0.15;
-      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+      //if (document.getElementById("chkVP10").checked) factor += 0.10;
+      //if (document.getElementById("chkVP15").checked) factor += 0.15;
+      //if (document.getElementById("chkServerBuff").checked) factor += 0.10;
       
       researchList.forEach(item => {
         const checked = document.getElementById(`check-${item.key}`).checked;
@@ -341,12 +341,10 @@
           if (!row) continue;
           subtotal.가루 += row.가루 || 0;
           subtotal.철강재 += row.철강재 || 0;
-          subtotal.시간 += parseTimeToSeconds(row.시간 || 0);
         }
 
         total.가루 += subtotal.가루;
         total.철강재 += subtotal.철강재;
-        total.시간 += subtotal.시간;
 
         rows += `
           <tr class="text-center">
