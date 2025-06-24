@@ -318,11 +318,11 @@
       let total = { 가루: 0, 철강재: 0, 시간: 0 };
       let rows = "";
 
-      let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+      //let factor = 1;//(parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
 
-      if (document.getElementById("chkVP10").checked) factor += 0.10;
-      if (document.getElementById("chkVP15").checked) factor += 0.15;
-      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+      //if (document.getElementById("chkVP10").checked) factor += 0.10;
+      //if (document.getElementById("chkVP15").checked) factor += 0.15;
+      //if (document.getElementById("chkServerBuff").checked) factor += 0.10;
 
       researchList.forEach(item => {
         const checked = document.getElementById(`check-${item.key}`).checked;
