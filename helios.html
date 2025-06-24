@@ -340,12 +340,10 @@
           if (!row) continue;
           subtotal.가루 += row.가루 || 0;
           subtotal.철강재 += row.철강재 || 0;
-          subtotal.시간 += parseTimeToSeconds(row.시간 || 0);
         }
 
         total.가루 += subtotal.가루;
         total.철강재 += subtotal.철강재;
-        total.시간 += subtotal.시간;
 
         rows += `
           <tr class="text-center">
@@ -353,7 +351,6 @@
             <td class="border p-1">${cur} → ${tgt}</td>
             <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
             <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
-            <td class="border p-1">${formatTime(Math.round(subtotal.시간 / factor))}</td>
           </tr>`;
       });
 
