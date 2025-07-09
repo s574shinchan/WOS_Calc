@@ -274,12 +274,16 @@
               for (let i = 1; i < lines.length; i++) {
                 const cols = lines[i].split(",");
                 const name = cols[idx.연구];
-                if (!name || !name.includes(type)) continue;
+                if (!name) continue;
+                
+                const match = name.match(/^(.*)-(\d+)$/);
+                if (!match) continue;
+                
+                const [_, fullType, levelStr] = match;
+                if (fullType !== type) continue;
                 
                 //const [_, levelStr] = name.split("-");
                 //const level = parseInt(levelStr);
-                const match = name.match(/-(\d+)$/);
-                if (!match) continue;
                 const level = parseInt(match[1]);
                 
                 if (level > s && level <= e) {
