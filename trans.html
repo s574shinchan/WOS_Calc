@@ -70,7 +70,11 @@
 
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?` +
       `includeGridData=true&ranges=${RANGE}` +
-      `&fields=sheets.data.rowData.values(effectiveValue,effectiveFormat(backgroundColor,textFormat.foregroundColor),userEnteredFormat.backgroundColor),sheets.merges` +
+      `&fields=sheets.data.rowData.values(` +
+        `effectiveValue,` +
+        `effectiveFormat(backgroundColor,textFormat(foregroundColor,bold,fontSize)),` +
+        `userEnteredFormat(backgroundColor,textFormat(bold,fontSize))` +
+      `),sheets.merges` +
       `&key=${API_KEY}`;
 
     // 색상 변환: { red: 0.5, green: 0.7, blue: 0.2 } → rgb(128,179,51)
@@ -121,9 +125,12 @@
             const userFmt = cell?.userEnteredFormat ?? {};
             const bg = toRGB(userFmt.backgroundColor, "#ffffff");
             const fg = toRGB(effectiveFmt.textFormat?.foregroundColor, "#000000");
-
+            
+            const fontSize = effectiveFmt.textFormat?.fontSize ?? userFmt.textFormat?.fontSize ?? 12 ;
+            const isBold = effectiveFmt.textFormat?.bold === true || userFmt.textFormat?.bold === true;
+            
             const span = mergeMap[key];
-            const tag = `<td style="background:${bg}; color:${fg};"` +
+            const tag = `<td style="background:${bg}; color:${fg}; font-weight:${isBold ? "bold" : "normal"}; font-size:${fontSize}px;"` +
               (span?.rowspan ? ` rowspan="${span.rowspan}"` : "") +
               (span?.colspan ? ` colspan="${span.colspan}"` : "") +
               `>${text}</td>`;
