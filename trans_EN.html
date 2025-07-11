@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>StatesTrans 배경색 포함</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2px;
+      background: #f4f4f4;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>📊 State Transfer</h2>
+    <div class="text-gray-700 text-sm text-center mb-4">
+      <p>This is a prediction based on previous immigration group data, so it is not 100% accurate..</p>
+    </div>
+    <div id="sheet-table">⏳ Loding...</div>
+    <div class="text-gray-700 text-sm text-center mb-4">
+      <p>If the Neighboring Kingdom range is incorrect, please let us know on Discord below.</p>
+    </div>
+  </div>
+
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+
+  <script>
+    const API_KEY = "AIzaSyA4Ve1ViWoYIpzhHh45wjVjbk5bkEnEmUk";
+    const SPREADSHEET_ID = "1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw";
+    const RANGE = "StatesTrans_EN";
+
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?` +
+      `includeGridData=true&ranges=${RANGE}` +
+      `&fields=sheets.data.rowData.values(` +
+        `effectiveValue,` +
+        `effectiveFormat(backgroundColor,textFormat(foregroundColor,bold,fontSize)),` +
+        `userEnteredFormat(backgroundColor,textFormat(bold,fontSize),borders)` +
+      `),sheets.merges` +
+      `&key=${API_KEY}`;
+
+    // 색상 변환: { red: 0.5, green: 0.7, blue: 0.2 } → rgb(128,179,51)
+    function toRGB(color, fallback = "#ffffff") {
+      if (!color) return fallback;
+      const r = Math.round((color.red ?? 0) * 255);
+      const g = Math.round((color.green ?? 0) * 255);
+      const b = Math.round((color.blue ?? 0) * 255);
+      return `rgb(${r},${g},${b})`;
+    }
+    
+    function toBorderColor(border) {
+      if (!border?.color) return null;
+      const { red = 0, green = 0, blue = 0 } = border.color;
+      return `rgb(${Math.round(red * 255)},${Math.round(green * 255)},${Math.round(blue * 255)})`;
+    }
+    
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const sheet = data.sheets[0];
+        const merges = sheet.merges || [];
+        const rows = sheet.data[0].rowData || [];
+
+        const mergeMap = {};
+        const skip = new Set();
+        for (const m of merges) {
+          const key = `${m.startRowIndex},${m.startColumnIndex}`;
+          mergeMap[key] = {
+            rowspan: m.endRowIndex - m.startRowIndex,
+            colspan: m.endColumnIndex - m.startColumnIndex
+          };
+          for (let r = m.startRowIndex; r < m.endRowIndex; r++) {
+            for (let c = m.startColumnIndex; c < m.endColumnIndex; c++) {
+              if (r !== m.startRowIndex || c !== m.startColumnIndex) {
+                skip.add(`${r},${c}`);
+              }
+            }
+          }
+        }
+
+        let html = "<table><tbody>";
+        rows.forEach((row, ri) => {
+          html += "<tr>";
+          const cells = row.values || [];
+          cells.forEach((cell, ci) => {
+            const key = `${ri},${ci}`;
+            if (skip.has(key)) return;
+
+            const val = cell?.effectiveValue;
+            const text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
+
+            const effectiveFmt = cell?.effectiveFormat ?? {};
+            const userFmt = cell?.userEnteredFormat ?? {};
+            const bg = toRGB(userFmt.backgroundColor, "#ffffff");
+            const fg = toRGB(effectiveFmt.textFormat?.foregroundColor, "#000000");
+            
+            const isBold = effectiveFmt.textFormat?.bold === true || userFmt.textFormat?.bold === true;           
+            const rawSize = effectiveFmt.textFormat?.fontSize;
+            const fontSize = rawSize > 10 ? rawSize : "";
+
+            const borders = userFmt.borders || {};
+            const borderTop = toBorderColor(borders.top);
+            const borderBottom = toBorderColor(borders.bottom);
+            const borderLeft = toBorderColor(borders.left);
+            const borderRight = toBorderColor(borders.right);
+            
+            let borderStyle = "";
+            if (borderTop) borderStyle += `border-top: 1px solid ${borderTop};`;
+            if (borderBottom) borderStyle += `border-bottom: 1px solid ${borderBottom};`;
+            if (borderLeft) borderStyle += `border-left: 1px solid ${borderLeft};`;
+            if (borderRight) borderStyle += `border-right: 1px solid ${borderRight};`;
+            
+            const span = mergeMap[key];
+            const tag = `<td style="background:${bg}; color:${fg}; font-weight:${isBold ? "bold" : "normal"}; font-size:${fontSize}px; ${borderStyle}"` +
+              (span?.rowspan ? ` rowspan="${span.rowspan}"` : "") +
+              (span?.colspan ? ` colspan="${span.colspan}"` : "") +
+              `>${text}</td>`;
+            html += tag;
+          });
+          html += "</tr>";
+        });
+        html += "</tbody></table>";
+
+        document.getElementById("sheet-table").innerHTML = html;
+        sendHeightToParent();
+      })
+      .catch(err => {
+        console.error("API Error:", err);
+        document.getElementById("sheet-table").innerText = "❌ Data Not Found.";
+      });
+  </script>
+  <script>
+    function setupLangSelect(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', function () {
+          const langCode = this.value; // 예: index_en.html
+          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
+          localStorage.setItem('lang', lang);
+          window.location.href = langCode;
+        });
+      }
+    }
+  
+    setupLangSelect('langSelectMobile');
+    setupLangSelect('langSelectPC');
+  </script>
+</body>
+</html>
