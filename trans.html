@@ -1,76 +1,79 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>Google 시트 데이터 표시</title>
+  <meta charset="UTF-8">
+  <title>StatesTrans 시트 표시 (API)</title>
   <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
     table {
       border-collapse: collapse;
       width: 100%;
-      font-family: sans-serif;
-      font-size: 14px;
+      margin-top: 16px;
     }
     th, td {
       border: 1px solid #ccc;
-      padding: 6px 8px;
+      padding: 6px 10px;
       text-align: center;
     }
-    thead {
+    th {
       background-color: #f3f3f3;
-      font-weight: bold;
     }
     tr:nth-child(even) {
-      background-color: #fafafa;
+      background-color: #f9f9f9;
     }
   </style>
 </head>
 <body>
-  <h2>🧾 실시간 시트 데이터</h2>
-  <div id="sheet-table">로딩 중...</div>
+  <h2>📊 이민그룹예상</h2>
+  <div id="sheet-table">⏳ 데이터를 불러오는 중...</div>
 
   <script>
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQRsdVsDIRaXzuNxPR5FxP_n2C6jB3vhHXy_Kc0pPAkwmkKBZ5keEpWTQ6wYKv2C10AV9lD3KlX0En1/pub?gid=2087082266&single=true&output=csv";
+    const API_KEY = "AIzaSyA4Ve1ViWoYIpzhHh45wjVjbk5bkEnEmUk";
+    const SPREADSHEET_ID = "1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw";
+    const RANGE = "StatesTrans!A1:Z100"; // 필요 시 조정 가능
 
-    fetch(sheetURL)
-      .then(response => response.text())
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(RANGE)}?key=${API_KEY}`;
+
+    fetch(url)
+      .then(res => res.json())
       .then(data => {
-        const rows = data.trim().split('\n').map(row => row.split(','));
-
-        let html = '<table><thead><tr>';
-        rows[0].forEach(cell => html += `<th>${cell}</th>`);
-        html += '</tr></thead><tbody>';
-
-        for (let i = 1; i < rows.length; i++) {
-          html += '<tr>';
-          rows[i].forEach(cell => html += `<td>${cell}</td>`);
-          html += '</tr>';
+        const rows = data.values;
+        if (!rows || rows.length === 0) {
+          document.getElementById("sheet-table").innerText = "⚠️ 데이터 없음";
+          return;
         }
 
-        html += '</tbody></table>';
-        document.getElementById('sheet-table').innerHTML = html;
+        let html = "<table><thead><tr>";
+        rows[0].forEach(cell => html += `<th>${cell}</th>`);
+        html += "</tr></thead><tbody>";
+
+        for (let i = 1; i < rows.length; i++) {
+          html += "<tr>";
+          rows[i].forEach(cell => html += `<td>${cell}</td>`);
+          html += "</tr>";
+        }
+
+        html += "</tbody></table>";
+        document.getElementById("sheet-table").innerHTML = html;
       })
-      .catch(error => {
-        document.getElementById('sheet-table').innerHTML = '데이터를 불러오지 못했습니다.';
-        console.error('Fetch error:', error);
+      .catch(err => {
+        console.error("Fetch error:", err);
+        document.getElementById("sheet-table").innerText = "❌ 데이터를 불러올 수 없습니다.";
       });
   </script>
-  <script>
-    function sendHeightToParent() {
-      const height = document.body.scrollHeight;
-      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
-    }
-
-    // 페이지 최초 로드 시
-    window.addEventListener("load", () => {
-      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+  <script>      
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
     });
-    
-    function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "2745px"
-        window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-    }
   </script>
 </body>
 </html>
