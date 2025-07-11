@@ -2,78 +2,129 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>StatesTrans 시트 표시 (API)</title>
+  <title>StatesTrans 배경색 포함</title>
   <style>
     body {
       font-family: sans-serif;
-      padding: 20px;
+      padding: 2px;
+      background: #f4f4f4;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     }
     table {
       border-collapse: collapse;
       width: 100%;
-      margin-top: 16px;
+      font-size: 12px;
     }
     th, td {
       border: 1px solid #ccc;
-      padding: 6px 10px;
+      padding: 6px;
       text-align: center;
-    }
-    th {
-      background-color: #f3f3f3;
-    }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
     }
   </style>
 </head>
 <body>
-  <h2>📊 이민그룹예상</h2>
-  <div id="sheet-table">⏳ 데이터를 불러오는 중...</div>
+  <div class="card">
+    <h2>📊 이민예상범위</h2>
+    <div id="sheet-table">⏳ 데이터를 불러오는 중...</div>
+  </div>
 
   <script>
     const API_KEY = "AIzaSyA4Ve1ViWoYIpzhHh45wjVjbk5bkEnEmUk";
     const SPREADSHEET_ID = "1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw";
-    const RANGE = "StatesTrans!A1:Z100"; // 필요 시 조정 가능
+    const RANGE = "StatesTrans";
 
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(RANGE)}?key=${API_KEY}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?` +
+      `includeGridData=true&ranges=${RANGE}` +
+      `&fields=sheets.data.rowData.values(effectiveValue,effectiveFormat(backgroundColor,textFormat.foregroundColor),userEnteredFormat.backgroundColor),sheets.merges` +
+      `&key=${API_KEY}`;
+
+    // 색상 변환: { red: 0.5, green: 0.7, blue: 0.2 } → rgb(128,179,51)
+    function toRGB(color, fallback = "#ffffff") {
+      if (!color) return fallback;
+      const r = Math.round((color.red ?? 0) * 255);
+      const g = Math.round((color.green ?? 0) * 255);
+      const b = Math.round((color.blue ?? 0) * 255);
+      return `rgb(${r},${g},${b})`;
+    }
 
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        const rows = data.values;
-        if (!rows || rows.length === 0) {
-          document.getElementById("sheet-table").innerText = "⚠️ 데이터 없음";
-          return;
+        const sheet = data.sheets[0];
+        const merges = sheet.merges || [];
+        const rows = sheet.data[0].rowData || [];
+
+        const mergeMap = {};
+        const skip = new Set();
+        for (const m of merges) {
+          const key = `${m.startRowIndex},${m.startColumnIndex}`;
+          mergeMap[key] = {
+            rowspan: m.endRowIndex - m.startRowIndex,
+            colspan: m.endColumnIndex - m.startColumnIndex
+          };
+          for (let r = m.startRowIndex; r < m.endRowIndex; r++) {
+            for (let c = m.startColumnIndex; c < m.endColumnIndex; c++) {
+              if (r !== m.startRowIndex || c !== m.startColumnIndex) {
+                skip.add(`${r},${c}`);
+              }
+            }
+          }
         }
 
-        let html = "<table><thead><tr>";
-        rows[0].forEach(cell => html += `<th>${cell}</th>`);
-        html += "</tr></thead><tbody>";
-
-        for (let i = 1; i < rows.length; i++) {
+        let html = "<table><tbody>";
+        rows.forEach((row, ri) => {
           html += "<tr>";
-          rows[i].forEach(cell => html += `<td>${cell}</td>`);
-          html += "</tr>";
-        }
+          const cells = row.values || [];
+          cells.forEach((cell, ci) => {
+            const key = `${ri},${ci}`;
+            if (skip.has(key)) return;
 
+            const val = cell?.effectiveValue;
+            const text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
+
+            const effectiveFmt = cell?.effectiveFormat ?? {};
+            const userFmt = cell?.userEnteredFormat ?? {};
+            const bg = toRGB(userFmt.backgroundColor, "#ffffff");
+            const fg = toRGB(effectiveFmt.textFormat?.foregroundColor, "#000000");
+
+            const span = mergeMap[key];
+            const tag = `<td style="background:${bg}; color:${fg};"` +
+              (span?.rowspan ? ` rowspan="${span.rowspan}"` : "") +
+              (span?.colspan ? ` colspan="${span.colspan}"` : "") +
+              `>${text}</td>`;
+            html += tag;
+          });
+          html += "</tr>";
+        });
         html += "</tbody></table>";
+
         document.getElementById("sheet-table").innerHTML = html;
       })
       .catch(err => {
-        console.error("Fetch error:", err);
+        console.error("API 오류:", err);
         document.getElementById("sheet-table").innerText = "❌ 데이터를 불러올 수 없습니다.";
       });
   </script>
-  <script>      
-    document.addEventListener("contextmenu", event => event.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" ||
-          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
-      {
-        e.preventDefault();
+  <script>
+    function setupLangSelect(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', function () {
+          const langCode = this.value; // 예: index_en.html
+          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
+          localStorage.setItem('lang', lang);
+          window.location.href = langCode;
+        });
       }
-    });
+    }
+  
+    setupLangSelect('langSelectMobile');
+    setupLangSelect('langSelectPC');
   </script>
 </body>
 </html>
