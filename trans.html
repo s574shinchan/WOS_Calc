@@ -35,7 +35,7 @@
 
   <script>
     function sendHeightToParent() {
-      const height = document.body.scrollHeight;
+      const height = document.body.scrollHeight + 10;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
 
@@ -123,6 +123,7 @@
         html += "</tbody></table>";
 
         document.getElementById("sheet-table").innerHTML = html;
+        sendHeightToParent();
       })
       .catch(err => {
         console.error("API 오류:", err);
