@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>StatesTrans Sheet Viewer</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', { packages: ['table'] });
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        const query = new google.visualization.Query(
+          'https://docs.google.com/spreadsheets/d/1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw/gviz/tq?sheet=StatesTrans&tq=select B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T offset 1 limit 18'
+        );
+        query.send(function (response) {
+          const data = response.getDataTable();
+          const table = new google.visualization.Table(document.getElementById("table_div"));
+          table.draw(data, { showRowNumber: false, width: '100%' });
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="table_div"></div>
+  </body>
+</html>
