@@ -23,4 +23,12 @@
   <body>
     <div id="table_div"></div>
   </body>
+  <script>
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      let isHeight = isMobile ? "550px" : "375px"
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
+    }
+  </script>
 </html>
