@@ -72,7 +72,7 @@
       `&fields=sheets.data.rowData.values(` +
         `effectiveValue,` +
         `effectiveFormat(backgroundColor,textFormat(foregroundColor,bold,fontSize)),` +
-        `userEnteredFormat(backgroundColor,textFormat(bold,fontSize))` +
+        `userEnteredFormat(backgroundColor,textFormat(bold,fontSize),borders)` +
       `),sheets.merges` +
       `&key=${API_KEY}`;
 
@@ -84,7 +84,13 @@
       const b = Math.round((color.blue ?? 0) * 255);
       return `rgb(${r},${g},${b})`;
     }
-
+    
+    function toBorderColor(border) {
+      if (!border?.color) return null;
+      const { red = 0, green = 0, blue = 0 } = border.color;
+      return `rgb(${Math.round(red * 255)},${Math.round(green * 255)},${Math.round(blue * 255)})`;
+    }
+    
     fetch(url)
       .then(res => res.json())
       .then(data => {
@@ -128,9 +134,21 @@
             const isBold = effectiveFmt.textFormat?.bold === true || userFmt.textFormat?.bold === true;           
             const rawSize = effectiveFmt.textFormat?.fontSize;
             const fontSize = rawSize > 10 ? rawSize : "";
+
+            const borders = userFmt.borders || {};
+            const borderTop = toBorderColor(borders.top);
+            const borderBottom = toBorderColor(borders.bottom);
+            const borderLeft = toBorderColor(borders.left);
+            const borderRight = toBorderColor(borders.right);
+            
+            let borderStyle = "";
+            if (borderTop) borderStyle += `border-top: 1px solid ${borderTop};`;
+            if (borderBottom) borderStyle += `border-bottom: 1px solid ${borderBottom};`;
+            if (borderLeft) borderStyle += `border-left: 1px solid ${borderLeft};`;
+            if (borderRight) borderStyle += `border-right: 1px solid ${borderRight};`;
             
             const span = mergeMap[key];
-            const tag = `<td style="background:${bg}; color:${fg}; font-weight:${isBold ? "bold" : "normal"}; font-size:${fontSize}px;"` +
+            const tag = `<td style="background:${bg}; color:${fg}; font-weight:${isBold ? "bold" : "normal"}; font-size:${fontSize}px; ${borderStyle}"` +
               (span?.rowspan ? ` rowspan="${span.rowspan}"` : "") +
               (span?.colspan ? ` colspan="${span.colspan}"` : "") +
               `>${text}</td>`;
