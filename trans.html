@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>StatesTrans Sheet Viewer</title>
+    <title>전체 시트 보기 - StatesTrans</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', { packages: ['table'] });
@@ -10,25 +10,32 @@
 
       function drawTable() {
         const query = new google.visualization.Query(
-          'https://docs.google.com/spreadsheets/d/1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw/gviz/tq?sheet=StatesTrans&tq=select B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T offset 1 limit 18'
+          'https://docs.google.com/spreadsheets/d/1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw/gviz/tq?sheet=StatesTrans'
         );
         query.send(function (response) {
           const data = response.getDataTable();
           const table = new google.visualization.Table(document.getElementById("table_div"));
-          table.draw(data, { showRowNumber: false, width: '100%' });
+          table.draw(data, {
+            showRowNumber: false,
+            width: '100%',
+            height: '100%',
+          });
         });
       }
     </script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      #table_div {
+        margin: auto;
+        max-width: 100%;
+      }
+    </style>
   </head>
   <body>
+    <h2>StatesTrans 전체 시트 보기</h2>
     <div id="table_div"></div>
   </body>
-  <script>
-    function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      let isHeight = isMobile ? "550px" : "375px"
-      window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
-    }
-  </script>
 </html>
