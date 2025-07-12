@@ -105,6 +105,7 @@
             buildingData[name] = data;
           }
           renderBuildingSelectors();
+          sendHeightToParent(); 
         }
     
         function renderBuildingSelectors() {
@@ -300,7 +301,6 @@
         }
     
         fetchBuildingData();
-        sendHeightToParent();
       </script>
       <script>      
         document.addEventListener("contextmenu", event => event.preventDefault());
