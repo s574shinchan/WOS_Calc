@@ -24,17 +24,17 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"></script>
 <style>
-    body {
-      background-image: url('images/watermark.png');
-      background-repeat: repeat;
-      background-position: center;
-      background-size: auto;
-      background-attachment: fixed;
-      background-color: #f3f3f3;
-      overflow-x: hidden;
-      margin: 0;
-    }
-  </style>
+  body {
+    background-image: url('images/watermark.png');
+    background-repeat: repeat;
+    background-position: center;
+    background-size: auto;
+    background-attachment: fixed;
+    background-color: #f3f3f3;
+    overflow-x: hidden;
+    margin: 0;
+  }
+</style>
 </meta>
 </head>
   <body class="bg-gray-100 min-h-screen p-4">
@@ -61,19 +61,19 @@
       <div class="sm:hidden overflow-x-auto mb-4 mt-1">
         <div class="flex space-x-2 w-max min-w-full bg-gray-100 p-2 rounded shadow text-xs">
           <button class="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('guide')">🏠 자료모음</button>
-          <button class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('building')">🏗 건물</button>
-          <button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('equip')">🛡 장비</button>
-          <button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('gem')">💎 보석</button>
-          <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('hero')">🦸 영웅</button>
-          <button class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('pet')">🐾 펫</button>
-          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('research')">🧪 연구</button>
+          <button class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('building')">🏗 건물계산</button>
+          <button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('equip')">🛡 영주장비</button>
+          <button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('gem')">💎 영주보석</button>
+          <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('hero')">🦸 영웅장비</button>
+          <button class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('pet')">🐾 펫돌파</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('research')">🧪 일반연구</button>
           <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('helios')">🔬 헬리오스</button>
-          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('troop')">👮‍♂️ 병사</button>
-          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('beartrap')">🐻 부대</button>
-          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('imagedata')">📷 재료</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('troop')">👮‍♂️ 병사셍신</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('beartrap')">🐻 부대지정</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('imagedata')">📷 재료표</button>
           <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('pakage')">📦 패키지</button>
-          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('schedule')">📅 일정</button>
-          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('transfer')">🛬 이민</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('schedule')">📅 일정표</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('transfer')">🛬 이민예측</button>
         </div>
       </div>
       <div class="text-gray-700 text-sm text-center mb-4">
@@ -155,12 +155,11 @@
                           <th class="border p-1">6주차</th>
                           <th class="border p-1">7주차</th>
                           <th class="border p-1">8주차</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <!-- 요새 1 -->
-                          <tr>
-                          <td class="border p-1">1</td>
+                        </tr>
+                      </thead>
+                        <tbody>
+                            <!-- 요새 1 -->
+                            <tr>                          <td class="border p-1">1</td>
                           <td class="border p-1">SSR 파편</td>
                           <td class="border p-1">HP 증가</td>
                           <td class="border p-1">공용 가속</td>
@@ -1066,7 +1065,7 @@
     
         const heights = {
           //building: [815, 655],
-          equip: [745, 576],
+          //equip: [745, 576],
           gem: [1450, 990],
           hero: [1115, 1125],
           pet: [1225, 846],
