@@ -9,310 +9,309 @@
   <body class="bg-gray-100 p-2 font-sans text-sm">
     <div class="max-w-full sm:max-w-6xl mx-auto bg-white p-2 sm:p-4 rounded-xl shadow-md space-y-4 text-[13px]">
       <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ 건물 계산기</h1>
-    </div>
-    <!-- 설명 영역 -->
-    <div class="text-gray-600 mb-4 text-sm">
-      <div class="mb-6">
-        <p>이 페이지는 각 건물별로 업그레이드 시에 필요한 자원(불의수정, 정제불수, 고기, 나무, 목재, 석탄, 철강재)을 계산하는 화면입니다.</p>
-        <p>건물 항목별로 개별 선택이 가능하며, 보유 중인 자원을 입력하면 추가로 필요한 수량만을 정확히 확인할 수 있습니다.</p>
-        <p>결과는 자원별 합계와 함께 표시되며, 패키지 구매 여부나 효율적인 투자 판단에 도움이 됩니다.</p>
-        <p>FC1 달성을 목표로 하는 단계부터 계산이 가능하며, 그 이하 단계는 반영되어 있지 않습니다.</p>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 px-0 text-center">
-        <!-- 첫 번째 행 -->
-        <div class="flex items-center flex-wrap text-sm font-semibold leading-tight">
-          <input class="mr-1 w-4 h-4" id="chkVP" onchange="handleVPCheck('chkVP')" type="checkbox"/> 일반)부집행관(VP) (10%)
-        </div>
-        <div class="flex items-center flex-wrap text-sm font-semibold leading-tight">
-          <input class="mr-1 w-4 h-4" id="chkServerBuff" type="checkbox"/> 건설서버버프 (10%)
-        </div>
-        <div class="flex items-center flex-wrap text-sm font-semibold leading-tight">
-          <input class="mr-1 w-4 h-4" id="chkPetBuff" onchange="togglePetBuffSelect()" type="checkbox"/> 펫버프<br/>(5-15%)
-          <select class="ml-2 mt-1 border rounded p-1 text-sm bg-gray-100 pointer-events-none" disabled="true" id="buffSelect">
-            <option value="0">선택 없음</option>
-            <option value="5">5%</option>
-            <option value="7">7%</option>
-            <option value="9">9%</option>
-            <option value="12">12%</option>
-            <option value="15">15%</option>
-          </select>
-        </div>
-        <div class="flex items-center flex-wrap text-sm font-semibold leading-tight"> 건설속도 (%)
-          <input class="ml-2 w-20 border rounded p-1 text-sm text-right" id="buildSpeed" min="0" placeholder="0" type="number"/>
-        </div>
-        <!-- 두 번째 행 -->
-        <div class="flex items-center text-sm font-semibold leading-tight mt-2">
-          <input class="mr-1 w-4 h-4" id="chkSPVP" onchange="handleVPCheck('chkSPVP')" type="checkbox"/> 최집)부집행관(VP) (15%)
-        </div>
-        <div class="flex items-center text-sm font-semibold leading-tight mt-2">
-          <input class="mr-1 w-4 h-4" id="chkCityBuff" type="checkbox"/> 시청버프 (20%)
-        </div>
-      </div>
-    </div>
-    <!-- 계산 폼 -->
-    <form class="space-y-4" id="calcForm">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="buildingGridBody"></div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        <div>
-          <label class="block font-semibold">보유 불수정</label>
-          <input class="w-full border rounded p-2" id="owned-불수정" type="number"/>
-        </div>
-        <div>
-          <label class="block font-semibold">보유 정제</label>
-          <input class="w-full border rounded p-2" id="owned-정제" type="number"/>
-        </div>
-      </div>
-      <button class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600" onclick="calculateAll()" type="button">계산하기</button>
-    </form>
-  </div>
-    <script>
-      function sendHeightToParent() {
-        const height = document.body.scrollHeight + 10;
-        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
-      }
       
-      // 페이지 최초 로드 시
-      window.addEventListener("load", () => {
-        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-      });
-      
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
-          window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-      }
-    </script>
-    <script>
-      const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
-      const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광", "변환시간"];
-      const buildingData = {};
-  
-      async function fetchBuildingData() {
-        for (const name of buildingList) {
-          const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
-          const res = await fetch(url);
-          const text = await res.text();
-          const lines = text.trim().split("\n");
-          const headers = lines[0].split(",");
-          const data = lines.slice(1).map(line => {
-            const obj = {};
-            const values = line.split(",");
-            headers.forEach((h, i) => {
-              obj[h.trim()] = values[i]?.trim() || "0";
-            });
-            return obj;
-          });
-          buildingData[name] = data;
+      <!-- 설명 영역 -->
+      <div class="text-gray-600 mb-4 text-sm">
+        <div class="mb-6">
+          <p>이 페이지는 각 건물별로 업그레이드 시에 필요한 자원(불의수정, 정제불수, 고기, 나무, 목재, 석탄, 철강재)을 계산하는 화면입니다.</p>
+          <p>건물 항목별로 개별 선택이 가능하며, 보유 중인 자원을 입력하면 추가로 필요한 수량만을 정확히 확인할 수 있습니다.</p>
+          <p>결과는 자원별 합계와 함께 표시되며, 패키지 구매 여부나 효율적인 투자 판단에 도움이 됩니다.</p>
+          <p>FC1 달성을 목표로 하는 단계부터 계산이 가능하며, 그 이하 단계는 반영되어 있지 않습니다.</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 px-0 text-center">
+          <!-- 첫 번째 행 -->
+          <div class="flex items-center flex-wrap text-sm font-semibold leading-tight">
+            <input class="mr-1 w-4 h-4" id="chkVP" onchange="handleVPCheck('chkVP')" type="checkbox"/> 일반)부집행관(VP) (10%)
+          </div>
+          <div class="flex items-center flex-wrap text-sm font-semibold leading-tight">
+            <input class="mr-1 w-4 h-4" id="chkServerBuff" type="checkbox"/> 건설서버버프 (10%)
+          </div>
+          <div class="flex items-center flex-wrap text-sm font-semibold leading-tight">
+            <input class="mr-1 w-4 h-4" id="chkPetBuff" onchange="togglePetBuffSelect()" type="checkbox"/> 펫버프<br/>(5-15%)
+            <select class="ml-2 mt-1 border rounded p-1 text-sm bg-gray-100 pointer-events-none" disabled="true" id="buffSelect">
+              <option value="0">선택 없음</option>
+              <option value="5">5%</option>
+              <option value="7">7%</option>
+              <option value="9">9%</option>
+              <option value="12">12%</option>
+              <option value="15">15%</option>
+            </select>
+          </div>
+          <div class="flex items-center flex-wrap text-sm font-semibold leading-tight"> 건설속도 (%)
+            <input class="ml-2 w-20 border rounded p-1 text-sm text-right" id="buildSpeed" min="0" placeholder="0" type="number"/>
+          </div>
+          <!-- 두 번째 행 -->
+          <div class="flex items-center text-sm font-semibold leading-tight mt-2">
+            <input class="mr-1 w-4 h-4" id="chkSPVP" onchange="handleVPCheck('chkSPVP')" type="checkbox"/> 최집)부집행관(VP) (15%)
+          </div>
+          <div class="flex items-center text-sm font-semibold leading-tight mt-2">
+            <input class="mr-1 w-4 h-4" id="chkCityBuff" type="checkbox"/> 시청버프 (20%)
+          </div>
+        </div>
+      </div>
+      <!-- 계산 폼 -->
+      <form class="space-y-4" id="calcForm">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="buildingGridBody"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold">보유 불수정</label>
+            <input class="w-full border rounded p-2" id="owned-불수정" type="number"/>
+          </div>
+          <div>
+            <label class="block font-semibold">보유 정제</label>
+            <input class="w-full border rounded p-2" id="owned-정제" type="number"/>
+          </div>
+        </div>
+        <button class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600" onclick="calculateAll()" type="button">계산하기</button>
+      </form>
+      <script>
+        function sendHeightToParent() {
+          const height = document.body.scrollHeight + 10;
+          window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
         }
-        renderBuildingSelectors();
-      }
-  
-      function renderBuildingSelectors() {
-        const container = document.getElementById("buildingGridBody");
-        buildingList.forEach(name => {
-          const levels = buildingData[name].map(d => d["레벨"]);
-          const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
-          container.innerHTML += `
-            <div class="bg-blue-50 border p-2 rounded shadow">
-              <label class="flex items-center text-sm font-semibold mb-1">
-                <input type="checkbox" id="check-${name}" class="mr-1 w-4 h-4" /> ${name}
-              </label>
-              <div class="flex items-center gap-2 mb-1">
-                <label class="text-sm whitespace-nowrap">현재</label>
-                <select id="start-${name}" class="w-full border rounded p-1 text-sm">${options}</select>
-              </div>
-              <div class="flex items-center gap-2 mb-1">
-                <label class="text-sm whitespace-nowrap">목표</label>
-                <select id="end-${name}" class="w-full border rounded p-1 text-sm">${options}</select>
-              </div>
-            </div>
-          `;
+        
+        // 페이지 최초 로드 시
+        window.addEventListener("load", () => {
+          setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
         });
-  
-        buildingList.forEach(name => {
-          const startSelect = document.getElementById(`start-${name}`);
-          const endSelect = document.getElementById(`end-${name}`);
-          if (startSelect && endSelect) {
-            startSelect.addEventListener("change", () => {
-              endSelect.value = startSelect.value;
+        
+        function loadPage(page) {
+          const isMobile = window.innerWidth <= 768;
+          const height = isMobile ? "550px" : "345px"
+            window.location.href = page;
+          window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+        }
+      </script>
+      <script>
+        const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
+        const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광", "변환시간"];
+        const buildingData = {};
+    
+        async function fetchBuildingData() {
+          for (const name of buildingList) {
+            const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
+            const res = await fetch(url);
+            const text = await res.text();
+            const lines = text.trim().split("\n");
+            const headers = lines[0].split(",");
+            const data = lines.slice(1).map(line => {
+              const obj = {};
+              const values = line.split(",");
+              headers.forEach((h, i) => {
+                obj[h.trim()] = values[i]?.trim() || "0";
+              });
+              return obj;
             });
+            buildingData[name] = data;
           }
-        });
-      }
-  
-      function formatValue(value) {
-        const num = parseFloat(value.toString().replace(/,/g, ''));
-        if (isNaN(num)) return value;
-        return num >= 1000 ? (num / 1000).toFixed(1) + "B" : num + "M";
-      }
-  
-      function formatHourToTime(hours) {
-        if (!hours || isNaN(hours)) return "0분";
-        const totalMinutes = Math.round(hours * 60);
-        const days = Math.floor(totalMinutes / 1440);
-        const hrs = Math.floor((totalMinutes % 1440) / 60);
-        const mins = totalMinutes % 60;
-  
-        let result = "";
-        if (days > 0) result += `${days}일 `;
-        if (hrs > 0) result += `${hrs}시간 `;
-        if (mins > 0 || result === "") result += `${mins}분`;
-        return result.trim();
-      }
-  
-      function handleVPCheck(toggleId) {
-        const chkVP = document.getElementById("chkVP");
-        const chkSPVP = document.getElementById("chkSPVP");
-      
-        if (toggleId === "chkVP" && chkVP.checked) {
-          chkSPVP.checked = false;
-        } else if (toggleId === "chkSPVP" && chkSPVP.checked) {
-          chkVP.checked = false;
+          renderBuildingSelectors();
         }
-      }
-  
-      function calculateAll() {
-        let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
-        let totalConversionTime = 0; // 단위: 시간
-        let result = `
-          <table class="w-full border text-sm text-center table-auto mt-4">
-            <thead class="bg-blue-100">
+    
+        function renderBuildingSelectors() {
+          const container = document.getElementById("buildingGridBody");
+          buildingList.forEach(name => {
+            const levels = buildingData[name].map(d => d["레벨"]);
+            const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
+            container.innerHTML += `
+              <div class="bg-blue-50 border p-2 rounded shadow">
+                <label class="flex items-center text-sm font-semibold mb-1">
+                  <input type="checkbox" id="check-${name}" class="mr-1 w-4 h-4" /> ${name}
+                </label>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">현재</label>
+                  <select id="start-${name}" class="w-full border rounded p-1 text-sm">${options}</select>
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-sm whitespace-nowrap">목표</label>
+                  <select id="end-${name}" class="w-full border rounded p-1 text-sm">${options}</select>
+                </div>
+              </div>
+            `;
+          });
+    
+          buildingList.forEach(name => {
+            const startSelect = document.getElementById(`start-${name}`);
+            const endSelect = document.getElementById(`end-${name}`);
+            if (startSelect && endSelect) {
+              startSelect.addEventListener("change", () => {
+                endSelect.value = startSelect.value;
+              });
+            }
+          });
+        }
+    
+        function formatValue(value) {
+          const num = parseFloat(value.toString().replace(/,/g, ''));
+          if (isNaN(num)) return value;
+          return num >= 1000 ? (num / 1000).toFixed(1) + "B" : num + "M";
+        }
+    
+        function formatHourToTime(hours) {
+          if (!hours || isNaN(hours)) return "0분";
+          const totalMinutes = Math.round(hours * 60);
+          const days = Math.floor(totalMinutes / 1440);
+          const hrs = Math.floor((totalMinutes % 1440) / 60);
+          const mins = totalMinutes % 60;
+    
+          let result = "";
+          if (days > 0) result += `${days}일 `;
+          if (hrs > 0) result += `${hrs}시간 `;
+          if (mins > 0 || result === "") result += `${mins}분`;
+          return result.trim();
+        }
+    
+        function handleVPCheck(toggleId) {
+          const chkVP = document.getElementById("chkVP");
+          const chkSPVP = document.getElementById("chkSPVP");
+        
+          if (toggleId === "chkVP" && chkVP.checked) {
+            chkSPVP.checked = false;
+          } else if (toggleId === "chkSPVP" && chkSPVP.checked) {
+            chkVP.checked = false;
+          }
+        }
+    
+        function calculateAll() {
+          let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+          let totalConversionTime = 0; // 단위: 시간
+          let result = `
+            <table class="w-full border text-sm text-center table-auto mt-4">
+              <thead class="bg-blue-100">
+                <tr>
+                  <th class="border p-1">건물</th>
+                  <th class="border p-1">레벨</th>
+                  <th class="border p-1">불수정</th>
+                  <th class="border p-1">정제</th>
+                  <th class="border p-1">고기</th>
+                  <th class="border p-1">나무</th>
+                  <th class="border p-1">석탄</th>
+                  <th class="border p-1">철광</th>
+                  <th class="border p-1">건설시간</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+    
+          const owned = {
+            "불수정": parseInt(document.getElementById("owned-불수정").value || 0),
+            "정제": parseInt(document.getElementById("owned-정제").value || 0)
+          };
+    
+          const buildSpeed = parseFloat(document.getElementById("buildSpeed").value || 0);
+          let factor = (buildSpeed * 0.01) + 1;
+    
+          const chkVP = document.getElementById("chkVP").checked;
+          const chkSPVP = document.getElementById("chkSPVP").checked;
+                const chkServerBuff= document.getElementById("chkServerBuff").checked;
+          
+          if (chkVP) factor += 0.10;
+          else if (chkSPVP) factor += 0.15;
+          
+          if(chkServerBuff) factor += 0.10;
+          
+          const chkPet = document.getElementById("chkPetBuff").checked
+          const petBuff = parseFloat(document.getElementById("buffSelect").value || "0");
+          
+          if (!isNaN(petBuff) && chkPet) {
+            factor = factor + (petBuff / 100);  // % 값을 소수점으로 반영
+          }
+    
+          buildingList.forEach(name => {
+            if (!document.getElementById("check-" + name).checked) return;
+    
+            const start = parseInt(document.getElementById("start-" + name).value);
+            const end = parseInt(document.getElementById("end-" + name).value);
+            const data = buildingData[name].slice(start + 1, end + 1);
+            let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
+            let buildingConversionTime = 0;
+    
+            data.forEach(row => {
+              resources.forEach(res => {
+                const value = parseInt(row[res] || 0);
+                if (res === "변환시간") {
+                  buildingConversionTime += value;
+                  totalConversionTime += value;
+                } else {
+                  subtotal[res] += value;
+                  total[res] += value;
+                }
+              });
+            });
+    
+            let adjustedBuildingHours = buildingConversionTime / factor;
+            const chkCityBuff = document.getElementById("chkCityBuff").checked;
+    
+            if(chkCityBuff) {
+              adjustedBuildingHours = adjustedBuildingHours * 0.8;
+            }
+    
+            const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
+            result += `
               <tr>
-                <th class="border p-1">건물</th>
-                <th class="border p-1">레벨</th>
-                <th class="border p-1">불수정</th>
-                <th class="border p-1">정제</th>
-                <th class="border p-1">고기</th>
-                <th class="border p-1">나무</th>
-                <th class="border p-1">석탄</th>
-                <th class="border p-1">철광</th>
-                <th class="border p-1">건설시간</th>
+                <td class="border p-1 font-medium">${name}</td>
+                <td class="border p-1 text-xs">${levelStr}</td>
+                <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
+                <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
+                <td class="border p-1">${formatValue(subtotal["고기"])}</td>
+                <td class="border p-1">${formatValue(subtotal["나무"])}</td>
+                <td class="border p-1">${formatValue(subtotal["석탄"])}</td>
+                <td class="border p-1">${formatValue(subtotal["철광"])}</td>
+                <td class="border p-1">${formatHourToTime(adjustedBuildingHours)}</td>
               </tr>
-            </thead>
-            <tbody>
-        `;
-  
-        const owned = {
-          "불수정": parseInt(document.getElementById("owned-불수정").value || 0),
-          "정제": parseInt(document.getElementById("owned-정제").value || 0)
-        };
-  
-        const buildSpeed = parseFloat(document.getElementById("buildSpeed").value || 0);
-        let factor = (buildSpeed * 0.01) + 1;
-  
-        const chkVP = document.getElementById("chkVP").checked;
-        const chkSPVP = document.getElementById("chkSPVP").checked;
-              const chkServerBuff= document.getElementById("chkServerBuff").checked;
-        
-        if (chkVP) factor += 0.10;
-        else if (chkSPVP) factor += 0.15;
-        
-        if(chkServerBuff) factor += 0.10;
-        
-        const chkPet = document.getElementById("chkPetBuff").checked
-        const petBuff = parseFloat(document.getElementById("buffSelect").value || "0");
-        
-        if (!isNaN(petBuff) && chkPet) {
-          factor = factor + (petBuff / 100);  // % 값을 소수점으로 반영
-        }
-  
-        buildingList.forEach(name => {
-          if (!document.getElementById("check-" + name).checked) return;
-  
-          const start = parseInt(document.getElementById("start-" + name).value);
-          const end = parseInt(document.getElementById("end-" + name).value);
-          const data = buildingData[name].slice(start + 1, end + 1);
-          let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
-          let buildingConversionTime = 0;
-  
-          data.forEach(row => {
-            resources.forEach(res => {
-              const value = parseInt(row[res] || 0);
-              if (res === "변환시간") {
-                buildingConversionTime += value;
-                totalConversionTime += value;
-              } else {
-                subtotal[res] += value;
-                total[res] += value;
-              }
-            });
+            `;
           });
-  
-          let adjustedBuildingHours = buildingConversionTime / factor;
-          const chkCityBuff = document.getElementById("chkCityBuff").checked;
-  
-          if(chkCityBuff) {
-            adjustedBuildingHours = adjustedBuildingHours * 0.8;
-          }
-  
-          const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
+    
           result += `
-            <tr>
-              <td class="border p-1 font-medium">${name}</td>
-              <td class="border p-1 text-xs">${levelStr}</td>
-              <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
-              <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
-              <td class="border p-1">${formatValue(subtotal["고기"])}</td>
-              <td class="border p-1">${formatValue(subtotal["나무"])}</td>
-              <td class="border p-1">${formatValue(subtotal["석탄"])}</td>
-              <td class="border p-1">${formatValue(subtotal["철광"])}</td>
-              <td class="border p-1">${formatHourToTime(adjustedBuildingHours)}</td>
+            <tr class="bg-blue-50 font-bold">
+              <td class="border p-1" colspan="2">총합</td>
+              <td class="border p-1">${total["불수정"].toLocaleString()}</td>
+              <td class="border p-1">${total["정제"].toLocaleString()}</td>
+              <td class="border p-1">${formatValue(total["고기"])}</td>
+              <td class="border p-1">${formatValue(total["나무"])}</td>
+              <td class="border p-1">${formatValue(total["석탄"])}</td>
+              <td class="border p-1">${formatValue(total["철광"])}</td>
+              <td class="border p-1"></td>
             </tr>
-          `;
-        });
-  
-        result += `
-          <tr class="bg-blue-50 font-bold">
-            <td class="border p-1" colspan="2">총합</td>
-            <td class="border p-1">${total["불수정"].toLocaleString()}</td>
-            <td class="border p-1">${total["정제"].toLocaleString()}</td>
-            <td class="border p-1">${formatValue(total["고기"])}</td>
-            <td class="border p-1">${formatValue(total["나무"])}</td>
-            <td class="border p-1">${formatValue(total["석탄"])}</td>
-            <td class="border p-1">${formatValue(total["철광"])}</td>
-            <td class="border p-1"></td>
-          </tr>
-          <tr class="text-center font-bold bg-orange-50">
-            <td class="border p-1" colspan="2">보유량</td>
-            <td class="border p-1">${owned["불수정"].toLocaleString()}</td>
-            <td class="border p-1">${owned["정제"].toLocaleString()}</td>
-            <td class="border p-1" colspan="5"></td>
-            </tr>
-            <tr class="text-center font-bold bg-red-50">
-            <td class="border p-1" colspan="2">과부족</td>
-            <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
-            <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
-            <td class="border p-1" colspan="5"></td>
-            </tr>
-        </tbody>
-      </table>`;
-  
-        window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
-      }
-  
-      function togglePetBuffSelect() {
-        const checkbox = document.getElementById("chkPetBuff");
-        const selectBox = document.getElementById("buffSelect");
-        selectBox.disabled = !checkbox.checked;
-        selectBox.classList.toggle("pointer-events-none", !checkbox.checked);
-        selectBox.classList.toggle("bg-white", checkbox.checked);
-        selectBox.classList.toggle("bg-gray-100", !checkbox.checked);
-      }
-  
-      fetchBuildingData();
-      sendHeightToParent();
-    </script>
-    <script>      
-      document.addEventListener("contextmenu", event => event.preventDefault());
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "F12" ||
-            (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-            (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
-        {
-          e.preventDefault();
+            <tr class="text-center font-bold bg-orange-50">
+              <td class="border p-1" colspan="2">보유량</td>
+              <td class="border p-1">${owned["불수정"].toLocaleString()}</td>
+              <td class="border p-1">${owned["정제"].toLocaleString()}</td>
+              <td class="border p-1" colspan="5"></td>
+              </tr>
+              <tr class="text-center font-bold bg-red-50">
+              <td class="border p-1" colspan="2">과부족</td>
+              <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
+              <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
+              <td class="border p-1" colspan="5"></td>
+              </tr>
+          </tbody>
+        </table>`;
+    
+          window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
         }
-      });
-    </script>
+    
+        function togglePetBuffSelect() {
+          const checkbox = document.getElementById("chkPetBuff");
+          const selectBox = document.getElementById("buffSelect");
+          selectBox.disabled = !checkbox.checked;
+          selectBox.classList.toggle("pointer-events-none", !checkbox.checked);
+          selectBox.classList.toggle("bg-white", checkbox.checked);
+          selectBox.classList.toggle("bg-gray-100", !checkbox.checked);
+        }
+    
+        fetchBuildingData();
+        sendHeightToParent();
+      </script>
+      <script>      
+        document.addEventListener("contextmenu", event => event.preventDefault());
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "F12" ||
+              (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+              (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+          {
+            e.preventDefault();
+          }
+        });
+      </script>
   </body>
 </html>
