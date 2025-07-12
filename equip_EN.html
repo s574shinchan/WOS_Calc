@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chief Gear Calculator</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (window.innerWidth <= 768) {
+      window.location.href = "equip_EN_m.html"; // 또는 원하는 모바일 전용 파일
+    }
+  </script>
 </head>
   <body class="bg-gray-100 p-2 font-sans text-sm">
     <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
@@ -26,15 +31,25 @@
         <button type="button" onclick="calculateGear()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">Calc</button>
       </form>
     </div>
-  
-    <script>
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
         window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-      }
-      
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+    <script>
       const gearSlots = ["장비1(창)", "장비2(창)", "장비3(방)", "장비4(방)", "장비5(궁)", "장비6(궁)"];
       const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/2035550da1ab0e8d4601e86c972415b02f568709/data/chief/Gear.csv';
       let gearLevels = [];
@@ -61,6 +76,7 @@
         });
         gearLevels = gearData.map(r => replaceDisplayName(r["단계"]));
         createGearUI();
+        sendHeightToParent();
       }
   
       async function createGearUI() {
