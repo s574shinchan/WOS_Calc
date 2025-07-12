@@ -63,7 +63,24 @@
         <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Calc</button>
       </form>
     </div>
+    <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
     
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
     <script>
       const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
       const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광", "변환시간"];
@@ -305,6 +322,7 @@
       }
 
       fetchBuildingData();
+      sendHeightToParent();
     </script>
     <script>      
       document.addEventListener("contextmenu", event => event.preventDefault());
