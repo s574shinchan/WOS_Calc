@@ -36,6 +36,11 @@
       margin: 0;
     }
   </style>
+  <script>
+    if (window.innerWidth <= 768) {
+      window.location.href = "index_m.html"; // 또는 원하는 모바일 전용 파일
+    }
+  </script>
 </head>
 <body class="bg-gray-100 min-h-screen p-4">
   <div class="max-w-[1400px] mx-auto w-full bg-blue-300 shadow rounded p-4 sm:p-3 relative">
