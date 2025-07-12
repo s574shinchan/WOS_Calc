@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>장비 계산기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 p-2 font-sans text-sm">
+    <div class="max-w-full sm:max-w-6xl mx-auto bg-white p-2 sm:p-4 rounded-xl shadow-md space-y-4 text-[13px]">
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">🛡️ 장비 계산기
+        <!-- 설명 추가 -->
+        <div class="text-gray-600 mb-6 text-sm">
+          <p>이 페이지는 현재 보유 중인 영주장비 등급과 목표하는 등급을 선택하면,</p>
+          <p>업그레이드에 필요한 자원(합금, 설계도면, 광택제, 달빛엠버 등)의 총 수량을 계산할 수 있습니다.</p>
+          <p>장비는 최대 6개까지 선택이 가능하며, 보유 중인 자원을 입력하면 추가로 필요한 수량만을 정확히 확인할 수 있습니다.</p>
+        </div>
+        <form class="space-y-6" id="gearForm">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2" id="gearTableBody"></div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+            <div><label class="block font-semibold">보유 합금</label><input class="w-full border rounded p-2" id="own-합금" type="number"/></div>
+            <div><label class="block font-semibold">보유 설계도면</label><input class="w-full border rounded p-2" id="own-설계도면" type="number"/></div>
+            <div><label class="block font-semibold">보유 광택제</label><input class="w-full border rounded p-2" id="own-광택제" type="number"/></div>
+            <div><label class="block font-semibold">보유 달빛앰버</label><input class="w-full border rounded p-2" id="own-앰버" type="number"/></div>
+          </div>
+          <button class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600" onclick="calculateGear()" type="button">계산하기</button>
+        </form>
+      </h1>
+    </div>
+    <script>
+      function sendHeightToParent() {
+        const height = document.body.scrollHeight + 10;
+        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+      }
+  
+      // 페이지 최초 로드 시
+      window.addEventListener("load", () => {
+        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+      });
+      
+      function loadPage(page) {
+        const isMobile = window.innerWidth <= 768;
+        const height = isMobile ? "550px" : "345px"
+          window.location.href = page;
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+      }
+    </script>
+    <script>     
+      const gearSlots = ["장비1(창)", "장비2(창)", "장비3(방)", "장비4(방)", "장비5(궁)", "장비6(궁)"];
+      const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/2035550da1ab0e8d4601e86c972415b02f568709/data/chief/Gear.csv';
+      let gearLevels = [];
+      let gearData = [];
+      
+      async function fetchCSVData() {
+        const res = await fetch(csvUrl);
+        const text = await res.text();
+        const lines = text.trim().split("\n").map(l => l.split(","));
+        const headers = lines[0];
+        gearData = lines.slice(1).map(row => {
+          const obj = {};
+          headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
+          return obj;
+        });
+        gearLevels = gearData.map(r => r["단계"]);
+        createGearUI();
+        sendHeightToParent();
+      }
+      
+      async function createGearUI() {
+        const grid = document.getElementById("gearTableBody");
+        gearSlots.forEach((name, i) => {
+          const options = gearLevels.map(stage => `<option value="${stage}">${stage}</option>`).join("");
+          grid.innerHTML += `
+          <div class="border p-2 rounded bg-blue-50 text-xs">
+          <label class="flex items-center text-sm font-semibold mb-1">
+          <input type="checkbox" id="check-${i}" class="mr-1 w-4 h-4" />
+          ${name}
+          </label>
+          <div class="flex items-center gap-2 mb-1">
+          <label class="text-sm whitespace-nowrap">현재</label>
+          <select id="start-${i}" class="w-full border rounded py-1 px-2 text-sm">
+          ${options}
+          </select>
+          </div>
+          <div class="flex items-center gap-2 mb-1">
+          <label class="text-sm whitespace-nowrap">목표</label>
+          <select id="end-${i}" class="w-full border rounded py-1 px-2 text-sm">
+          ${options}
+          </select>
+          </div>
+          </div>
+          `
+        });
+        
+        // 현재 선택 시 목표도 동일하게 자동 설정
+        gearSlots.forEach((_, i) => {
+          const start = document.getElementById(`start-${i}`);
+          const end = document.getElementById(`end-${i}`);
+          if (start && end) {
+            start.addEventListener("change", () => {
+              end.value = start.value;
+            });
+          }
+        });
+      }
+      
+      async function calculateGear() {
+        let total = { 합금: 0, 설계도면: 0, 광택제: 0, 달빛앰버: 0 };
+        let rows = "";
+        
+        gearSlots.forEach((name, i) => {
+          if (!document.getElementById(`check-${i}`).checked) 
+            return;
+          
+          const start = document.getElementById(`start-${i}`).value;
+          const end = document.getElementById(`end-${i}`).value;
+          const startIndex = gearLevels.indexOf(start);
+          const endIndex = gearLevels.indexOf(end);
+  
+          if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
+            rows += `<tr><td class="border p-1 text-center" colspan="5">⚠️ ${name}: 잘못된 단계 선택</td></tr>`;
+            return;
+          }
+  
+          const subtotal = { 합금: 0, 설계도면: 0, 광택제: 0, 달빛앰버: 0 };
+          for (let j = startIndex + 1; j <= endIndex; j++) {
+            const row = gearData[j];
+            subtotal.합금 += parseFloat(row["합금"] || "0");
+            subtotal.설계도면 += parseFloat(row["설계도면"] || "0");
+            subtotal.광택제 += parseFloat(row["광택제"] || "0");
+            subtotal.달빛앰버 += parseFloat(row["달빛앰버"] || "0");
+          }
+  
+          total.합금 += subtotal.합금;
+          total.설계도면 += subtotal.설계도면;
+          total.광택제 += subtotal.광택제;
+          total.달빛앰버 += subtotal.달빛앰버;
+  
+          rows += `
+          <tr class="text-center">
+          <td class="border p-1">${name}</td>
+          <td class="border p-1">${start} → ${end}</td>
+          <td class="border p-1">${subtotal.합금.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.설계도면.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.광택제.toLocaleString()}</td>
+          <td class="border p-1">${subtotal.달빛앰버.toLocaleString()}</td>
+          </tr>`;
+        });
+  
+        const owned = {
+          합금: parseFloat(document.getElementById("own-합금").value) || 0,
+          설계도면: parseFloat(document.getElementById("own-설계도면").value) || 0,
+          광택제: parseFloat(document.getElementById("own-광택제").value) || 0,
+          달빛앰버: parseFloat(document.getElementById("own-앰버").value) || 0,
+        };
+        
+        rows += `
+          <tr class="text-center font-bold bg-purple-100">
+            <td class="border p-1" colspan="2">총합</td>
+            <td class="border p-1">${total.합금.toLocaleString()}</td>
+            <td class="border p-1">${total.설계도면.toLocaleString()}</td>
+            <td class="border p-1">${total.광택제.toLocaleString()}</td>
+            <td class="border p-1">${total.달빛앰버.toLocaleString()}</td>
+          </tr>
+          <tr class="text-center font-bold bg-orange-50">
+            <td class="border p-1" colspan="2">보유량</td>
+            <td class="border p-1">${owned.합금.toLocaleString()}</td>
+            <td class="border p-1">${owned.설계도면.toLocaleString()}</td>
+            <td class="border p-1">${owned.광택제.toLocaleString()}</td>
+            <td class="border p-1">${owned.달빛앰버.toLocaleString()}</td>
+          </tr>
+          <tr class="text-center font-bold bg-red-50">
+            <td class="border p-1" colspan="2">과부족</td>
+            <td class="border p-1">${(owned.합금 - total.합금).toLocaleString()}</td>
+            <td class="border p-1">${(owned.설계도면 - total.설계도면).toLocaleString()}</td>
+            <td class="border p-1">${(owned.광택제 - total.광택제).toLocaleString()}</td>
+            <td class="border p-1">${(owned.달빛앰버 - total.달빛앰버).toLocaleString()}</td>
+          </tr>
+        `;
+  
+        const resultHTML = `
+          <table class="w-full table-auto border text-sm text-center mt-4">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="border p-1">슬롯</th>
+                <th class="border p-1">단계</th>
+                <th class="border p-1">합금</th>
+                <th class="border p-1">설계도면</th>
+                <th class="border p-1">광택제</th>
+                <th class="border p-1">앰버</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+        
+        window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+      }
+      
+      fetchCSVData();
+    </script>
+<script>      
+      document.addEventListener("contextmenu", event => event.preventDefault());
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+           (e.ctrlKey && (e.key === "U" || e.key === "S")))
+        {
+          e.preventDefault();
+        }
+      });
+    </script>
+</body>
+</html>
