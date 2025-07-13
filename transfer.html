@@ -32,14 +32,14 @@
     <h2>📊 이민예상범위</h2>
     <div class="text-gray-700 text-sm text-center mb-4">
       <p>기준일자는 이민채팅이 열리는 시점인 일요일 입니다.</p>
-      <p>이전까지의 이민그룹 데이터를 기반으로 한 예측정보이므로 100% 정확하지 않습니다.</p>
+      <p>이전까지의 이민그룹 데이터를 기본으로 한 예측정보이미로 100% 정확하지 않습니다.</p>
     </div>
     <div id="sheet-table">⏳ 데이터를 불러오는 중...</div>
     <div class="text-gray-700 text-sm text-center mb-4">
-      <p>예를 들어 본인서버가 기준일자에 6세대라고 명시되어있는 경우, 해당 기준일 다음날인 월요일에 6세대 시작입니다.</p>
+      <p>예를 들어 본인서방가 기준일자에 6세대라고 명시되어있는 경우, 해당 기준일 다음날인 월요일에 6세대 시작입니다.</p>
       <p>기준일이 7월인경우 8월예측 데이터는 7월 이민종료 이후에 업데이트 될 예정입니다.</p>
-      <p>또한, 4주인지 6주인지 기준이 잡히지 않을 경우에는 업데이트되지 않을 수 있습니다.</p>
-      <p>이웃왕국 범위가 잘못된 부분이 있다면 우측상단 오픈카톡으로 알려주시면 반영하겠습니다.</p>
+      <p>또한, 4주인지 6주인지 기준이 잡힌 경우에는 업데이트되지 않을 수 있습니다.</p>
+      <p>이욱왕국 범위가 잘못된 부분이 있다면 우측사단 오픈카톡으로 알려주시면 반영하게시오.</p>
     </div>
   </div>
 
@@ -49,21 +49,10 @@
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
 
-    // 페이지 최초 로드 시
     window.addEventListener("load", () => {
-      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+      setTimeout(sendHeightToParent, 100);
     });
-    
-    function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-    }
-  </script>
 
-  <script>
-    // 색상 변환: { red: 0.5, green: 0.7, blue: 0.2 } → rgb(128,179,51)
     function toRGB(color, fallback = "#ffffff") {
       if (!color) return fallback;
       const r = Math.round((color.red ?? 0) * 255);
@@ -71,39 +60,23 @@
       const b = Math.round((color.blue ?? 0) * 255);
       return `rgb(${r},${g},${b})`;
     }
-    
+
     function toBorderColor(border) {
       if (!border?.color) return null;
       const { red = 0, green = 0, blue = 0 } = border.color;
       return `rgb(${Math.round(red * 255)},${Math.round(green * 255)},${Math.round(blue * 255)})`;
     }
-    
-    async function loadKeyAndSheet() {
+
+    async function loadData() {
       try {
-        const keyRes = await fetch("https://byshin.s3.ap-southeast-2.amazonaws.com/data/fakeKey.txt");
-        if (!keyRes.ok) throw new Error("키 파일을 불러올 수 없습니다.");
-        const API_KEY = (await keyRes.text()).trim();
-  
-        const SPREADSHEET_ID = "1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw";
-        const RANGE = "StatesTrans";
-  
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?` +
-          `includeGridData=true&ranges=${RANGE}` +
-          `&fields=sheets.data.rowData.values(` +
-            `effectiveValue,` +
-            `effectiveFormat(backgroundColor,textFormat(foregroundColor,bold,fontSize)),` +
-            `userEnteredFormat(backgroundColor,textFormat(bold,fontSize),borders)` +
-          `),sheets.merges` +
-          `&key=${API_KEY}`;
-  
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Google Sheets API 오류");
-  
-        const data = await res.json();
+        const response = await fetch("https://wos-proxy.mko75620.workers.dev/get-sheet");
+        if (!response.ok) throw new Error("프록시 호출 실패");
+        const data = await response.json();
+
         const sheet = data.sheets[0];
         const merges = sheet.merges || [];
         const rows = sheet.data[0].rowData || [];
-  
+
         const mergeMap = {};
         const skip = new Set();
         for (const m of merges) {
@@ -120,7 +93,7 @@
             }
           }
         }
-  
+
         let html = "<table><tbody>";
         rows.forEach((row, ri) => {
           html += "<tr>";
@@ -128,31 +101,31 @@
           cells.forEach((cell, ci) => {
             const key = `${ri},${ci}`;
             if (skip.has(key)) return;
-  
+
             const val = cell?.effectiveValue;
             const text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
-  
+
             const effectiveFmt = cell?.effectiveFormat ?? {};
             const userFmt = cell?.userEnteredFormat ?? {};
             const bg = toRGB(userFmt.backgroundColor, "#ffffff");
             const fg = toRGB(effectiveFmt.textFormat?.foregroundColor, "#000000");
-  
+
             const isBold = effectiveFmt.textFormat?.bold === true || userFmt.textFormat?.bold === true;
             const rawSize = effectiveFmt.textFormat?.fontSize;
             const fontSize = rawSize > 10 ? rawSize : "";
-  
+
             const borders = userFmt.borders || {};
             const borderTop = toBorderColor(borders.top);
             const borderBottom = toBorderColor(borders.bottom);
             const borderLeft = toBorderColor(borders.left);
             const borderRight = toBorderColor(borders.right);
-  
+
             let borderStyle = "";
             if (borderTop) borderStyle += `border-top: 1px solid ${borderTop};`;
             if (borderBottom) borderStyle += `border-bottom: 1px solid ${borderBottom};`;
             if (borderLeft) borderStyle += `border-left: 1px solid ${borderLeft};`;
             if (borderRight) borderStyle += `border-right: 1px solid ${borderRight};`;
-  
+
             const span = mergeMap[key];
             const tag = `<td style="background:${bg}; color:${fg}; font-weight:${isBold ? "bold" : "normal"}; font-size:${fontSize}px; ${borderStyle}"` +
               (span?.rowspan ? ` rowspan="${span.rowspan}"` : "") +
@@ -163,32 +136,16 @@
           html += "</tr>";
         });
         html += "</tbody></table>";
-  
+
         document.getElementById("sheet-table").innerHTML = html;
         sendHeightToParent();
       } catch (err) {
         console.error("로딩 오류:", err);
-        document.getElementById("sheet-table").innerText = "❌ 데이터를 불러올 수 없습니다.";
+        document.getElementById("sheet-table").innerText = "❌ 데이터를 불러오지 못했습니다.";
       }
     }
-  
-    window.addEventListener("load", loadKeyAndSheet);
-  </script>
-  <script>
-    function setupLangSelect(id) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('change', function () {
-          const langCode = this.value; // 예: index_en.html
-          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
-          localStorage.setItem('lang', lang);
-          window.location.href = langCode;
-        });
-      }
-    }
-  
-    setupLangSelect('langSelectMobile');
-    setupLangSelect('langSelectPC');
+
+    window.addEventListener("load", loadData);
   </script>
 </body>
 </html>
