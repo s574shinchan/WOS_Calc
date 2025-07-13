@@ -42,15 +42,25 @@
             </form>
           </div>
         </div>
+        <script>
+          function sendHeightToParent() {
+            const height = document.body.scrollHeight + 10;
+            window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+          }
         
-        <script> 
+          // 페이지 최초 로드 시
+          window.addEventListener("load", () => {
+            setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+          });
+          
           function loadPage(page) {
             const isMobile = window.innerWidth <= 768;
             const height = isMobile ? "550px" : "345px"
-            window.location.href = page;
+              window.location.href = page;
             window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
           }
-          
+        </script>        
+        <script> 
           const slotNames = ["고글", "장갑", "벨트", "신발"];
           const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Hero/Mithril.csv";
           let stageList = [];
@@ -68,6 +78,7 @@
             });
             stageList = csvData.map(r => r["레벨"]);
             renderHeroEquipUI();
+            sendHeightToParent();
           }
           
           function renderHeroEquipUI() {
@@ -223,6 +234,7 @@
             });
             masteryLevels = masteryData.map(r => r["레벨"]);
             renderMasteryUI();
+            sendHeightToParent();
           }
     
           function renderMasteryUI() {
