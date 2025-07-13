@@ -1,70 +1,75 @@
 <!DOCTYPE html>
 
 <html lang="ko">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="ca-pub-8205102847358210" name="google-adsense-account"/>
-<meta content="index, follow" name="robots">
-<meta content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료들이 한곳에!" name="description"/>
-<title>Whiteout Survival Calculator &amp; Data Collection</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"></script>
-<style>
-    body {
-      background-image: url('images/watermark.png');
-      background-repeat: repeat;
-      background-position: center;
-      background-size: auto;
-      background-attachment: fixed;
-      background-color: #f3f3f3;
-      overflow-x: hidden;
-      margin: 0;
-    }
-  </style>
-</meta></head>
-<body class="bg-gray-100 min-h-screen p-4">
-<div class="max-w-[1400px] mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3 relative">
-<!-- 모바일 버튼: 중앙 가로 정렬 -->
-<div class="flex flex-col items-center gap-2 sm:hidden mb-4">
-<!-- 언어 선택 콤보박스 -->
-<select class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectMobile">
-    <option value="index.html">🌐 Language</option>
-    <option value="index.html">🇰🇷 Korean　</option>
-    <option selected="" value="index_en.html">🇺🇸 English</option>
-    <option value="index_JP.html">🇯🇵 Japanese</option>
-</select>
-</div>
-<!-- PC 버튼: 우측 상단 세로 정렬 -->
-<div class="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
-<!-- 언어 선택 콤보박스 -->
-<select class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectPC">
-    <option value="index.html">🌐 Language</option>
-    <option value="index.html">🇰🇷 Korean　</option>
-    <option selected="" value="index_en.html">🇺🇸 English</option>
-    <option value="index_JP.html">🇯🇵 Japanese</option>    
-</select>
-</div>
-<!-- 로고 -->
-<div class="text-center mb-4 mt-6 sm:mt-4">
-<img alt="로고" class="mx-auto w-64 drop-shadow-lg cursor-pointer" onclick="ComeBackHome()" src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png"/>
-</div>
-<!-- ✅ 모바일 버튼: 가로 스크롤 -->
-<div class="sm:hidden overflow-x-auto mb-4 mt-1">
-<div class="flex space-x-2 w-max min-w-full bg-gray-100 p-2 rounded shadow text-xs">
-<button class="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('guide')">🏠 Data</button>
-<button class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('building')">🏗 Building</button>
-<button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('equip')">🛡 Chief Gear</button>
-<button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('gem')">💎 Chief Charm</button>
-<button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('hero')">🦸 Hero Gear</button>
-<button class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('pet')">🐾 Pet</button>
-<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('research')">🧪 Research</button>
-<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('helios')">🔬 Helios</button>
-<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('troop')">👮‍♂️ Training</button>
-<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('schedule')">📅 Schedule</button>
-<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('transfer')">🛬 Transfer</button>
-</div>
-</div>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="ca-pub-8205102847358210" name="google-adsense-account"/>
+    <meta content="index, follow" name="robots">
+    <meta content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료들이 한곳에!" name="description"/>
+    <title>Whiteout Survival Calculator &amp; Data Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"></script>
+    <style>
+      body {
+        background-image: url('images/watermark.png');
+        background-repeat: repeat;
+        background-position: center;
+        background-size: auto;
+        background-attachment: fixed;
+        background-color: #f3f3f3;
+        overflow-x: hidden;
+        margin: 0;
+      }
+    </style>
+  </meta>
+  </head>
+  <body class="bg-gray-100 min-h-screen p-4">
+    <div class="max-w-[1400px] mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3 relative">
+      <!-- 모바일 버튼: 중앙 가로 정렬 -->
+      <div class="flex flex-col items-center gap-2 sm:hidden mb-4">
+        <!-- 언어 선택 콤보박스 -->
+        <select class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectMobile">
+          <option value="index.html">🌐 Language</option>
+          <option value="index.html">🇰🇷 Korean　</option>
+          <option selected="" value="index_en.html">🇺🇸 English</option>
+          <!--
+          <option value="index_JP.html">🇯🇵 Japanese</option>
+          -->
+        </select>
+      </div>
+      <!-- PC 버튼: 우측 상단 세로 정렬 -->
+      <div class="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
+        <!-- 언어 선택 콤보박스 -->
+        <select class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectPC">
+          <option value="index.html">🌐 Language</option>
+          <option value="index.html">🇰🇷 Korean　</option>
+          <option selected="" value="index_en.html">🇺🇸 English</option>
+          <!--
+          <option value="index_JP.html">🇯🇵 Japanese</option>
+          --> 
+        </select>
+      </div>
+      <!-- 로고 -->
+      <div class="text-center mb-4 mt-6 sm:mt-4">
+        <img alt="로고" class="mx-auto w-64 drop-shadow-lg cursor-pointer" onclick="ComeBackHome()" src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png"/>
+      </div>
+      <!-- ✅ 모바일 버튼: 가로 스크롤 -->
+      <div class="sm:hidden overflow-x-auto mb-4 mt-1">
+        <div class="flex space-x-2 w-max min-w-full bg-gray-100 p-2 rounded shadow text-xs">
+          <button class="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('guide')">🏠 Data</button>
+          <button class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('building')">🏗 Building</button>
+          <button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('equip')">🛡 Chief Gear</button>
+          <button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('gem')">💎 Chief Charm</button>
+          <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('hero')">🦸 Hero Gear</button>
+          <button class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('pet')">🐾 Pet</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('research')">🧪 Research</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('helios')">🔬 Helios</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('troop')">👮‍♂️ Training</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('schedule')">📅 Schedule</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('transfer')">🛬 Transfer</button>
+        </div>
+      </div>
 
 <!-- 문구 -->
 <h1 class="text-xl font-bold mb-2 text-center">WOS Calculator &amp; Data Collection</h1>
