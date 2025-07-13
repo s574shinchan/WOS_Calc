@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="ca-pub-8205102847358210" name="google-adsense-account"/>
+<meta content="index, follow" name="robots">
+<meta content="ホワイトアウトサバイバル（WOS）専用電卓と各種資料集サイト" name="description"/>
+<title>WOS電卓＆資料集</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"></script>
+<style>
+    body {
+      background-image: url('images/watermark.png');
+      background-repeat: repeat;
+      background-position: center;
+      background-size: auto;
+      background-attachment: fixed;
+      background-color: #f3f3f3;
+      overflow-x: hidden;
+      margin: 0;
+    }
+  </style>
+</meta>
+</head>
+<body class="bg-gray-100 min-h-screen p-1">
+<div class="max-w-[1400px] mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3 relative">
+<!-- 모바일 버튼: 중앙 가로 정렬 -->
+<div class="flex flex-col items-center gap-2 sm:hidden mb-4">
+<!-- 언어 선택 콤보박스 -->
+<select class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectMobile">
+<option value="index.html">🌐 言語</option>
+<option value="index.html">🇰🇷 韓国語　</option>
+<option value="index_en.html">🇺🇸 English</option>
+<option selected="" value="index_jp.html">🇯🇵 日本語</option>
+</select>
+</div>
+<!-- PC 버튼: 우측 상단 세로 정렬 -->
+<div class="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
+<!-- 언어 선택 콤보박스 -->
+<select class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectPC">
+<option value="index.html">🌐 言語</option>
+<option value="index.html">🇰🇷 韓国語　</option>
+<option value="index_en.html">🇺🇸 English</option>
+<option selected="" value="index_jp.html">🇯🇵 日本語</option>
+</select>
+</div>
+<!-- 로고 -->
+<div class="text-center mb-4 mt-6 sm:mt-4">
+<img alt="로고" class="mx-auto w-64 drop-shadow-lg cursor-pointer" onclick="ComeBackHome()" src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png"/>
+</div>
+<!-- 문구 -->
+<h1 class="text-xl font-bold mb-2 text-center">WOS電卓＆資料集</h1>
+<div class="max-w-[1400px] mx-auto bg-white rounded shadow p-4 flex flex-col sm:flex-row gap-4">
+<!-- 좌측 버튼 그룹 -->
+<div class="flex flex-col space-y-2 bg-gray-200 p-2 rounded shadow w-full sm:w-40">
+<button class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('guide')">🏠 データ</button>
+<button class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('building')">🏗 建造</button>
+<button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('equip')">🛡 領主装備</button>
+<button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('gem')">💎 領主宝石</button>
+<button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('hero')">🦸 英雄装備</button>
+<button class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('pet')">🐾 ペット</button>
+<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('helios')">🔬 烈日兵士</button>
+<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('troop')">👮‍ 兵士訓練</button>
+<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('schedule')">📅 スケジュール</button>
+<button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded" onclick="switchTab('transfer')">🛬 王国移民</button>
+</div>
+<!-- guideDetails: 처음에만 표시됨 -->
+<div class="flex-1 bg-white rounded p-2 space-y-4 shadow" id="guideDetails">
+<div class="bg-gray-100 p-2 font-sans text-sm">
+<div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
+<h1 class="text-2xl font-bold text-gray-800 mb-4">📘 資料集</h1>
+<div class="space-y-4">
+<details class="border border-blue-300 rounded-md p-4 shadow">
+<summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">👑 Fort & SH weekly Rewards</summary>
+<div class="mt-3 space-y-4 text-sm text-gray-800" id="요새보상">
+<p class="text-gray-500 text-sm">📦 Data Loding...</p>
+</div>
+</details>
+<details class="border border-blue-300 rounded-md p-4 shadow">
+<summary class="cursor-pointer text-lg font-semibold text-blue-700">🧬 Generational Hero Traits</summary>
+<div class="mt-3 space-y-4 text-sm text-gray-800" id="영웅특성">
+<p class="text-gray-500 text-sm">📦 Data Loding...</p>
+</div>
+</details>
+<!-- ⚔️ SVS_Event -->
+<details class="bg-white border border-blue-300 rounded-md p-4">
+<summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS Preparation</summary>
+<div class="mt-3 space-y-4 text-sm text-gray-800" id="준비단계">
+<p class="text-gray-500 text-sm">📦 Data Loding...</p>
+</div>
+</details>
+<!-- 🛫 이민 시스템 안내 -->
+<details class="bg-white border border-blue-300 rounded-md p-4">
+<summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 Transfer State</summary>
+<div class="mt-3 space-y-4 text-sm text-gray-800" id="서버이민">
+<p class="text-gray-500 text-sm">📦 Data Loding...</p>
+</div>
+</details>
+<!-- 단어번역 -->
+<details class="bg-white border border-blue-300 rounded-md p-4">
+<summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 Any Word</summary>
+<div class="mt-3 space-y-4 text-sm text-gray-800" id="용어안내">
+<p class="text-gray-500 text-sm">📦 Data Loding...</p>
+</div>
+</details>
+<!-- 영웅 성급업 -->
+<details class="bg-white border border-blue-300 rounded-md p-4">
+<summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 Hero Tier</summary>
+<div class="mt-3 space-y-4 text-sm text-gray-800" id="영웅성급">
+<p class="text-gray-500 text-sm">📦 Data Loding...</p>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+<!-- iframe 영역: 기본은 숨김 -->
+<div class="max-w-[1400px] w-full hidden bg-white mt-4 rounded shadow p-2" id="frameWrapper">
+<iframe class="w-full rounded border transition-all duration-300" frameborder="0" id="mainFrame" style="height: auto;"></iframe>
+</div>
+<!-- 결과 팝업 -->
+<div class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50" id="popupModal">
+<div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 text-sm">
+<h3 class="text-xl font-bold mb-4 text-center">📊 Result</h3>
+<div class="overflow-auto max-h-[65vh] text-center" id="popupContent"></div>
+<div class="text-center mt-4">
+<button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="closePopup()"> OK
+            </button>
+</div>
+</div>
+</div>
+<!-- Scroll to Top Button -->
+<button aria-label="Scroll to top" class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition" id="scrollToTopBtn">
+<!-- Up arrow SVG icon -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 15l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- 카피라이트 -->
+<footer class="text-center text-xs text-gray-500 mt-5">⛔ Unauthorized copying prohibited | © Made By S580 ShinChan(uuid: 67331703)</footer>
+</div>
+<!-- 콘텐츠 전체 폭 제한 -->
+<div class="max-w-4xl mx-auto p-2">
+<div class="flex flex-col lg:flex-row justify-between gap-2">
+<!-- 광고1: 모바일 작게, PC는 437px -->
+<div class="w-full lg:w-1/2 flex justify-start">
+<ins class="adsbygoogle" data-ad-client="ca-pub-8205102847358210" data-ad-slot="8804962791" style="display:inline-block; width:100%; max-width:437px; height:250px"></ins>
+</div>
+<!-- 광고2: 모바일 작게, PC는 437px -->
+<div class="w-full lg:w-1/2 flex justify-end">
+<ins class="adsbygoogle" data-ad-client="ca-pub-8205102847358210" data-ad-slot="9326856916" style="display:inline-block; width:100%; max-width:437px; height:250px"></ins>
+</div>
+</div>
+</div>
+<script async="" defer="" src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3">
+    new Crate({
+        server: '1389897321013055558', // Server_WOS_ShinChan
+        channel: '1389897473643905106' // #chat
+    })
+  </script>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+<script>
+    const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/JP/';
+    const fileMap = {
+      요새보상: '요새보상_JP.html',
+      영웅특성: '영웅특성_JP.html',
+      준비단계: 'SVS_Pre_JP.html',
+      서버이민: '서버이민_JP.html',
+      용어안내: 'ward_JP.html',
+      영웅성급: '영웅성급업_JP.html'
+    };
+    
+    // [ID] => 로딩 여부 저장
+    const loadState = {};
+    Object.keys(fileMap).forEach(id => loadState[id] = false);
+    
+    // 모든 <details> 요소에 toggle 이벤트 바인딩
+    document.querySelectorAll('details').forEach(detail => {
+      detail.addEventListener('toggle', async () => {
+        for (const id in fileMap) {
+          const target = detail.querySelector(`#${id}`);
+          if (target && !loadState[id] && detail.open) {
+            try {
+              const res = await fetch(`${baseUrl}${fileMap[id]}`);
+              if (!res.ok) throw new Error('파일 요청 실패');
+              const html = await res.text();
+              target.innerHTML = html;
+              loadState[id] = true;
+            } catch (e) {
+              target.innerHTML = `<p class="text-red-500">⚠️ Data Loding Fail.</p>`;
+            }
+          }
+        }
+      });
+    });
+  </script>
+<script>
+    function showGuide() {
+      document.getElementById("guideDetails").style.display = "block";
+      document.getElementById("frameWrapper").style.display = "none";
+    }
+        
+    function ComeBackHome() {
+      const frame = document.getElementById("mainFrame");
+      const isMobile = window.innerWidth <= 768;
+      
+      // 먼저 onload 이벤트 설정
+      frame.onload = function () {
+        try {
+          const guideDetails = frame.contentWindow.document.getElementById("guideDetails");
+          if (guideDetails) {
+            guideDetails.style.display = "none";
+          }
+        } catch (e) {
+          console.error("guideDetails를 숨기는 데 실패함:", e);
+        }
+      };
+      
+      showGuide();
+      frame.style.height = isMobile ? "550px" : "635px";
+    }
+    
+    function switchTab(page) {
+      const guide = document.getElementById("guideDetails");
+      const wrapper = document.getElementById("frameWrapper");
+      const frame = document.getElementById("mainFrame");
+      const isMobile = window.innerWidth <= 768;
+      const lang = localStorage.getItem('lang').toUpperCase();
+      
+      if (page === 'guide') {
+        guide.style.display = "block";
+        wrapper.style.display = "none";
+        document.body.style.overflowX = "hidden";
+      } else {
+        guide.style.display = "none";
+        wrapper.style.display = "block";
+        frame.src = (lang === 'ko') ? `${page}.html` : `${page}_${lang}.html`;
+
+        // ✅ 추가: 탭 전환시 우측 여백 제거
+        document.body.style.overflowX = "hidden";
+        document.documentElement.style.overflowX = "hidden";        
+      }
+    }
+    
+    window.addEventListener("message", function (event) {
+      if (event.data.type === "RESULT_POPUP") {
+        const html = event.data.html;
+        document.getElementById("popupContent").innerHTML = html;
+        document.getElementById("popupModal").classList.remove("hidden");
+      }  //RESULT_POPUP
+    });
+
+    window.addEventListener("message", function (event) {
+      if (event.data.type === "SET_FRAME_SIZE") {
+        const frame = document.getElementById("mainFrame");
+        frame.style.height = event.data.height;
+      }
+
+      if (event.data.type === "FRAME_CHANGE") {
+        const frame = document.getElementById("mainFrame");
+        frame.style.height = `${event.data.height + 10}px`;
+      }
+    });
+    
+    function closePopup() {
+      document.getElementById("popupModal").classList.add("hidden");
+    }
+  </script>
+<script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+<script>
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 200) {
+        scrollToTopBtn.classList.remove("hidden");
+      } else {
+        scrollToTopBtn.classList.add("hidden");
+      }
+    });
+
+    scrollToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+<script>
+    function setupLangSelect(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+          
+      // 현재 파일명 감지    
+      const currentPath = window.location.pathname;
+      const currentFile = currentPath.split("/").pop() || "index.html";
+      
+      // 현재 언어 설정에 따라 기본값 자동 선택
+      const currentLang = currentFile.includes("_") ? currentFile.split("_")[1].split(".")[0].toLowerCase() : "ko";
+      el.value = currentLang === "ko" ? "index.html" : `index_${currentLang}.html`;
+  
+      el.addEventListener("change", function () {
+        const selectedFile = this.value; // ex: index_en.html or index.html
+        const selectedLang = selectedFile.includes("_") ? selectedFile.split("_")[1].split(".")[0].toUpperCase() : "ko";
+        localStorage.setItem("lang", selectedLang);
+  
+        // 동일 페이지 선택 시 강제 새로고침
+        if (currentFile === selectedFile || (currentFile === "" && selectedFile === "index.html")) {
+          window.location.href = selectedFile; // 강제 이동
+        } else {
+          window.location.href = selectedFile;
+        }
+      });
+    }
+  
+    setupLangSelect('langSelectMobile');
+    setupLangSelect('langSelectPC');
+  </script>
+</body>
+</html>
