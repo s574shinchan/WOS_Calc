@@ -25,23 +25,45 @@
       <form id="gearForm" class="space-y-6">
         <div id="gearTableBody" class="grid grid-cols-2 md:grid-cols-3 gap-2"></div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-          <div><label class="block font-semibold">보유 합금</label><input type="number" id="own-합금" class="w-full border rounded p-2" /></div>
-          <div><label class="block font-semibold">보유 설계도면</label><input type="number" id="own-설계도면" class="w-full border rounded p-2" /></div>
-          <div><label class="block font-semibold">보유 광택제</label><input type="number" id="own-광택제" class="w-full border rounded p-2" /></div>
-          <div><label class="block font-semibold">보유 달빛앰버</label><input type="number" id="own-앰버" class="w-full border rounded p-2" /></div>
+          <div>
+            <label class="block font-semibold">보유 합금</label>
+            <input type="number" id="own-합금" class="w-full border rounded p-2" />
+          </div>
+          <div>
+            <label class="block font-semibold">보유 설계도면</label>
+            <input type="number" id="own-설계도면" class="w-full border rounded p-2" />
+          </div>
+          <div>
+            <label class="block font-semibold">보유 광택제</label>
+            <input type="number" id="own-광택제" class="w-full border rounded p-2" />
+          </div>
+          <div>
+            <label class="block font-semibold">보유 달빛앰버</label>
+            <input type="number" id="own-앰버" class="w-full border rounded p-2" />
+          </div>
         </div>
         <button type="button" onclick="calculateGear()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">계산하기</button>
       </form>
     </div>
-  
     <script>
+      function sendHeightToParent() {
+        const height = document.body.scrollHeight + 10;
+        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+      }
+    
+      // 페이지 최초 로드 시
+      window.addEventListener("load", () => {
+        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+      });
+      
       function loadPage(page) {
         const isMobile = window.innerWidth <= 768;
         const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
+          window.location.href = page;
         window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
       }
-      
+    </script>
+    <script>      
       const gearSlots = ["장비1(창)", "장비2(창)", "장비3(방)", "장비4(방)", "장비5(궁)", "장비6(궁)"];
       const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/2035550da1ab0e8d4601e86c972415b02f568709/data/chief/Gear.csv';
       let gearLevels = [];
@@ -59,6 +81,7 @@
         });
         gearLevels = gearData.map(r => r["단계"]);
         createGearUI();
+        sendHeightToParent();
       }
   
       async function createGearUI() {
