@@ -59,19 +59,6 @@
   </script>
 
   <script>
-    const API_KEY = "AIzaSyA4Ve1ViWoYIpzhHh45wjVjbk5bkEnEmUk";
-    const SPREADSHEET_ID = "1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw";
-    const RANGE = "StatesTrans_EN";
-
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?` +
-      `includeGridData=true&ranges=${RANGE}` +
-      `&fields=sheets.data.rowData.values(` +
-        `effectiveValue,` +
-        `effectiveFormat(backgroundColor,textFormat(foregroundColor,bold,fontSize)),` +
-        `userEnteredFormat(backgroundColor,textFormat(bold,fontSize),borders)` +
-      `),sheets.merges` +
-      `&key=${API_KEY}`;
-
     // 색상 변환: { red: 0.5, green: 0.7, blue: 0.2 } → rgb(128,179,51)
     function toRGB(color, fallback = "#ffffff") {
       if (!color) return fallback;
@@ -87,13 +74,32 @@
       return `rgb(${Math.round(red * 255)},${Math.round(green * 255)},${Math.round(blue * 255)})`;
     }
     
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
+    async function loadKeyAndSheet() {
+      try {
+        const keyRes = await fetch("/data/fakeKey.txt");
+        if (!keyRes.ok) throw new Error("키 파일을 불러올 수 없습니다.");
+        const API_KEY = (await keyRes.text()).trim();
+  
+        const SPREADSHEET_ID = "1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw";
+        const RANGE = "StatesTrans";
+  
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?` +
+          `includeGridData=true&ranges=${RANGE}` +
+          `&fields=sheets.data.rowData.values(` +
+            `effectiveValue,` +
+            `effectiveFormat(backgroundColor,textFormat(foregroundColor,bold,fontSize)),` +
+            `userEnteredFormat(backgroundColor,textFormat(bold,fontSize),borders)` +
+          `),sheets.merges` +
+          `&key=${API_KEY}`;
+  
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Google Sheets API 오류");
+  
+        const data = await res.json();
         const sheet = data.sheets[0];
         const merges = sheet.merges || [];
         const rows = sheet.data[0].rowData || [];
-
+  
         const mergeMap = {};
         const skip = new Set();
         for (const m of merges) {
@@ -110,7 +116,7 @@
             }
           }
         }
-
+  
         let html = "<table><tbody>";
         rows.forEach((row, ri) => {
           html += "<tr>";
@@ -118,31 +124,31 @@
           cells.forEach((cell, ci) => {
             const key = `${ri},${ci}`;
             if (skip.has(key)) return;
-
+  
             const val = cell?.effectiveValue;
             const text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
-
+  
             const effectiveFmt = cell?.effectiveFormat ?? {};
             const userFmt = cell?.userEnteredFormat ?? {};
             const bg = toRGB(userFmt.backgroundColor, "#ffffff");
             const fg = toRGB(effectiveFmt.textFormat?.foregroundColor, "#000000");
-            
-            const isBold = effectiveFmt.textFormat?.bold === true || userFmt.textFormat?.bold === true;           
+  
+            const isBold = effectiveFmt.textFormat?.bold === true || userFmt.textFormat?.bold === true;
             const rawSize = effectiveFmt.textFormat?.fontSize;
             const fontSize = rawSize > 10 ? rawSize : "";
-
+  
             const borders = userFmt.borders || {};
             const borderTop = toBorderColor(borders.top);
             const borderBottom = toBorderColor(borders.bottom);
             const borderLeft = toBorderColor(borders.left);
             const borderRight = toBorderColor(borders.right);
-            
+  
             let borderStyle = "";
             if (borderTop) borderStyle += `border-top: 1px solid ${borderTop};`;
             if (borderBottom) borderStyle += `border-bottom: 1px solid ${borderBottom};`;
             if (borderLeft) borderStyle += `border-left: 1px solid ${borderLeft};`;
             if (borderRight) borderStyle += `border-right: 1px solid ${borderRight};`;
-            
+  
             const span = mergeMap[key];
             const tag = `<td style="background:${bg}; color:${fg}; font-weight:${isBold ? "bold" : "normal"}; font-size:${fontSize}px; ${borderStyle}"` +
               (span?.rowspan ? ` rowspan="${span.rowspan}"` : "") +
@@ -153,14 +159,16 @@
           html += "</tr>";
         });
         html += "</tbody></table>";
-
+  
         document.getElementById("sheet-table").innerHTML = html;
         sendHeightToParent();
-      })
-      .catch(err => {
-        console.error("API Error:", err);
-        document.getElementById("sheet-table").innerText = "❌ Data Not Found.";
-      });
+      } catch (err) {
+        console.error("로딩 오류:", err);
+        document.getElementById("sheet-table").innerText = "❌ 데이터를 불러올 수 없습니다.";
+      }
+    }
+  
+    window.addEventListener("load", loadKeyAndSheet);
   </script>
   <script>
     function setupLangSelect(id) {
