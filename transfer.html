@@ -80,7 +80,7 @@
     
     async function loadKeyAndSheet() {
       try {
-        const keyRes = await fetch("/data/fakeKey.txt");
+        const keyRes = await fetch("https://byshin.s3.ap-southeast-2.amazonaws.com/data/fakeKey.txt");
         if (!keyRes.ok) throw new Error("키 파일을 불러올 수 없습니다.");
         const API_KEY = (await keyRes.text()).trim();
   
