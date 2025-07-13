@@ -26,15 +26,25 @@
       <button type="button" onclick="calculatePet()" class="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600">계산하기</button>
     </form>
   </div>
-
   <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
     function loadPage(page) {
       const isMobile = window.innerWidth <= 768;
-      let isHeight = isMobile ? "550px" : "345px"
-      window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
-    
+  </script>
+  <script>
     const grades = ["기간토", "매머드", "호랑이", "코뿔소", "고릴라", "동굴사자", 
                     "흑표범", "큰뿔사슴", 
                     "티타니스", "테이퍼", 
@@ -226,6 +236,7 @@
     }
 
     loadPetUI();
+    sendHeightToParent();
   </script>
   <script>
     document.addEventListener("contextmenu", event => event.preventDefault());
