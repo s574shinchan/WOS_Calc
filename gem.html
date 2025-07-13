@@ -52,7 +52,24 @@
         <button type="button" onclick="calculateGems()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">계산하기</button>
       </form>
     </div>
-    
+    <script>
+      function sendHeightToParent() {
+        const height = document.body.scrollHeight + 10;
+        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+      }
+  
+      // 페이지 최초 로드 시
+      window.addEventListener("load", () => {
+        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+      });
+      
+      function loadPage(page) {
+        const isMobile = window.innerWidth <= 768;
+        const height = isMobile ? "550px" : "345px"
+          window.location.href = page;
+        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+      }
+    </script>
     <script>
       const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/ef3bd1665ddf73044b325143fb9fb16cf98ddcd3/data/chief/Gem.csv';
       const gemSlots = [
@@ -282,14 +299,8 @@
         } 
       }
       
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-      }
-      
       createGemUI();
+      sendHeightToParent();
     </script>
     <script>
       document.addEventListener("contextmenu", event => event.preventDefault());
