@@ -52,10 +52,9 @@
     </div>
     <button onclick="calculateResearch()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg">Calc</button>
   </div>
-
   <script>
     function sendHeightToParent() {
-      const height = document.body.scrollHeight;
+      const height = document.body.scrollHeight + 10;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
 
@@ -66,11 +65,12 @@
     
     function loadPage(page) {
       const isMobile = window.innerWidth <= 768;
-      let isHeight = isMobile ? "550px" : "345px"
-      window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: isHeight, width: "100%"}, "*");
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
-    
+  </script>
+  <script>
     const researchData = {
       "I": [
         { level: 1, 가루: 16, 철강재: 5000, 시간: "0d 08:00:00" },
@@ -397,6 +397,7 @@
     // 최초 실행
     updateResearchList();
     renderResearchCards();
+    sendHeightToParent();
   </script>
   <script>
     document.addEventListener("contextmenu", event => event.preventDefault());
