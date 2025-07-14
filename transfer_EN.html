@@ -101,6 +101,21 @@
 
             const val = cell?.effectiveValue;
             const text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
+            text = text.replace("그룹","Group");
+            text = text.replace("10불 12세대","FC10, Gen12");
+            text = text.replace("10불 11세대","FC10, Gen11");
+            text = text.replace("10불 10세대","FC10, Gen10");
+            text = text.replace("10불 9세대","FC10, Gen9");
+            text = text.replace("10불 8세대","FC10, Gen8");
+            text = text.replace("10불 7세대","FC10, Gen7");
+            text = text.replace("8불 6세대","FC8, Gen6");
+            text = text.replace("8불 5세대","FC8, Gen5");
+            text = text.replace("5불 5세대","FC5, Gen5");
+            text = text.replace("5불 4세대 11T","FC5, Gen4, T11");
+            text = text.replace("5불 3세대 신화","FC5, Gen3 Red Gear");
+            text = text.replace("5불 3세대","FC5, Gen3");
+            text = text.replace("3불 3세대","FC3, Gen3");
+            text = text.replace("서버",'State");
 
             const effectiveFmt = cell?.effectiveFormat ?? {};
             const userFmt = cell?.userEnteredFormat ?? {};
