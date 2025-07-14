@@ -6,8 +6,11 @@
   <title>건물 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    if (window.innerWidth <= 768) {
-      window.location.href = "building_m.html"; // 또는 원하는 모바일 전용 파일
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
+  
+    if (isMobile && !location.pathname.includes('index_m')) {
+      window.location.href = "index_m.html";
     }
   </script>
 </head>
