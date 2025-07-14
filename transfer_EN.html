@@ -111,7 +111,8 @@
             text = text.replace("8불 6세대","FC8, Gen6");
             text = text.replace("8불 5세대","FC8, Gen5");
             text = text.replace("5불 5세대","FC5, Gen5");
-            text = text.replace("5불 4세대 11T","FC5, Gen4, T11");
+            text = text.replace("5불 4세대 11T","FC5, Gen4 T11");
+            text = text.replace("5불 4세대","FC5, Gen4");
             text = text.replace("5불 3세대 신화","FC5, Gen3 Red Gear");
             text = text.replace("5불 3세대","FC5, Gen3");
             text = text.replace("3불 3세대","FC3, Gen3");
@@ -119,7 +120,12 @@
             text = text.replace("요약","Summary");
             text = text.replace("그룹별 상세내역","Detail");
             text = text.replace("기준일","Base Date");
-            text = text.replace("그룹 / 날짜","Group/Date");            
+            text = text.replace("그룹/날짜","Group/Date");
+            text = text.replace("이민주기","Cycle");
+            text = text.replace("28일","28d ");
+            text = text.replace("42일","42d ");
+            text = text.replace("4주","4w");
+            text = text.replace("6주","6w");
 
             const effectiveFmt = cell?.effectiveFormat ?? {};
             const userFmt = cell?.userEnteredFormat ?? {};
