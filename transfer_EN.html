@@ -100,7 +100,7 @@
             if (skip.has(key)) return;
 
             const val = cell?.effectiveValue;
-            const text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
+            let text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
             text = text.replace("그룹","Group");
             text = text.replace("10불 12세대","FC10, Gen12");
             text = text.replace("10불 11세대","FC10, Gen11");
@@ -116,6 +116,10 @@
             text = text.replace("5불 3세대","FC5, Gen3");
             text = text.replace("3불 3세대","FC3, Gen3");
             text = text.replace("서버","State");
+            text = text.replace("요약","Summary");
+            text = text.replace("그룹별 상세내역","Detail");
+            text = text.replace("기준일","Base Date");
+            text = text.replace("그룹 / 날짜","Group/Date");            
 
             const effectiveFmt = cell?.effectiveFormat ?? {};
             const userFmt = cell?.userEnteredFormat ?? {};
