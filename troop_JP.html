@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>訓練計算機</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">👮‍♂️ 訓練計算機</h1>
+    
+    <!-- 위쪽 체크박스 3개 -->
+    <div class="flex gap-4 mb-4">
+      <label class="inline-flex items-center font-semibold">
+        <input type="checkbox" id="edu1" class="mr-1" onclick="handleExclusiveCheck('edu1', 'edu2')" />
+        教育部長 (50%)
+      </label>
+      <label class="inline-flex items-center font-semibold">
+        <input type="checkbox" id="edu2" class="mr-1" onclick="handleExclusiveCheck('edu2', 'edu1')" />
+        教育部長 (75%)
+      </label>
+      <label class="inline-flex items-center font-semibold">
+        <input type="checkbox" id="serverBuff" class="mr-1" />
+        戦闘動員 (30%)
+      </label>
+    </div>
+    
+    <!-- 입력 카드 -->
+    <div class="space-y-4">
+      <!-- 콤보박스 가로 나열 -->
+      <div class="flex gap-2">
+        <div class="flex-1">
+          <label for="tier" class="block font-semibold mb-1">兵士ティア</label>
+          <select id="tier" class="border rounded w-full p-1">
+            <option value="T1">T1</option>
+            <option value="T2">T2</option>
+            <option value="T3">T3</option>
+            <option value="T4">T4</option>
+            <option value="T5">T5</option>
+            <option value="T6">T6</option>
+            <option value="T7">T7</option>
+            <option value="T8">T8</option>
+            <option value="T9">T9</option>
+            <option value="T10">T10</option>
+            <option value="T11" selected>T11</option>
+          </select>
+        </div>
+  
+        <div class="flex-1">
+          <label for="speed" class="block font-semibold mb-1">訓練速度 (%)</label>
+          <input type="number" id="speed" class="border rounded w-full p-1" placeholder="0" min="0" step="0.1" />
+        </div>
+  
+        <div class="flex-1">
+          <label for="amount" class="block font-semibold mb-1">1回の訓練人数</label>
+          <input type="number" id="amount" class="border rounded w-full p-1" placeholder="0" min="0" />
+        </div>
+      </div>
+      
+      <!-- 보유 가속 입력 -->
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="block font-semibold mb-1">所持加速（日）</label>
+          <input type="number" id="accelDay" class="border rounded w-full p-1" placeholder="0" min="0" />
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">所持加速（時間）</label>
+          <input type="number" id="accelHour" class="border rounded w-full p-1" placeholder="0" min="0" />
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">所持加速（分）</label>
+          <input type="number" id="accelMinute" class="border rounded w-full p-1" placeholder="0" min="0"" />
+        </div>
+      </div>
+  
+      <button onclick="calculateTraining()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full mt-2">計算する	</button>
+    </div>
+  </div>
+  
+  <script>
+    const trainingTimePerTier = {
+      T1: 12,
+      T2: 17,
+      T3: 24,
+      T4: 32,
+      T5: 44,
+      T6: 60,
+      T7: 83,
+      T8: 113,
+      T9: 131,
+      T10: 152,
+      T11: 180
+    };
+    
+    const tierScore = {
+      T1: 3,
+      T2: 4,
+      T3: 5,
+      T4: 8,
+      T5: 12,
+      T6: 18,
+      T7: 25,
+      T8: 35,
+      T9: 45,
+      T10: 60,
+      T11: 75
+    };
+
+    // 교육부1,2는 서로 배타적으로 동작
+    function handleExclusiveCheck(clickedId, otherId) {
+      const clickedCheckbox = document.getElementById(clickedId);
+      const otherCheckbox = document.getElementById(otherId);
+      if (clickedCheckbox.checked) {
+        otherCheckbox.checked = false;
+      }
+    }
+    
+    function calculateTraining() {
+      const tier = document.getElementById('tier').value;  
+      const baseTimeSec = trainingTimePerTier[tier];
+      let speedPercent = parseFloat(document.getElementById('speed').value);
+      let amountPerSession = parseInt(document.getElementById('amount').value);
+      
+      // 체크박스 효과 적용
+      if (document.getElementById('edu1').checked) {
+        amountPerSession += 200;
+        speedPercent += 50;
+      }
+      if (document.getElementById('edu2').checked) {
+        amountPerSession += 300;
+        speedPercent += 75;
+      }
+      if (document.getElementById('serverBuff').checked) {
+        speedPercent += 30;
+      }
+      
+      const accelDay = parseInt(document.getElementById('accelDay').value);
+      const accelHour = parseInt(document.getElementById('accelHour').value);
+      const accelMinute = parseInt(document.getElementById('accelMinute').value);
+      const totalAccelSec = (accelDay * 24 * 3600) + (accelHour * 3600) + (accelMinute * 60);
+    
+      const speedRatio = speedPercent * 0.01;
+      const adjustedTimePerUnitSec = baseTimeSec / (1 + speedRatio);
+    
+      const totalTimePerSessionSec = adjustedTimePerUnitSec * amountPerSession;
+    
+      const possibleTrainings = Math.floor(totalAccelSec / totalTimePerSessionSec);
+      const totalProduced = possibleTrainings * amountPerSession;
+    
+      const totalScore = totalProduced * tierScore[tier];
+    
+      const totalTimeUsedSec = possibleTrainings * totalTimePerSessionSec;
+      const days = Math.floor(totalTimeUsedSec / (24 * 3600));
+      const hours = Math.floor((totalTimeUsedSec % (24 * 3600)) / 3600);
+      const minutes = Math.floor((totalTimeUsedSec % 3600) / 60);
+      const seconds = Math.floor(totalTimeUsedSec % 60);
+    
+      let resultHTML = `
+        <table class="w-full border text-sm text-center table-auto mt-4">
+          <thead class="bg-blue-100">
+            <tr>
+              <th class="border p-1">兵士ティア</th>
+              <th class="border p-1">生産兵士数</th>
+              <th class="border p-1">SVS スコア</th>
+              <th class="border p-1">所要時間</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border p-1 font-medium">${tier}</td>
+              <td class="border p-1">${totalProduced.toLocaleString()} 人</td>
+              <td class="border p-1">${totalScore.toLocaleString()}</td>
+              <td class="border p-1">${days}日 ${hours}時間 ${minutes}分</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+    }
+  </script>
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S")))
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
