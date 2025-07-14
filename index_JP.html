@@ -24,8 +24,11 @@
     }
   </style>
   <script>
-    if (window.innerWidth <= 768) {
-      window.location.href = "index_JP_m.html"; // 또는 원하는 모바일 전용 파일
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
+
+    if (isMobile && !location.pathname.includes('index_JP_m')) {
+      window.location.href = "index_JP_m.html";
     }
   </script>
 </head>
