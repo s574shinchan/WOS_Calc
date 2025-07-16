@@ -293,7 +293,15 @@
         guide.style.display = "none";
         wrapper.style.display = "block";
         frame.src = (lang === 'ko') ? `${page}.html` : `${page}_${lang}.html`;
-
+       
+        const heights = {
+          pet: [1225, 846]
+        };
+    
+        if (heights[page]) {
+          frame.style.height = isMobile ? `${heights[page][0]}px` : `${heights[page][1]}px`;
+        }
+        
         // ✅ 추가: 탭 전환시 우측 여백 제거
         document.body.style.overflowX = "hidden";
         document.documentElement.style.overflowX = "hidden";        
