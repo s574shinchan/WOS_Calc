@@ -38,7 +38,7 @@
     });
     
     function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
+      const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
       const height = isMobile ? "550px" : "345px"
         window.location.href = page;
       window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
