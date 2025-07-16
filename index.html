@@ -1131,7 +1131,7 @@
         
     function ComeBackHome() {
       const frame = document.getElementById("mainFrame");
-      const isMobile = window.innerWidth <= 768;
+      const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
       
       // 먼저 onload 이벤트 설정
       frame.onload = function () {
@@ -1153,7 +1153,7 @@
       const guide = document.getElementById("guideDetails");
       const wrapper = document.getElementById("frameWrapper");
       const frame = document.getElementById("mainFrame");
-      const isMobile = window.innerWidth <= 768;
+      const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
     
       if (page === 'guide') {
         guide.style.display = "block";
