@@ -5,6 +5,12 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>건물 계산기</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const isMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua.toLowerCase());
+      const isTablet = /ipad|android(?!.*mobile)/i.test(ua.toLowerCase()) || window.innerWidth >= 641;
+      // ➜ building_m.html로 접속한 경우 다시 리디렉션되지 않도록 모바일/태블릿 구분만 선언 (동작 없음)
+    </script>
   </head>
   <body class="bg-gray-100 p-2 font-sans text-sm">
     <div class="max-w-full sm:max-w-6xl mx-auto bg-white p-2 sm:p-4 rounded-xl shadow-md space-y-4 text-[13px]">
@@ -64,6 +70,16 @@
         </div>
         <button class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600" onclick="calculateAll()" type="button">계산하기</button>
       </form>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          // Tailwind로 숨겨졌을 가능성 있는 콘텐츠를 강제로 보이게 처리
+          const mainContainer = document.querySelector(".max-w-full");
+          if (mainContainer?.classList.contains("hidden")) {
+            mainContainer.classList.remove("hidden");
+            mainContainer.classList.add("block");
+          }
+        });
+      </script>
       <script>
         function sendHeightToParent() {
           const height = document.body.scrollHeight + 10;
