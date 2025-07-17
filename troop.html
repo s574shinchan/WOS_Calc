@@ -145,9 +145,9 @@
         speedPercent += 30;
       }
       
-      const accelDay = parseInt(document.getElementById('accelDay').value), 10) || 0;
-      const accelHour = parseInt(document.getElementById('accelHour').value), 10) || 0;
-      const accelMinute = parseInt(document.getElementById('accelMinute').value), 10) || 0;
+      const accelDay = parseInt(document.getElementById('accelDay').value, 10) || 0;
+      const accelHour = parseInt(document.getElementById('accelHour').value, 10) || 0;
+      const accelMinute = parseInt(document.getElementById('accelMinute').value, 10) || 0;
       const totalAccelSec = (accelDay * 24 * 3600) + (accelHour * 3600) + (accelMinute * 60);
     
       const speedRatio = speedPercent * 0.01;
