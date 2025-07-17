@@ -18,18 +18,20 @@
         <p>ex)최집-교육부, 서버버프 활성화 후 훈련속도가 300%인 경우, 300% - 30%(서버버프) - 75%(최집교육부) = 195%를 입력하면 됩니다.</p>
       </div>
       <div class="grid grid-cols-4 gap-x-4 px-0 text-center">
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="edu1" class="mr-1" onclick="handleExclusiveCheck('edu1', 'edu2')" />
-          일반)교육부장관 (50%)
-        </label>
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="edu2" class="mr-1" onclick="handleExclusiveCheck('edu2', 'edu1')" />
-          최집)교육부장관 (75%)
-        </label>
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="serverBuff" class="mr-1" />
-          서버훈련버프 (30%)
-        </label>
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <label class="inline-flex items-center font-semibold">
+            <input type="checkbox" id="edu1" class="mr-1" onclick="handleExclusiveCheck('edu1', 'edu2')" />
+            일반)교육부장관 (50%)
+          </label>
+          <label class="inline-flex items-center font-semibold">
+            <input type="checkbox" id="edu2" class="mr-1" onclick="handleExclusiveCheck('edu2', 'edu1')" />
+            최집)교육부장관 (75%)
+          </label>
+          <label class="inline-flex items-center font-semibold">
+            <input type="checkbox" id="serverBuff" class="mr-1" />
+            서버훈련버프 (30%)
+          </label>
+        </div>
       </div>
     </div>
     
