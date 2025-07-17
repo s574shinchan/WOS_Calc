@@ -129,8 +129,8 @@
     function calculateTraining() {
       const tier = document.getElementById('tier').value;  
       const baseTimeSec = trainingTimePerTier[tier];
-      let speedPercent = parseFloat(document.getElementById('speed').value)|| 0;
-      let amountPerSession = parseInt(document.getElementById('amount').value), 10) || 0;
+      let speedPercent = parseFloat(document.getElementById('speed').value);
+      let amountPerSession = parseInt(document.getElementById('amount').value);
       
       // 체크박스 효과 적용
       if (document.getElementById('edu1').checked) {
@@ -145,9 +145,9 @@
         speedPercent += 30;
       }
       
-      const accelDay = parseInt(document.getElementById('accelDay').value), 10) || 0;
-      const accelHour = parseInt(document.getElementById('accelHour').value), 10) || 0;
-      const accelMinute = parseInt(document.getElementById('accelMinute').value), 10) || 0;
+      const accelDay = parseInt(document.getElementById('accelDay').value);
+      const accelHour = parseInt(document.getElementById('accelHour').value);
+      const accelMinute = parseInt(document.getElementById('accelMinute').value);
       const totalAccelSec = (accelDay * 24 * 3600) + (accelHour * 3600) + (accelMinute * 60);
     
       const speedRatio = speedPercent * 0.01;
