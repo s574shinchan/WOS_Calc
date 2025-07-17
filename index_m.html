@@ -1194,25 +1194,23 @@
       setupLangSelect('langSelectPC');
     </script>
     <script>
-      const isMobileOrTablet = (() => {
-        const ua = navigator.userAgent.toLowerCase();
-        const mobileRegex = /iphone|ipod|android.*mobile|iemobile|opera mini/;
-        const tabletRegex = /ipad|android(?!.*mobile)/;
-        
-        return mobileRegex.test(ua) || tabletRegex.test(ua) || window.innerWidth <= 1024;
-      })();
-      
-      if (isMobileOrTablet) {
-        const btns = document.getElementById('mobileButtons');
-        const menu = document.getElementById('mobileMenu');
-        if (btns) {
-          btns.classList.remove('hidden');
-          btns.classList.add('flex');
+      const ua = navigator.userAgent.toLowerCase();
+      const isMobileDevice = /iphone|ipod|android.*mobile|iemobile|opera mini/.test(ua);
+      const isTabletDevice = /ipad|android(?!.*mobile)/.test(ua) || (window.innerWidth > 640 && window.innerWidth <= 1024);
+    
+      const shouldShowMobileLayout = isMobileDevice || isTabletDevice;
+    
+      window.addEventListener("DOMContentLoaded", () => {
+        if (shouldShowMobileLayout) {
+          document.getElementById("mobileButtons")?.classList.remove("hidden");
+          document.getElementById("mobileButtons")?.classList.add("flex");
+    
+          document.getElementById("mobileMenu")?.classList.remove("hidden");
+          document.getElementById("mobileMenu")?.classList.add("block");
+    
+          document.getElementById("frameWrapper")?.classList.remove("hidden");
         }
-        if (menu) {
-          menu.classList.remove('hidden');
-        }
-      }
+      });
     </script>
   </body>
 </html>
