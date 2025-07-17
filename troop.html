@@ -10,30 +10,31 @@
   <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
     <h1 class="text-2xl font-bold text-gray-800 mb-4">👮‍♂️ 훈련 계산기</h1>
     
-    <!-- 위쪽 체크박스 3개 -->
-    <div class="flex gap-4 mb-4">
-      <div class="mb-6">
-        <p>훈련속도는 서버버프 및 관직버프가 적용되기전 수치를 입력하셔야합니다.</p>
+    <div class="mb-4">
+      <!-- 안내 문구 (첫 줄) -->
+      <div class="mb-2">
+        <p>훈련속도는 서버버프 및 관직버프가 적용되기전 수치를 입력하셔야 합니다.</p>
         <p>만약 이미 관직 및 버프를 받은 상태라면, 게임상에서 확인할 수 있는 훈련속도에서 관직 및 서버버프의 %만큼 뺀 값을 입력하시면 됩니다.</p>
         <p>ex)최집-교육부, 서버버프 활성화 후 훈련속도가 300%인 경우, 300% - 30%(서버버프) - 75%(최집교육부) = 195%를 입력하면 됩니다.</p>
       </div>
-      <div class="grid grid-cols-4 gap-x-4 px-0 text-center">
-        <div class="flex items-center text-sm font-semibold leading-tight">
-          <label class="inline-flex items-center font-semibold">
-            <input type="checkbox" id="edu1" class="mr-1" onclick="handleExclusiveCheck('edu1', 'edu2')" />
-            일반)교육부장관 (50%)
-          </label>
-          <label class="inline-flex items-center font-semibold">
-            <input type="checkbox" id="edu2" class="mr-1" onclick="handleExclusiveCheck('edu2', 'edu1')" />
-            최집)교육부장관 (75%)
-          </label>
-          <label class="inline-flex items-center font-semibold">
-            <input type="checkbox" id="serverBuff" class="mr-1" />
-            서버훈련버프 (30%)
-          </label>
-        </div>
+    
+      <!-- 체크박스 (두 번째 줄) -->
+      <div class="flex gap-4 flex-wrap">
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="edu1" class="mr-1" onclick="handleExclusiveCheck('edu1', 'edu2')" />
+          일반)교육부장관 (50%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="edu2" class="mr-1" onclick="handleExclusiveCheck('edu2', 'edu1')" />
+          최집)교육부장관 (75%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="serverBuff" class="mr-1" />
+          서버훈련버프 (30%)
+        </label>
       </div>
     </div>
+
     
     <!-- 입력 카드 -->
     <div class="space-y-4">
