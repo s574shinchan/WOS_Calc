@@ -22,7 +22,6 @@
           <input type="checkbox" id="chkMask" onchange="handleCheck('chkMask')" class="mr-1 w-4 h-4" /> Marksman
         </div>
       </div>
-      <!--
       <div class="grid grid-cols-2 md:flex md:flex-wrap md:items-center gap-4">
         <label class="inline-flex items-center font-semibold">
           <input type="checkbox" id="chkVP10" onchange="handleVPCheck('chkVP10')" class="mr-2 w-4 h-4">Vice President (10%)
@@ -38,7 +37,6 @@
           <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
         </div>
       </div>
-       -->
     </div>
     
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6" id="researchGrid"></div>
@@ -319,11 +317,11 @@
       let total = { 가루: 0, 철강재: 0, 시간: 0 };
       let rows = "";
       
-      //let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+      let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
 
-      //if (document.getElementById("chkVP10").checked) factor += 0.10;
-      //if (document.getElementById("chkVP15").checked) factor += 0.15;
-      //if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+      if (document.getElementById("chkVP10").checked) factor += 0.10;
+      if (document.getElementById("chkVP15").checked) factor += 0.15;
+      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
       
       researchList.forEach(item => {
         const checked = document.getElementById(`check-${item.key}`).checked;
@@ -352,6 +350,7 @@
             <td class="border p-1">${cur} → ${tgt}</td>
             <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
             <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
+            <td class="border p-1">${formatTime(Math.round(subtotal.시간 / factor))}</td>
           </tr>`;
       });
 
@@ -365,16 +364,19 @@
           <td class="border p-1" colspan="2">Total</td>
           <td class="border p-1">${total.가루.toLocaleString()}</td>
           <td class="border p-1">${total.철강재.toLocaleString()}</td>
+          <td class="border p-1">${formatTime(Math.round(total.시간 / factor))}</td>
         </tr>
         <tr class="text-center font-bold bg-orange-50">
           <td class="border p-1" colspan="2">Stock</td>
           <td class="border p-1">${owned.가루.toLocaleString()}</td>
           <td class="border p-1">${owned.철강재.toLocaleString()}</td>
+          <td class="border p-1"></td>
         </tr>
         <tr class="text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">Quantity required</td>
           <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
           <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
+          <td class="border p-1"></td>
         </tr>
       `;
 
@@ -386,6 +388,7 @@
               <th class="border p-1">Level</th>
               <th class="border p-1">Fire Crystal Shard</th>
               <th class="border p-1">Steel</th>
+              <th class="border p-1">Time</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
