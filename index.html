@@ -134,7 +134,8 @@
         <button onclick="switchTab('schedule')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">📅 일정표</button>
         <button onclick="switchTab('transfer')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🛬 이민예측</button>
         <button onclick="switchTab('merge')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🌏 서버합병</button>
-        <button onclick="switchTab('history2024')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">📝 과거이민그룹 (2024)</button>
+        <button onclick="switchTab('transferhistory2024')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">📝 이민그룹 (2024)</button>
+        <button onclick="switchTab('transferhistory2025')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">📝 이민그룹 (2025)</button>
       </div>
       
       <!-- guideDetails: 처음에만 표시됨 -->
@@ -1175,14 +1176,6 @@
         wrapper.style.display = "none";
         // ✅ 추가
         document.body.style.overflowX = "hidden";
-      } else if (page === 'history2024') {
-        guide.style.display = "none";
-        wrapper.style.display = "block";
-        frame.src = "transferHistory2024.html";
-        
-        // ✅ 추가: 탭 전환시 우측 여백 제거
-        document.body.style.overflowX = "hidden";
-        document.documentElement.style.overflowX = "hidden";
        } else {
         guide.style.display = "none";
         wrapper.style.display = "block";
