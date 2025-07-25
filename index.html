@@ -134,7 +134,7 @@
         <button onclick="switchTab('schedule')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">📅 일정표</button>
         <button onclick="switchTab('transfer')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🛬 이민예측</button>
         <button onclick="switchTab('merge')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🌏 서버합병</button>
-        <button onclick="switchTab('history2024')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">📝 과거이민그룹(2024)</button>
+        <!--<button onclick="switchTab('history2024')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">📝 과거이민그룹 (2024)</button>-->
       </div>
       
       <!-- guideDetails: 처음에만 표시됨 -->
@@ -1178,12 +1178,7 @@
       } else {
         guide.style.display = "none";
         wrapper.style.display = "block";
-
-        if(page === 'history2024') {
-          frame.src = transferHisory2024.html;
-        } else {
-          frame.src = `${page}.html`;
-        }
+        frame.src = `${page}.html`;
         
         const heights = {
           pet: [1225, 846]
