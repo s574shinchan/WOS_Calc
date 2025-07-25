@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Server Merge</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2px;
+      background: #f4f4f4;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🌏 이민그룹 (2025)</h2>
+    <div id="sheet-table">⏳ 데이터를 불러오는 중...</div>
+  </div>
+
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100);
+    });
+
+    function toRGB(color, fallback = "#ffffff") {
+      if (!color) return fallback;
+      const r = Math.round((color.red ?? 0) * 255);
+      const g = Math.round((color.green ?? 0) * 255);
+      const b = Math.round((color.blue ?? 0) * 255);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function toBorderColor(border) {
+      if (!border?.color) return null;
+      const { red = 0, green = 0, blue = 0 } = border.color;
+      return `rgb(${Math.round(red * 255)},${Math.round(green * 255)},${Math.round(blue * 255)})`;
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch("https://wos-transfer-history2025.mko75620.workers.dev/get-sheet");
+        if (!response.ok) throw new Error("프록시 호출 실패");
+        const data = await response.json();
+
+        const sheet = data.sheets[0];
+        const merges = sheet.merges || [];
+        const rows = sheet.data[0].rowData || [];
+
+        const mergeMap = {};
+        const skip = new Set();
+        for (const m of merges) {
+          const key = `${m.startRowIndex},${m.startColumnIndex}`;
+          mergeMap[key] = {
+            rowspan: m.endRowIndex - m.startRowIndex,
+            colspan: m.endColumnIndex - m.startColumnIndex
+          };
+          for (let r = m.startRowIndex; r < m.endRowIndex; r++) {
+            for (let c = m.startColumnIndex; c < m.endColumnIndex; c++) {
+              if (r !== m.startRowIndex || c !== m.startColumnIndex) {
+                skip.add(`${r},${c}`);
+              }
+            }
+          }
+        }
+
+        let html = "<table><tbody>";
+        rows.forEach((row, ri) => {
+          html += "<tr>";
+          const cells = row.values || [];
+          cells.forEach((cell, ci) => {
+            const key = `${ri},${ci}`;
+            if (skip.has(key)) return;
+
+            const val = cell?.effectiveValue;
+            const text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
+
+            const effectiveFmt = cell?.effectiveFormat ?? {};
+            const userFmt = cell?.userEnteredFormat ?? {};
+            const bg = toRGB(userFmt.backgroundColor, "#ffffff");
+            const fg = toRGB(effectiveFmt.textFormat?.foregroundColor, "#000000");
+
+            const isBold = effectiveFmt.textFormat?.bold === true || userFmt.textFormat?.bold === true;
+            const rawSize = effectiveFmt.textFormat?.fontSize;
+            const fontSize = rawSize > 10 ? rawSize : "";
+
+            const borders = userFmt.borders || {};
+            const borderTop = toBorderColor(borders.top);
+            const borderBottom = toBorderColor(borders.bottom);
+            const borderLeft = toBorderColor(borders.left);
+            const borderRight = toBorderColor(borders.right);
+
+            let borderStyle = "";
+            if (borderTop) borderStyle += `border-top: 1px solid ${borderTop};`;
+            if (borderBottom) borderStyle += `border-bottom: 1px solid ${borderBottom};`;
+            if (borderLeft) borderStyle += `border-left: 1px solid ${borderLeft};`;
+            if (borderRight) borderStyle += `border-right: 1px solid ${borderRight};`;
+
+            const span = mergeMap[key];
+            const tag = `<td style="background:${bg}; color:${fg}; font-weight:${isBold ? "bold" : "normal"}; font-size:${fontSize}px; ${borderStyle}"` +
+              (span?.rowspan ? ` rowspan="${span.rowspan}"` : "") +
+              (span?.colspan ? ` colspan="${span.colspan}"` : "") +
+              `>${text}</td>`;
+            html += tag;
+          });
+          html += "</tr>";
+        });
+        html += "</tbody></table>";
+
+        document.getElementById("sheet-table").innerHTML = html;
+        sendHeightToParent();
+      } catch (err) {
+        console.error("로딩 오류:", err);
+        document.getElementById("sheet-table").innerText = "❌ 데이터를 불러오지 못했습니다.";
+      }
+    }
+
+    window.addEventListener("load", loadData);
+  </script>
+</body>
+</html>
