@@ -1178,7 +1178,12 @@
       } else {
         guide.style.display = "none";
         wrapper.style.display = "block";
-        frame.src = `${page}.html`;
+
+        if(page === 'history2024') {
+          frame.src = transferHisory2024.html;
+        } else {
+          frame.src = `${page}.html`;
+        }
         
         const heights = {
           pet: [1225, 846]
