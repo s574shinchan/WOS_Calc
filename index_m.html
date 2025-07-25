@@ -38,7 +38,7 @@
 </meta>
 </head>
   <body class="bg-gray-100 min-h-screen p-4">
-    <div class="max-w-[1400px] mx-auto w-full bg-blue-300 shadow rounded p-4 sm:p-3 relative">
+    <div class="max-w-[1500px] mx-auto w-full bg-blue-300 shadow rounded p-4 sm:p-3 relative">
       <!-- 모바일/태블릿 버튼: 중앙 가로 정렬 -->
       <div id="mobileButtons" class="hidden flex-row justify-center items-center gap-2 flex-wrap mb-4">
         <button class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 shadow" onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')">💬 컨설팅문의</button>
@@ -89,6 +89,8 @@
           <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('pakage')">📦 패키지</button>
           <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('schedule')">📅 일정표</button>
           <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('transfer')">🛬 이민예측</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('merge')">🌏 서버합병</button>
+          <button class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('transferHistory2025')">📝 이민그룹 (2025)</button>
         </div>
       </div>
       <div class="text-gray-700 text-sm text-center mb-4">
@@ -98,11 +100,11 @@
 
       <!-- 문구 -->
       <h1 class="text-xl font-bold mb-2 text-center">WOS 계산기 &amp; 자료모음</h1>
-      <div class="max-w-[1400px] mx-auto bg-white rounded shadow p-4 flex flex-col sm:flex-row gap-4">
+      <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-4 flex flex-col sm:flex-row gap-4">
         <!-- guideDetails: 처음에만 표시됨 -->
         <div class="flex-1 bg-white rounded p-2 space-y-4 shadow" id="guideDetails">
           <div class="bg-gray-100 p-2 font-sans text-sm">
-            <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
+            <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
               <h1 class="text-2xl font-bold text-gray-800 mb-4">📘 WOS 자료모음</h1>
               <div class="space-y-4">
                 <details class="bg-white border border-blue-300 rounded-md p-4">
@@ -964,7 +966,7 @@
         </button>
         
         <!-- iframe 영역 -->        
-        <div class="max-w-[1400px] w-full hidden bg-white rounded shadow p-2" id="frameWrapper">
+        <div class="max-w-[1500px] w-full hidden bg-white rounded shadow p-2" id="frameWrapper">
           <iframe class="w-full rounded border transition-all duration-300" frameborder="0" id="mainFrame" style="height: auto;"></iframe>
         </div>
       
