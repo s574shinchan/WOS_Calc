@@ -1175,7 +1175,15 @@
         wrapper.style.display = "none";
         // ✅ 추가
         document.body.style.overflowX = "hidden";
-      } else {
+      } else if (page === 'history2024') {
+        guide.style.display = "none";
+        wrapper.style.display = "block";
+        frame.src = transferHisory2024.html;
+        
+        // ✅ 추가: 탭 전환시 우측 여백 제거
+        document.body.style.overflowX = "hidden";
+        document.documentElement.style.overflowX = "hidden";
+       } else {
         guide.style.display = "none";
         wrapper.style.display = "block";
         frame.src = `${page}.html`;
