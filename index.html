@@ -37,24 +37,52 @@
     }
     /* ✅ 다크모드 전용 */
     body.dark-mode {
-      background-color: #121212;
-      background-image: url('images/watermark_dark.png'); /* 있으면 별도 배경 적용 */
-      color: #e0e0e0;
+    background-color: #121212;
+    color: #ffffff;
     }
   
-    /* ✅ 카드 및 박스 배경도 어둡게 */
+    /* Tailwind 기반 또는 일반 섹션 */
+    .dark-mode section,
     .dark-mode .bg-white,
-    .dark-mode .card {
-      background-color: #1e1e1e !important;
-      color: #e0e0e0 !important;
+    .dark-mode .card,
+    .dark-mode .rounded-xl,
+    .dark-mode .shadow-md,
+    .dark-mode .max-w-6xl,
+    .dark-mode .p-2,
+    .dark-mode .bg-gray-100,
+    .dark-mode .bg-gray-200,
+    .dark-mode .bg-gray-300 {
+      background-color: #2c2c2c !important;
+      color: #ffffff !important;
     }
   
+    /* 테두리 */
     .dark-mode .border {
       border-color: #555 !important;
     }
   
+    /* 링크 강조 */
     .dark-mode a {
       color: #80caff;
+    }
+  
+    /* 입력창 등 form 요소 */
+    .dark-mode input,
+    .dark-mode select,
+    .dark-mode textarea {
+      background-color: #444 !important;
+      color: #fff !important;
+      border-color: #666 !important;
+    }
+  
+    /* 테이블의 경우 */
+    .dark-mode table {
+      background-color: #2c2c2c;
+      color: #ffffff;
+    }
+    .dark-mode th,
+    .dark-mode td {
+      border-color: #444 !important;
     }
   </style>
   <script>
