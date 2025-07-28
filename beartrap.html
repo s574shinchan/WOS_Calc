@@ -12,8 +12,8 @@
       color: #f0f0f0;
     }
     
-    .dark-mode .bg-white,
-    .dark-mode .blue-50 { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .border { border-color: #444 !important; }
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
     .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
   
     .dark-mode .text-gray-800,
@@ -25,25 +25,40 @@
     .dark-mode .text-orange-500 { color: #ffa94d !important; }
     .dark-mode .text-green-600 { color: #79e68c !important; }
     .dark-mode .text-red-500 { color: #ff8080 !important; }
-  
+    .dark-mode .text-gray-500 { color: #aaa !important; }    
+    
+    .dark-mode .text-gray-800, 
+    .dark-mode .text-gray-600 { color: #e0e0e0 !important; }
+    
     .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
     .dark-mode th, .dark-mode td { border-color: #444 !important; }
     .dark-mode thead th { color: #000 !important; }
     
-    .dark-mode .bg-blue-100,
     .dark-mode .bg-amber-100,    
     .dark-mode .bg-green-100,
-    .dark-mode .bg-orange-50,
     .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
-  
+    
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+    
     .dark-mode .bg-amber-50,
     .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
-    .dark-mode input { color: #000 !important; }
-  
+
+    .dark-mode .bg-blue-100,
+    .dark-mode .bg-blue-50,
+    .dark-mode .bg-orange-50,
+    .dark-mode .bg-purple-50,
+    .dark-mode .bg-yellow-50,
+    .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
+    
     .dark-mode summary { background-color: #333 !important; color: #fff !important; }
     .dark-mode ul li { color: #ddd; }
-    .dark-mode .text-gray-500 { color: #aaa !important; }
+    
+    .dark-mode select option { color: #000 !important; }
+    .dark-mode select { color: #000 !important; }
+    .dark-mode input { color: #000 !important; }
   </style>
+
   <!-- ✅ 다크모드 상태 유지 스크립트 -->
   <script>
     window.addEventListener('DOMContentLoaded', () => {
