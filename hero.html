@@ -47,6 +47,8 @@
     .dark-mode .bg-blue-100,
     .dark-mode .bg-blue-50,
     .dark-mode .bg-orange-50,
+    .dark-mode .bg-purple-50,
+    .dark-mode .bg-yellow-50,
     .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
     
     .dark-mode summary { background-color: #333 !important; color: #fff !important; }
@@ -82,9 +84,9 @@
           <form id="heroEquipForm" class="space-y-4">
             <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-              <div><label class="block font-semibold">보유 너트수</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
-              <div><label class="block font-semibold">보유 미스릴</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" /></div>
-              <div><label class="block font-semibold">보유 레전드장비</label><input type="number" id="own-레전드장비" class="w-full border rounded p-2" /></div>
+              <div><label class="block font-semibold">보유 너트수</label><input type="number" id="own-너트" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
+              <div><label class="block font-semibold">보유 미스릴</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
+              <div><label class="block font-semibold">보유 레전드장비</label><input type="number" id="own-레전드장비" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
             </div>
             <button type="button" onclick="calcMithril()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
           </form>
@@ -95,8 +97,8 @@
             <form id="masteryForm" class="space-y-4">
               <div id="masteryGrid" class="grid grid-cols-2 md:grid-cols-2 gap-4"></div>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                <div><label class="block font-semibold">보유 마스터리</label><input type="number" id="owned-마스터리석" class="w-full border rounded p-2" /></div>
-                <div><label class="block font-semibold">보유 레전드장비</label><input type="number" id="owned-레전드장비" class="w-full border rounded p-2" /></div>
+                <div><label class="block font-semibold">보유 마스터리</label><input type="number" id="owned-마스터리석" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
+                <div><label class="block font-semibold">보유 레전드장비</label><input type="number" id="owned-레전드장비" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
               </div>
               <button type="button" onclick="calcMastery()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">계산하기</button>
             </form>
