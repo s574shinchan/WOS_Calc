@@ -1135,6 +1135,33 @@
       document.body.classList.toggle('dark-mode', isDark);
     });
   </script>
+  <!-- 다크모드 토글 스위치 아래쪽 스크립트에 추가 -->
+  <script>
+    document.getElementById("darkModeToggle").addEventListener("change", (e) => {
+      const isChecked = e.target.checked;
+      document.body.classList.toggle("dark-mode", isChecked);
+      localStorage.setItem("darkMode", isChecked);
+  
+      // ✅ iframe에 다크모드 상태 전달
+      const iframe = document.getElementById("mainFrame");
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: "TOGGLE_DARK", enabled: isChecked }, "*");
+      }
+    });
+  
+    // ✅ 페이지 로드시 저장된 다크모드 적용
+    window.addEventListener("DOMContentLoaded", () => {
+      const isDark = localStorage.getItem("darkMode") === "true";
+      document.body.classList.toggle("dark-mode", isDark);
+  
+      // iframe 로드 후에도 전송 보장
+      const iframe = document.getElementById("mainFrame");
+      iframe?.addEventListener("load", () => {
+        iframe.contentWindow.postMessage({ type: "TOGGLE_DARK", enabled: isDark }, "*");
+      });
+    });
+  </script>
+
 
   <script>
     const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/';
