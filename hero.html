@@ -5,6 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>영웅 장비 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- ✅ 다크모드 CSS -->
+  <style>
+    body.dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+    .dark-mode .text-gray-800, .dark-mode .text-gray-600 {
+      color: #e0e0e0 !important;
+    }
+    .dark-mode .border { border-color: #444 !important; }
+    .dark-mode thead th { color: #000 !important; }
+    .dark-mode .bg-blue-50,
+    .dark-mode .bg-blue-100,
+    .dark-mode .bg-orange-50,
+    .dark-mode .bg-red-50 {
+      background-color: #2e2e2e !important;
+    }
+    .dark-mode select option { color: #000 !important; }
+    .dark-mode select { color: #000 !important; }
+  </style>
+
+  <!-- ✅ 다크모드 상태 유지 스크립트 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
 </head>
   <body class="bg-gray-100 p-2 font-sans text-sm">
     <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md space-y-5"> 
