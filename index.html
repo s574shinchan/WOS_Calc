@@ -35,6 +35,27 @@
       overflow-x: hidden;
       margin: 0;
     }
+    /* ✅ 다크모드 전용 */
+    body.dark-mode {
+      background-color: #121212;
+      background-image: url('images/watermark_dark.png'); /* 있으면 별도 배경 적용 */
+      color: #e0e0e0;
+    }
+  
+    /* ✅ 카드 및 박스 배경도 어둡게 */
+    .dark-mode .bg-white,
+    .dark-mode .card {
+      background-color: #1e1e1e !important;
+      color: #e0e0e0 !important;
+    }
+  
+    .dark-mode .border {
+      border-color: #555 !important;
+    }
+  
+    .dark-mode a {
+      color: #80caff;
+    }
   </style>
   <script>
     const ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -74,6 +95,14 @@
     
     <!-- PC 버튼: 우측 상단 고정 + 세로 정렬 -->
     <div class="hidden sm:block">
+      <div class="absolute top-4 right-4 flex flex-col items-end space-y-2">
+    
+      <!-- 🌙 다크모드 토글 -->
+      <label class="text-white text-sm flex items-center space-x-2">
+        <span>🌙</span>
+        <input type="checkbox" id="darkModeToggle" />
+        <span>Dark Mode</span>
+      </label>
       <div class="absolute top-4 right-4 flex flex-col items-end space-y-2">
         <button 
           onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')" 
@@ -1079,6 +1108,20 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
    -->
+  <script>
+    const toggle = document.getElementById('darkModeToggle');
+    toggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark-mode', toggle.checked);
+      localStorage.setItem('darkMode', toggle.checked);
+    });
+  
+    window.addEventListener('DOMContentLoaded', () => {
+      const isDark = localStorage.getItem('darkMode') === 'true';
+      toggle.checked = isDark;
+      document.body.classList.toggle('dark-mode', isDark);
+    });
+  </script>
+
   <script>
     const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/';
     
