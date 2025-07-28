@@ -20,9 +20,9 @@
         <form id="heroEquipForm" class="space-y-4">
           <div id="heroEquipGridBody" class="grid grid-cols-2 gap-4"></div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            <div><label class="block font-semibold">Owned 100 Enhancement XP Component</label><input type="number" id="own-너트" class="w-full border rounded p-2" /></div>
-            <div><label class="block font-semibold">Owned Mithril</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" /></div>
-            <div><label class="block font-semibold">Owned Mythic Gear</label><input type="number" id="own-레전드장비" class="w-full border rounded p-2" /></div>
+            <div><label class="block font-semibold">Owned 100 Enhancement XP Component</label><input type="number" id="own-너트" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
+            <div><label class="block font-semibold">Owned Mithril</label><input type="number" id="own-미스릴" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
+            <div><label class="block font-semibold">Owned Mythic Gear</label><input type="number" id="own-레전드장비" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
           </div>
           <button type="button" onclick="calcMithril()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">Calc</button>
         </form>
@@ -33,8 +33,8 @@
         <form id="masteryForm" class="space-y-4">
           <div id="masteryGrid" class="grid grid-cols-2 md:grid-cols-2 gap-4"></div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            <div><label class="block font-semibold">Owned Essence Stones</label><input type="number" id="owned-마스터리석" class="w-full border rounded p-2" /></div>
-            <div><label class="block font-semibold">Owned Mythic Gear</label><input type="number" id="owned-레전드장비" class="w-full border rounded p-2" /></div>
+            <div><label class="block font-semibold">Owned Essence Stones</label><input type="number" id="owned-마스터리석" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
+            <div><label class="block font-semibold">Owned Mythic Gear</label><input type="number" id="owned-레전드장비" class="w-full border rounded p-2" placeholder="0" min="0" /></div>
           </div>
           <button type="button" onclick="calcMastery()" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">Calc</button>
         </form>
