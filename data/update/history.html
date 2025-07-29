@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>업데이트 내역</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    section {
+      margin-bottom: 24px;
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin: 0;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h2>📌 업데이트 기록</h2>
+
+  <section>
+    <h3>25.05.21</h3>
+    <ul>
+      <li>일반연구 계산 기능 추가</li>
+      <li>건물업그레이드 시간 추가</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.05.31</h3>
+    <ul>
+      <li>버튼 나열방식 변경</li>
+      <li>병사 생산시 SVS 점수 계산기능 추가</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.06.01</h3>
+    <ul>
+      <li>주단위 이벤트 및 패키지 일정추가 (비중 높지 않은 패키지의 경우 제외)</li>
+      <li>헬리오스 연구 방,창,궁 병종별로 연구 명칭 분리</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.06.02</h3>
+    <ul>
+      <li>헬리오스 연구 영문버전 추가</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.06.05</h3>
+    <ul>
+      <li>VIP 구간별 경험치 소모량 추가</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.06.14</h3>
+    <ul>
+      <li>헬리오스 연구 시간 계산 추가</li>
+      <li>용광로 업그레이드 조건 추가</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.06.23</h3>
+    <ul>
+      <li>헬리오스 연구 시간 계산 삭제</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.07.12</h3>
+    <ul>
+      <li>이민예측범위 추가</li>
+      <li>모바일 환경에 맞춤처리</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.07.23</h3>
+    <ul>
+      <li>서버합병 히스토리 추가 (삭제 및 변형 가능성 높음)</li>
+      <li>미야의점집 불수 진행도에 따른 불수변화량 간략하게 추가</li>
+      <li>일반연구 3가지 탭 모두 0레벨 추가</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.07.24</h3>
+    <ul>
+      <li>헬리오스 연구 시간 복구</li>
+      <li>서버합병 데이터 안맞는 부분 수정 보완</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.07.25</h3>
+    <ul>
+      <li>과거이민그룹 24,25년 분리추가</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>25.07.29</h3>
+    <ul>
+      <li>다크모드 추가</li>
+    </ul>
+  </section>
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+  
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+</body>
+</html>
