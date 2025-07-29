@@ -1100,7 +1100,9 @@
       </div>
       
       <!-- 카피라이트 -->  
-      <footer class="text-center text-xs font-bold text-gray-500 mt-5">⛔ 무단 복제 금지 | © Made By S580 ShinChan(uuid: 67331703)</footer>
+      <footer class="text-center text-xs font-bold text-gray-500 mt-5">⛔ 무단 복제 금지 | © Made By S580 ShinChan(uuid: 67331703)
+        <span id="updateLink" class="underline cursor-pointer hover:text-white-100 ml-2">업데이트내역</span>
+      </footer>
     </div>
   </div>
 
@@ -1129,6 +1131,17 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
    -->
+  <script>
+    document.getElementById("updateLink").addEventListener("click", () => {
+      const guide = document.getElementById("guideDetails");
+      const wrapper = document.getElementById("frameWrapper");
+      const frame = document.getElementById("mainFrame");
+      
+      guide.style.display = "none";
+      wrapper.style.display = "block";
+      frame.src = ".html";
+    });
+  </script>
   <script>
     const toggle = document.getElementById('darkModeToggle');
     toggle.addEventListener('change', () => {
