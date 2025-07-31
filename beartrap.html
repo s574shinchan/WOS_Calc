@@ -270,15 +270,15 @@
       </tr>`;
       
       // ✅ 남은값 행 추가
-      const infValue = document.getElementById('ratioInf').value || 0;
-      const lanValue = document.getElementById('ratioLan').value || 0;
-      const marValue = document.getElementById('ratioMar').value || 0;
+      const infValue = parseInt(cleanValue(document.getElementById('Infantry').value), 10) || 0;
+      const lanValue = parseInt(cleanValue(document.getElementById('Lancer').value), 10) || 0;
+      const marValue = parseInt(cleanValue(document.getElementById('Marksmen').value), 10) || 0;
       
       html += `<tr class="bg-yellow-100 font-semibold">
         <td class="text-center border p-1">남은값</td>
-        <td class="text-center border p-1">${(totalInf - infValue).toLocaleString()}</td>
-        <td class="text-center border p-1">${(totalLan - lanValue).toLocaleString()}</td>
-        <td class="text-center border p-1">${(totalMar - marValue).toLocaleString()}</td>
+        <td class="text-center border p-1">${(infValue - totalInf).toLocaleString()}</td>
+        <td class="text-center border p-1">${(lanValue - totalLan).toLocaleString()}</td>
+        <td class="text-center border p-1">${(marValue - totalMar).toLocaleString()}</td>
       </tr>`;
             
       document.getElementById('resultBody').innerHTML = html;
