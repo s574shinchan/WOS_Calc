@@ -97,7 +97,7 @@
         <label><input type="radio" name="strategy" value="equal" checked onclick="toggleCustom(false)" class="p-2"> 34/33/33</label><br>
         <label><input type="radio" name="strategy" value="20/40/40" onclick="toggleCustom(false)" class="p-2"> 20/40/40</label><br>
         <label><input type="radio" name="strategy" value="10/10/80" onclick="toggleCustom(false)" class="p-2"> 10/10/80</label><br>
-        <label><input type="radio" name="strategy" value="60/40/00" onclick="toggleCustom(false)" class="p-2"> 60/40/0</label><br>
+        <label><input type="radio" name="strategy" value="60/40/0" onclick="toggleCustom(false)" class="p-2"> 60/40/0</label><br>
         <label><input type="radio" name="strategy" value="50/20/30" onclick="toggleCustom(false)" class="p-2"> 50/20/30</label><br>
         <label><input type="radio" name="strategy" value="custom" onclick="toggleCustom(true)" class="p-2"> 사용자지정비율</label>
 
@@ -132,9 +132,9 @@
           </select>
         </div>
         <div class="space-y-1">
-          <label><input type="radio" name="cityBuff" value="0" checked> 도시버프 없음</label><br>
-          <label><input type="radio" name="cityBuff" value="10"> 출정 수용량증가 2h (+10%)</label><br>
-          <label><input type="radio" name="cityBuff" value="20"> 출정 수용량증가 12h (+20%)</label><br>
+          <label><input type="radio" id="cityBuff0" name="cityBuff" value="0" checked> 도시버프 없음</label><br>
+          <label><input type="radio" id="cityBuff10" name="cityBuff" value="10"> 출정 수용량증가 2h (+10%)</label><br>
+          <label><input type="radio" id="cityBuff20" name="cityBuff" value="20"> 출정 수용량증가 12h (+20%)</label><br>
           <button type="button" onclick="calculate()" class="bg-blue-500 text-white mt-3 p-2 rounded hover:bg-blue-600">계산하기</button>
         </div>
       </div>
@@ -315,6 +315,70 @@
           (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
         e.preventDefault();
       }
+    });
+  </script>
+  <script>
+    function saveSettings() {
+      const ids = [
+        'baseMarch', 'marchCount', 'Infantry', 'Lancer', 'Marksmen',
+        'ratioInf', 'ratioLan', 'ratioMar', 'tumblingLevel'
+      ];
+  
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) localStorage.setItem(id, el.value);
+      });
+  
+      localStorage.setItem('buffTumbling', document.getElementById('buffTumbling').checked);
+  
+      const strategy = document.querySelector('input[name="strategy"]:checked');
+      if (strategy) localStorage.setItem('strategy', strategy.value);
+  
+      const cityBuff = document.querySelector('input[name="cityBuff"]:checked');
+      if (cityBuff) localStorage.setItem('cityBuff', cityBuff.value);
+    }
+  
+    function loadSettings() {
+      const ids = [
+        'baseMarch', 'marchCount', 'Infantry', 'Lancer', 'Marksmen',
+        'ratioInf', 'ratioLan', 'ratioMar', 'tumblingLevel'
+      ];
+  
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        const val = localStorage.getItem(id);
+        if (el && val !== null) el.value = val;
+      });
+  
+      const chk = localStorage.getItem('buffTumbling');
+      if (chk === 'true') {
+        document.getElementById('buffTumbling').checked = true;
+        document.getElementById('tumblingLevelGroup').style.display = 'block';
+      }
+  
+      const strategy = localStorage.getItem('strategy');
+      if (strategy) {
+        const radio = document.querySelector(`input[name='strategy'][value='${strategy}']`);
+        if (radio) {
+          radio.checked = true;
+          toggleCustom(strategy === 'custom');
+        }
+      }
+  
+      const cityBuff = localStorage.getItem('cityBuff');
+      if (cityBuff) {
+        const radio = document.querySelector(`input[name='cityBuff'][value='${cityBuff}']`);
+        if (radio) radio.checked = true;
+      }
+    }
+  
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
+  
+      // 저장 이벤트 연결 (input/select/radio/checkbox 등)
+      document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('change', saveSettings);
+      });
     });
   </script>
 </body>
