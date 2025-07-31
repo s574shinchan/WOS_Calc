@@ -272,9 +272,9 @@
       // ✅ 남은값 행 추가 (capacity 기준 차이)
       html += `<tr class="bg-yellow-100 font-semibold">
         <td class="text-center border p-1">남은값</td>
-        <td class="text-center border p-1">${(capacity - totalInf).toLocaleString()}</td>
-        <td class="text-center border p-1">${(capacity - totalLan).toLocaleString()}</td>
-        <td class="text-center border p-1">${(capacity - totalMar).toLocaleString()}</td>
+        <td class="text-center border p-1">${(totalInf - inf).toLocaleString()}</td>
+        <td class="text-center border p-1">${(totalLan - lan).toLocaleString()}</td>
+        <td class="text-center border p-1">${(totalMar - mar).toLocaleString()}</td>
       </tr>`;
             
       document.getElementById('resultBody').innerHTML = html;
