@@ -96,9 +96,9 @@
         <strong>비율적용</strong><br>
         <label><input type="radio" name="strategy" value="equal" checked onclick="toggleCustom(false)" class="p-2"> 34/33/33</label><br>
         <label><input type="radio" name="strategy" value="20/40/40" onclick="toggleCustom(false)" class="p-2"> 20/40/40</label><br>
-        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)" class="p-2"> 10/10/80</label><br>
-        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)" class="p-2"> 60/40/0</label><br>
-        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)" class="p-2"> 50/20/30</label><br>
+        <label><input type="radio" name="strategy" value="10/10/80" onclick="toggleCustom(false)" class="p-2"> 10/10/80</label><br>
+        <label><input type="radio" name="strategy" value="60/40/00" onclick="toggleCustom(false)" class="p-2"> 60/40/0</label><br>
+        <label><input type="radio" name="strategy" value="50/20/30" onclick="toggleCustom(false)" class="p-2"> 50/20/30</label><br>
         <label><input type="radio" name="strategy" value="custom" onclick="toggleCustom(true)" class="p-2"> 사용자지정비율</label>
 
         <div class="bg-blue-50 p-3 mt-2 rounded" id="customRatio" style="display: none;">
@@ -234,6 +234,7 @@
         inf = parseFloat(cleanValue(document.getElementById('ratioInf').value)) || 0;
         lan = parseFloat(cleanValue(document.getElementById('ratioLan').value)) || 0;
         mar = parseFloat(cleanValue(document.getElementById('ratioMar').value)) || 0;
+        console.log(inf + lan + mar);
         if (inf + lan + mar !== 100) {
           alert("사용자 지정 비율의 합이 100%여야 합니다.");
           return;
