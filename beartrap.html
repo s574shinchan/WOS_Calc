@@ -96,7 +96,9 @@
         <strong>비율적용</strong><br>
         <label><input type="radio" name="strategy" value="equal" checked onclick="toggleCustom(false)" class="p-2"> 34/33/33</label><br>
         <label><input type="radio" name="strategy" value="20/40/40" onclick="toggleCustom(false)" class="p-2"> 20/40/40</label><br>
-        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)" class="p-2"> 10/30/60</label><br>
+        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)" class="p-2"> 10/10/80</label><br>
+        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)" class="p-2"> 60/40/0</label><br>
+        <label><input type="radio" name="strategy" value="10/30/60" onclick="toggleCustom(false)" class="p-2"> 50/20/30</label><br>
         <label><input type="radio" name="strategy" value="custom" onclick="toggleCustom(true)" class="p-2"> 사용자지정비율</label>
 
         <div class="bg-blue-50 p-3 mt-2 rounded" id="customRatio" style="display: none;">
@@ -222,8 +224,12 @@
         inf = 34; lan = 33; mar = 33;
       } else if (strategy === "20/40/40") {
         inf = 20; lan = 40; mar = 40;
-      } else if (strategy === "10/30/60") {
-        inf = 10; lan = 30; mar = 60;
+      } else if (strategy === "10/10/80") {
+        inf = 10; lan = 10; mar = 80;
+      } else if (strategy === "60/40/0") {
+        inf = 60; lan = 40; mar = 0;
+      } else if (strategy === "50/20/30") {
+        inf = 50; lan = 20; mar = 30;
       } else {
         inf = parseFloat(cleanValue(document.getElementById('ratioInf').value)) || 0;
         lan = parseFloat(cleanValue(document.getElementById('ratioLan').value)) || 0;
@@ -235,14 +241,41 @@
       }
 
       let html = '';
+      let totalInf = 0, totalLan = 0, totalMar = 0;
+      
       for (let i = 1; i <= marches; i++) {
+        const valInf = Math.floor(capacity * inf / 100);
+        const valLan = Math.floor(capacity * lan / 100);
+        const valMar = Math.floor(capacity * mar / 100);
+
+        totalInf += valInf;
+        totalLan += valLan;
+        totalMar += valMar;
+        
         html += `<tr>
           <td class="text-center border p-1">${i}</td>
-          <td class="text-center border p-1">${Math.floor(capacity * inf / 100).toLocaleString()}</td>
-          <td class="text-center border p-1">${Math.floor(capacity * lan / 100).toLocaleString()}</td>
-          <td class="text-center border p-1">${Math.floor(capacity * mar / 100).toLocaleString()}</td>
+          <td class="text-center border p-1">${valInf.toLocaleString()}</td>
+          <td class="text-center border p-1">${valLan.toLocaleString()}</td>
+          <td class="text-center border p-1">${valMar.toLocaleString()}</td>
         </tr>`;
       }
+
+      // ✅ 합계 행 추가
+      html += `<tr class="bg-gray-200 font-semibold">
+        <td class="text-center border p-1">합계</td>
+        <td class="text-center border p-1">${totalInf.toLocaleString()}</td>
+        <td class="text-center border p-1">${totalLan.toLocaleString()}</td>
+        <td class="text-center border p-1">${totalMar.toLocaleString()}</td>
+      </tr>`;
+      
+      // ✅ 남은값 행 추가 (capacity 기준 차이)
+      html += `<tr class="bg-yellow-100 font-semibold">
+        <td class="text-center border p-1">남은값</td>
+        <td class="text-center border p-1">${(capacity - totalInf).toLocaleString()}</td>
+        <td class="text-center border p-1">${(capacity - totalLan).toLocaleString()}</td>
+        <td class="text-center border p-1">${(capacity - totalMar).toLocaleString()}</td>
+      </tr>`;
+            
       document.getElementById('resultBody').innerHTML = html;
       sendHeightToParent();
     }
