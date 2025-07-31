@@ -234,7 +234,7 @@
         inf = parseFloat(cleanValue(document.getElementById('ratioInf').value)) || 0;
         lan = parseFloat(cleanValue(document.getElementById('ratioLan').value)) || 0;
         mar = parseFloat(cleanValue(document.getElementById('ratioMar').value)) || 0;
-        console.log(inf + lan + mar);
+
         if (inf + lan + mar !== 100) {
           alert("사용자 지정 비율의 합이 100%여야 합니다.");
           return;
@@ -269,12 +269,16 @@
         <td class="text-center border p-1">${totalMar.toLocaleString()}</td>
       </tr>`;
       
-      // ✅ 남은값 행 추가 (capacity 기준 차이)
+      // ✅ 남은값 행 추가
+      const infValue = document.getElementById('ratioInf').value || 0;
+      const lanValue = document.getElementById('ratioLan').value || 0;
+      const marValue = document.getElementById('ratioMar').value || 0;
+      
       html += `<tr class="bg-yellow-100 font-semibold">
         <td class="text-center border p-1">남은값</td>
-        <td class="text-center border p-1">${(totalInf - inf).toLocaleString()}</td>
-        <td class="text-center border p-1">${(totalLan - lan).toLocaleString()}</td>
-        <td class="text-center border p-1">${(totalMar - mar).toLocaleString()}</td>
+        <td class="text-center border p-1">${(totalInf - infValue).toLocaleString()}</td>
+        <td class="text-center border p-1">${(totalLan - lanValue).toLocaleString()}</td>
+        <td class="text-center border p-1">${(totalMar - marValue).toLocaleString()}</td>
       </tr>`;
             
       document.getElementById('resultBody').innerHTML = html;
