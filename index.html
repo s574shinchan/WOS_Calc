@@ -1419,13 +1419,7 @@
 
   <script>
     document.getElementById("updateLink").addEventListener("click", () => {
-      const guide = document.getElementById("guideDetails");
-      const wrapper = document.getElementById("frameWrapper");
-      const frame = document.getElementById("mainFrame");
-      
-      guide.style.display = "none";
-      wrapper.style.display = "block";
-      frame.src = "https://s574shinchan.github.io/WOS_Calc/data/update/history.html";
+      loadIntoContentArea("https://s574shinchan.github.io/WOS_Calc/data/update/history.html");
     });
   </script>
   <script>
@@ -1518,26 +1512,33 @@
       const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
     
       if (page === 'guide') {
-        guide.style.display = "block";
-        wrapper.style.display = "none";
-        // ✅ 추가
-        document.body.style.overflowX = "hidden";
+        document.getElementById('guideDetails').style.display = 'block';
+        document.getElementById('contentWrapper').style.display = 'none';
+        document.body.style.overflowX = 'hidden';
+        return;
+        //guide.style.display = "block";
+        //wrapper.style.display = "none";
+        //// ✅ 추가
+        //document.body.style.overflowX = "hidden";
        } else {
-        guide.style.display = "none";
-        wrapper.style.display = "block";
-        frame.src = `${page}.html`;
+        loadIntoContentArea(`${page}.html`);
+        document.getElementById('guideDetails').style.display = 'none';
+        document.getElementById('contentWrapper').style.display = 'block';
+        //guide.style.display = "none";
+        //wrapper.style.display = "block";
+        //frame.src = `${page}.html`;
         
-        const heights = {
-          pet: [1225, 846]
-        };
+        //const heights = {
+        //  pet: [1225, 846]
+        //};
     
-        if (heights[page]) {
-          frame.style.height = isMobile ? `${heights[page][0]}px` : `${heights[page][1]}px`;
-        }
+        //if (heights[page]) {
+        //  frame.style.height = isMobile ? `${heights[page][0]}px` : `${heights[page][1]}px`;
+        //}
         
-        // ✅ 추가: 탭 전환시 우측 여백 제거
-        document.body.style.overflowX = "hidden";
-        document.documentElement.style.overflowX = "hidden";
+        //// ✅ 추가: 탭 전환시 우측 여백 제거
+        //document.body.style.overflowX = "hidden";
+        //document.documentElement.style.overflowX = "hidden";
       }
     }
     
@@ -1565,7 +1566,56 @@
       document.getElementById("popupModal").classList.add("hidden");
     }
   </script>
-  
+  <script>
+    async function loadIntoContentArea(url) {
+      const wrapper = document.getElementById('contentWrapper');
+      const area    = document.getElementById('contentArea');
+      const guide   = document.getElementById('guideDetails');
+    
+      try {
+        const res = await fetch(url, { cache: 'no-cache' });
+        const htmlText = await res.text();
+    
+        // body 안쪽만 잘라서 넣기 (상대 파일에 <html>이 있을 수도 있으니 대비)
+        const bodyMatch = htmlText.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        const inner = bodyMatch ? bodyMatch[1] : htmlText;
+    
+        // DOMParser로 파싱 → script 실행 처리
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(inner, 'text/html');
+    
+        // 내용 채우기
+        area.innerHTML = '';
+        area.append(...doc.body.childNodes);
+    
+        // script 태그 재주입해서 실행
+        doc.querySelectorAll('script').forEach(s => {
+          const ns = document.createElement('script');
+          if (s.src) ns.src = s.src;
+          if (s.type) ns.type = s.type;
+          if (s.noModule) ns.noModule = true;
+          if (s.defer) ns.defer = true;
+          if (!s.src) ns.textContent = s.textContent;
+          area.appendChild(ns);
+        });
+    
+        // 화면 전환
+        guide.style.display  = 'none';
+        wrapper.style.display = 'block';
+    
+        // 가로 스크롤 방지 (기존 유지)
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowX = 'hidden';
+    
+        // 탭 전환 시 상단으로
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {
+        area.innerHTML = '<p class="text-red-500 p-2">⚠️ 콘텐츠를 불러오지 못했습니다.</p>';
+        guide.style.display  = 'none';
+        wrapper.style.display = 'block';
+      }
+    }
+    </script>
   <script>
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("keydown", function (e) {
