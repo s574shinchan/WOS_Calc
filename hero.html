@@ -233,21 +233,21 @@
             };
     
             rows += `
-            <tr class="text-center font-bold bg-yellow-100">
+            <tr class="row-total text-center font-bold bg-yellow-100">
               <td colspan="2" class="border p-1">총합</td>
               <td class="border p-1">${total.경험치.toLocaleString()}</td>
               <td class="border p-1">${total.너트.toLocaleString()}</td>
               <td class="border p-1">${total.미스릴.toLocaleString()}</td>
               <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
             </tr>
-            <tr class="text-center font-bold bg-orange-50">
+            <tr class="row-owned text-center font-bold bg-orange-50">
               <td colspan="2" class="border p-1">보유량</td>
               <td class="border p-1"></td>
               <td class="border p-1">${own.너트.toLocaleString()}</td>
               <td class="border p-1">${own.미스릴.toLocaleString()}</td>
               <td class="border p-1">${own.레전드장비.toLocaleString()}</td>
             </tr>
-            <tr class="text-center font-bold bg-red-50">
+            <tr class="row-deficit text-center font-bold bg-red-50">
               <td colspan="2" class="border p-1">과부족</td>
               <td class="border p-1">${total.경험치.toLocaleString()}</td>
               <td class="border p-1">${(own.너트 - total.너트).toLocaleString()}</td>
@@ -379,17 +379,17 @@
             };
     
             rows += `
-              <tr class="text-center font-bold bg-yellow-100">
+              <tr class="row-total text-center font-bold bg-yellow-100">
                 <td colspan="2" class="border p-1">총합</td>
                 <td class="border p-1">${total.마스터리석.toLocaleString()}</td>
                 <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
               </tr>
-              <tr class="text-center font-bold bg-orange-50">
+              <tr class="row-owned text-center font-bold bg-orange-50">
                 <td colspan="2" class="border p-1">보유량</td>
                 <td class="border p-1">${own.마스터리석.toLocaleString()}</td>
                 <td class="border p-1">${own.레전드장비.toLocaleString()}</td>
               </tr>
-              <tr class="text-center font-bold bg-red-50">
+              <tr class="row-deficit text-center font-bold bg-red-50">
                 <td colspan="2" class="border p-1">과부족</td>
                 <td class="border p-1">${(own.마스터리석 - total.마스터리석).toLocaleString()}</td>
                 <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
