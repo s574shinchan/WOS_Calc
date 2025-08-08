@@ -183,19 +183,19 @@ for (let i = 0; i < gemSlots.length; i++) {
         };
   
         rows += `
-          <tr class="text-center font-bold bg-purple-100">
+          <tr class="row-total text-center font-bold bg-purple-100">
             <td class="border p-1" colspan="2">Total</td>
             <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
             <td class="border p-1">${total.도면.toLocaleString()}</td>
             <td class="border p-1">${total.비전.toLocaleString()}</td>
           </tr>
-          <tr class="text-center font-bold bg-orange-50">
+          <tr class="row-owned text-center font-bold bg-orange-50">
             <td class="border p-1" colspan="2">Stock</td>
             <td class="border p-1">${owned.매뉴얼.toLocaleString()}</td>
             <td class="border p-1">${owned.도면.toLocaleString()}</td>
             <td class="border p-1">${owned.비전.toLocaleString()}</td>
           </tr>
-          <tr class="text-center font-bold bg-red-50">
+          <tr class="row-deficit text-center font-bold bg-red-50">
             <td class="border p-1" colspan="2">Quantity required</td>
             <td class="border p-1">${(owned.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
             <td class="border p-1">${(owned.도면 - total.도면).toLocaleString()}</td>
