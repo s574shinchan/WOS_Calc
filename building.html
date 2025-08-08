@@ -343,7 +343,7 @@
       });
 
       result += `
-        <tr class="bg-blue-50 font-bold">
+        <tr class="row-total bg-blue-50 font-bold">
           <td class="border p-1" colspan="2">총합</td>
           <td class="border p-1">${total["불수정"].toLocaleString()}</td>
           <td class="border p-1">${total["정제"].toLocaleString()}</td>
@@ -353,13 +353,13 @@
           <td class="border p-1">${formatValue(total["철광"])}</td>
           <td class="border p-1"></td>
         </tr>
-        <tr class="text-center font-bold bg-orange-50">
+        <tr class="row-owned text-center font-bold bg-orange-50">
           <td class="border p-1" colspan="2">보유량</td>
           <td class="border p-1">${owned["불수정"].toLocaleString()}</td>
           <td class="border p-1">${owned["정제"].toLocaleString()}</td>
           <td class="border p-1" colspan="5"></td>
           </tr>
-          <tr class="text-center font-bold bg-red-50">
+          <tr class="row-deficit text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">과부족</td>
           <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
           <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
