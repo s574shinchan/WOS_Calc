@@ -360,19 +360,19 @@
       };
 
       rows += `
-        <tr class="text-center font-bold bg-purple-100">
+        <tr class="row-total text-center font-bold bg-purple-100">
           <td class="border p-1" colspan="2">Total</td>
           <td class="border p-1">${total.가루.toLocaleString()}</td>
           <td class="border p-1">${total.철강재.toLocaleString()}</td>
           <td class="border p-1">${formatTime(Math.round(total.시간 / factor))}</td>
         </tr>
-        <tr class="text-center font-bold bg-orange-50">
+        <tr class="row-owned text-center font-bold bg-orange-50">
           <td class="border p-1" colspan="2">Stock</td>
           <td class="border p-1">${owned.가루.toLocaleString()}</td>
           <td class="border p-1">${owned.철강재.toLocaleString()}</td>
           <td class="border p-1"></td>
         </tr>
-        <tr class="text-center font-bold bg-red-50">
+        <tr class="row-deficit text-center font-bold bg-red-50">
           <td class="border p-1" colspan="2">Quantity required</td>
           <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
           <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
