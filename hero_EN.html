@@ -322,17 +322,17 @@
         };
 
         rows += `
-          <tr class="text-center font-bold bg-yellow-100">
+          <tr class="row-total text-center font-bold bg-yellow-100">
             <td colspan="2" class="border p-1">Total</td>
             <td class="border p-1">${total.마스터리석.toLocaleString()}</td>
             <td class="border p-1">${total.레전드장비.toLocaleString()}</td>
           </tr>
-          <tr class="text-center font-bold bg-orange-50">
+          <tr class="row-owned text-center font-bold bg-orange-50">
             <td colspan="2" class="border p-1">Stock</td>
             <td class="border p-1">${own.마스터리석.toLocaleString()}</td>
             <td class="border p-1">${own.레전드장비.toLocaleString()}</td>
           </tr>
-          <tr class="text-center font-bold bg-red-50">
+          <tr class="row-deficit text-center font-bold bg-red-50">
             <td colspan="2" class="border p-1">Required quantity</td>
             <td class="border p-1">${(own.마스터리석 - total.마스터리석).toLocaleString()}</td>
             <td class="border p-1">${(own.레전드장비 - total.레전드장비).toLocaleString()}</td>
