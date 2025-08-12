@@ -6,24 +6,65 @@
     <title>Day 1 & Day 2 — 탭 계산기</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* 공통 스타일 */
-      body{background:#ffffff!important;color:#000!important}
-      .card{background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.06)}
-      .t{border-collapse:collapse;width:100%;color:#000}
-      .t th,.t td{border:1px solid #d1d5db;padding:.5rem;font-size:13px}
-      .head{background:#f3f4f6;font-weight:600}
-      .in{background:#d1fae5}  /* 입력 영역(초록) */
-      .sum{background:#fef08a} /* 합계(노랑) */
+      /* 1) 라이트 기본 팔레트 */
+      :root{
+        --bg:#ffffff;         /* 페이지 배경 */
+        --text:#111827;       /* 텍스트 색 */
+        --card:#ffffff;       /* 카드/표 배경 */
+        --head:#f3f4f6;       /* thead 배경 */
+        --border:#e5e7eb;     /* 테두리 */
+        --in:#d1fae5;         /* 입력칸(초록) */
+        --sum:#fef08a;        /* 합계(노랑) */
+        --tab-bg:#f9fafb;     /* 비선택 탭 배경 */
+      }
+    
+      /* 2) 다크모드 팔레트 (index.html에서 body에 dark-mode가 붙음) */
+      body.dark-mode{
+        --bg:#0b1220;
+        --text:#e5e7eb;
+        --card:#0f172a;
+        --head:#111827;
+        --border:#374151;
+        --in:#134e4a;
+        --sum:#a57c00;
+        --tab-bg:#1f2937;
+      }
+    
+      /* 3) 공통 스타일 (색은 전부 변수 사용) */
+      body{ background:var(--bg); color:var(--text); }
+      .card{ background:var(--card); box-shadow:0 8px 24px rgba(0,0,0,.06) }
+      .t{ border-collapse:collapse; width:100%; color:var(--text) }
+      .t th,.t td{ border:1px solid var(--border); padding:.5rem; font-size:13px }
+      .head{ background:var(--head); font-weight:600 }
+      .in{ background:var(--in) }      /* 입력 영역(초록) */
+      .sum{ background:var(--sum) }    /* 합계(노랑) */
       .r{text-align:right}
-      input[type="number"]{appearance:textfield;background:transparent;color:#000}
-      input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{appearance:none;margin:0}
+    
+      input[type="number"]{
+        appearance:textfield;
+        background:transparent;
+        color:var(--text);
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button{ appearance:none; margin:0 }
+    
       .maxw{max-width:1100px}
-      /* 탭 */
-      .tabs{display:flex;gap:.25rem;border-bottom:1px solid #e5e7eb;margin-bottom:.75rem}
-      .tab-btn{padding:.6rem 1rem;font-weight:600;border:1px solid #e5e7eb;border-bottom:0;border-top-left-radius:.6rem;border-top-right-radius:.6rem;background:#f9fafb;color:#111}
-      .tab-btn[aria-selected="true"]{background:#fff}
-      .tab-panel{display:none}
-      .tab-panel.active{display:block}
+    
+      /* 4) 탭 */
+      .tabs{
+        display:flex; gap:.25rem;
+        border-bottom:1px solid var(--border);
+        margin-bottom:.75rem
+      }
+      .tab-btn{
+        padding:.6rem 1rem; font-weight:600;
+        border:1px solid var(--border); border-bottom:0;
+        border-top-left-radius:.6rem; border-top-right-radius:.6rem;
+        background:var(--tab-bg); color:var(--text)
+      }
+      .tab-btn[aria-selected="true"]{ background:var(--card) }
+      .tab-panel{ display:none }
+      .tab-panel.active{ display:block }
     </style>
   </head>
   <body class="p-3 md:p-6">
@@ -358,15 +399,16 @@
           <table class="t">
             <thead>
               <tr class="head">
-                <th style="width:40%">병사티어</th>
-                <th class="r" style="width:30%">생산수</th>
-                <th class="r" style="width:30%">Points</th>
+                <th style="width:25%">병사티어</th>
+                <th style="width:25%">1명당 점수</th>
+                <th class="r" style="width:25%">생산량</th>
+                <th class="r" style="width:25%">Points</th>
               </tr>
             </thead>
             <tbody id="d4_tBody"></tbody>
             <tfoot>
               <tr>
-                <td class="font-semibold text-right" colspan="2">소계</td>
+                <td class="font-semibold text-right" colspan="3">소계</td>
                 <td class="sum r font-mono" id="d4_tTot">-</td>
               </tr>
             </tfoot>
@@ -575,25 +617,41 @@
       const D4_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000}; // 16레벨 21,000
       
       function d4_buildTroops(){
-        const tb=$("#d4_tBody"); tb.innerHTML="";
-        Object.keys(D4_TROOP_PTS).forEach((tier,i)=>{
-          const tr=document.createElement("tr");
-          tr.innerHTML=`
-            <td>${tier} <span class="text-xs">(per ${D4_TROOP_PTS[tier]})</span></td>
-            <td class="in"><input class="w-full r font-mono d4_tQty" type="number" min="0" step="1" value="0" data-tier="${tier}" /></td>
-            <td class="r font-mono" id="d4_tP-${tier}">-</td>`;
+        const tb = $("#d4_tBody");
+        tb.innerHTML = "";
+        Object.keys(D4_TROOP_PTS).forEach((tier) => {
+          const per = D4_TROOP_PTS[tier]; // 1명당 점수
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${tier}</td>
+            <td class="r font-mono">${fmt(per)}</td>
+            <td class="in">
+              <input class="w-full r font-mono d4_tQty" type="number" min="0" step="1" value="0" data-tier="${tier}" />
+            </td>
+            <td class="r font-mono" id="d4_tCalc-${tier}">-</td>
+          `;
           tb.appendChild(tr);
         });
-        tb.addEventListener("input",e=>{ if(!e.target.classList.contains("d4_tQty")) return; d4_calcTroops(); });
+      
+        tb.addEventListener("input", (e) => {
+          if (!e.target.classList.contains("d4_tQty")) return;
+          d4_calcTroops();
+        });
       }
       
       function d4_calcTroops(){
-        let sub=0;
-        document.querySelectorAll(".d4_tQty").forEach(inp=>{
-          const tier=inp.dataset.tier, qty=+(inp.value||0), pts=qty*D4_TROOP_PTS[tier];
-          $("#d4_tP-"+tier).textContent=fmt(pts); sub+=pts;
+        let sub = 0;
+        document.querySelectorAll(".d4_tQty").forEach((inp) => {
+          const tier = inp.dataset.tier;
+          const per  = D4_TROOP_PTS[tier];
+          const qty  = +(inp.value || 0);
+          const pts  = qty * per;
+          $("#d4_tCalc-" + tier).textContent = fmt(pts);
+          sub += pts;
         });
-        $("#d4_tTot").textContent=fmt(sub); $("#d4_tTot").dataset.val=sub; d4_calcMain();
+        $("#d4_tTot").textContent = fmt(sub);
+        $("#d4_tTot").dataset.val = sub;
+        d4_calcMain(); // 총합 갱신
       }
       
       function d4_buildCharms(){
