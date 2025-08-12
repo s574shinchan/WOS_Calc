@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SVS 준비단계 1일차</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .card { box-shadow: 0 8px 24px rgba(0,0,0,.06); background: #ffffff; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem }
+  .t { border-collapse: collapse; width: 100%; color: #000000; }
+  .t th, .t td { border: 1px solid #d1d5db; padding: .5rem; font-size: 13px; color: #000000; }
+  .head { background: #f3f4f6; font-weight: 600; }
+  .in { background: #d1fae5; }
+  .sum { background: #fef08a; }
+  .r { text-align: right; }
+  input[type="number"] {
+    appearance: textfield;
+    background: transparent;
+    color: #000000;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button { appearance: none; margin: 0; }
+</style>
+</head>
+<body class="p-3 md:p-6">
+  <div class="max-w-5xl mx-auto space-y-3">
+    <!-- 상단: Total points -->
+    <div class="grid-2">
+      <h1 class="text-xl md:text-2xl font-bold">SVS 준비단계 1일차</h1>
+      <div class="text-right">
+        <span class="align-middle mr-2 font-semibold">총 점수</span>
+        <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="totalPoints">-</span>
+      </div>
+    </div>
+
+    <!-- A. Day 1 메인 표 -->
+    <section class="card rounded-xl overflow-hidden">
+      <table class="t">
+        <thead>
+          <tr class="head">
+            <th style="width:55%">1일차 총합계</th>
+            <th class="r" style="width:20%">재료</th>
+            <th class="r" style="width:25%">Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>불의수정 소모</td>
+            <td class="in">
+              <input id="qtyFire" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
+            </td>
+            <td class="r" id="ptsFire">-</td>
+          </tr>
+          <tr>
+            <td>불의수정 조각 소모(연구)</td>
+            <td class="in">
+              <input id="qtyShard" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
+            </td>
+            <td class="r" id="ptsShard">-</td>
+          </tr>
+          <tr>
+            <td>제련된 불의수정 소모 (FC6+)</td>
+            <td class="in">
+              <input id="qtyRefined" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
+            </td>
+            <td class="r" id="ptsRefined">-</td>
+          </tr>
+          <tr>
+            <td>가속사용 (1분당)</td>
+            <td class="in text-center text-sm">아래표에서 입력</td>
+            <td class="r" id="ptsSpeedups">-</td>
+          </tr>
+          <tr>
+            <td>영주보석 업그레이드</td>
+            <td class="in text-center text-sm">아래표에서 입력</td>
+            <td class="r" id="ptsCharms">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- B. Speedups -->
+    <section class="card rounded-xl overflow-hidden">
+      <table class="t">
+        <thead>
+          <tr class="head">
+            <th style="width:25%">가속사용</th>
+            <th style="width:25%">개별점수</th>
+            <th class="r" style="width:25%">개수</th>
+            <th class="r" style="width:25%">Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>일</td>
+            <td class="text-right">43200</td>
+            <td class="in">
+              <input id="spdDays" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
+            </td>
+            <td class="r" id="spdDaysPts">-</td>
+          </tr>
+          <tr>
+            <td>시간</td>
+            <td class="text-right">1800</td>
+            <td class="in">
+              <input id="spdHours" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
+            </td>
+            <td class="r" id="spdHoursPts">-</td>
+          </tr>
+          <tr>
+            <td>분</td>
+            <td class="text-right">30</td>
+            <td class="in">
+              <input id="spdMins" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
+            </td>
+            <td class="r" id="spdMinsPts">-</td>
+          </tr>
+          <tr>
+            <td class="font-semibold text-right" colspan = "2">소계</td>
+            <td class="sum r font-mono" id="spdTotalMin">-</td>
+            <td class="sum r font-mono" id="spdTotalPts">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- C. Charms Level -->
+    <section class="card rounded-xl overflow-hidden">
+      <table class="t">
+        <thead>
+          <tr class="head">
+            <th style="width:25%">보석레벨</th>
+            <th class="r" style="width:25%">개당 점수</th>
+            <th class="r" style="width:25%">개수</th>
+            <th class="r" style="width:25%">Points</th>
+          </tr>
+        </thead>
+        <tbody id="charmsBody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="font-semibold text-right">소계</td>
+            <td class="sum r font-mono" id="charmsTotal">-</td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+  </div>
+
+<script>
+const UNIT = {
+  fire: 2000,
+  shard: 1000,
+  refined: 30000,
+  speedupPerMinute: 30
+};
+const CHARM_POINTS = {
+  1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,
+  9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000
+};
+const fmt = n => (isFinite(n) ? n.toLocaleString() : "-");
+const $ = sel => document.querySelector(sel);
+
+function calcMain(){
+  const qFire    = +($("#qtyFire").value||0);
+  const qShard   = +($("#qtyShard").value||0);
+  const qRefined = +($("#qtyRefined").value||0);
+  const pFire    = qFire    * UNIT.fire;
+  const pShard   = qShard   * UNIT.shard;
+  const pRefined = qRefined * UNIT.refined;
+  $("#ptsFire").textContent    = fmt(pFire);
+  $("#ptsShard").textContent   = fmt(pShard);
+  $("#ptsRefined").textContent = fmt(pRefined);
+  const spdPts    = +($("#spdTotalPts").dataset.val || 0);
+  const charmsPts = +($("#charmsTotal").dataset.val  || 0);
+  $("#ptsSpeedups").textContent = fmt(spdPts);
+  $("#ptsCharms").textContent   = fmt(charmsPts);
+  $("#totalPoints").textContent = fmt(pFire + pShard + pRefined + spdPts + charmsPts);
+}
+function calcSpeedups(){
+  const d = +($("#spdDays").value||0);
+  const h = +($("#spdHours").value||0);
+  const m = +($("#spdMins").value||0);
+  const totalMin = d*1440 + h*60 + m;
+  const totalPts = totalMin * UNIT.speedupPerMinute;
+  $("#spdDaysPts").textContent  = fmt(d*1440*UNIT.speedupPerMinute);
+  $("#spdHoursPts").textContent = fmt(h*60*UNIT.speedupPerMinute);
+  $("#spdMinsPts").textContent  = fmt(m*UNIT.speedupPerMinute);
+  $("#spdTotalMin").textContent = fmt(totalMin);
+  $("#spdTotalPts").textContent = fmt(totalPts);
+  $("#spdTotalPts").dataset.val = totalPts;
+  calcMain();
+}
+function buildCharms(){
+  const tbody = $("#charmsBody");
+  tbody.innerHTML = "";
+  for(let lv=1; lv<=16; lv++){
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${lv}</td>
+      <td class="r font-mono">${fmt(CHARM_POINTS[lv])}</td>
+      <td class="in">
+        <input class="w-full r font-mono charmQty" type="number" min="0" step="1" value="0" data-level="${lv}" />
+      </td>
+      <td class="r font-mono charmPts" id="chp-${lv}">-</td>
+    `;
+    tbody.appendChild(tr);
+  }
+  tbody.addEventListener("input", e=>{
+    if(!e.target.classList.contains("charmQty")) return;
+    calcCharms();
+  });
+}
+function calcCharms(){
+  let sub = 0;
+  document.querySelectorAll(".charmQty").forEach(inp=>{
+    const lv = +inp.dataset.level;
+    let qty = +(inp.value||0);
+
+    if(qty > 18) {
+      qty = 18;
+      inp.value = 18; // 입력란에도 제한값 표시
+    }
+
+    const pts = qty * 70 * CHARM_POINTS[lv];
+    $("#chp-"+lv).textContent = fmt(pts);
+    sub += pts;
+  });
+  $("#charmsTotal").textContent = fmt(sub);
+  $("#charmsTotal").dataset.val = sub;
+  calcMain();
+}
+["#qtyFire","#qtyShard","#qtyRefined"].forEach(sel=>{
+  $(sel).addEventListener("input", calcMain);
+});
+["#spdDays","#spdHours","#spdMins"].forEach(sel=>{
+  $(sel).addEventListener("input", calcSpeedups);
+});
+buildCharms();
+calcCharms();
+calcSpeedups();
+calcMain();
+</script>
+</body>
+</html>
