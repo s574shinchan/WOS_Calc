@@ -1,249 +1,481 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SVS 준비단계 1일차</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  body {
-    background: #ffffff !important;
-    color: #000000 !important;
-  }
-  .card { box-shadow: 0 8px 24px rgba(0,0,0,.06); background: #ffffff; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem }
-  .t { border-collapse: collapse; width: 100%; color: #000000; }
-  .t th, .t td { border: 1px solid #d1d5db; padding: .5rem; font-size: 13px; color: #000000; }
-  .head { background: #f3f4f6; font-weight: 600; }
-  .in { background: #d1fae5; }
-  .sum { background: #fef08a; }
-  .r { text-align: right; }
-  input[type="number"] {
-    appearance: textfield;
-    background: transparent;
-    color: #000000;
-  }
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button { appearance: none; margin: 0; }
-</style>
-</head>
-<body class="p-3 md:p-6">
-  <div class="max-w-5xl mx-auto space-y-3">
-    <!-- 상단: Total points -->
-    <div class="grid-2">
-      <h1 class="text-xl md:text-2xl font-bold">SVS 준비단계 1일차</h1>
-      <div class="text-right">
-        <span class="align-middle mr-2 font-semibold">총 점수</span>
-        <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="totalPoints">-</span>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Day 1 & Day 2 — 탭 계산기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* 공통 스타일 */
+      body{background:#ffffff!important;color:#000!important}
+      .card{background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+      .t{border-collapse:collapse;width:100%;color:#000}
+      .t th,.t td{border:1px solid #d1d5db;padding:.5rem;font-size:13px}
+      .head{background:#f3f4f6;font-weight:600}
+      .in{background:#d1fae5}  /* 입력 영역(초록) */
+      .sum{background:#fef08a} /* 합계(노랑) */
+      .r{text-align:right}
+      input[type="number"]{appearance:textfield;background:transparent;color:#000}
+      input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{appearance:none;margin:0}
+      .maxw{max-width:1100px}
+      /* 탭 */
+      .tabs{display:flex;gap:.25rem;border-bottom:1px solid #e5e7eb;margin-bottom:.75rem}
+      .tab-btn{padding:.6rem 1rem;font-weight:600;border:1px solid #e5e7eb;border-bottom:0;border-top-left-radius:.6rem;border-top-right-radius:.6rem;background:#f9fafb;color:#111}
+      .tab-btn[aria-selected="true"]{background:#fff}
+      .tab-panel{display:none}
+      .tab-panel.active{display:block}
+    </style>
+  </head>
+  <body class="p-3 md:p-6">
+    <div class="mx-auto maxw">
+      
+      <!-- 탭 버튼 -->
+      <div class="tabs">
+        <button class="tab-btn" data-tab="day1" aria-selected="true">1일차</button>
+        <button class="tab-btn" data-tab="day2" aria-selected="false">2일차</button>
+        <button class="tab-btn" data-tab="day3" aria-selected="false">3일차</button>
+        <button class="tab-btn" data-tab="day4" aria-selected="false">4일차</button>
+        <button class="tab-btn" data-tab="day5" aria-selected="false">5일차</button>
       </div>
+      
+      <!-- ==================== Day 1 ==================== -->
+      <section id="panel-day1" class="tab-panel active space-y-3">
+        <div class="flex items-center justify-between">
+          <h1 class="text-xl md:text-2xl font-bold">준비단계 1일차</h1>
+          <div class="text-right">
+            <span class="align-middle mr-2 font-semibold">총 점수</span>
+            <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d1_total">-</span>
+          </div>
+        </div>
+        
+        <!-- Day1 메인 -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:55%">1일차 미션</th>
+                <th class="c" style="width:20%">재료</th>
+                <th class="c" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>불의수정 소모</td>
+                <td class="in"><input id="d1_qFire" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d1_pFire">-</td>
+              </tr>
+              <tr>
+                <td>불의수정 조각 소모(연구)</td>
+                <td class="in"><input id="d1_qShard" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d1_pShard">-</td>
+              </tr>
+              <tr>
+                <td>제련된 불의수정 소모 (FC6+)</td>
+                <td class="in"><input id="d1_qRef" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d1_pRef">-</td>
+              </tr>
+              <tr>
+                <td>가속사용 (1분당)</td>
+                <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r" id="d1_pSpd">-</td>
+              </tr>
+              <tr>
+                <td>영주보석 업그레이드</td>
+                <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r" id="d1_pCharms">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Day1 Speedups -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:25%">가속사용</th>
+                <th style="width:25%">개별점수</th>
+                <th class="r" style="width:25%">개수</th>
+                <th class="r" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>일</td>
+                <td class="text-right">43200</td>
+                <td class="in"><input id="d1_spdD" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d1_spdDP">-</td>
+              </tr>
+              <tr>
+                <td>시간</td>
+                <td class="text-right">1800</td>
+                <td class="in"><input id="d1_spdH" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d1_spdHP">-</td>
+              </tr>
+              <tr>
+                <td>분</td>
+                <td class="text-right">30</td>
+                <td class="in"><input id="d1_spdM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d1_spdMP">-</td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-right"colspan = "2">소계</td>
+                <td class="sum r font-mono" id="d1_spdMin">-</td>
+                <td class="sum r font-mono" id="d1_spdTot">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Day1 Charms -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:25%">보석레벨</th>
+              <th class="r" style="width:25%">개당 점수</th>
+              <th class="r" style="width:25%">개수</th>
+              <th class="r" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody id="d1_charBody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="font-semibold text-right">소계</td>
+                <td class="sum r font-mono" id="d1_charTot">-</td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
+      </section>
+      
+      <!-- ==================== Day 2 ==================== -->
+      <section id="panel-day2" class="tab-panel space-y-3">
+        <div class="flex items-center justify-between">
+          <h1 class="text-xl md:text-2xl font-bold">준비단계 2일차</h1>
+          <div class="text-right">
+            <span class="align-middle mr-2 font-semibold">총 점수</span>
+            <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d2_total">-</span>
+          </div>
+        </div>
+        
+        <!-- Day2 메인 -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:55%">2일차 미션</th>
+                <th class="c" style="width:20%">재료</th>
+                <th class="c" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>불의수정 소모</td>
+                <td class="in"><input id="d2_qFire" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_pFire">-</td>
+              </tr>
+              <tr>
+                <td>불의수정 가루소모 (연구)</td>
+                <td class="in"><input id="d2_qShard" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_pShard">-</td>
+              </tr>
+              <tr>
+                <td>제련된 불의수정 소모 (FC6+)</td>
+                <td class="in"><input id="d2_qRef" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_pRef">-</td>
+              </tr>
+              <tr>
+                <td>행운의 룰렛</td>
+                <td class="in"><input id="d2_qWheel" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_pWheel">-</td>
+              </tr>
+              <tr>
+                <td>영웅조각 이용하여 성급업</td>
+                <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r" id="d2_pHero">-</td>
+              </tr>
+              <tr>
+                <td>가속사용 (1분당)</td>
+                <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r" id="d2_pSpd">-</td>
+              </tr>
+              <tr>
+                <td>자원채집</td>
+                <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r" id="d2_pGather">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+  
+        <!-- Day2 Hero Shards -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:50%">영웅조각</th>
+                <th class="r" style="width:25%">개수</th>
+                <th class="r" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>레어 영웅 파편</td>
+                <td class="in"><input id="d2_hsR" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_hsRP">-</td>
+              </tr>
+              <tr>
+                <td>에픽 영웅 파편</td>
+                <td class="in"><input id="d2_hsE" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_hsEP">-</td>
+              </tr>
+              <tr>
+                <td>레전드 영웅 파편</td>
+                <td class="in"><input id="d2_hsM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_hsMP">-</td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-right" colspan="2">소계</td>
+                <td class="sum r font-mono" id="d2_hsTot">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Day2 Speedups -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:25%">가속사용</th>
+                <th style="width:25%">개별점수</th>
+                <th class="r" style="width:25%">개수</th>
+                <th class="r" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>일</td>
+                <td class="text-right">43200</td>
+                <td class="in"><input id="d2_spdD" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_spdDP">-</td>
+              </tr>
+              <tr>
+                <td>시간</td>
+                <td class="text-right">1800</td>
+                <td class="in"><input id="d2_spdH" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_spdHP">-</td>
+              </tr>
+              <tr>
+                <td>분</td>
+                <td class="text-right">30</td>
+                <td class="in"><input id="d2_spdM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_spdMP">-</td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-right" colspan = "2">소계</td>
+                <td class="sum r font-mono" id="d2_spdMin">-</td>
+                <td class="sum r font-mono" id="d2_spdTot">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+  
+        <!-- Day2 Gather -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:50%">자원</th>
+                <th class="r" style="width:25%">개수</th>
+                <th class="r" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody id="d2_gBody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2" class="font-semibold text-right">소계</td>
+                <td class="sum r font-mono" id="d2_gTot">-</td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
+      </section>
     </div>
-
-    <!-- A. Day 1 메인 표 -->
-    <section class="card rounded-xl overflow-hidden">
-      <table class="t">
-        <thead>
-          <tr class="head">
-            <th style="width:55%">1일차 총합계</th>
-            <th class="r" style="width:20%">재료</th>
-            <th class="r" style="width:25%">Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>불의수정 소모</td>
-            <td class="in">
-              <input id="qtyFire" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
-            </td>
-            <td class="r" id="ptsFire">-</td>
-          </tr>
-          <tr>
-            <td>불의수정 조각 소모(연구)</td>
-            <td class="in">
-              <input id="qtyShard" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
-            </td>
-            <td class="r" id="ptsShard">-</td>
-          </tr>
-          <tr>
-            <td>제련된 불의수정 소모 (FC6+)</td>
-            <td class="in">
-              <input id="qtyRefined" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
-            </td>
-            <td class="r" id="ptsRefined">-</td>
-          </tr>
-          <tr>
-            <td>가속사용 (1분당)</td>
-            <td class="in text-center text-sm">아래표에서 입력</td>
-            <td class="r" id="ptsSpeedups">-</td>
-          </tr>
-          <tr>
-            <td>영주보석 업그레이드</td>
-            <td class="in text-center text-sm">아래표에서 입력</td>
-            <td class="r" id="ptsCharms">-</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- B. Speedups -->
-    <section class="card rounded-xl overflow-hidden">
-      <table class="t">
-        <thead>
-          <tr class="head">
-            <th style="width:25%">가속사용</th>
-            <th style="width:25%">개별점수</th>
-            <th class="r" style="width:25%">개수</th>
-            <th class="r" style="width:25%">Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>일</td>
-            <td class="text-right">43200</td>
-            <td class="in">
-              <input id="spdDays" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
-            </td>
-            <td class="r" id="spdDaysPts">-</td>
-          </tr>
-          <tr>
-            <td>시간</td>
-            <td class="text-right">1800</td>
-            <td class="in">
-              <input id="spdHours" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
-            </td>
-            <td class="r" id="spdHoursPts">-</td>
-          </tr>
-          <tr>
-            <td>분</td>
-            <td class="text-right">30</td>
-            <td class="in">
-              <input id="spdMins" class="w-full r font-mono" type="number" min="0" step="1" value="0" />
-            </td>
-            <td class="r" id="spdMinsPts">-</td>
-          </tr>
-          <tr>
-            <td class="font-semibold text-right" colspan = "2">소계</td>
-            <td class="sum r font-mono" id="spdTotalMin">-</td>
-            <td class="sum r font-mono" id="spdTotalPts">-</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- C. Charms Level -->
-    <section class="card rounded-xl overflow-hidden">
-      <table class="t">
-        <thead>
-          <tr class="head">
-            <th style="width:25%">보석레벨</th>
-            <th class="r" style="width:25%">개당 점수</th>
-            <th class="r" style="width:25%">개수</th>
-            <th class="r" style="width:25%">Points</th>
-          </tr>
-        </thead>
-        <tbody id="charmsBody"></tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3" class="font-semibold text-right">소계</td>
-            <td class="sum r font-mono" id="charmsTotal">-</td>
-          </tr>
-        </tfoot>
-      </table>
-    </section>
-  </div>
-
-<script>
-const UNIT = {
-  fire: 2000,
-  shard: 1000,
-  refined: 30000,
-  speedupPerMinute: 30
-};
-const CHARM_POINTS = {
-  1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,
-  9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000
-};
-const fmt = n => (isFinite(n) ? n.toLocaleString() : "-");
-const $ = sel => document.querySelector(sel);
-
-function calcMain(){
-  const qFire    = +($("#qtyFire").value||0);
-  const qShard   = +($("#qtyShard").value||0);
-  const qRefined = +($("#qtyRefined").value||0);
-  const pFire    = qFire    * UNIT.fire;
-  const pShard   = qShard   * UNIT.shard;
-  const pRefined = qRefined * UNIT.refined;
-  $("#ptsFire").textContent    = fmt(pFire);
-  $("#ptsShard").textContent   = fmt(pShard);
-  $("#ptsRefined").textContent = fmt(pRefined);
-  const spdPts    = +($("#spdTotalPts").dataset.val || 0);
-  const charmsPts = +($("#charmsTotal").dataset.val  || 0);
-  $("#ptsSpeedups").textContent = fmt(spdPts);
-  $("#ptsCharms").textContent   = fmt(charmsPts);
-  $("#totalPoints").textContent = fmt(pFire + pShard + pRefined + spdPts + charmsPts);
-}
-function calcSpeedups(){
-  const d = +($("#spdDays").value||0);
-  const h = +($("#spdHours").value||0);
-  const m = +($("#spdMins").value||0);
-  const totalMin = d*1440 + h*60 + m;
-  const totalPts = totalMin * UNIT.speedupPerMinute;
-  $("#spdDaysPts").textContent  = fmt(d*1440*UNIT.speedupPerMinute);
-  $("#spdHoursPts").textContent = fmt(h*60*UNIT.speedupPerMinute);
-  $("#spdMinsPts").textContent  = fmt(m*UNIT.speedupPerMinute);
-  $("#spdTotalMin").textContent = fmt(totalMin);
-  $("#spdTotalPts").textContent = fmt(totalPts);
-  $("#spdTotalPts").dataset.val = totalPts;
-  calcMain();
-}
-function buildCharms(){
-  const tbody = $("#charmsBody");
-  tbody.innerHTML = "";
-  for(let lv=1; lv<=16; lv++){
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${lv}</td>
-      <td class="r font-mono">${fmt(CHARM_POINTS[lv])}</td>
-      <td class="in">
-        <input class="w-full r font-mono charmQty" type="number" min="0" step="1" value="0" data-level="${lv}" />
-      </td>
-      <td class="r font-mono charmPts" id="chp-${lv}">-</td>
-    `;
-    tbody.appendChild(tr);
-  }
-  tbody.addEventListener("input", e=>{
-    if(!e.target.classList.contains("charmQty")) return;
-    calcCharms();
-  });
-}
-function calcCharms(){
-  let sub = 0;
-  document.querySelectorAll(".charmQty").forEach(inp=>{
-    const lv = +inp.dataset.level;
-    let qty = +(inp.value||0);
-
-    if(qty > 18) {
-      qty = 18;
-      inp.value = 18; // 입력란에도 제한값 표시
-    }
-
-    const pts = qty * 70 * CHARM_POINTS[lv];
-    $("#chp-"+lv).textContent = fmt(pts);
-    sub += pts;
-  });
-  $("#charmsTotal").textContent = fmt(sub);
-  $("#charmsTotal").dataset.val = sub;
-  calcMain();
-}
-["#qtyFire","#qtyShard","#qtyRefined"].forEach(sel=>{
-  $(sel).addEventListener("input", calcMain);
-});
-["#spdDays","#spdHours","#spdMins"].forEach(sel=>{
-  $(sel).addEventListener("input", calcSpeedups);
-});
-buildCharms();
-calcCharms();
-calcSpeedups();
-calcMain();
-</script>
-</body>
+    
+    <script>
+      /* ===================== 공통 유틸 ===================== */
+      const fmt = n => (isFinite(n) ? n.toLocaleString() : "-");
+      const $ = s => document.querySelector(s);
+      
+      /* ===================== 탭 전환 ===================== */
+      document.querySelectorAll(".tab-btn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const tab = btn.dataset.tab;
+          document.querySelectorAll(".tab-btn").forEach(b=>b.setAttribute("aria-selected", String(b===btn)));
+          document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+          $("#panel-"+tab).classList.add("active");
+        });
+      });
+      
+      /* ===================== Day 1 ===================== */
+      const D1_UNIT = { fire:2000, shard:1000, refined:30000, spdPerMin:30 };
+      const D1_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
+      
+      function d1_buildCharms(){
+        const tb = $("#d1_charBody"); tb.innerHTML = "";
+        for(let lv=1; lv<=16; lv++){
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${lv}</td>
+            <td class="r font-mono">${fmt(D1_CHAR_BASE[lv])}</td>
+            <td class="in"><input class="w-full r font-mono d1_cQty" type="number" min="0" max="18" step="1" value="0" data-lv="${lv}"></td>
+            <td class="r font-mono" id="d1_cP-${lv}">-</td>
+          `;
+          tb.appendChild(tr);
+        }
+        tb.addEventListener("input", e=>{
+          if(!e.target.classList.contains("d1_cQty")) return;
+          d1_calcCharms();
+        });
+      }
+      
+      function d1_calcCharms(){
+        let sub=0;
+        document.querySelectorAll(".d1_cQty").forEach(inp=>{
+          const lv = +inp.dataset.lv;
+          let qty = +(inp.value||0);
+          if(qty>18){ qty=18; inp.value=18; }           // 최대 18 제한
+          const pts = qty * 70 * D1_CHAR_BASE[lv];       // (조각 × 70 × 기본점수)
+          $("#d1_cP-"+lv).textContent = fmt(pts);
+          sub += pts;
+        });
+        $("#d1_charTot").textContent = fmt(sub);
+        $("#d1_charTot").dataset.val = sub;
+        d1_calcMain();
+      }
+      
+      function d1_calcSpeed(){
+        const d=+( $("#d1_spdD").value||0), h=+( $("#d1_spdH").value||0), m=+( $("#d1_spdM").value||0);
+        const mins = d*1440 + h*60 + m;
+        const pts  = mins * D1_UNIT.spdPerMin;
+        $("#d1_spdDP").textContent = fmt(d*1440*D1_UNIT.spdPerMin);
+        $("#d1_spdHP").textContent = fmt(h*60*D1_UNIT.spdPerMin);
+        $("#d1_spdMP").textContent = fmt(m*D1_UNIT.spdPerMin);
+        $("#d1_spdMin").textContent = fmt(mins);
+        $("#d1_spdTot").textContent = fmt(pts);
+        $("#d1_spdTot").dataset.val = pts;
+        d1_calcMain();
+      }
+      
+      function d1_calcMain(){
+        const pFire = (+($("#d1_qFire").value||0))*D1_UNIT.fire;
+        const pSha  = (+($("#d1_qShard").value||0))*D1_UNIT.shard;
+        const pRef  = (+($("#d1_qRef").value||0))*D1_UNIT.refined;
+        $("#d1_pFire").textContent = fmt(pFire);
+        $("#d1_pShard").textContent= fmt(pSha);
+        $("#d1_pRef").textContent  = fmt(pRef);
+        const sp = +($("#d1_spdTot").dataset.val||0);
+        const ch = +($("#d1_charTot").dataset.val||0);
+        $("#d1_pSpd").textContent = fmt(sp);
+        $("#d1_pCharms").textContent = fmt(ch);
+        $("#d1_total").textContent = fmt(pFire+pSha+pRef+sp+ch);
+      }
+      
+      ["#d1_qFire","#d1_qShard","#d1_qRef"].forEach(s=>$(s).addEventListener("input", d1_calcMain));
+      ["#d1_spdD","#d1_spdH","#d1_spdM"].forEach(s=>$(s).addEventListener("input", d1_calcSpeed));
+      d1_buildCharms(); 
+      d1_calcCharms(); 
+      d1_calcSpeed(); 
+      d1_calcMain();
+      
+      /* ===================== Day 2 ===================== */
+      const D2_UNIT = { fire:2000, shard:1000, refined:30000, wheel:8000, spdPerMin:30 };
+      const D2_HERO = { rare:350, epic:1220, myth:3040 };
+      const D2_GATHER = [
+        {k:"T8 (고기, 나무, 석탄, 철광)",v:28000},
+        {k:"T7",v:12000},{k:"T6",v:6000},{k:"T5",v:2400},
+        {k:"T4",v:1200},{k:"T3",v:600},{k:"T2",v:300},{k:"T1",v:140},
+      ];
+      
+      function d2_buildGather(){
+        const tb = $("#d2_gBody"); tb.innerHTML="";
+        D2_GATHER.forEach((row,i)=>{
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.k}</td>
+            <td class="in"><input class="w-full r font-mono d2_gQty" type="number" min="0" step="1" value="0" data-i="${i}"></td>
+            <td class="r font-mono" id="d2_gP-${i}">-</td>
+          `;
+          tb.appendChild(tr);
+        });
+        tb.addEventListener("input", e=>{
+          if(!e.target.classList.contains("d2_gQty")) return;
+          d2_calcGather();
+        });
+      }
+      
+      function d2_calcHero(){
+        const r=(+($("#d2_hsR").value||0))*D2_HERO.rare;
+        const e=(+($("#d2_hsE").value||0))*D2_HERO.epic;
+        const m=(+($("#d2_hsM").value||0))*D2_HERO.myth;
+        $("#d2_hsRP").textContent=fmt(r);
+        $("#d2_hsEP").textContent=fmt(e);
+        $("#d2_hsMP").textContent=fmt(m);
+        const sub=r+e+m; $("#d2_hsTot").textContent=fmt(sub); $("#d2_hsTot").dataset.val=sub;
+        d2_calcMain();
+      }
+      
+      function d2_calcSpeed(){
+        const d=+( $("#d2_spdD").value||0), h=+( $("#d2_spdH").value||0), m=+( $("#d2_spdM").value||0);
+        const mins=d*1440+h*60+m, pts=mins*D2_UNIT.spdPerMin;
+        $("#d2_spdDP").textContent=fmt(d*1440*D2_UNIT.spdPerMin);
+        $("#d2_spdHP").textContent=fmt(h*60*D2_UNIT.spdPerMin);
+        $("#d2_spdMP").textContent=fmt(m*D2_UNIT.spdPerMin);
+        $("#d2_spdMin").textContent=fmt(mins);
+        $("#d2_spdTot").textContent=fmt(pts); $("#d2_spdTot").dataset.val=pts;
+        d2_calcMain();
+      }
+      
+      function d2_calcGather(){
+        let sub=0;
+        document.querySelectorAll(".d2_gQty").forEach(inp=>{
+          const i=+inp.dataset.i, qty=+(inp.value||0);
+          const pts=qty*D2_GATHER[i].v;
+          $("#d2_gP-"+i).textContent=fmt(pts);
+          sub+=pts;
+        });
+        $("#d2_gTot").textContent=fmt(sub); $("#d2_gTot").dataset.val=sub;
+        d2_calcMain();
+      }
+      
+      function d2_calcMain(){
+        const pFire=(+($("#d2_qFire").value||0))*D2_UNIT.fire;
+        const pSha =(+($("#d2_qShard").value||0))*D2_UNIT.shard;
+        const pRef =(+($("#d2_qRef").value||0))*D2_UNIT.refined;
+        const pWh  =(+($("#d2_qWheel").value||0))*D2_UNIT.wheel;
+        $("#d2_pFire").textContent=fmt(pFire);
+        $("#d2_pShard").textContent=fmt(pSha);
+        $("#d2_pRef").textContent=fmt(pRef);
+        $("#d2_pWheel").textContent=fmt(pWh);
+        const hero=+($("#d2_hsTot").dataset.val||0);
+        const sp  =+($("#d2_spdTot").dataset.val||0);
+        const g   =+($("#d2_gTot").dataset.val||0);
+        $("#d2_pHero").textContent=fmt(hero);
+        $("#d2_pSpd").textContent=fmt(sp);
+        $("#d2_pGather").textContent=fmt(g);
+        $("#d2_total").textContent=fmt(pFire+pSha+pRef+pWh+hero+sp+g);
+      }
+      
+      ["#d2_qFire","#d2_qShard","#d2_qRef","#d2_qWheel"].forEach(s=>$(s).addEventListener("input", d2_calcMain));
+      ["#d2_hsR","#d2_hsE","#d2_hsM"].forEach(s=>$(s).addEventListener("input", d2_calcHero));
+      ["#d2_spdD","#d2_spdH","#d2_spdM"].forEach(s=>$(s).addEventListener("input", d2_calcSpeed));
+      d2_buildGather(); 
+      d2_calcHero(); 
+      d2_calcSpeed(); 
+      d2_calcGather(); 
+      d2_calcMain();
+    </script>
+  </body>
 </html>
