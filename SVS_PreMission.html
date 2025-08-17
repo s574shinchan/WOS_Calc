@@ -99,34 +99,40 @@
           <table class="t">
             <thead>
               <tr class="head">
-                <th style="width:55%">1일차 미션</th>
-                <th class="c" style="width:20%">재료</th>
-                <th class="c" style="width:25%">Points</th>
+                <th style="width:25%">1일차 미션</th>
+                <th class="r" style="width:25%">개별 점수</th>
+                <th class="r" style="width:25%">재료</th>
+                <th class="r" style="width:25%">Points</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>불의수정 소모</td>
+                <td class="r mono">2,000</td>
                 <td class="in"><input id="d1_qFire" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d1_pFire">-</td>
               </tr>
               <tr>
                 <td>불의수정 조각 소모(연구)</td>
+                <td class="r mono">1,000</td>
                 <td class="in"><input id="d1_qShard" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d1_pShard">-</td>
               </tr>
               <tr>
                 <td>제련된 불의수정 소모 (FC6+)</td>
+                <td class="r mono">30,000</td>
                 <td class="in"><input id="d1_qRef" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d1_pRef">-</td>
               </tr>
               <tr>
                 <td>가속사용 (1분당)</td>
+                <td class="r mono">30</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d1_pSpd">-</td>
               </tr>
               <tr>
                 <td>영주보석 업그레이드</td>
+                <td class="r mono">70</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d1_pCharms">-</td>
               </tr>
@@ -212,44 +218,52 @@
           <table class="t">
             <thead>
               <tr class="head">
-                <th style="width:55%">2일차 미션</th>
-                <th class="c" style="width:20%">재료</th>
-                <th class="c" style="width:25%">Points</th>
+                <th style="width:25%">2일차 미션</th>
+                <th class="r" style="width:25%">개별 점수</th>
+                <th class="r" style="width:25%">재료</th>
+                <th class="r" style="width:25%">Points</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>불의수정 소모</td>
+                <td class="r mono">2,000</td>
                 <td class="in"><input id="d2_qFire" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d2_pFire">-</td>
               </tr>
               <tr>
                 <td>불의수정 가루소모 (연구)</td>
+                <td class="r mono">1,000</td>
                 <td class="in"><input id="d2_qShard" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d2_pShard">-</td>
               </tr>
               <tr>
                 <td>제련된 불의수정 소모 (FC6+)</td>
+                <td class="r mono">30,000</td>
                 <td class="in"><input id="d2_qRef" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d2_pRef">-</td>
               </tr>
               <tr>
                 <td>행운의 룰렛</td>
+                <td class="r mono">8,000</td>
                 <td class="in"><input id="d2_qWheel" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d2_pWheel">-</td>
               </tr>
               <tr>
                 <td>영웅조각 이용하여 성급업</td>
+                <td class="r mono">Various</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d2_pHero">-</td>
               </tr>
               <tr>
                 <td>가속사용 (1분당)</td>
+                <td class="r mono">30</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d2_pSpd">-</td>
               </tr>
               <tr>
                 <td>자원채집</td>
+                <td class="r mono">2</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d2_pGather">-</td>
               </tr>
@@ -369,44 +383,52 @@
           <table class="t">
             <thead>
               <tr class="head">
-                <th style="width:55%">3일차 미션</th>
-                <th class="c" style="width:20%">재료</th>
-                <th class="c" style="width:25%">Points</th>
+                <th style="width:25%">3일차 미션</th>
+                <th class="r" style="width:25%">개별 점수</th>
+                <th class="r" style="width:25%">재료</th>
+                <th class="r" style="width:25%">Points</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>행운의 룰렛</td>
+                <td class="r mono">8,000</td>
                 <td class="in"><input id="d3_wQty" class="w-full r font-mono" type="number" min="0" step="1" value="0" placeholder="개수 입력"></td>
                 <td class="r mono" id="d3_wPts">-</td>
               </tr>
               <tr>
                 <td>영웅조각 이용하여 성급업</td>
+                <td class="r mono">Various</td>
                 <td class="in r">아래표에서 입력</td>
                 <td class="r mono" id="d3_heroPts">-</td>
               </tr>
               <tr>
                 <td>영주보석 업그레이드</td>
+                <td class="r mono">70</td>
                 <td class="in r">아래표에서 입력</td>
                 <td class="r mono" id="d3_charmsPts">-</td>
               </tr>
               <tr>
-                <td>야수 및 괴수사냥</td>
-                <td class="in r">아래표에서 입력</td>
-                <td class="r mono" id="d3_beastPtsTop">-</td>
-              </tr>
-              <tr>
                 <td>펫 돌파</td>
+                <td class="r mono">50</td>
                 <td class="in r">아래표에서 입력</td>
                 <td class="r mono" id="d3_petAdvPtsTop">-</td>
               </tr>
               <tr>
                 <td>펫 단련</td>
+                <td class="r mono">Various</td>
                 <td class="in r">아래표에서 입력</td>
                 <td class="r mono" id="d3_petRefPtsTop">-</td>
               </tr>
               <tr>
-                <td>스태미너계산</td>
+                <td>야수 및 괴수사냥</td>
+                <td class="r mono">Various</td>
+                <td class="in r">아래표에서 입력</td>
+                <td class="r mono" id="d3_beastPtsTop">-</td>
+              </tr>
+              <tr>
+                <td>빙원괴수</td>
+                <td class="r mono">30,000</td>
                 <td class="in r">아래표에서 입력</td>
                 <td class="r mono" id="d3_polarPtsTop">-</td>
               </tr>
@@ -508,10 +530,10 @@
               </thead>
               <tbody id="d3_petRefBody"></tbody>
               <tfoot>
-                <tr>
-                  <td colspan="3" class="r"><b>소계</b></td>
-                  <td class="sum r mono" id="d3_petRefTotal">-</td>
-                </tr>
+               <tr>
+                 <td colspan="3" class="r"><b>소계</b></td>
+                 <td class="sum r mono" id="d3_petRefTotal">-</td>
+               </tr>
               </tfoot>
             </table>
           </section>
@@ -607,34 +629,40 @@
           <table class="t">
             <thead>
               <tr class="head">
-                <th style="width:55%">4일차 미션</th>
-                <th class="c" style="width:20%">재료</th>
-                <th class="c" style="width:25%">Points</th>
+                <th style="width:25%">4일차 미션</th>
+                <th class="r" style="width:25%">개별 점수</th>
+                <th class="r" style="width:25%">재료</th>
+                <th class="r" style="width:25%">Points</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>영웅전용장비 1개 소모</td>
+                <td class="r mono">8,000</td>
                 <td class="in"><input id="d4_qWid" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d4_pWid">-</td>
               </tr>
               <tr>
                 <td>마스터리석 1개 소모</td>
+                <td class="r mono">4,000</td>
                 <td class="in"><input id="d4_qEss" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d4_pEss">-</td>
               </tr>
               <tr>
                 <td>미스릴 1개 소모</td>
+                <td class="r mono">144,000</td>
                 <td class="in"><input id="d4_qMit" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d4_pMit">-</td>
               </tr>
               <tr>
                 <td>영주보석 업그레이드</td>
+                <td class="r mono">70</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d4_pCharms">-</td>
               </tr>
               <tr>
-                <td>병사생산(T1–T11)</td>
+                <td>병사생산</td>
+                <td class="r mono">T1–T11</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d4_pTroop">-</td>
               </tr>
@@ -684,6 +712,211 @@
               </tfoot>
             </table>
           </section>
+        </div>
+      </section>
+
+      <!-- ==================== Day 5 ==================== -->
+      <section id="panel-day5" class="tab-panel space-y-3">
+        <div class="flex items-center justify-between">
+          <h1 class="text-xl md:text-2xl font-bold">준비단계 5일차</h1>
+          <div class="text-right">
+            <span class="align-middle mr-2 font-semibold">총 점수</span>
+            <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d5_total">-</span>
+          </div>
+        </div>
+      
+        <!-- Day5 메인 -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:25%">5일차 미션</th>
+                <th class="r" style="width:25%">개별 점수</th>
+                <th class="r" style="width:25%">재료</th>
+                <th class="r" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>불의수정 소모</td>
+                <td class="r mono">2,000</td>
+                <td class="in"><input id="d5_qFire" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_pFire">-</td>
+              </tr>
+              <tr>
+                <td>불의수정 조각 소모(연구)</td>
+                <td class="r mono">1,000</td>
+                <td class="in"><input id="d5_pShard" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_pShard">-</td>
+              </tr>
+              <tr>
+                <td>제련된 불의수정 소모 (FC6+)</td>
+                <td class="r mono">30,000</td>
+                <td class="in"><input id="d5_pRef" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_pRef">-</td>
+              </tr>
+              <tr>
+                <td>영웅전용장비 1개 소모</td>
+                <td class="r mono">8,000</td>
+                <td class="in"><input id="d5_pWid" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_pWid">-</td>
+              </tr>
+              <tr>
+                <td>마스터리석 1개 소모</td>
+                <td class="r mono">4,000</td>
+                <td class="in"><input id="d5_pEss" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_pEss">-</td>
+              </tr>
+              <tr>
+                <td>미스릴 1개 소모</td>
+                <td class="r mono">144,000</td>
+                <td class="in"><input id="d5_pMit" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_pMit">-</td>
+              </tr>
+              <tr>
+                <td>가속사용 (1분당)</td>
+                <td class="r mono">30</td>
+	    <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r mono" id="d5_pSpd">-</td>
+              </tr>
+              <tr>
+                <td>영주장비 업그레이드</td>
+                <td class="r mono">36</td>
+	    <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r mono" id="d5_pChief">-</td>
+              </tr>
+              <tr>
+                <td>펫 돌파</td>
+                <td class="r mono">50</td>
+	    <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r mono" id="d5_pPetAdv">-</td>
+              </tr>
+              <tr>
+                <td>펫 단련</td>
+                <td class="r mono">Various</td>
+	    <td class="in text-center text-sm">아래표에서 입력</td>
+                <td class="r mono" id="d5_pPetRef">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      
+        <!-- Speedups -->
+        <div class="cols">
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:25%">가속사용</th>
+                <th style="width:25%">개별점수</th>
+                <th class="r" style="width:25%">개수</th>
+                <th class="r" style="width:25%">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>일</td>
+                <td class="r mono">43,200</td>
+                <td class="in"><input id="d5_spdD" class="w-full r mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_spdDP">-</td>
+              </tr>
+              <tr>
+                <td>시간</td>
+                <td class="r mono">1,800</td>
+                <td class="in"><input id="d5_spdH" class="w-full r mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_spdHP">-</td>
+              </tr>
+              <tr>
+                <td>분</td>
+                <td class="r mono">30</td>
+                <td class="in"><input id="d5_spdM" class="w-full r mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r mono" id="d5_spdMP">-</td>
+              </tr>
+              <tr>
+                <td class="r font-semibold" colspan="2">소계(분)</td>
+                <td class="sum r mono" id="d5_spdMin">-</td>
+                <td class="sum r mono" id="d5_spdTot">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Pet Refining -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:40%">펫 단련</th>
+                  <th class="r" style="width:20%">개별 점수</th>
+                  <th class="r" style="width:20%">개수</th>
+                  <th class="r" style="width:20%">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>일반 펫 단련</td>
+                  <td class="r mono">1,150</td>
+                  <td class="in"><input id="d5_refC" class="w-full r mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r mono" id="d5_refCP">-</td>
+                </tr>
+                <tr>
+                  <td>고급 펫 단련</td>
+                  <td class="r mono">15,000</td>
+                  <td class="in"><input id="d5_refA" class="w-full r mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r mono" id="d5_refAP">-</td>
+                </tr>
+                <tr>
+                  <td class="r font-semibold" colspan="3">소계</td>
+                  <td class="sum r mono" id="d5_refTot">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+      
+        <!-- Pet advancement ⟷ Pet Refining -->
+        <div class="cols">
+          <!-- Pet advancement -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:40%">펫 돌파</th>
+                  <th class="r" style="width:20%">개별 점수</th>
+                  <th class="r" style="width:20%">개수</th>
+                  <th class="r" style="width:20%">Points</th>
+                </tr>
+              </thead>
+              <tbody id="d5_petAdvBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="r"><b>소계</b></td>
+                  <td class="sum r mono" id="d5_petAdvTotal">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </section>
+      
+        <!-- Chief Gear -->
+        <section class="card rounded-xl overflow-hidden">
+          <table class="t">
+            <thead>
+              <tr class="head">
+                <th style="width:45%">영주장비</th>
+                <th class="r" style="width:20%">개별 점수</th>
+                <th class="r" style="width:20%">개수</th>
+                <th class="r" style="width:15%">Points</th>
+              </tr>
+            </thead>
+            <tbody id="d5_chiefBody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="r font-semibold">소계</td>
+                <td class="sum r mono" id="d5_chiefTot">-</td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
         </div>
       </section>
     </div>
@@ -1006,15 +1239,20 @@
         d3_calcTotal();
       }
 
+      /* --- Pet Refine --- */
       function d3_buildPetRef(){
-        const tb=document.getElementById("d3_petRefBody"); tb.innerHTML="";
-        Object.entries(D3_PET_REF_BASE).forEach(([name,base])=>{
-          const tr=document.createElement("tr");
-          tr.innerHTML=`
+        const tb = document.getElementById("d3_petRefBody"); 
+        tb.innerHTML = "";
+        Object.entries(D3_PET_REF_BASE).forEach(([name, base], i)=>{
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
             <td>${name}</td>
             <td class="r mono">${fmt(base)}</td>
-            <td class="in"><input class="w-full r mono d3_petRefQty" type="number" min="0" step="1" value="0" data-name="${name}"></td>
-            <td class="r mono" id="d3_petRefPts-${d3_safe(name)}">-</td>`;
+            <td class="in">
+              <input class="w-full r mono d3_petRefQty" type="number" min="0" step="1" value="0"
+                     data-name="${name}" data-idx="${i}">
+            </td>
+            <td class="r mono" id="d3_petRefPts-${i}">-</td>`;
           tb.appendChild(tr);
         });
         tb.addEventListener("input", e=>{
@@ -1022,19 +1260,21 @@
           d3_calcPetRef();
         });
       }
-      
+
+      // 2) 계산: 인덱스로 대응되는 셀을 찾아서 채웁니다.
       function d3_calcPetRef(){
-        let sub=0;
+        let sub = 0;
         document.querySelectorAll(".d3_petRefQty").forEach(inp=>{
-          const name=inp.dataset.name;
-          const base=D3_PET_REF_BASE[name];
-          const qty=+(inp.value||0);
-          const pts=qty*base;
-          document.getElementById("d3_petRefPts-"+d3_safe(name)).textContent=d3_show(pts);
-          sub+=pts;
+          const name = inp.dataset.name;
+          const idx  = +inp.dataset.idx;
+          const base = D3_PET_REF_BASE[name];
+          const qty  = +(inp.value || 0);
+          const pts  = qty * base;
+          document.getElementById("d3_petRefPts-"+idx).textContent = d3_show(pts);
+          sub += pts;
         });
-        document.getElementById("d3_petRefTotal").textContent=d3_show(sub);
-        document.getElementById("d3_petRefPtsTop").textContent=d3_show(sub);
+        document.getElementById("d3_petRefTotal").textContent = d3_show(sub);
+        document.getElementById("d3_petRefPtsTop").textContent = d3_show(sub);
         d3_calcTotal();
       }
 
@@ -1221,6 +1461,162 @@
       d4_calcTroops();
       d4_calcCharms();
       d4_calcMain();
+
+      /* ===================== Day5 ===================== */
+      const D5_UNIT = {
+        fire:2000, shard:1000, refined:30000, widgets:8000, essence:4000, mithril:144000,
+        spdPerMin:30, chiefMul:36, petAdvMul:50
+      };
+      
+      // Pet advancement (BasePoint)
+      const D5_PET_ADV_BASE = {
+        "Level 10":500,"Level 20":1000,"Level 30":2000,"Level 40":3000,
+        "Level 50":4500,"Level 60":6750,"Level 70":10000,"Level 80":12000,
+        "Level 90":14500,"Level 100":17500
+      };
+      
+      // Pet Refine unit points
+      const D5_REF = { common:1150, advanced:15000 };
+      
+      /* Chief Gear: 행별 기본점수(스샷 기준값; 필요시 여기서 수정) */
+      const D5_CHIEF_BASE = {
+        "고급":1125,
+        "고급 1성":1875,
+        "레어":3000,
+        "레어 1성":4500,
+        "레어 2성":5100,
+        "레어 3성":5440,
+        "에픽":3230,
+        "에픽 1성":3230,
+        "에픽 2성":3225,
+        "에픽 3성":3225,
+        "에픽 T1":3230,
+        "에픽 T1 1성":3440,
+        "에픽 T1 2성":4085,
+        "에픽 T1 3성":4085,
+        "레전드 (전체)":6250,
+        "신화 (전체)":9560
+      };
+      
+      const d5show = n => (isFinite(n) && n>0 ? n.toLocaleString() : "-");
+      
+      /* --- Speedups --- */
+      function d5_calcSpeed(){
+        const d=+(document.getElementById("d5_spdD").value||0),
+              h=+(document.getElementById("d5_spdH").value||0),
+              m=+(document.getElementById("d5_spdM").value||0);
+        const mins=d*1440+h*60+m, pts=mins*D5_UNIT.spdPerMin;
+        document.getElementById("d5_spdDP").textContent=d5show(d*1440*D5_UNIT.spdPerMin);
+        document.getElementById("d5_spdHP").textContent=d5show(h*60*D5_UNIT.spdPerMin);
+        document.getElementById("d5_spdMP").textContent=d5show(m*D5_UNIT.spdPerMin);
+        document.getElementById("d5_spdMin").textContent=d5show(mins);
+        document.getElementById("d5_spdTot").textContent=d5show(pts);
+        document.getElementById("d5_pSpd").textContent = d5show(pts);
+        d5_calcMain();
+      }
+      ["#d5_spdD","#d5_spdH","#d5_spdM"].forEach(s=>document.querySelector(s).addEventListener("input", d5_calcSpeed));
+      
+      /* --- Pet advancement --- */
+      function d5_buildPetAdv(){
+        const tb=document.getElementById("d5_petAdvBody"); tb.innerHTML="";
+        Object.entries(D5_PET_ADV_BASE).forEach(([name,base])=>{
+          const id = name.replace(/\s|\W/g,'');
+          const tr=document.createElement("tr");
+          tr.innerHTML = `
+            <td>${name}</td>
+            <td class="r mono">${base.toLocaleString()}</td>
+            <td class="in"><input class="w-full r mono d5_petAdvQty" data-name="${name}" type="number" min="0" step="1" value="0"></td>
+            <td class="r mono" id="d5_petAdvPts-${id}">-</td>`;
+          tb.appendChild(tr);
+        });
+        tb.addEventListener("input", e=>{
+          if(!e.target.classList.contains("d5_petAdvQty")) return;
+          d5_calcPetAdv();
+        });
+      }
+      function d5_calcPetAdv(){
+        let sub=0;
+        document.querySelectorAll(".d5_petAdvQty").forEach(inp=>{
+          const name=inp.dataset.name, base=D5_PET_ADV_BASE[name], qty=+(inp.value||0);
+          const pts = qty * D5_UNIT.petAdvMul * base;
+          document.getElementById("d5_petAdvPts-"+name.replace(/\s|\W/g,'')).textContent=d5show(pts);
+          sub += pts;
+        });
+        document.getElementById("d5_petAdvTotal").textContent=d5show(sub);
+        document.getElementById("d5_pPetAdv").textContent=d5show(sub);
+        d5_calcMain();
+      }
+      
+      /* --- Pet Refine --- */
+      function d5_calcRef(){
+        const c = +((document.getElementById("d5_refC").value)||0) * D5_REF.common;
+        const a = +((document.getElementById("d5_refA").value)||0) * D5_REF.advanced;
+        document.getElementById("d5_refCP").textContent=d5show(c);
+        document.getElementById("d5_refAP").textContent=d5show(a);
+        const sub=c+a;
+        document.getElementById("d5_refTot").textContent=d5show(sub);
+        document.getElementById("d5_pPetRef").textContent=d5show(sub);
+        d5_calcMain();
+      }
+      ["#d5_refC","#d5_refA"].forEach(s=>document.querySelector(s).addEventListener("input", d5_calcRef));
+      
+      /* --- Chief Gear --- */
+      function d5_buildChief(){
+        const tb=document.getElementById("d5_chiefBody"); tb.innerHTML="";
+        Object.entries(D5_CHIEF_BASE).forEach(([name,base])=>{
+          const id = name.replace(/\s|\W/g,'');
+          const tr=document.createElement("tr");
+          tr.innerHTML = `
+            <td>${name}</td>
+            <td class="r mono">${base.toLocaleString()}</td>
+            <td class="in"><input class="w-full r mono d5_chQty" data-name="${name}" type="number" min="0" step="1" value="0"></td>
+            <td class="r mono" id="d5_chPts-${id}">-</td>`;
+          tb.appendChild(tr);
+        });
+        tb.addEventListener("input", e=>{
+          if(!e.target.classList.contains("d5_chQty")) return;
+          d5_calcChief();
+        });
+      }
+      function d5_calcChief(){
+        let sub=0;
+        document.querySelectorAll(".d5_chQty").forEach(inp=>{
+          const name=inp.dataset.name, base=D5_CHIEF_BASE[name], qty=+(inp.value||0);
+          const pts = qty * D5_UNIT.chiefMul * base;
+          document.getElementById("d5_chPts-"+name.replace(/\s|\W/g,'')).textContent=d5show(pts);
+          sub += pts;
+        });
+        document.getElementById("d5_chiefTot").textContent=d5show(sub);
+        document.getElementById("d5_pChief").textContent=d5show(sub);
+        d5_calcMain();
+      }
+      
+      /* --- 메인 합계(소계 + 고정 재료) --- */
+      function d5_num(text){ return (!text || text==='-') ? 0 : +text.replace(/,/g,''); }
+      function d5_calcMain(){
+        // 고정 재료: 수량 입력이 없으므로 '1개 사용시' 개념으로 합계? → 스샷 구조상 하위표에서만 입력받고 합계 반영
+        // 이 파일에서는 하위표(스피드업/기어/펫)에서만 값이 생기므로, 상단 재료 6종은 별도 입력칸을 두지 않고 0 처리.
+        const pFire=0, pShard=0, pRef=0, pWid=0, pEss=0, pMit=0;
+      
+        const pSpd   = d5_num(document.getElementById("d5_pSpd").textContent);
+        const pChief = d5_num(document.getElementById("d5_pChief").textContent);
+        const pAdv   = d5_num(document.getElementById("d5_pPetAdv").textContent);
+        const pRefi  = d5_num(document.getElementById("d5_pPetRef").textContent);
+      
+        document.getElementById("d5_pFire").textContent  = d5show(pFire);
+        document.getElementById("d5_pShard").textContent = d5show(pShard);
+        document.getElementById("d5_pRef").textContent   = d5show(pRef);
+        document.getElementById("d5_pWid").textContent   = d5show(pWid);
+        document.getElementById("d5_pEss").textContent   = d5show(pEss);
+        document.getElementById("d5_pMit").textContent   = d5show(pMit);
+      
+        const total = pFire+pShard+pRef+pWid+pEss+pMit + pSpd + pChief + pAdv + pRefi;
+        document.getElementById("d5_total").textContent = d5show(total);
+      }
+      
+      /* init Day5 */
+      d5_buildPetAdv(); d5_buildChief();
+      d5_calcPetAdv(); d5_calcChief(); d5_calcRef(); d5_calcSpeed(); d5_calcMain();
     </script>
     
     <script>
