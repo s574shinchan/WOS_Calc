@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Day 1 & Day 2 — 탭 계산기</title>
+    <title>SVS 점수계산</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       /* 1) 라이트 기본 팔레트 */
@@ -17,8 +17,8 @@
         --sum:#fef08a;        /* 합계(노랑) */
         --tab-bg:#f9fafb;     /* 비선택 탭 배경 */
       }
-    
-      /* 2) 다크모드 팔레트 (index.html에서 body에 dark-mode가 붙음) */
+
+      /* 2) 다크모드 팔레트 (body.dark-mode 클래스 사용 시) */
       body.dark-mode{
         --bg:#0b1220;
         --text:#e5e7eb;
@@ -29,27 +29,28 @@
         --sum:#a57c00;
         --tab-bg:#1f2937;
       }
-    
-      /* 3) 공통 스타일 (색은 전부 변수 사용) */
+
+      /* 3) 공통 스타일 */
       body{ background:var(--bg); color:var(--text); }
       .card{ background:var(--card); box-shadow:0 8px 24px rgba(0,0,0,.06) }
       .t{ border-collapse:collapse; width:100%; color:var(--text) }
-      .t th,.t td{ border:1px solid var(--border); padding:.5rem; font-size:13px }
+      .t th,.t td{ border:1px solid var(--border); padding:.5rem; font-size:13px; vertical-align:top }
       .head{ background:var(--head); font-weight:600 }
       .in{ background:var(--in) }      /* 입력 영역(초록) */
       .sum{ background:var(--sum) }    /* 합계(노랑) */
       .r{text-align:right}
-    
+      .c{ text-align:center !important; }
+      .c input[type="checkbox"]{ display:block; margin:0 auto; }
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+
       input[type="number"]{
-        appearance:textfield;
-        background:transparent;
-        color:var(--text);
+        appearance:textfield; background:transparent; color:var(--text);
       }
       input::-webkit-outer-spin-button,
       input::-webkit-inner-spin-button{ appearance:none; margin:0 }
-    
+
       .maxw{max-width:1100px}
-    
+
       /* 4) 탭 */
       .tabs{
         display:flex; gap:.25rem;
@@ -65,11 +66,15 @@
       .tab-btn[aria-selected="true"]{ background:var(--card) }
       .tab-panel{ display:none }
       .tab-panel.active{ display:block }
+
+      /* 좌우 2열 그리드 (모바일 1열) */
+      .cols{ display:grid; grid-template-columns:1fr; gap:.75rem; align-items:start; }
+      @media (min-width:900px){ .cols{ grid-template-columns:1fr 1fr; } }
     </style>
   </head>
   <body class="p-3 md:p-6">
     <div class="mx-auto maxw">
-      
+
       <!-- 탭 버튼 -->
       <div class="tabs">
         <button class="tab-btn" data-tab="day1" aria-selected="true">1일차</button>
@@ -78,7 +83,7 @@
         <button class="tab-btn" data-tab="day4" aria-selected="false">4일차</button>
         <button class="tab-btn" data-tab="day5" aria-selected="false">5일차</button>
       </div>
-      
+
       <!-- ==================== Day 1 ==================== -->
       <section id="panel-day1" class="tab-panel active space-y-3">
         <div class="flex items-center justify-between">
@@ -88,7 +93,7 @@
             <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d1_total">-</span>
           </div>
         </div>
-        
+
         <!-- Day1 메인 -->
         <section class="card rounded-xl overflow-hidden">
           <table class="t">
@@ -130,66 +135,68 @@
         </section>
 
         <!-- Day1 Speedups -->
-        <section class="card rounded-xl overflow-hidden">
-          <table class="t">
-            <thead>
-              <tr class="head">
-                <th style="width:25%">가속사용</th>
-                <th style="width:25%">개별점수</th>
-                <th class="r" style="width:25%">개수</th>
-                <th class="r" style="width:25%">Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>일</td>
-                <td class="text-right">43200</td>
-                <td class="in"><input id="d1_spdD" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d1_spdDP">-</td>
-              </tr>
-              <tr>
-                <td>시간</td>
-                <td class="text-right">1800</td>
-                <td class="in"><input id="d1_spdH" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d1_spdHP">-</td>
-              </tr>
-              <tr>
-                <td>분</td>
-                <td class="text-right">30</td>
-                <td class="in"><input id="d1_spdM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d1_spdMP">-</td>
-              </tr>
-              <tr>
-                <td class="font-semibold text-right"colspan = "2">소계</td>
-                <td class="sum r font-mono" id="d1_spdMin">-</td>
-                <td class="sum r font-mono" id="d1_spdTot">-</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Day1 Charms -->
-        <section class="card rounded-xl overflow-hidden">
-          <table class="t">
-            <thead>
-              <tr class="head">
-                <th style="width:25%">보석레벨</th>
-              <th class="r" style="width:25%">개당 점수</th>
-              <th class="r" style="width:25%">개수</th>
-              <th class="r" style="width:25%">Points</th>
-              </tr>
-            </thead>
-            <tbody id="d1_charBody"></tbody>
-            <tfoot>
-              <tr>
-                <td colspan="3" class="font-semibold text-right">소계</td>
-                <td class="sum r font-mono" id="d1_charTot">-</td>
-              </tr>
-            </tfoot>
-          </table>
-        </section>
+        <div class="cols">
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:25%">가속사용</th>
+                  <th style="width:25%">개별점수</th>
+                  <th class="r" style="width:25%">개수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>일</td>
+                  <td class="text-right">43200</td>
+                  <td class="in"><input id="d1_spdD" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d1_spdDP">-</td>
+                </tr>
+                <tr>
+                  <td>시간</td>
+                  <td class="text-right">1800</td>
+                  <td class="in"><input id="d1_spdH" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d1_spdHP">-</td>
+                </tr>
+                <tr>
+                  <td>분</td>
+                  <td class="text-right">30</td>
+                  <td class="in"><input id="d1_spdM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d1_spdMP">-</td>
+                </tr>
+                <tr>
+                  <td class="font-semibold text-right"colspan="2">소계</td>
+                  <td class="sum r font-mono" id="d1_spdMin">-</td>
+                  <td class="sum r font-mono" id="d1_spdTot">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+  
+          <!-- Day1 Charms -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:25%">보석레벨</th>
+                  <th class="r" style="width:25%">개당 점수</th>
+                  <th class="r" style="width:25%">개수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody id="d1_charBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="font-semibold text-right">소계</td>
+                  <td class="sum r font-mono" id="d1_charTot">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </section>
+        </div>
       </section>
-      
+  
       <!-- ==================== Day 2 ==================== -->
       <section id="panel-day2" class="tab-panel space-y-3">
         <div class="flex items-center justify-between">
@@ -199,7 +206,7 @@
             <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d2_total">-</span>
           </div>
         </div>
-        
+
         <!-- Day2 메인 -->
         <section class="card rounded-xl overflow-hidden">
           <table class="t">
@@ -249,95 +256,336 @@
             </tbody>
           </table>
         </section>
-  
-        <!-- Day2 Hero Shards -->
+
+        <!-- ✅ Day2: 영웅조각 ⟷ 가속사용 (Day3 형식과 동일한 좌우 배치) -->
+        <div class="cols" id="d2_rowShardsSpeed">
+          <!-- Day2 Hero Shards -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:50%">영웅조각</th>
+                  <th class="r" style="width:25%">개수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>레어 영웅 파편</td>
+                  <td class="in"><input id="d2_hsR" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d2_hsRP">-</td>
+                </tr>
+                <tr>
+                  <td>에픽 영웅 파편</td>
+                  <td class="in"><input id="d2_hsE" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d2_hsEP">-</td>
+                </tr>
+                <tr>
+                  <td>레전드 영웅 파편</td>
+                  <td class="in"><input id="d2_hsM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d2_hsMP">-</td>
+                </tr>
+                <tr>
+                  <td class="font-semibold text-right" colspan="2">소계</td>
+                  <td class="sum r font-mono" id="d2_hsTot">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- Day2 Speedups -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:25%">가속사용</th>
+                  <th style="width:25%">개별점수</th>
+                  <th class="r" style="width:25%">개수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>일</td>
+                  <td class="text-right">43200</td>
+                  <td class="in"><input id="d2_spdD" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d2_spdDP">-</td>
+                </tr>
+                <tr>
+                  <td>시간</td>
+                  <td class="text-right">1800</td>
+                  <td class="in"><input id="d2_spdH" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d2_spdHP">-</td>
+                </tr>
+                <tr>
+                  <td>분</td>
+                  <td class="text-right">30</td>
+                  <td class="in"><input id="d2_spdM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r" id="d2_spdMP">-</td>
+                </tr>
+                <tr>
+                  <td class="font-semibold text-right" colspan="2">소계</td>
+                  <td class="sum r font-mono" id="d2_spdMin">-</td>
+                  <td class="sum r font-mono" id="d2_spdTot">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- Day2 Gather -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:50%">자원</th>
+                  <th class="r" style="width:25%">개수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody id="d2_gBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" class="font-semibold text-right">소계</td>
+                  <td class="sum r font-mono" id="d2_gTot">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </section>
+        </div>
+      </section>
+
+      <!-- ==================== Day 3 ==================== -->
+      <section id="panel-day3" class="tab-panel space-y-3">
+        <div class="flex items-center justify-between">
+          <h1 class="text-xl md:text-2xl font-bold">준비단계 3일차</h1>
+          <div class="text-right">
+            <span class="align-middle mr-2 font-semibold">총 점수</span>
+            <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d3_total">-</span>
+          </div>
+        </div>
+
+        <!-- Day3 메인 -->
         <section class="card rounded-xl overflow-hidden">
           <table class="t">
             <thead>
               <tr class="head">
-                <th style="width:50%">영웅조각</th>
-                <th class="r" style="width:25%">개수</th>
-                <th class="r" style="width:25%">Points</th>
+                <th style="width:55%">3일차 미션</th>
+                <th class="c" style="width:20%">재료</th>
+                <th class="c" style="width:25%">Points</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>레어 영웅 파편</td>
-                <td class="in"><input id="d2_hsR" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d2_hsRP">-</td>
+                <td>행운의 룰렛</td>
+                <td class="in"><input id="d3_wQty" class="w-full r font-mono" type="number" min="0" step="1" value="0" placeholder="개수 입력"></td>
+                <td class="r mono" id="d3_wPts">-</td>
               </tr>
               <tr>
-                <td>에픽 영웅 파편</td>
-                <td class="in"><input id="d2_hsE" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d2_hsEP">-</td>
+                <td>영웅조각 이용하여 성급업</td>
+                <td class="in r">아래표에서 입력</td>
+                <td class="r mono" id="d3_heroPts">-</td>
               </tr>
               <tr>
-                <td>레전드 영웅 파편</td>
-                <td class="in"><input id="d2_hsM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d2_hsMP">-</td>
+                <td>영주보석 업그레이드</td>
+                <td class="in r">아래표에서 입력</td>
+                <td class="r mono" id="d3_charmsPts">-</td>
               </tr>
               <tr>
-                <td class="font-semibold text-right" colspan="2">소계</td>
-                <td class="sum r font-mono" id="d2_hsTot">-</td>
+                <td>야수 및 괴수사냥</td>
+                <td class="in r">아래표에서 입력</td>
+                <td class="r mono" id="d3_beastPtsTop">-</td>
+              </tr>
+              <tr>
+                <td>펫 돌파</td>
+                <td class="in r">아래표에서 입력</td>
+                <td class="r mono" id="d3_petAdvPtsTop">-</td>
+              </tr>
+              <tr>
+                <td>펫 단련</td>
+                <td class="in r">아래표에서 입력</td>
+                <td class="r mono" id="d3_petRefPtsTop">-</td>
+              </tr>
+              <tr>
+                <td>스태미너계산</td>
+                <td class="in r">아래표에서 입력</td>
+                <td class="r mono" id="d3_polarPtsTop">-</td>
               </tr>
             </tbody>
           </table>
         </section>
 
-        <!-- Day2 Speedups -->
+        <!-- Day3: Hero Shards ⟷ Beasts -->
+        <div class="cols">
+          <!-- Hero Shards -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:50%">영웅조각</th>
+                  <th class="r" style="width:25%">개수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>레어 영웅 조각</td>
+                  <td class="in"><input id="d3_hsR" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r mono" id="d3_hsRPts">-</td>
+                </tr>
+                <tr>
+                  <td>에픽 영웅 조각</td>
+                  <td class="in"><input id="d3_hsE" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r mono" id="d3_hsEPts">-</td>
+                </tr>
+                <tr>
+                  <td>레전드 영웅조각</td>
+                  <td class="in"><input id="d3_hsM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                  <td class="r mono" id="d3_hsMPts">-</td>
+                </tr>
+                <tr>
+                  <td class="r" colspan="2"><b>소계</b></td>
+                  <td class="sum r mono" id="d3_hsTotal">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- Beasts -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:30%">야수사냥</th>
+                  <th class="r" style="width:20%">개별 점수</th>
+                  <th class="r" style="width:25%">행군 수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody id="d3_beastBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="r"><b>소계</b></td>
+                  <td class="sum r mono" id="d3_beastTotal">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </section>
+        </div>
+
+        <!-- Day3: Pet advancement ⟷ Pet Refining -->
+        <div class="cols">
+          <!-- Pet advancement -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:30%">펫 돌파</th>
+                  <th class="r" style="width:20%">개별 점수</th>
+                  <th class="r" style="width:25%">개수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody id="d3_petAdvBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="r"><b>소계</b></td>
+                  <td class="sum r mono" id="d3_petAdvTotal">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </section>
+
+          <!-- Pet Refining -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:40%">펫 단련</th>
+                  <th class="r" style="width:20%">개별 점수</th>
+                  <th class="r" style="width:20%">개수</th>
+                  <th class="r" style="width:20%">Points</th>
+                </tr>
+              </thead>
+              <tbody id="d3_petRefBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="r"><b>소계</b></td>
+                  <td class="sum r mono" id="d3_petRefTotal">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </section>
+        </div>
+
+        <!-- Day3: Polar terrors -->
         <section class="card rounded-xl overflow-hidden">
-          <table class="t">
-            <thead>
-              <tr class="head">
-                <th style="width:25%">가속사용</th>
-                <th style="width:25%">개별점수</th>
-                <th class="r" style="width:25%">개수</th>
-                <th class="r" style="width:25%">Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>일</td>
-                <td class="text-right">43200</td>
-                <td class="in"><input id="d2_spdD" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d2_spdDP">-</td>
-              </tr>
-              <tr>
-                <td>시간</td>
-                <td class="text-right">1800</td>
-                <td class="in"><input id="d2_spdH" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d2_spdHP">-</td>
-              </tr>
-              <tr>
-                <td>분</td>
-                <td class="text-right">30</td>
-                <td class="in"><input id="d2_spdM" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r" id="d2_spdMP">-</td>
-              </tr>
-              <tr>
-                <td class="font-semibold text-right" colspan = "2">소계</td>
-                <td class="sum r font-mono" id="d2_spdMin">-</td>
-                <td class="sum r font-mono" id="d2_spdTot">-</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="cols">
+            <!-- 왼쪽: EA & Stamina -->
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:60%">빙원괴수</th>
+                  <th class="r" style="width:40%">EA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Level 1-7</td>
+                  <td class="r mono" id="d3_polarEA">30,000</td>
+                </tr>
+                <tr><td colspan="2" class="head">스태미너계산</td></tr>
+                <tr>
+                  <td>시작 스태미너</td>
+                  <td class="in"><input id="d3_stStart" class="w-full r mono" type="number" min="0" step="1" value="0"></td>
+                </tr>
+                <tr>
+                  <td>스태미너 캔 갯수</td>
+                  <td class="in"><input id="d3_stChief" class="w-full r mono" type="number" min="0" step="1" value="0"></td>
+                </tr>
+                <tr>
+                  <td><b>총 스태미너</b></td>
+                  <td class="sum r mono" id="d3_stTotal">-</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- 오른쪽: 전략 표 (항상 계산, 체크박스는 선택만) -->
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:32%">지나o : 지나x</th>
+                  <th class="r" style="width:18%">행군 수</th>
+                  <th class="r" style="width:30%">Points</th>
+                  <th class="c" style="width:20%">사용여부</th>
+                </tr>
+              </thead>
+              <tbody id="d3_polarBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="r"><b>소계</b></td>
+                  <td class="sum r mono" id="d3_polarSelected">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </section>
-  
-        <!-- Day2 Gather -->
+
+        <!-- Day3: Charms -->
         <section class="card rounded-xl overflow-hidden">
           <table class="t">
             <thead>
               <tr class="head">
-                <th style="width:50%">자원</th>
+                <th style="width:25%">보석레벨</th>
+                <th class="r" style="width:25%">개별 점수</th>
                 <th class="r" style="width:25%">개수</th>
                 <th class="r" style="width:25%">Points</th>
               </tr>
             </thead>
-            <tbody id="d2_gBody"></tbody>
+            <tbody id="d3_charBody"></tbody>
             <tfoot>
               <tr>
-                <td colspan="2" class="font-semibold text-right">소계</td>
-                <td class="sum r font-mono" id="d2_gTot">-</td>
+                <td colspan="3" class="r"><b>소계</b></td>
+                <td class="sum r mono" id="d3_charTotal">-</td>
               </tr>
             </tfoot>
           </table>
@@ -353,15 +601,15 @@
             <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d4_total">-</span>
           </div>
         </div>
-  
+
         <!-- Day4 메인 -->
         <section class="card rounded-xl overflow-hidden">
           <table class="t">
             <thead>
               <tr class="head">
                 <th style="width:55%">4일차 미션</th>
-                <th class="r" style="width:20%">재료</th>
-                <th class="r" style="width:25%">Points</th>
+                <th class="c" style="width:20%">재료</th>
+                <th class="c" style="width:25%">Points</th>
               </tr>
             </thead>
             <tbody>
@@ -393,56 +641,58 @@
             </tbody>
           </table>
         </section>
-  
+
         <!-- Day4 Troops -->
-        <section class="card rounded-xl overflow-hidden">
-          <table class="t">
-            <thead>
-              <tr class="head">
-                <th style="width:25%">병사티어</th>
-                <th style="width:25%">1명당 점수</th>
-                <th class="r" style="width:25%">생산량</th>
-                <th class="r" style="width:25%">Points</th>
-              </tr>
-            </thead>
-            <tbody id="d4_tBody"></tbody>
-            <tfoot>
-              <tr>
-                <td class="font-semibold text-right" colspan="3">소계</td>
-                <td class="sum r font-mono" id="d4_tTot">-</td>
-              </tr>
-            </tfoot>
-          </table>
-        </section>
+        <div class="cols">
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:25%">병사티어</th>
+                  <th style="width:25%">1명당 점수</th>
+                  <th class="r" style="width:25%">생산량</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody id="d4_tBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td class="font-semibold text-right" colspan="3">소계</td>
+                  <td class="sum r font-mono" id="d4_tTot">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </section>
   
-        <!-- Day4 Charms -->
-        <section class="card rounded-xl overflow-hidden">
-          <table class="t">
-            <thead>
-              <tr class="head">
-                <th style="width:25%">보석레벨</th>
-                <th class="r" style="width:25%">개당 점수</th>
-                <th class="r" style="width:25%">개수</th>
-                <th class="r" style="width:25%">Points</th>
-              </tr>
-            </thead>
-            <tbody id="d4_charBody"></tbody>
-            <tfoot>
-              <tr>
-                <td colspan="3" class="font-semibold text-right">소계</td>
-                <td class="sum r font-mono" id="d4_charTot">-</td>
-              </tr>
-            </tfoot>
-          </table>
-        </section>
+          <!-- Day4 Charms -->
+          <section class="card rounded-xl overflow-hidden">
+            <table class="t">
+              <thead>
+                <tr class="head">
+                  <th style="width:25%">보석레벨</th>
+                  <th class="r" style="width:25%">개당 점수</th>
+                  <th class="r" style="width:25%">개수</th>
+                  <th class="r" style="width:25%">Points</th>
+                </tr>
+              </thead>
+              <tbody id="d4_charBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="font-semibold text-right">소계</td>
+                  <td class="sum r font-mono" id="d4_charTot">-</td>
+                </tr>
+              </tfoot>
+            </table>
+          </section>
+        </div>
       </section>
     </div>
-    
+
     <script>
       /* ===================== 공통 유틸 ===================== */
       const fmt = n => (isFinite(n) ? n.toLocaleString() : "-");
       const $ = s => document.querySelector(s);
-      
+
       /* ===================== 탭 전환 ===================== */
       document.querySelectorAll(".tab-btn").forEach(btn=>{
         btn.addEventListener("click", ()=>{
@@ -452,11 +702,11 @@
           $("#panel-"+tab).classList.add("active");
         });
       });
-      
+
       /* ===================== Day 1 ===================== */
       const D1_UNIT = { fire:2000, shard:1000, refined:30000, spdPerMin:30 };
       const D1_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
-      
+
       function d1_buildCharms(){
         const tb = $("#d1_charBody"); tb.innerHTML = "";
         for(let lv=1; lv<=16; lv++){
@@ -474,56 +724,58 @@
           d1_calcCharms();
         });
       }
-      
+
       function d1_calcCharms(){
         let sub=0;
         document.querySelectorAll(".d1_cQty").forEach(inp=>{
           const lv = +inp.dataset.lv;
           let qty = +(inp.value||0);
-          if(qty>18){ qty=18; inp.value=18; }           // 최대 18 제한
-          const pts = qty * 70 * D1_CHAR_BASE[lv];       // (조각 × 70 × 기본점수)
-          $("#d1_cP-"+lv).textContent = fmt(pts);
+          if(qty>18){ qty=18; inp.value=18; }
+          const pts = qty * 70 * D1_CHAR_BASE[lv];
+          document.getElementById("d1_cP-"+lv).textContent = fmt(pts);
           sub += pts;
         });
-        $("#d1_charTot").textContent = fmt(sub);
-        $("#d1_charTot").dataset.val = sub;
+        document.getElementById("d1_charTot").textContent = fmt(sub);
+        document.getElementById("d1_charTot").dataset.val = sub;
         d1_calcMain();
       }
-      
+
       function d1_calcSpeed(){
-        const d=+( $("#d1_spdD").value||0), h=+( $("#d1_spdH").value||0), m=+( $("#d1_spdM").value||0);
+        const d=+( document.getElementById("d1_spdD").value||0),
+              h=+( document.getElementById("d1_spdH").value||0),
+              m=+( document.getElementById("d1_spdM").value||0);
         const mins = d*1440 + h*60 + m;
         const pts  = mins * D1_UNIT.spdPerMin;
-        $("#d1_spdDP").textContent = fmt(d*1440*D1_UNIT.spdPerMin);
-        $("#d1_spdHP").textContent = fmt(h*60*D1_UNIT.spdPerMin);
-        $("#d1_spdMP").textContent = fmt(m*D1_UNIT.spdPerMin);
-        $("#d1_spdMin").textContent = fmt(mins);
-        $("#d1_spdTot").textContent = fmt(pts);
-        $("#d1_spdTot").dataset.val = pts;
+        document.getElementById("d1_spdDP").textContent = fmt(d*1440*D1_UNIT.spdPerMin);
+        document.getElementById("d1_spdHP").textContent = fmt(h*60*D1_UNIT.spdPerMin);
+        document.getElementById("d1_spdMP").textContent = fmt(m*D1_UNIT.spdPerMin);
+        document.getElementById("d1_spdMin").textContent = fmt(mins);
+        document.getElementById("d1_spdTot").textContent = fmt(pts);
+        document.getElementById("d1_spdTot").dataset.val = pts;
         d1_calcMain();
       }
-      
+
       function d1_calcMain(){
-        const pFire = (+($("#d1_qFire").value||0))*D1_UNIT.fire;
-        const pSha  = (+($("#d1_qShard").value||0))*D1_UNIT.shard;
-        const pRef  = (+($("#d1_qRef").value||0))*D1_UNIT.refined;
-        $("#d1_pFire").textContent = fmt(pFire);
-        $("#d1_pShard").textContent= fmt(pSha);
-        $("#d1_pRef").textContent  = fmt(pRef);
-        const sp = +($("#d1_spdTot").dataset.val||0);
-        const ch = +($("#d1_charTot").dataset.val||0);
-        $("#d1_pSpd").textContent = fmt(sp);
-        $("#d1_pCharms").textContent = fmt(ch);
-        $("#d1_total").textContent = fmt(pFire+pSha+pRef+sp+ch);
+        const pFire = (+((document.getElementById("d1_qFire").value)||0))*D1_UNIT.fire;
+        const pSha  = (+((document.getElementById("d1_qShard").value)||0))*D1_UNIT.shard;
+        const pRef  = (+((document.getElementById("d1_qRef").value)||0))*D1_UNIT.refined;
+        document.getElementById("d1_pFire").textContent = fmt(pFire);
+        document.getElementById("d1_pShard").textContent= fmt(pSha);
+        document.getElementById("d1_pRef").textContent  = fmt(pRef);
+        const sp = +(document.getElementById("d1_spdTot").dataset.val||0);
+        const ch = +(document.getElementById("d1_charTot").dataset.val||0);
+        document.getElementById("d1_pSpd").textContent = fmt(sp);
+        document.getElementById("d1_pCharms").textContent = fmt(ch);
+        document.getElementById("d1_total").textContent = fmt(pFire+pSha+pRef+sp+ch);
       }
-      
-      ["#d1_qFire","#d1_qShard","#d1_qRef"].forEach(s=>$(s).addEventListener("input", d1_calcMain));
-      ["#d1_spdD","#d1_spdH","#d1_spdM"].forEach(s=>$(s).addEventListener("input", d1_calcSpeed));
+
+      ["#d1_qFire","#d1_qShard","#d1_qRef"].forEach(s=>document.querySelector(s).addEventListener("input", d1_calcMain));
+      ["#d1_spdD","#d1_spdH","#d1_spdM"].forEach(s=>document.querySelector(s).addEventListener("input", d1_calcSpeed));
       d1_buildCharms(); 
       d1_calcCharms(); 
       d1_calcSpeed(); 
       d1_calcMain();
-      
+
       /* ===================== Day 2 ===================== */
       const D2_UNIT = { fire:2000, shard:1000, refined:30000, wheel:8000, spdPerMin:30 };
       const D2_HERO = { rare:350, epic:1220, myth:3040 };
@@ -532,9 +784,9 @@
         {k:"T7",v:12000},{k:"T6",v:6000},{k:"T5",v:2400},
         {k:"T4",v:1200},{k:"T3",v:600},{k:"T2",v:300},{k:"T1",v:140},
       ];
-      
+
       function d2_buildGather(){
-        const tb = $("#d2_gBody"); tb.innerHTML="";
+        const tb = document.getElementById("d2_gBody"); tb.innerHTML="";
         D2_GATHER.forEach((row,i)=>{
           const tr = document.createElement("tr");
           tr.innerHTML = `
@@ -549,78 +801,352 @@
           d2_calcGather();
         });
       }
-      
+
       function d2_calcHero(){
-        const r=(+($("#d2_hsR").value||0))*D2_HERO.rare;
-        const e=(+($("#d2_hsE").value||0))*D2_HERO.epic;
-        const m=(+($("#d2_hsM").value||0))*D2_HERO.myth;
-        $("#d2_hsRP").textContent=fmt(r);
-        $("#d2_hsEP").textContent=fmt(e);
-        $("#d2_hsMP").textContent=fmt(m);
-        const sub=r+e+m; $("#d2_hsTot").textContent=fmt(sub); $("#d2_hsTot").dataset.val=sub;
+        const r=(+((document.getElementById("d2_hsR").value)||0))*D2_HERO.rare;
+        const e=(+((document.getElementById("d2_hsE").value)||0))*D2_HERO.epic;
+        const m=(+((document.getElementById("d2_hsM").value)||0))*D2_HERO.myth;
+        document.getElementById("d2_hsRP").textContent=fmt(r);
+        document.getElementById("d2_hsEP").textContent=fmt(e);
+        document.getElementById("d2_hsMP").textContent=fmt(m);
+        const sub=r+e+m; document.getElementById("d2_hsTot").textContent=fmt(sub); document.getElementById("d2_hsTot").dataset.val=sub;
         d2_calcMain();
       }
-      
+
       function d2_calcSpeed(){
-        const d=+( $("#d2_spdD").value||0), h=+( $("#d2_spdH").value||0), m=+( $("#d2_spdM").value||0);
+        const d=+( document.getElementById("d2_spdD").value||0),
+              h=+( document.getElementById("d2_spdH").value||0),
+              m=+( document.getElementById("d2_spdM").value||0);
         const mins=d*1440+h*60+m, pts=mins*D2_UNIT.spdPerMin;
-        $("#d2_spdDP").textContent=fmt(d*1440*D2_UNIT.spdPerMin);
-        $("#d2_spdHP").textContent=fmt(h*60*D2_UNIT.spdPerMin);
-        $("#d2_spdMP").textContent=fmt(m*D2_UNIT.spdPerMin);
-        $("#d2_spdMin").textContent=fmt(mins);
-        $("#d2_spdTot").textContent=fmt(pts); $("#d2_spdTot").dataset.val=pts;
+        document.getElementById("d2_spdDP").textContent=fmt(d*1440*D2_UNIT.spdPerMin);
+        document.getElementById("d2_spdHP").textContent=fmt(h*60*D2_UNIT.spdPerMin);
+        document.getElementById("d2_spdMP").textContent=fmt(m*D2_UNIT.spdPerMin);
+        document.getElementById("d2_spdMin").textContent=fmt(mins);
+        document.getElementById("d2_spdTot").textContent=fmt(pts); document.getElementById("d2_spdTot").dataset.val=pts;
         d2_calcMain();
       }
-      
+
       function d2_calcGather(){
         let sub=0;
         document.querySelectorAll(".d2_gQty").forEach(inp=>{
           const i=+inp.dataset.i, qty=+(inp.value||0);
           const pts=qty*D2_GATHER[i].v;
-          $("#d2_gP-"+i).textContent=fmt(pts);
+          document.getElementById("d2_gP-"+i).textContent=fmt(pts);
           sub+=pts;
         });
-        $("#d2_gTot").textContent=fmt(sub); $("#d2_gTot").dataset.val=sub;
+        document.getElementById("d2_gTot").textContent=fmt(sub); document.getElementById("d2_gTot").dataset.val=sub;
         d2_calcMain();
       }
-      
+
       function d2_calcMain(){
-        const pFire=(+($("#d2_qFire").value||0))*D2_UNIT.fire;
-        const pSha =(+($("#d2_qShard").value||0))*D2_UNIT.shard;
-        const pRef =(+($("#d2_qRef").value||0))*D2_UNIT.refined;
-        const pWh  =(+($("#d2_qWheel").value||0))*D2_UNIT.wheel;
-        $("#d2_pFire").textContent=fmt(pFire);
-        $("#d2_pShard").textContent=fmt(pSha);
-        $("#d2_pRef").textContent=fmt(pRef);
-        $("#d2_pWheel").textContent=fmt(pWh);
-        const hero=+($("#d2_hsTot").dataset.val||0);
-        const sp  =+($("#d2_spdTot").dataset.val||0);
-        const g   =+($("#d2_gTot").dataset.val||0);
-        $("#d2_pHero").textContent=fmt(hero);
-        $("#d2_pSpd").textContent=fmt(sp);
-        $("#d2_pGather").textContent=fmt(g);
-        $("#d2_total").textContent=fmt(pFire+pSha+pRef+pWh+hero+sp+g);
+        const pFire=(+((document.getElementById("d2_qFire").value)||0))*D2_UNIT.fire;
+        const pSha =(+((document.getElementById("d2_qShard").value)||0))*D2_UNIT.shard;
+        const pRef =(+((document.getElementById("d2_qRef").value)||0))*D2_UNIT.refined;
+        const pWh  =(+((document.getElementById("d2_qWheel").value)||0))*D2_UNIT.wheel;
+        document.getElementById("d2_pFire").textContent=fmt(pFire);
+        document.getElementById("d2_pShard").textContent=fmt(pSha);
+        document.getElementById("d2_pRef").textContent=fmt(pRef);
+        document.getElementById("d2_pWheel").textContent=fmt(pWh);
+        const hero=+((document.getElementById("d2_hsTot").dataset.val)||0);
+        const sp  =+((document.getElementById("d2_spdTot").dataset.val)||0);
+        const g   =+((document.getElementById("d2_gTot").dataset.val)||0);
+        document.getElementById("d2_pHero").textContent=fmt(hero);
+        document.getElementById("d2_pSpd").textContent=fmt(sp);
+        document.getElementById("d2_pGather").textContent=fmt(g);
+        document.getElementById("d2_total").textContent=fmt(pFire+pSha+pRef+pWh+hero+sp+g);
+      }
+
+      ["#d2_qFire","#d2_qShard","#d2_qRef","#d2_qWheel"].forEach(s=>document.querySelector(s).addEventListener("input", d2_calcMain));
+      ["#d2_hsR","#d2_hsE","#d2_hsM"].forEach(s=>document.querySelector(s).addEventListener("input", d2_calcHero));
+      ["#d2_spdD","#d2_spdH","#d2_spdM"].forEach(s=>document.querySelector(s).addEventListener("input", d2_calcSpeed));
+      d2_buildGather(); 
+      d2_calcHero();
+      d2_calcSpeed();
+      d2_calcGather();
+      d2_calcMain();
+
+      /* ===================== Day 3 ===================== */
+      const D3_UNIT = { wheel:8000, charmMul:70, hero:{rare:350,epic:1220,myth:3040} };
+      const D3_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
+      const D3_BEAST_BASE = {
+        "Level 1-10": 9000,"Level 11-15": 9750,"Level 16-20": 10500,
+        "Level 21-25": 11250,"Level 26-30": 12000
+      };
+      const D3_PET_ADV_BASE = {
+        "Level 10": 500,"Level 20": 1000,"Level 30": 2000,"Level 40": 3000,"Level 50": 4500,
+        "Level 60": 6750,"Level 70": 10000,"Level 80": 12000,"Level 90": 14500,"Level 100": 17500
+      };
+      const D3_PET_REF_BASE = { "일반 펫 단련":1150, "고급 펫 단련":15000 };
+      const D3_POLAR_EA = 30000;
+      const D3_POLAR_STRATS = [
+        {key:"1:0 (Only Gina)", a:1, b:0},
+        {key:"1:1", a:1, b:1},{key:"1:2", a:1, b:2},{key:"1:3", a:1, b:3},
+        {key:"1:4", a:1, b:4},{key:"1:5", a:1, b:5},
+        {key:"0:6 (No Gina)", a:0, b:6},
+      ];
+      const d3_show = n => (n>0 ? fmt(n) : "-");
+      const d3_safe = s => s.replace(/[^a-zA-Z0-9]/g,'');
+
+      function d3_calcWheel(){
+        const qty = +( (document.getElementById("d3_wQty").value) || 0 );
+        const pts = qty * D3_UNIT.wheel;
+        document.getElementById("d3_wPts").textContent = d3_show(pts);
+        d3_calcTotal();
+      }
+      document.getElementById("d3_wQty").addEventListener("input", d3_calcWheel);
+
+      function d3_calcHero(){
+        const r = +((document.getElementById("d3_hsR").value)||0) * D3_UNIT.hero.rare;
+        const e = +((document.getElementById("d3_hsE").value)||0) * D3_UNIT.hero.epic;
+        const m = +((document.getElementById("d3_hsM").value)||0) * D3_UNIT.hero.myth;
+        const sub = r+e+m;
+        document.getElementById("d3_hsRPts").textContent = d3_show(r);
+        document.getElementById("d3_hsEPts").textContent = d3_show(e);
+        document.getElementById("d3_hsMPts").textContent = d3_show(m);
+        document.getElementById("d3_hsTotal").textContent = d3_show(sub);
+        document.getElementById("d3_heroPts").textContent = d3_show(sub);
+        d3_calcTotal();
+      }
+      ["#d3_hsR","#d3_hsE","#d3_hsM"].forEach(s=>document.querySelector(s).addEventListener("input", d3_calcHero));
+
+      function d3_buildCharms(){
+        const tb = document.getElementById("d3_charBody"); tb.innerHTML="";
+        for(let lv=1; lv<=16; lv++){
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${lv}</td>
+            <td class="r mono">${fmt(D3_CHAR_BASE[lv])}</td>
+            <td class="in"><input class="w-full r mono d3_cQty" type="number" min="0" max="18" step="1" value="0" data-lv="${lv}"></td>
+            <td class="r mono" id="d3_cPts-${lv}">-</td>
+          `;
+          tb.appendChild(tr);
+        }
+        tb.addEventListener("input", e=>{
+          if(!e.target.classList.contains("d3_cQty")) return;
+          d3_calcCharms();
+        });
       }
       
-      ["#d2_qFire","#d2_qShard","#d2_qRef","#d2_qWheel"].forEach(s=>$(s).addEventListener("input", d2_calcMain));
-      ["#d2_hsR","#d2_hsE","#d2_hsM"].forEach(s=>$(s).addEventListener("input", d2_calcHero));
-      ["#d2_spdD","#d2_spdH","#d2_spdM"].forEach(s=>$(s).addEventListener("input", d2_calcSpeed));
-      d2_buildGather(); 
-      d2_calcHero(); 
-      d2_calcSpeed(); 
-      d2_calcGather(); 
-      d2_calcMain();
+      function d3_calcCharms(){
+        let sub=0;
+        document.querySelectorAll(".d3_cQty").forEach(inp=>{
+          const lv=+inp.dataset.lv;
+          let qty=+(inp.value||0);
+          if(qty>18){ qty=18; inp.value=18; }
+          const pts = qty * D3_UNIT.charmMul * D3_CHAR_BASE[lv];
+          document.getElementById("d3_cPts-"+lv).textContent = d3_show(pts);
+          sub+=pts;
+        });
+        document.getElementById("d3_charTotal").textContent = d3_show(sub);
+        document.getElementById("d3_charmsPts").textContent = d3_show(sub);
+        d3_calcTotal();
+      }
+
+      function d3_buildBeasts(){
+        const tb=document.getElementById("d3_beastBody"); tb.innerHTML="";
+        Object.entries(D3_BEAST_BASE).forEach(([name,base])=>{
+          const tr=document.createElement("tr");
+          tr.innerHTML=`
+            <td>${name}</td>
+            <td class="r mono">${fmt(base)}</td>
+            <td class="in"><input class="w-full r mono d3_beastQty" type="number" min="0" step="1" value="0" data-name="${name}"></td>
+            <td class="r mono" id="d3_beastPts-${d3_safe(name)}">-</td>`;
+          tb.appendChild(tr);
+        });
+        tb.addEventListener("input", e=>{
+          if(!e.target.classList.contains("d3_beastQty")) return;
+          d3_calcBeasts();
+        });
+      }
       
+      function d3_calcBeasts(){
+        let sub=0;
+        document.querySelectorAll(".d3_beastQty").forEach(inp=>{
+          const name=inp.dataset.name;
+          const base=D3_BEAST_BASE[name];
+          const qty=+(inp.value||0);
+          const pts=qty*base;
+          document.getElementById("d3_beastPts-"+d3_safe(name)).textContent=d3_show(pts);
+          sub+=pts;
+        });
+        document.getElementById("d3_beastTotal").textContent=d3_show(sub);
+        document.getElementById("d3_beastPtsTop").textContent=d3_show(sub);
+        d3_calcTotal();
+      }
+
+      function d3_buildPetAdv(){
+        const tb=document.getElementById("d3_petAdvBody"); tb.innerHTML="";
+        Object.entries(D3_PET_ADV_BASE).forEach(([name,base])=>{
+          const tr=document.createElement("tr");
+          tr.innerHTML=`
+            <td>${name}</td>
+            <td class="r mono">${fmt(base)}</td>
+            <td class="in"><input class="w-full r mono d3_petAdvQty" type="number" min="0" step="1" value="0" data-name="${name}"></td>
+            <td class="r mono" id="d3_petAdvPts-${d3_safe(name)}">-</td>`;
+          tb.appendChild(tr);
+        });
+        tb.addEventListener("input", e=>{
+          if(!e.target.classList.contains("d3_petAdvQty")) return;
+          d3_calcPetAdv();
+        });
+      }
+      
+      function d3_calcPetAdv(){
+        let sub=0;
+        document.querySelectorAll(".d3_petAdvQty").forEach(inp=>{
+          const name=inp.dataset.name;
+          const base=D3_PET_ADV_BASE[name];
+          const qty=+(inp.value||0);
+          const pts=qty*base;
+          document.getElementById("d3_petAdvPts-"+d3_safe(name)).textContent=d3_show(pts);
+          sub+=pts;
+        });
+        document.getElementById("d3_petAdvTotal").textContent=d3_show(sub);
+        document.getElementById("d3_petAdvPtsTop").textContent=d3_show(sub);
+        d3_calcTotal();
+      }
+
+      function d3_buildPetRef(){
+        const tb=document.getElementById("d3_petRefBody"); tb.innerHTML="";
+        Object.entries(D3_PET_REF_BASE).forEach(([name,base])=>{
+          const tr=document.createElement("tr");
+          tr.innerHTML=`
+            <td>${name}</td>
+            <td class="r mono">${fmt(base)}</td>
+            <td class="in"><input class="w-full r mono d3_petRefQty" type="number" min="0" step="1" value="0" data-name="${name}"></td>
+            <td class="r mono" id="d3_petRefPts-${d3_safe(name)}">-</td>`;
+          tb.appendChild(tr);
+        });
+        tb.addEventListener("input", e=>{
+          if(!e.target.classList.contains("d3_petRefQty")) return;
+          d3_calcPetRef();
+        });
+      }
+      
+      function d3_calcPetRef(){
+        let sub=0;
+        document.querySelectorAll(".d3_petRefQty").forEach(inp=>{
+          const name=inp.dataset.name;
+          const base=D3_PET_REF_BASE[name];
+          const qty=+(inp.value||0);
+          const pts=qty*base;
+          document.getElementById("d3_petRefPts-"+d3_safe(name)).textContent=d3_show(pts);
+          sub+=pts;
+        });
+        document.getElementById("d3_petRefTotal").textContent=d3_show(sub);
+        document.getElementById("d3_petRefPtsTop").textContent=d3_show(sub);
+        d3_calcTotal();
+      }
+
+      function d3_buildPolar(){
+        document.getElementById("d3_polarEA").textContent = fmt(D3_POLAR_EA);
+        const tb=document.getElementById("d3_polarBody"); tb.innerHTML="";
+        D3_POLAR_STRATS.forEach(({key})=>{
+          const id = d3_safe(key);
+          const tr=document.createElement("tr");
+          tr.innerHTML=`
+            <td>${key}</td>
+            <td class="r mono" id="d3_polRallies-${id}">-</td>
+            <td class="r mono" id="d3_polPts-${id}">-</td>
+            <td class="c"><input type="checkbox" class="d3_polPick" data-key="${key}" id="d3_pick-${id}"></td>`;
+          tb.appendChild(tr);
+        });
+
+        tb.addEventListener("change", e=>{
+          if(!e.target.classList.contains("d3_polPick")) return;
+          document.querySelectorAll(".d3_polPick").forEach(chk=>{
+            if(chk!==e.target) chk.checked=false; // 단일 선택
+          });
+          d3_updatePolarPick();
+        });
+
+        document.getElementById("d3_stStart").addEventListener("input", d3_calcPolar);
+        document.getElementById("d3_stChief").addEventListener("input", d3_calcPolar);
+
+        d3_calcPolar();
+      }
+      
+      function d3_calcPolar(){
+        const start = +( (document.getElementById("d3_stStart").value) || 0 );
+        const chief = +( (document.getElementById("d3_stChief").value) || 0 );
+        const totalSt = start + (chief * 10);
+        document.getElementById("d3_stTotal").textContent = totalSt>0 ? fmt(totalSt) : "-";
+
+        D3_POLAR_STRATS.forEach(({key,a,b})=>{
+          const id = d3_safe(key);
+          if(totalSt>0){
+            const avgCost = (a===0) ? 25 : ((20 + 25*b)/(a+b));
+            const ralliesRaw = totalSt/avgCost;
+            const rallies = Math.round(ralliesRaw);
+            const points  = Math.round(ralliesRaw * D3_POLAR_EA);
+            document.getElementById("d3_polRallies-"+id).textContent = d3_show(rallies);
+            document.getElementById("d3_polPts-"+id).textContent     = d3_show(points);
+          }else{
+            document.getElementById("d3_polRallies-"+id).textContent = "-";
+            document.getElementById("d3_polPts-"+id).textContent     = "-";
+          }
+        });
+
+        d3_updatePolarPick();
+      }
+      
+      function d3_updatePolarPick(){
+        let selected=0;
+        D3_POLAR_STRATS.forEach(({key})=>{
+          const id=d3_safe(key);
+          const picked = document.getElementById("d3_pick-"+id).checked;
+          if(picked){
+            const pts = +document.getElementById("d3_polPts-"+id).textContent.replace(/,/g,'') || 0;
+            selected = pts;
+          }
+        });
+        document.getElementById("d3_polarSelected").textContent = d3_show(selected);
+        document.getElementById("d3_polarPtsTop").textContent   = d3_show(selected);
+        d3_calcTotal();
+      }
+
+      function d3_parseNum(s){
+        return (!s || s==='-') ? 0 : +s.replace(/,/g,'');
+      }
+      
+      function d3_calcTotal(){
+        const total =
+          d3_parseNum(document.getElementById("d3_wPts").textContent) +
+          d3_parseNum(document.getElementById("d3_heroPts").textContent) +
+          d3_parseNum(document.getElementById("d3_charmsPts").textContent) +
+          d3_parseNum(document.getElementById("d3_beastPtsTop").textContent) +
+          d3_parseNum(document.getElementById("d3_petAdvPtsTop").textContent) +
+          d3_parseNum(document.getElementById("d3_petRefPtsTop").textContent) +
+          d3_parseNum(document.getElementById("d3_polarPtsTop").textContent);
+        document.getElementById("d3_total").textContent = d3_show(total);
+      }
+
+      function d3_init(){
+        d3_buildCharms(); 
+        d3_buildBeasts(); 
+        d3_buildPetAdv(); 
+        d3_buildPetRef(); 
+        d3_buildPolar();
+        d3_calcWheel();
+        d3_calcHero();
+        d3_calcCharms();
+        d3_calcBeasts();
+        d3_calcPetAdv(); 
+        d3_calcPetRef(); 
+        d3_calcTotal();
+      }
+      d3_init();
+
       /* ===================== Day 4 ===================== */
-      const D4_UNIT = { widgets:8000, essence:4000, mithril:144000 };  // 스샷 기준 단가
+      const D4_UNIT = { widgets:8000, essence:4000, mithril:144000 };
       const D4_TROOP_PTS = { T1:3,T2:4,T3:5,T4:8,T5:12,T6:18,T7:25,T8:35,T9:45,T10:60,T11:75 };
-      const D4_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000}; // 16레벨 21,000
-      
+      const D4_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
+
       function d4_buildTroops(){
-        const tb = $("#d4_tBody");
+        const tb = document.getElementById("d4_tBody");
         tb.innerHTML = "";
         Object.keys(D4_TROOP_PTS).forEach((tier) => {
-          const per = D4_TROOP_PTS[tier]; // 1명당 점수
+          const per = D4_TROOP_PTS[tier];
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${tier}</td>
@@ -632,13 +1158,13 @@
           `;
           tb.appendChild(tr);
         });
-      
+
         tb.addEventListener("input", (e) => {
           if (!e.target.classList.contains("d4_tQty")) return;
           d4_calcTroops();
         });
       }
-      
+
       function d4_calcTroops(){
         let sub = 0;
         document.querySelectorAll(".d4_tQty").forEach((inp) => {
@@ -646,16 +1172,16 @@
           const per  = D4_TROOP_PTS[tier];
           const qty  = +(inp.value || 0);
           const pts  = qty * per;
-          $("#d4_tCalc-" + tier).textContent = fmt(pts);
+          document.getElementById("d4_tCalc-" + tier).textContent = fmt(pts);
           sub += pts;
         });
-        $("#d4_tTot").textContent = fmt(sub);
-        $("#d4_tTot").dataset.val = sub;
-        d4_calcMain(); // 총합 갱신
+        document.getElementById("d4_tTot").textContent = fmt(sub);
+        document.getElementById("d4_tTot").dataset.val = sub;
+        d4_calcMain();
       }
-      
+
       function d4_buildCharms(){
-        const tb=$("#d4_charBody"); tb.innerHTML="";
+        const tb=document.getElementById("d4_charBody"); tb.innerHTML="";
         for(let lv=1; lv<=16; lv++){
           const tr=document.createElement("tr");
           tr.innerHTML=`
@@ -667,60 +1193,75 @@
         }
         tb.addEventListener("input",e=>{ if(!e.target.classList.contains("d4_cQty")) return; d4_calcCharms(); });
       }
-      
+
       function d4_calcCharms(){
         let sub=0;
         document.querySelectorAll(".d4_cQty").forEach(inp=>{
           const lv=+inp.dataset.lv; let qty=+(inp.value||0);
           if(qty>18){ qty=18; inp.value=18; }
           const pts=qty*70*D4_CHAR_BASE[lv];
-          $("#d4_cP-"+lv).textContent=fmt(pts); sub+=pts;
+          document.getElementById("d4_cP-"+lv).textContent=fmt(pts); sub+=pts;
         });
-        $("#d4_charTot").textContent=fmt(sub); $("#d4_charTot").dataset.val=sub; d4_calcMain();
+        document.getElementById("d4_charTot").textContent=fmt(sub); document.getElementById("d4_charTot").dataset.val=sub; d4_calcMain();
       }
-      
+
       function d4_calcMain(){
-        const pW=(+($("#d4_qWid").value||0))*D4_UNIT.widgets;
-        const pE=(+($("#d4_qEss").value||0))*D4_UNIT.essence;
-        const pM=(+($("#d4_qMit").value||0))*D4_UNIT.mithril;
-        $("#d4_pWid").textContent=fmt(pW); $("#d4_pEss").textContent=fmt(pE); $("#d4_pMit").textContent=fmt(pM);
-        const ch=+($("#d4_charTot").dataset.val||0), tp=+($("#d4_tTot").dataset.val||0);
-        $("#d4_pCharms").textContent=fmt(ch); $("#d4_pTroop").textContent=fmt(tp);
-        $("#d4_total").textContent=fmt(pW+pE+pM+ch+tp);
+        const pW=(+((document.getElementById("d4_qWid").value)||0))*D4_UNIT.widgets;
+        const pE=(+((document.getElementById("d4_qEss").value)||0))*D4_UNIT.essence;
+        const pM=(+((document.getElementById("d4_qMit").value)||0))*D4_UNIT.mithril;
+        document.getElementById("d4_pWid").textContent=fmt(pW); document.getElementById("d4_pEss").textContent=fmt(pE); document.getElementById("d4_pMit").textContent=fmt(pM);
+        const ch=+((document.getElementById("d4_charTot").dataset.val)||0), tp=+((document.getElementById("d4_tTot").dataset.val)||0);
+        document.getElementById("d4_pCharms").textContent=fmt(ch); document.getElementById("d4_pTroop").textContent=fmt(tp);
+        document.getElementById("d4_total").textContent=fmt(pW+pE+pM+ch+tp);
       }
-      
-      ["#d4_qWid","#d4_qEss","#d4_qMit"].forEach(s=>$(s).addEventListener("input", d4_calcMain));
-      d4_buildTroops();
-      d4_buildCharms();
+
+      ["#d4_qWid","#d4_qEss","#d4_qMit"].forEach(s=>document.querySelector(s).addEventListener("input", d4_calcMain));
+      d4_buildTroops(); 
+      d4_buildCharms(); 
       d4_calcTroops();
       d4_calcCharms();
       d4_calcMain();
     </script>
+    
+    <script>
+      /* ===================== 탭 전환 ===================== */
+      document.querySelectorAll(".tab-btn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const tab = btn.dataset.tab;
+    
+          // 탭 상태 전환
+          document.querySelectorAll(".tab-btn")
+            .forEach(b=>b.setAttribute("aria-selected", String(b===btn)));
+          document.querySelectorAll(".tab-panel")
+            .forEach(p=>p.classList.remove("active"));
+          document.getElementById("panel-"+tab).classList.add("active");
+    
+          // ✅ 탭 전환 후 프레임 높이 갱신
+          // 레이아웃이 적용된 다음 프레임에 높이를 계산하도록 rAF+setTimeout 사용
+          requestAnimationFrame(()=>setTimeout(sendHeightToParent, 0));
+          window.addEventListener("resize", ()=>setTimeout(sendHeightToParent, 50));
+        });
+      });
+    </script>
+
+    <!-- (선택) 프레임 높이 통신/보안 키 차단 스크립트 -->
     <script>
       function sendHeightToParent() {
         const height = document.body.scrollHeight + 10;
         window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
       }
-  
-      // 페이지 최초 로드 시
-      window.addEventListener("load", () => {
-        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-      });
-      
+      window.addEventListener("load", () => { setTimeout(sendHeightToParent, 100); });
       function loadPage(page) {
         const isMobile = window.innerWidth <= 768;
         const height = isMobile ? "550px" : "345px"
-          window.location.href = page;
+        window.location.href = page;
         window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
       }
-    </script>
-    <script>      
       document.addEventListener("contextmenu", event => event.preventDefault());
       document.addEventListener("keydown", function (e) {
         if (e.key === "F12" ||
             (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-            (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
-        {
+            (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
           e.preventDefault();
         }
       });
