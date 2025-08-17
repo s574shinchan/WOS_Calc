@@ -74,7 +74,6 @@
   </head>
   <body class="p-3 md:p-6">
     <div class="mx-auto maxw">
-
       <!-- 탭 버튼 -->
       <div class="tabs">
         <button class="tab-btn" data-tab="day1" aria-selected="true">1일차</button>
@@ -1358,7 +1357,7 @@
           d3_parseNum(document.getElementById("d3_petAdvPtsTop").textContent) +
           d3_parseNum(document.getElementById("d3_petRefPtsTop").textContent) +
           d3_parseNum(document.getElementById("d3_polarPtsTop").textContent);
-        document.getElementById("d3_total").textContent = d3_show(total);
+        document.getElementById("d3_total").textContent = d3_show(total)||0;
       }
 
       function d3_init(){
@@ -1611,7 +1610,7 @@
         document.getElementById("d5_pMit").textContent   = d5show(pMit);
       
         const total = pFire+pShard+pRef+pWid+pEss+pMit + pSpd + pChief + pAdv + pRefi;
-        document.getElementById("d5_total").textContent = d5show(total);
+        document.getElementById("d5_total").textContent = d5show(total)||0;
       }
       
       /* init Day5 */
