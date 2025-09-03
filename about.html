@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>소개 | WOS 통합 계산기</title>
+  <meta name="description" content="화이트아웃 서바이벌(WOS) 통합 계산기 소개 — 실제 게임 데이터 기반, 패키지 구성/변동 안내, 자원·시간 계산 표기, 비공식 팬사이트 고지."/>
+  <link rel="canonical" href="/about.html"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 구조화 데이터: AboutPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "WOS 통합 계산기 소개",
+    "description": "화이트아웃 서바이벌(Whiteout Survival) 통합 계산기 — 실제 게임 데이터 기반 계산과 자료 제공, 패키지 구성/변동 안내, 자원·시간 표기, 비공식 팬사이트 고지.",
+    "inLanguage": "ko"
+  }
+  </script>
+
+  <style>
+    body { background:#ffffff; }
+    .badge { display:inline-block; padding:4px 10px; border-radius:9999px; border:1px solid #e5e7eb; font-size:12px; }
+    .muted { color:#6b7280; }
+    .card  { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px; }
+    .list  { list-style: disc; margin-left:1.25rem; }
+  </style>
+</head>
+<body class="p-4 sm:p-6 font-sans text-sm text-gray-800">
+  <main class="max-w-3xl mx-auto space-y-4">
+
+    <!-- 헤더 -->
+    <header>
+      <h1 class="text-2xl font-bold mb-1">소개</h1>
+      <p class="muted text-xs">최종 업데이트: 2025-09-03</p>
+    </header>
+
+    <!-- 소개 본문 -->
+    <section class="card">
+      <p>
+        <strong>WOS 통합 계산기</strong>는 화이트아웃 서바이벌(Whiteout Survival) 유저를 위한 <b>통합 계산·자료 허브</b>입니다.
+        <br> 건물, 영주 장비, 보석, 펫 돌파, 연구 등을 실제 게임 데이터에 기반해 정리하고, 비교할 수 있도록 제공합니다.
+        <br> 이용하는 모든 유저들이 <b>계획 및 방향성을 잡을 때</b> 유용하도록 구성했습니다.
+      </p>
+    </section>
+
+    <!-- 신뢰/정책에 도움이 되는 구체 항목 -->
+    <section class="card">
+      <h2 class="text-lg font-semibold mb-2">원칙과 표기</h2>
+      <ul class="list space-y-1">
+        <li><b>실제 게임 데이터 기반</b>
+             <br> — 본 사이트의 표·계산기는 실제 게임 내 확인 가능한 수치와 검증된 자료를 바탕으로 제작합니다.</li>
+        <li><b>패키지별 구성품·변동 여부 표기</b> 
+              <br> — 패키지는 이벤트/패치에 따라 구성품이 달라질 수 있어, 가능한 경우 구성·가격·변동 가능성을 함께 표기합니다.</li>
+        <li><b>자원·시간 계산 표기</b>
+              <br> — 계산 결과는 필요한 <u>자원</u>과 <u>시간</u>(예: h, d 단위)을 명확히 표시합니다.</li>
+        <li><b>갱신 주기</b>
+              <br> — 패치/이벤트로 값이 바뀌면 우선순위로 보정합니다. 페이지 하단의 “업데이트 내역” 을 참고하세요.</li>
+      </ul>
+    </section>
+
+    <!-- 비공식 고지 및 권리 -->
+    <section class="card">
+      <h2 class="text-lg font-semibold mb-2">비공식 팬사이트 고지</h2>
+      <p>
+        본 사이트는 <b>비공식 팬사이트</b>로, 게임사와 제휴·승인을 받지 않았습니다.
+        게임 명칭과 로고, 스크린샷 등은 각 소유권자에게 귀속됩니다.
+        표기 오류·저작권 관련 우려가 있을 경우 즉시 조치할 수 있도록 아래 연락처로 알려주세요.
+      </p>
+    </section>
+
+    <!-- 문의/제보 -->
+    <section class="card">
+      <h2 class="text-lg font-semibold mb-2">문의 · 오류 제보</h2>
+      <p>오류 제보/개선 의견은 <a class="underline text-blue-600" href="https://open.kakao.com/o/suX41pYg">카카오톡 오픈프로필</a> 로 보내주세요. 재현 정보(페이지/입력값/브라우저/시간)를 함께 주시면 빠르게 반영하겠습니다.</p>
+      <p class="muted text-xs mt-2">광고/쿠키 등 이용자 데이터 처리에 관한 내용은 <a class="underline" href="/privacy.html">개인정보 처리방침</a>을 확인해 주세요.</p>
+    </section>
+
+  </main>
+
+  <!-- 부모(index.html)의 iframe 높이 자동 맞춤 (동일 도메인 가정) -->
+  <script>
+    (function() {
+      function reportHeight() {
+        try {
+          var h = document.documentElement.scrollHeight || document.body.scrollHeight;
+          parent && parent.postMessage({ type: "childHeight", page: "about", height: h }, "*");
+        } catch (e) {}
+      }
+      window.addEventListener("load", reportHeight);
+      window.addEventListener("resize", () => setTimeout(reportHeight, 50));
+    })();
+  </script>
+</body>
+</html>
