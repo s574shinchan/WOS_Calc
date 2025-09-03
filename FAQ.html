@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <meta name="description" content="화이트아웃 서바이벌(WOS) 통합 계산기 FAQ — VIP, 연구/건물 우선순위, 데이터 출처, 사용법 안내">
+  <title>FAQ | WOS 통합 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 구조화 데이터: FAQPage (애드센스/SEO 도움) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "이 사이트의 데이터는 어디에서 오나요? 신뢰할 수 있나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "모든 계산기는 실제 게임 내 수치와 검증된 자료를 기반으로 제작되며, 표기 오류 및 패치 변경점은 수시로 보정합니다. 표/계산기 옆에 사용법과 주의사항을 함께 제공합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "VIP와 연구·건물 중 무엇을 먼저 올리는 게 좋나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "초중반에는 자원 수급을 위한 경제 연구와 핵심 건물(숙소/주택) 우선이 일반적입니다. 집결전 대비가 목적이라면 VIP 10 이상 구간의 효율이 커서 VIP 투자도 고려할 만합니다. 상황별 우선순위는 계산 결과를 참조하십시오."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "계산 결과가 실제와 달라 보이면 어떻게 하나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "패치나 서버 버프에 따라 값이 달라질 수 있습니다. 페이지 상단의 안내 문구 및 주석을 확인하고, 오류가 의심되면 문의 채널로 제보해 주세요. 확인 후 반영합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "내가 입력한 값은 저장되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "일부 계산기는 브라우저의 로컬 스토리지를 사용해 입력값을 임시 저장합니다. 브라우저/기기 변경이나 캐시 삭제 시 값이 초기화될 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "모바일 환경에서는 어떻게 사용하나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "모바일/태블릿에서도 이용할 수 있도록 별도 레이아웃을 제공합니다. 화면 폭이 좁을 때 표가 자동으로 줄바꿈되며, 메뉴에서 원하는 계산기를 선택해 로드할 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "문의/오류 제보는 어디로 하나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "상단 메뉴의 문의 버튼 또는 이메일(wos-calc@proton.me, 예시)로 제보해 주세요. 재현 정보를 같이 주시면 신속히 반영됩니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    body { background: #f5f7fb; }
+  </style>
+</head>
+<body class="p-3 sm:p-4 font-sans text-sm text-gray-800">
+  <div class="max-w-3xl mx-auto">
+    <header class="mb-4">
+      <h1 class="text-2xl font-bold">FAQ</h1>
+      <p class="text-gray-600">자주 묻는 질문과 답변입니다. 필요한 항목을 확인하세요.</p>
+    </header>
+
+    <!-- FAQ 본문: details/summary (접힘)-->
+    <section class="space-y-3">
+      <details id="faq-data" class="bg-white border rounded-xl shadow-sm p-3" open>
+        <summary class="cursor-pointer font-semibold">데이터 출처/신뢰성</summary>
+        <div class="mt-2 text-gray-700 leading-relaxed">
+          해당 계산기내 모든 데이터는 실제 게임 데이터를 기반으로 제작되었습니다.
+        </div>
+      </details>
+
+      <details id="faq-priority" class="bg-white border rounded-xl shadow-sm p-3" open>
+        <summary class="cursor-pointer font-semibold">연구의 우선순위</summary>
+        <div class="mt-2 text-gray-700 leading-relaxed">
+          본인의 위치가 집결원 및 무소과금 유저라면, 경제 및 발전을 위주로 연구를 하고,<br>
+          전투에 실질적으로 참여하는 집결장 및 서브집결장 정도라면 전투와 발전 위주로 연구하는 것을 권장합니다.<br>
+          연구에 필요한 재화 및 시간을 미리 계산하여 사전대비하여 효율적으로 연구가 가능합니다.
+        </div>
+      </details>
+
+      <details id="faq-diff" class="bg-white border rounded-xl shadow-sm p-3" open>
+        <summary class="cursor-pointer font-semibold">계산 결과가 실제와 달라 보일 때</summary>
+        <div class="mt-2 text-gray-700 leading-relaxed">
+          서버 버프, 이벤트, 패치에 따라 결과가 다를 수 있습니다.<br>
+          페이지 상단의 안내 문구를 확인하고, 의심 사례는 해당 홈페이지 우측 상단 <a href="#faq-contact" class="underline">자료요청</a>을 통하여 제보해 주세요.
+          확인 후 수식/데이터를 보정합니다.
+        </div>
+      </details>
+
+      <details id="faq-storage" class="bg-white border rounded-xl shadow-sm p-3" open>
+        <summary class="cursor-pointer font-semibold">캐시값 저장</summary>
+        <div class="mt-2 text-gray-700 leading-relaxed">
+          해당 사이트는 캐시값 쿠키를 사이트내 저장하지 않습니다.
+        </div>
+      </details>
+
+      <details id="faq-mobile" class="bg-white border rounded-xl shadow-sm p-3" open>
+        <summary class="cursor-pointer font-semibold">모바일 이용</summary>
+        <div class="mt-2 text-gray-700 leading-relaxed">
+          모바일/태블릿에서도 이용이 가능하도록 레이아웃이 대응하도록 구현해두었습니다.<br>
+          정상적으로 동작하지 않는 경우 해당 홈페이지 우측 상단 <a href="#faq-contact" class="underline">자료요청</a>을 통하여 제보해 주세요.
+        </div>
+      </details>
+
+      <details id="faq-contact" class="bg-white border rounded-xl shadow-sm p-3" open>
+        <summary class="cursor-pointer font-semibold">문의/오류 제보</summary>
+        <div class="mt-2 text-gray-700 leading-relaxed">
+          해당 홈페이지 우측 상단 <a href="#faq-contact" class="underline">자료요청</a>을 통하여 제보해 주세요.<br>
+          입력 정보를 알려주시면 빠르게 확인하여 대응 가능합니다.
+        </div>
+      </details>
+
+    </section>
+
+    <footer class="text-xs text-gray-500 mt-6">
+      <a href="/privacy.html" class="underline">개인정보 처리방침</a> ·
+      <a href="/about.html" class="underline">소개</a>
+    </footer>
+  </div>
+
+  <!-- 부모(index.html)의 iframe 높이를 자동으로 맞추기 위한 postMessage (동일 도메인 가정) -->
+  <script>
+    (function() {
+      function reportHeight() {
+        try {
+          var h = document.documentElement.scrollHeight || document.body.scrollHeight;
+          parent && parent.postMessage({ type: "childHeight", page: "faq", height: h }, "*");
+        } catch (e) {}
+      }
+      window.addEventListener("load", reportHeight);
+      window.addEventListener("resize", reportHeight);
+      // details 토글 시에도 높이 갱신
+      document.addEventListener("toggle", function(e) {
+        if (e.target && e.target.tagName === "DETAILS") {
+          setTimeout(reportHeight, 50);
+        }
+      }, true);
+    })();
+  </script>
+</body>
+</html>
