@@ -117,7 +117,6 @@
         class="bg-teal-600 text-white text-sm px-4 py-2 rounded hover:bg-gray-800 shadow">
         📬 자료요청　
       </button>
-      <button class="px-2 py-1 rounded border" onclick="switchTab('faq')">❓ FAQ</button>
       <!-- 언어 선택 콤보박스 -->
       <select id="langSelectMobile" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1">
         <option value="index.html">🌐 Language</option>
@@ -149,11 +148,6 @@
           onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
           class="bg-teal-600 text-white text-sm px-3 py-2 rounded hover:bg-gray-800 shadow">
           📬 자료요청　
-        </button>
-        <button 
-          onclick="switchTab('faq')"
-          class="bg-teal-600 text-white text-sm px-3 py-2 rounded hover:bg-gray-800 shadow">
-          ❓ FAQ
         </button>
         <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm">
           <option value="index.html">🌐 Language</option>
@@ -1402,7 +1396,9 @@
       
       <!-- 카피라이트 -->  
       <footer class="text-center text-xs font-bold text-gray-700 mt-5">⛔ 무단 복제 금지 | © Made By S580 ShinChan(uuid: 67331703)
-        <span id="updateLink" class="underline cursor-pointer hover:text-white-100 ml-2">업데이트내역</span>
+        <span id="updateLink"  class="underline cursor-pointer hover:text-white-100 ml-2">업데이트내역</span>
+        <span id="faqLink"     class="underline cursor-pointer hover:text-white-100 ml-2">❓ FAQ</span>
+        <span id="privacyLink" class="underline cursor-pointer hover:text-white-100 ml-2">🔒 개인정보 처리방침</span>
       </footer>
     </div>
   </div>
@@ -1433,16 +1429,66 @@
   </script>
 
   <script>
-    document.getElementById("updateLink").addEventListener("click", () => {
-      const guide = document.getElementById("guideDetails");
+    document.addEventListener("DOMContentLoaded", () => {
+      // 필요 경로를 여기에 각기 다르게 설정하세요.
+      const UPDATE_URL  = "https://s574shinchan.github.io/WOS_Calc/data/update/history.html"; // 기존과 동일
+      const FAQ_URL     = "/faq.html";       // 예: S3/CloudFront 루트의 faq.html
+      const PRIVACY_URL = "/privacy.html";   // 예: 루트의 privacy.html (새 탭)
+    
+      const guide   = document.getElementById("guideDetails");
       const wrapper = document.getElementById("frameWrapper");
-      const frame = document.getElementById("mainFrame");
-      
-      guide.style.display = "none";
-      wrapper.style.display = "block";
-      frame.src = "https://s574shinchan.github.io/WOS_Calc/data/update/history.html";
+      const frame   = document.getElementById("mainFrame");
+    
+      // iframe 로더 (guide 숨기고 frame 표시)
+      function openInFrame(url) {
+        if (guide)   guide.style.display   = "none";
+        if (wrapper) wrapper.style.display = "block";
+        if (frame) {
+          frame.style.height = "900px"; // 초기값(필요시 조정)
+          frame.src = url;
+        }
+      }
+    
+      // 업데이트 내역 → iframe 로드 (기존 요구사항)
+      const updateLink = document.getElementById("updateLink");
+      if (updateLink) {
+        updateLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          openInFrame(UPDATE_URL);
+        });
+      }
+    
+      // FAQ → iframe 로드 (업데이트와 동일 방식)
+      const faqLink = document.getElementById("faqLink");
+      if (faqLink) {
+        faqLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          openInFrame(FAQ_URL);
+        });
+      }
+    
+      // 개인정보 처리방침 → 새 탭
+      const privacyLink = document.getElementById("privacyLink");
+      if (privacyLink) {
+        privacyLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          const win = window.open(PRIVACY_URL, "_blank", "noopener");
+          if (win) { win.opener = null; } // 보안
+          else { window.location.href = PRIVACY_URL; } // 팝업 차단 대비
+        });
+      }
+    
+      // (선택) 자식 페이지가 높이를 알려오면 iframe 높이 자동 맞춤
+      if (!window.__childHeightListenerBound) {
+        window.addEventListener("message", (e) => {
+          if (!e.data || e.data.type !== "childHeight") return;
+          if (frame) frame.style.height = Math.max(700, e.data.height) + "px";
+        });
+        window.__childHeightListenerBound = true;
+      }
     });
   </script>
+  
   <script>
     const toggle = document.getElementById('darkModeToggle');
     toggle.addEventListener('change', () => {
