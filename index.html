@@ -117,7 +117,7 @@
         class="bg-teal-600 text-white text-sm px-4 py-2 rounded hover:bg-gray-800 shadow">
         📬 자료요청　
       </button>
-
+      <button class="px-2 py-1 rounded border" onclick="switchTab('faq')">❓ FAQ</button>
       <!-- 언어 선택 콤보박스 -->
       <select id="langSelectMobile" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1">
         <option value="index.html">🌐 Language</option>
@@ -150,7 +150,7 @@
           class="bg-teal-600 text-white text-sm px-3 py-2 rounded hover:bg-gray-800 shadow">
           📬 자료요청　
         </button>
-    
+        <button class="px-2 py-1 rounded border" onclick="switchTab('faq')">❓ FAQ</button>
         <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm">
           <option value="index.html">🌐 Language</option>
           <option value="index.html">🇰🇷 한국어　</option>
@@ -176,7 +176,7 @@
       <!-- ✅ 제목 태그 추가 -->
       <h1 class="text-2xl font-bold mb-1">WOS 통합 계산기</h1>
       <p>화이트아웃 서바이벌(Whiteout Survival) 유저를 위한 계산기 & 자료 허브입니다.</p>
-      <p>건물·영주 장비·펫·연구자료를 실제 게임 데이터에 근거하여 제공합니다.</p>
+      <p>건물·영주 장비·펫·연구 등의 자료를 실제 게임 데이터에 근거하여 제공합니다.</p>
       <p>실제 데이터를 기반이기 때문에 과금계획 및 방향성에 도움이 됩니다.</p>
       
       <!-- <h2 class="text-base font-semibold mb-3 text-gray-600">화이트아웃 서바이벌 유저를 위한 종합 자료 제공</h2>
@@ -222,7 +222,7 @@
           <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
             <h1 class="text-2xl font-bold text-gray-800 mb-4">📘 WOS 자료모음</h1>
             <div class="space-y-4">
-              <details class="bg-white border border-blue-300 rounded-md p-4">
+              <details open class="bg-white border border-blue-300 rounded-md p-4">
                 <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔰 VIP 구간별 경험치</summary>
                 <div class="mb-2 mt-2">
                   <div class="flex flex-col md:flex-row w-full">
@@ -272,7 +272,235 @@
                   </div>
                 </div>
               </details>
-                      
+              
+              <!-- 영웅 성급업 -->
+              <details open class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 영웅성급업표</summary>
+                <div id="영웅성급" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <div class="overflow-x-auto">
+                    <h2>최초 모집 시 영웅조각 10개 필요</h2>
+                    <table class="table-auto border w-full text-xs text-center">
+                      <thead class="bg-orange-100">
+                        <th class="border p-1">등급</th>
+                        <th class="border p-1">
+                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier1.png" class="w-6 h-6 mx-auto" alt="1단계">
+                        </th>
+                        <th class="border p-1">
+                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier2.png" class="w-6 h-6 mx-auto" alt="2단계">
+                        </th>
+                        <th class="border p-1">
+                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier3.png" class="w-6 h-6 mx-auto" alt="3단계">
+                        </th>
+                        <th class="border p-1">
+                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier4.png" class="w-6 h-6 mx-auto" alt="4단계">
+                        </th>
+                        <th class="border p-1">
+                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier5.png" class="w-6 h-6 mx-auto" alt="5단계">
+                        </th>
+                        <th class="border p-1">
+                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier6.png" class="w-6 h-6 mx-auto" alt="6단계">
+                        </th>
+                        <th class="border p-1">SubTotal</th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="border p-1">1성</td>
+                          <td class="border p-1">1</td>
+                          <td class="border p-1">1</td>
+                          <td class="border p-1">2</td>
+                          <td class="border p-1">2</td>
+                          <td class="border p-1">2</td>
+                          <td class="border p-1">2</td>
+                          <td class="border p-1">20</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">2성</td>
+                          <td class="border p-1">5</td>
+                          <td class="border p-1">5</td>
+                          <td class="border p-1">5</td>
+                          <td class="border p-1">5</td>
+                          <td class="border p-1">5</td>
+                          <td class="border p-1">15</td>
+                          <td class="border p-1">40</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">3성</td>
+                          <td class="border p-1">15</td>
+                          <td class="border p-1">15</td>
+                          <td class="border p-1">15</td>
+                          <td class="border p-1">15</td>
+                          <td class="border p-1">15</td>
+                          <td class="border p-1">40</td>
+                          <td class="border p-1">115</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">4성</td>
+                          <td class="border p-1">40</td>
+                          <td class="border p-1">40</td>
+                          <td class="border p-1">40</td>
+                          <td class="border p-1">40</td>
+                          <td class="border p-1">40</td>
+                          <td class="border p-1">100</td>
+                          <td class="border p-1">300</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">5성</td>
+                          <td class="border p-1">100</td>
+                          <td class="border p-1">100</td>
+                          <td class="border p-1">100</td>
+                          <td class="border p-1">100</td>
+                          <td class="border p-1">100</td>
+                          <td class="border p-1">100</td>
+                          <td class="border p-1">600</td>
+                        </tr>
+                      </tbdoy>
+                      <tfoot>
+                        <tr class="font-bold">
+                          <td colspan="7" class="border px-2 py-1 text-right">Total</td>
+                          <td class="border p-1">1075</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </details>
+              
+              <!-- 용광로 업그레이드 조건 -->
+              <details open class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 용광로 업그레이드 조건</summary>
+                <div id="용광로조건" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <div class="mb-2 mt-2">
+                    <div class="flex flex-col md:flex-row w-full">
+                      <div class="w-full md:w-1/2 px-1">
+                        <div class="overflow-x-auto">
+                          <table class="table-auto border w-full text-xs text-center">
+                            <thead class="bg-orange-100">
+                              <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="border p-1">FC1</td><td class="border p-1">대사관 Lv.30, 연구소 Lv.30</td>
+                              </tr>
+                              <tr class="bg-indigo-50">
+                                <td class="border p-1">FC2</td><td class="border p-1">대사관 FC1, 창병 병영 FC1</td>              
+                              </tr>
+                              <tr>
+                                <td class="border p-1">FC3</td><td class="border p-1">대사관 FC2, 방패 병영 FC2</td>              
+                              </tr>
+                              <tr class="bg-indigo-50">
+                                <td class="border p-1">FC4</td><td class="border p-1">대사관 FC3, 궁병 병영 FC3</td>              
+                              </tr>
+                              <tr>
+                                <td class="border p-1">FC5</td><td class="border p-1">대사관 FC4, 창병 병영 FC4</td>              
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                  
+                      <div class="w-full md:w-1/2 px-1">
+                        <div class="overflow-x-auto">
+                          <table class="table-auto border w-full text-xs text-center">
+                            <thead class="bg-orange-100">
+                              <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="border p-1">FC6</td><td class="border p-1">대사관 FC5, 방패 병영 FC5</td>
+                              </tr>
+                              <tr class="bg-indigo-50">
+                                <td class="border p-1">FC7</td><td class="border p-1">대사관 FC6, 궁병 병영 FC6</td>
+                              </tr>
+                              <tr>
+                                <td class="border p-1">FC8</td><td class="border p-1">대사관 FC7, 창병 병영 FC7</td>
+                              </tr>
+                              <tr class="bg-indigo-50">
+                                <td class="border p-1">FC9</td><td class="border p-1">대사관 FC8, 방패 병영 FC8</td>
+                              </tr>
+                              <tr>
+                                <td class="border p-1">FC10</td><td class="border p-1">대사관 FC9, 궁병 병영 FC9</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- 🛫 이민 시스템 안내 -->
+              <details open class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
+                <!-- 서버분류 -->
+                <section>
+                  <h3 class="font-semibold text-blue-600 mb-1">🔹 서버분류</h3>
+                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li><span class="text-blue-500">일반서버</span><br>
+                      - 이민인원: <strong>55</strong> | 특별초대: <strong>최대 3</strong> | 일반초대: <strong>35</strong> | 자유이민: <strong>20 (선착순)</strong>
+                    </li>
+                    <li><span class="text-red-500">강성서버</span><br>
+                      - 이민인원: <strong>30</strong> | 특별초대: <strong>없음</strong> | 일반초대: <strong>20</strong> | 자유이민: <strong>10 (선착순)</strong>
+                    </li>
+                  </ul>
+                </section>
+                
+                <!-- 일정 -->
+                <section>
+                  <h3 class="font-semibold text-blue-600 mb-1">🔹 일정</h3>
+                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li><strong>일 ~ 화</strong>: 이민 전투력 제한 설정 및 이민모집 홍보</li>
+                    <li><strong>수 ~ 목</strong>: 초대권 받은 사람들 이동 가능 (특별초대 + 일반초대)</li>
+                    <li><strong>금 ~ 토</strong>: <u>UTC 00:00부터</u> 자유이민 시작 (선착순)</li>      
+                  </ul>
+                </section>
+                
+                <!-- 용어정리 -->
+                <section>
+                  <h3 class="font-semibold text-blue-600 mb-1">🔹 용어정리</h3>
+                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>특별초대: <strong>전투력 제한 없음</strong>, <u>첫 이민 시 3장</u>, <u>월 1장 추가</u>, <strong>최대 3장 보유 가능</strong></li>
+                    <li>일반초대: <strong>전투력 제한 범위 내</strong></li>
+                  </ul>
+                </section>
+                
+                <!-- 그 외 -->
+                <section>
+                  <h3 class="font-semibold text-blue-600 mb-1">🔹 그 외</h3>
+                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
+                    <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
+                    <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
+                    <li>모병소/의무실 병사도 전투력 포함</li>
+                    <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
+                    <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
+                  </ul>
+                </section>
+                
+                <!-- 이민권 패키지 구성 -->
+                <section>
+                  <h3 class="font-semibold text-green-600">✈️ 이민권 패키지</h3>
+                  <div class="overflow-x-auto">
+                    <table class="table-auto border w-full text-xs text-center">
+                      <thead class="bg-green-100">
+                        <tr>
+                          <th class="border p-1">금액</th>
+                          <th class="border p-1">이민권</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td class="border p-1">7,500</td><td class="border p-1">1장</td></tr>
+                        <tr><td class="border p-1">15,000</td><td class="border p-1">2장</td></tr>
+                        <tr><td class="border p-1">30,000</td><td class="border p-1">3장</td></tr>
+                        <tr><td class="border p-1">79,000</td><td class="border p-1">4장</td></tr>
+                        <tr><td class="border p-1">149,000</td><td class="border p-1">5장</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="text-xs text-gray-600 mt-1">📌 참고 : 149,000 패키지는 <span class="font-semibold text-red-500">최대 15번</span>까지 구매 가능합니다.</p>
+                </section>
+              </details>
+              
               <!-- 단어번역 -->
               <details class="bg-white border border-blue-300 rounded-md p-4">
                 <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 각종 용어 안내</summary>
@@ -921,235 +1149,7 @@
                   <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
                 </div>
               </details>
-              
-              <!-- 🛫 이민 시스템 안내 -->
-              <details class="bg-white border border-blue-300 rounded-md p-4">
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
-                <!-- 서버분류 -->
-                <section>
-                  <h3 class="font-semibold text-blue-600 mb-1">🔹 서버분류</h3>
-                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li><span class="text-blue-500">일반서버</span><br>
-                      - 이민인원: <strong>55</strong> | 특별초대: <strong>최대 3</strong> | 일반초대: <strong>35</strong> | 자유이민: <strong>20 (선착순)</strong>
-                    </li>
-                    <li><span class="text-red-500">강성서버</span><br>
-                      - 이민인원: <strong>30</strong> | 특별초대: <strong>없음</strong> | 일반초대: <strong>20</strong> | 자유이민: <strong>10 (선착순)</strong>
-                    </li>
-                  </ul>
-                </section>
-                
-                <!-- 일정 -->
-                <section>
-                  <h3 class="font-semibold text-blue-600 mb-1">🔹 일정</h3>
-                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li><strong>일 ~ 화</strong>: 이민 전투력 제한 설정 및 이민모집 홍보</li>
-                    <li><strong>수 ~ 목</strong>: 초대권 받은 사람들 이동 가능 (특별초대 + 일반초대)</li>
-                    <li><strong>금 ~ 토</strong>: <u>UTC 00:00부터</u> 자유이민 시작 (선착순)</li>      
-                  </ul>
-                </section>
-                
-                <!-- 용어정리 -->
-                <section>
-                  <h3 class="font-semibold text-blue-600 mb-1">🔹 용어정리</h3>
-                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li>특별초대: <strong>전투력 제한 없음</strong>, <u>첫 이민 시 3장</u>, <u>월 1장 추가</u>, <strong>최대 3장 보유 가능</strong></li>
-                    <li>일반초대: <strong>전투력 제한 범위 내</strong></li>
-                  </ul>
-                </section>
-                
-                <!-- 그 외 -->
-                <section>
-                  <h3 class="font-semibold text-blue-600 mb-1">🔹 그 외</h3>
-                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
-                    <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
-                    <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
-                    <li>모병소/의무실 병사도 전투력 포함</li>
-                    <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
-                    <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
-                  </ul>
-                </section>
-                
-                <!-- 이민권 패키지 구성 -->
-                <section>
-                  <h3 class="font-semibold text-green-600">✈️ 이민권 패키지</h3>
-                  <div class="overflow-x-auto">
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-green-100">
-                        <tr>
-                          <th class="border p-1">금액</th>
-                          <th class="border p-1">이민권</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr><td class="border p-1">7,500</td><td class="border p-1">1장</td></tr>
-                        <tr><td class="border p-1">15,000</td><td class="border p-1">2장</td></tr>
-                        <tr><td class="border p-1">30,000</td><td class="border p-1">3장</td></tr>
-                        <tr><td class="border p-1">79,000</td><td class="border p-1">4장</td></tr>
-                        <tr><td class="border p-1">149,000</td><td class="border p-1">5장</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <p class="text-xs text-gray-600 mt-1">📌 참고 : 149,000 패키지는 <span class="font-semibold text-red-500">최대 15번</span>까지 구매 가능합니다.</p>
-                </section>
-              </details>
-  
-              <!-- 영웅 성급업 -->
-              <details class="bg-white border border-blue-300 rounded-md p-4">
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 영웅성급업표</summary>
-                <div id="영웅성급" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <div class="overflow-x-auto">
-                    <h2>최초 모집 시 영웅조각 10개 필요</h2>
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <th class="border p-1">등급</th>
-                        <th class="border p-1">
-                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier1.png" class="w-6 h-6 mx-auto" alt="1단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier2.png" class="w-6 h-6 mx-auto" alt="2단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier3.png" class="w-6 h-6 mx-auto" alt="3단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier4.png" class="w-6 h-6 mx-auto" alt="4단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier5.png" class="w-6 h-6 mx-auto" alt="5단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier6.png" class="w-6 h-6 mx-auto" alt="6단계">
-                        </th>
-                        <th class="border p-1">SubTotal</th>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="border p-1">1성</td>
-                          <td class="border p-1">1</td>
-                          <td class="border p-1">1</td>
-                          <td class="border p-1">2</td>
-                          <td class="border p-1">2</td>
-                          <td class="border p-1">2</td>
-                          <td class="border p-1">2</td>
-                          <td class="border p-1">20</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">2성</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">40</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">3성</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">115</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">4성</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">300</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">5성</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">600</td>
-                        </tr>
-                      </tbdoy>
-                      <tfoot>
-                        <tr class="font-bold">
-                          <td colspan="7" class="border px-2 py-1 text-right">Total</td>
-                          <td class="border p-1">1075</td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                </div>
-              </details>
-              
-              <!-- 연맹대작전 -->
-              <details class="bg-white border border-blue-300 rounded-md p-4">
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 용광로 업그레이드 조건</summary>
-                <div id="용광로조건" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <div class="mb-2 mt-2">
-                    <div class="flex flex-col md:flex-row w-full">
-                      <div class="w-full md:w-1/2 px-1">
-                        <div class="overflow-x-auto">
-                          <table class="table-auto border w-full text-xs text-center">
-                            <thead class="bg-orange-100">
-                              <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td class="border p-1">FC1</td><td class="border p-1">대사관 Lv.30, 연구소 Lv.30</td>
-                              </tr>
-                              <tr class="bg-indigo-50">
-                                <td class="border p-1">FC2</td><td class="border p-1">대사관 FC1, 창병 병영 FC1</td>              
-                              </tr>
-                              <tr>
-                                <td class="border p-1">FC3</td><td class="border p-1">대사관 FC2, 방패 병영 FC2</td>              
-                              </tr>
-                              <tr class="bg-indigo-50">
-                                <td class="border p-1">FC4</td><td class="border p-1">대사관 FC3, 궁병 병영 FC3</td>              
-                              </tr>
-                              <tr>
-                                <td class="border p-1">FC5</td><td class="border p-1">대사관 FC4, 창병 병영 FC4</td>              
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                  
-                      <div class="w-full md:w-1/2 px-1">
-                        <div class="overflow-x-auto">
-                          <table class="table-auto border w-full text-xs text-center">
-                            <thead class="bg-orange-100">
-                              <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td class="border p-1">FC6</td><td class="border p-1">대사관 FC5, 방패 병영 FC5</td>
-                              </tr>
-                              <tr class="bg-indigo-50">
-                                <td class="border p-1">FC7</td><td class="border p-1">대사관 FC6, 궁병 병영 FC6</td>
-                              </tr>
-                              <tr>
-                                <td class="border p-1">FC8</td><td class="border p-1">대사관 FC7, 창병 병영 FC7</td>
-                              </tr>
-                              <tr class="bg-indigo-50">
-                                <td class="border p-1">FC9</td><td class="border p-1">대사관 FC8, 방패 병영 FC8</td>
-                              </tr>
-                              <tr>
-                                <td class="border p-1">FC10</td><td class="border p-1">대사관 FC9, 궁병 병영 FC9</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </details>
-              
+                            
               <!-- 정제불수 기댓값 -->
               <details class="bg-white border border-blue-300 rounded-md p-4">
                 <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 제련불수 기대값</summary>
