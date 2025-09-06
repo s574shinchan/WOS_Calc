@@ -253,6 +253,7 @@
         const start = hasHeader ? 1 : 0;
         const EXP = new Map(), MARK = new Map();
         const rawLevels = [];
+        
         for (let i=start;i<lines.length;i++){
           const c  = lines[i].split(delim);
           const lv = Number((c[0]||"").replace(/[^\\d.-]/g,""));
@@ -263,6 +264,7 @@
           EXP.set(lv, Number.isFinite(ex)?ex:0);
           MARK.set(lv, Number.isFinite(mk)?mk:0);
         }
+        
         const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
         if (levels.length < 2) return { levels, expSteps:[], markSteps:[] };
     
@@ -275,6 +277,7 @@
           }
           return nondec >= (levels.length-1) && pos>0;
         };
+        
         const cumExp  = isCum(EXP);
         const cumMark = isCum(MARK);
         const expSteps = [], markSteps = [];
@@ -314,6 +317,7 @@
             expertCap.textContent = maxLv ? `(최대 레벨 ${maxLv})` : "";
             renderExpertLevelOptions(expertLevels);
             clearAll();
+            sendHeightToParent();
           }catch(e){
             console.warn(e);
             expertWarn.textContent = "본체 CSV를 불러오지 못했습니다. 경로/CORS 확인";
@@ -321,6 +325,7 @@
             expertCap.textContent = "";
             renderExpertLevelOptions(expertLevels);
             clearAll();
+            sendHeightToParent();
           }
         }
       }
@@ -371,5 +376,23 @@
       (async function init(){ await loadDataFor(selType.value); })();
     });
     </script>
+    <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
 </body>
 </html>
