@@ -242,7 +242,9 @@
       const isFilled = v => v !== "" && v !== null && v !== undefined && !Number.isNaN(+v);
     
       function detectDelim(sample){
-        return sample.includes("\\t") ? "\\t" : (sample.includes(";") ? ";" : ",");
+        if (sample.includes("\t")) return "\t";
+        if (sample.includes(";")) return ";";
+        return ",";
       }
     
       function parseExpertCSV(text){
@@ -296,6 +298,47 @@
           .join("");
         expertCur.innerHTML = opts;
         expertTgt.innerHTML = opts;
+      }
+
+      function parseSkillCSV(text){
+        const lines = text.replace(/\uFEFF/g,"").replace(/\r/g,"")
+                          .split("\n").filter(l=>l.trim()!=="");
+        if (!lines.length) return { levels:[], expSteps:[], itemSteps:[] };
+      
+        const delim = detectDelim(lines[0]);
+        const headerLooks = /(레벨|lv|level|exp|item|아이템|경험치)/i.test(lines[0]);
+        const start = headerLooks ? 1 : 0;
+      
+        const exp=[], item=[], levelsFromFile=[];
+        for (let i=start;i<lines.length;i++){
+          const c = lines[i].split(delim);
+          // 3열(Level,Exp,Item) 또는 2열(Exp,Item)
+          if (c.length >= 3) {
+            const lv = Number((c[0]||"").replace(/[^\d.-]/g,""));
+            const e  = Number((c[1]||"").replace(/[^\d.-]/g,""));
+            const it = Number((c[2]||"").replace(/[^\d.-]/g,""));
+            if (Number.isFinite(lv)) levelsFromFile.push(lv);
+            exp.push(Number.isFinite(e)?e:0);
+            item.push(Number.isFinite(it)?it:0);
+          } else {
+            const e  = Number((c[0]||"").replace(/[^\d.-]/g,""));
+            const it = Number((c[1]||"").replace(/[^\d.-]/g,""));
+            exp.push(Number.isFinite(e)?e:0);
+            item.push(Number.isFinite(it)?it:0);
+          }
+        }
+      
+        const L = Math.max(1, exp.length);
+        // 레벨 열이 있으면 그걸 사용(연속/비연속도 그대로), 없으면 0..L
+        let levels;
+        if (levelsFromFile.length) {
+          // 파일에 있는 레벨들을 정렬·중복제거 후, 각 단계쌍 개수와 맞춰 자르기
+          const uniq = [...new Set(levelsFromFile)].sort((a,b)=>a-b);
+          levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L+1}, (_,i)=>i);
+        } else {
+          levels = Array.from({length:L+1}, (_,i)=>i);
+        }
+        return { levels, expSteps:exp, itemSteps:item };
       }
     
       async function fetchText(url){
