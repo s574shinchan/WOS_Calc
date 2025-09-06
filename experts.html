@@ -178,41 +178,41 @@
     document.addEventListener("DOMContentLoaded", () => {
       const SETTINGS = {
         "Cyrille": {
-          base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille.csv" },
+          base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille.csv" },
           skills: [
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S1.csv" },
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S2.csv" },
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S3.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S4.csv" }
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S4.csv" },
           ]
         },
-        "Agnes":   { 
-          base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes.csv" },
+        "Agnes": {
+          base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes.csv" },
           skills: [
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S1.csv" },
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S2.csv" },
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S3.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S4.csv" }
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S4.csv" },
           ]
         },
-        "Holger":  { 
-          base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger.csv" },
+        "Holger": {
+          base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger.csv" },
           skills: [
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S1.csv" },
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S2.csv" },
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S3.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S4.csv" }
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S4.csv" },
           ]
         },
-        "Romulus": { 
-          base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus.csv" },
+        "Romulus": {
+          base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus.csv" },
           skills: [
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S1.csv" },
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S2.csv" },
             { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S3.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S4.csv" }
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S4.csv" },
           ]
-        }
+        },
       };
     
       // ===== STATE =====
@@ -226,9 +226,9 @@
       const selType = $("selType");
       const expertCur = $("expertCur");
       const expertTgt = $("expertTgt");
-      const expertWarn = $("expertWarn"); // optional
+      const expertWarn = document.getElementById("expertWarn"); // 없을 수 있음
       const expertCap  = $("expertCap");
-      const sumExpertExp = $("sumExpertExp");
+      const sumExpertExp  = $("sumExpertExp");
       const sumExpertMark = $("sumExpertMark");
       const btnReset = $("btnReset");
     
@@ -246,27 +246,23 @@
       const isFilled = v => v !== "" && v !== null && v !== undefined && !Number.isNaN(+v);
     
       function detectDelim(sample){
-        if (sample.includes("\t")) return "\t"; // first-line sniff (escaped check for safety)
-        if (sample.includes("	")) return "	";
-        if (sample.includes(";")) return ";";
+        if (sample.includes("\t")) return "\t";
+        if (sample.includes(";"))  return ";";
         return ",";
       }
     
-      // 본체 CSV 파서
+      // 본체 CSV 파서 (누적/구간 자동)
       function parseExpertCSV(text){
         const lines = text.replace(/\uFEFF/g,"").replace(/\r/g,"")
-                          .split("\n").length > 1
-                          ? text.replace(/\uFEFF/g,"").replace(/\r/g,"").split("\n")
-                          : text.replace(/\uFEFF/g,"").replace(/\r/g,"").split("");
-        const rows = lines.filter(l=>l.trim()!=="");
-        if (!rows.length) return { levels:[], expSteps:[], markSteps:[] };
-        const delim = detectDelim(rows[0]);
-        const hasHeader = /(레벨|lv|level|경험치|exp)/i.test(rows[0]);
+                          .split("\n").filter(l=>l.trim()!=="");
+        if (!lines.length) return { levels:[], expSteps:[], markSteps:[] };
+        const delim = detectDelim(lines[0]);
+        const hasHeader = /(레벨|lv|level|경험치|exp)/i.test(lines[0]);
         const start = hasHeader ? 1 : 0;
-        const EXP = new Map(), MARK = new Map();
-        const rawLevels = [];
-        for (let i=start;i<rows.length;i++){
-          const c  = rows[i].split(delim);
+    
+        const EXP = new Map(), MARK = new Map(), rawLevels=[];
+        for (let i=start;i<lines.length;i++){
+          const c  = lines[i].split(delim);
           const lv = Number((c[0]||"").replace(/[^\d.-]/g,""));
           if (!Number.isFinite(lv)) continue;
           rawLevels.push(lv);
@@ -278,10 +274,10 @@
         const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
         if (levels.length < 2) return { levels, expSteps:[], markSteps:[] };
     
-        const isCum = (map) => {
+        const isCum = (map)=>{
           let prev=null, nondec=0, pos=0;
           for (const lv of levels){
-            const v = map.get(lv)??0;
+            const v = map.get(lv) ?? 0;
             if (prev!==null){ if (v>=prev) nondec++; if (v>prev) pos++; }
             prev = v;
           }
@@ -289,7 +285,8 @@
         };
         const cumExp  = isCum(EXP);
         const cumMark = isCum(MARK);
-        const expSteps = [], markSteps = [];
+    
+        const expSteps=[], markSteps=[];
         for (let i=0;i<levels.length-1;i++){
           const a=levels[i], b=levels[i+1];
           expSteps[i]  = Math.max(0, cumExp  ? ((EXP.get(b)||0)-(EXP.get(a)||0)) : (EXP.get(a)||0));
@@ -298,24 +295,26 @@
         return { levels, expSteps, markSteps };
       }
     
-      // 스킬 CSV 파서 (2열/3열 자동 지원)
+      // 스킬 CSV (2열 또는 3열 자동)
       function parseSkillCSV(text){
-        const rows = text.replace(/\uFEFF/g,"").replace(/\r/g,"").split("").filter(l=>l.trim()!=="");
+        const rows = text.replace(/\uFEFF/g,"").replace(/\r/g,"")
+                         .split("\n").filter(l=>l.trim()!=="");
         if (!rows.length) return { levels:[], expSteps:[], itemSteps:[] };
         const delim = detectDelim(rows[0]);
         const headerLooks = /(레벨|lv|level|exp|item|아이템|경험치)/i.test(rows[0]);
         const start = headerLooks ? 1 : 0;
+    
         const exp=[], item=[], levelsFromFile=[];
         for (let i=start;i<rows.length;i++){
           const c = rows[i].split(delim);
-          if (c.length >= 3) {
+          if (c.length >= 3){
             const lv = Number((c[0]||"").replace(/[^\d.-]/g,""));
             const e  = Number((c[1]||"").replace(/[^\d.-]/g,""));
             const it = Number((c[2]||"").replace(/[^\d.-]/g,""));
             if (Number.isFinite(lv)) levelsFromFile.push(lv);
             exp.push(Number.isFinite(e)?e:0);
             item.push(Number.isFinite(it)?it:0);
-          } else {
+          }else{
             const e  = Number((c[0]||"").replace(/[^\d.-]/g,""));
             const it = Number((c[1]||"").replace(/[^\d.-]/g,""));
             exp.push(Number.isFinite(e)?e:0);
@@ -324,17 +323,17 @@
         }
         const L = Math.max(1, exp.length);
         let levels;
-        if (levelsFromFile.length) {
+        if (levelsFromFile.length){
           const uniq = [...new Set(levelsFromFile)].sort((a,b)=>a-b);
           levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L+1}, (_,i)=>i);
-        } else {
-          levels = Array.from({length:L+1}, (_,i)=>i);
+        }else{
+          levels = Array.from({length:L+1}, (_,i)=>i); // 0..L
         }
         return { levels, expSteps:exp, itemSteps:item };
       }
     
-      function renderOptions(selectEl, levels, emptyLabel=" "){
-        const opts = [`<option value="">${emptyLabel}</option>`]
+      function renderOptions(selectEl, levels){
+        const opts = ['<option value=""></option>']
           .concat(levels.map(lv => `<option value="${lv}">Lv${lv}</option>`))
           .join("");
         selectEl.innerHTML = opts;
@@ -348,9 +347,6 @@
     
       async function loadDataFor(type){
         const conf = SETTINGS[type];
-        if (!conf) return;
-        if (expertWarn) expertWarn.textContent = "";
-    
         // 본체
         if (conf.base?.csv){
           try{
@@ -372,7 +368,6 @@
             renderOptions(expertTgt, []);
           }
         }
-    
         // 스킬 1~4
         for (let i=0;i<4;i++){
           const s = conf.skills?.[i];
@@ -405,28 +400,23 @@
           ref.outE.textContent = "0";
           ref.outI.textContent = "0";
         }
-    
         // 총합 초기화
-        sumExpertExp.textContent = "0";
-        sumExpertMark.textContent= "0";
+        if (sumExpertExp)  sumExpertExp.textContent  = "0";
+        if (sumExpertMark) sumExpertMark.textContent = "0";
         sumSkillExp.textContent  = "0";
         sumSkillItem.textContent = "0";
       }
     
       function sumRangeSteps(steps, fromLv, toLv){
-        let s=0;
-        for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0;
-        return s;
+        let s=0; for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0; return s;
       }
     
       function calc(){
         // 본체
         let eExp=0, eMark=0;
-        const curLv = +expertCur.value;
-        const tgtLv = +expertTgt.value;
+        const curLv = +expertCur.value, tgtLv = +expertTgt.value;
         if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
-          const fi = expertLevels.indexOf(curLv);
-          const ti = expertLevels.indexOf(tgtLv);
+          const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
           if (expertWarn) {
             expertWarn.textContent =
               (fi<0 || ti<0) ? "CSV에 없는 레벨입니다."
@@ -434,29 +424,23 @@
               : "";
           }
           if (fi>=0 && ti>fi){
-            for (let i=fi; i<ti; i++){
-              eExp  += expertExp[i]  || 0;
-              eMark += expertMark[i] || 0;
-            }
+            for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
           }
         } else {
           if (expertWarn) expertWarn.textContent = "";
         }
-        sumExpertExp.textContent  = fmt(eExp);
-        sumExpertMark.textContent = fmt(eMark);
+        if (sumExpertExp)  sumExpertExp.textContent  = fmt(eExp);
+        if (sumExpertMark) sumExpertMark.textContent = fmt(eMark);
     
         // 스킬
         let tExp=0, tItem=0;
-        sRef.forEach((ref, i)=>{
+        sRef.forEach((ref,i)=>{
           let sE=0, sI=0;
           const cV = ref.cur.value, tV = ref.tgt.value;
           if (isFilled(cV) && isFilled(tV) && skillLevels[i].length>1){
-            const c = +cV, t = +tV;
+            const c=+cV, t=+tV;
             ref.warn.textContent = (t<=c) ? "목표 레벨은 현재보다 커야 합니다." : "";
-            if (t>c){
-              sE = sumRangeSteps(skillExp[i], c, t);
-              sI = sumRangeSteps(skillItem[i], c, t);
-            }
+            if (t>c){ sE = sumRangeSteps(skillExp[i], c, t); sI = sumRangeSteps(skillItem[i], c, t); }
           } else {
             ref.warn.textContent = "";
           }
@@ -464,7 +448,6 @@
           ref.outI.textContent = fmt(sI);
           tExp += sE; tItem += sI;
         });
-    
         sumSkillExp.textContent  = fmt(tExp);
         sumSkillItem.textContent = fmt(tItem);
       }
@@ -473,8 +456,8 @@
         expertCur.value = "";
         expertTgt.value = "";
         if (expertWarn) expertWarn.textContent = "";
-        sumExpertExp.textContent = "0";
-        sumExpertMark.textContent= "0";
+        if (sumExpertExp)  sumExpertExp.textContent  = "0";
+        if (sumExpertMark) sumExpertMark.textContent = "0";
         sRef.forEach(ref=>{
           ref.cur.value=""; ref.tgt.value="";
           ref.warn.textContent=""; ref.outE.textContent="0"; ref.outI.textContent="0";
@@ -485,18 +468,13 @@
     
       selType.addEventListener("change", async ()=>{ await loadDataFor(selType.value); clearAll(); });
       btnReset.addEventListener("click", clearAll);
-    
-      [expertCur, expertTgt].forEach(el=>{
-        el.addEventListener("input", calc);
-        el.addEventListener("change", calc);
-      });
+      [expertCur, expertTgt].forEach(el=>{ el.addEventListener("input", calc); el.addEventListener("change", calc); });
       sRef.forEach(ref=>{
         ref.cur.addEventListener("input", calc);
         ref.tgt.addEventListener("input", calc);
         ref.cur.addEventListener("change", calc);
         ref.tgt.addEventListener("change", calc);
       });
-    
       (async function init(){ await loadDataFor(selType.value); })();
     });
   </script>
