@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WOS 전문가/스킬 레벨업 계산기</title>
+  <title>WOS 전문가/스킬 레벨업 계산기 (CORS/한줄 CSV 대응)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 16px;box-shadow:0 6px 18px rgba(15,23,42,.06)}
@@ -16,22 +16,20 @@
     }
     .inline-label{display:flex;align-items:center;gap:.5rem}
     select.pill{height:32px}
+    .err{color:#b45309}
   </style>
 </head>
 <body class="bg-gray-100 p-3 font-sans text-sm">
   <main class="mx-auto max-w-5xl space-y-4">
-    <!-- 헤더 -->
     <header class="flex items-center justify-between">
       <div>
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">WOS 전문가/스킬 레벨업 계산기</h1>
-        <p class="text-sm muted mt-1">레벨을 읽어 선택하고, 필요한 <b>경험치</b>와 <b>표식, 학습의 책</b> 합계를 계산합니다.</p>
+        <p class="text-sm muted mt-1">CSV에서 레벨을 읽어 선택하고, 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
       </div>
     </header>
-    
-    <!-- 상단 바 -->
+
     <section class="card">
       <div class="toolbar">
-        <!-- 전문가 선택 -->
         <div class="space-y-1">
           <div class="font-semibold">전문가 선택</div>
           <select id="selType" class="pill w-full">
@@ -42,35 +40,24 @@
           </select>
         </div>
 
-        <!-- 레벨 범위 -->
         <div class="space-y-1">
           <div class="font-semibold">레벨 범위 <span id="expertCap" class="muted"></span></div>
           <div class="flex flex-wrap items-center gap-6">
-            <label class="inline-label">
-              <span class="muted">현재</span>
-              <select id="expertCur" class="pill w-24"></select>
-            </label>
-            <label class="inline-label">
-              <span class="muted">목표</span>
-              <select id="expertTgt" class="pill w-24"></select>
-            </label>
+            <label class="inline-label"><span class="muted">현재</span>
+              <select id="expertCur" class="pill w-24"></select></label>
+            <label class="inline-label"><span class="muted">목표</span>
+              <select id="expertTgt" class="pill w-24"></select></label>
           </div>
-          <p id="expertWarn" class="text-xs text-amber-600 mt-1"></p>
+          <p id="expertWarn" class="text-xs err mt-1"></p>
         </div>
 
-        <!-- 초기화 버튼 -->
         <div class="text-right">
-          <button id="btnReset"
-            class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
-            초기화
-          </button>
+          <button id="btnReset" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">초기화</button>
         </div>
       </div>
     </section>
-    
-    <!-- 스킬 카드 반복 (1~4) -->
+
     <section class="grid md:grid-cols-2 gap-4">
-      <!-- 템플릿을 1~4로 복제 -->
       <div class="card">
         <h3 class="text-base font-bold mb-3">스킬 1</h3>
         <div class="grid md:grid-cols-2 gap-4">
@@ -80,7 +67,7 @@
               <label class="inline-label"><span class="muted">현재</span><select id="s1Cur" class="pill w-20"></select></label>
               <label class="inline-label"><span class="muted">목표</span><select id="s1Tgt" class="pill w-20"></select></label>
             </div>
-            <p id="s1Warn" class="text-xs text-amber-600 mt-1"></p>
+            <p id="s1Warn" class="text-xs err mt-1"></p>
           </div>
           <div>
             <div class="text-sm font-semibold mb-1">필요 합계</div>
@@ -101,7 +88,7 @@
               <label class="inline-label"><span class="muted">현재</span><select id="s2Cur" class="pill w-20"></select></label>
               <label class="inline-label"><span class="muted">목표</span><select id="s2Tgt" class="pill w-20"></select></label>
             </div>
-            <p id="s2Warn" class="text-xs text-amber-600 mt-1"></p>
+            <p id="s2Warn" class="text-xs err mt-1"></p>
           </div>
           <div>
             <div class="text-sm font-semibold mb-1">필요 합계</div>
@@ -122,7 +109,7 @@
               <label class="inline-label"><span class="muted">현재</span><select id="s3Cur" class="pill w-20"></select></label>
               <label class="inline-label"><span class="muted">목표</span><select id="s3Tgt" class="pill w-20"></select></label>
             </div>
-            <p id="s3Warn" class="text-xs text-amber-600 mt-1"></p>
+            <p id="s3Warn" class="text-xs err mt-1"></p>
           </div>
           <div>
             <div class="text-sm font-semibold mb-1">필요 합계</div>
@@ -143,7 +130,7 @@
               <label class="inline-label"><span class="muted">현재</span><select id="s4Cur" class="pill w-20"></select></label>
               <label class="inline-label"><span class="muted">목표</span><select id="s4Tgt" class="pill w-20"></select></label>
             </div>
-            <p id="s4Warn" class="text-xs text-amber-600 mt-1"></p>
+            <p id="s4Warn" class="text-xs err mt-1"></p>
           </div>
           <div>
             <div class="text-sm font-semibold mb-1">필요 합계</div>
@@ -155,8 +142,7 @@
         </div>
       </div>
     </section>
-    
-    <!-- 총합 -->
+
     <section class="card">
       <h2 class="text-base font-bold mb-3">총합</h2>
       <div class="grid sm:grid-cols-3 gap-3 text-sm">
@@ -173,343 +159,355 @@
       </div>
     </section>
   </main>
-  
+
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const SETTINGS = {
-        "Cyrille": {
-          base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille.csv" },
-          skills: [
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S1.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S2.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S3.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S4.csv" },
-          ]
-        },
-        "Agnes": {
-          base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes.csv" },
-          skills: [
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S1.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S2.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S3.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S4.csv" },
-          ]
-        },
-        "Holger": {
-          base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger.csv" },
-          skills: [
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S1.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S2.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S3.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S4.csv" },
-          ]
-        },
-        "Romulus": {
-          base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus.csv" },
-          skills: [
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S1.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S2.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S3.csv" },
-            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S4.csv" },
-          ]
-        },
+  document.addEventListener("DOMContentLoaded", () => {
+    const SETTINGS = {
+      "Cyrille": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S4.csv" },
+        ]
+      },
+      "Agnes": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S4.csv" },
+        ]
+      },
+      "Holger": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S4.csv" },
+        ]
+      },
+      "Romulus": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S4.csv" },
+        ]
+      },
+    };
+
+    // ===== STATE =====
+    let expertLevels = [], expertExp = [], expertMark = [];
+    const skillLevels = [[],[],[],[]];
+    const skillExp  = [[],[],[],[]];
+    const skillItem = [[],[],[],[]];
+
+    // ===== DOM =====
+    const $ = (id)=>document.getElementById(id);
+    const selType = $("selType");
+    const expertCur = $("expertCur");
+    const expertTgt = $("expertTgt");
+    const expertWarn = document.getElementById("expertWarn"); // 없을 수 있음
+    const expertCap  = $("expertCap");
+    const sumExpertExp  = $("sumExpertExp");
+    const sumExpertMark = $("sumExpertMark");
+    const btnReset = $("btnReset");
+
+    const sRef = [1,2,3,4].map(i=>({
+      cur:$(`s${i}Cur`), tgt:$(`s${i}Tgt`),
+      warn:$(`s${i}Warn`), cap:$(`s${i}Cap`),
+      outE:$(`s${i}Exp`), outI:$(`s${i}Item`)
+    }));
+
+    const sumSkillExp = $("sumSkillExp");
+    const sumSkillItem = $("sumSkillItem");
+
+    // ===== UTIL =====
+    const fmt = n => Number(n||0).toLocaleString("ko-KR");
+    const isFilled = v => v !== "" && v !== null && v !== undefined && !Number.isNaN(+v);
+
+    function detectDelim(sample){
+      if (sample.includes("\t")) return "\t";
+      if (sample.includes(";"))  return ";";
+      return ",";
+    }
+
+    // 한 줄 CSV를 'Lv.N' 앞에서 강제 줄바꿈 (본체/스킬 공통)
+    function preprocessByLevel(text){
+      let s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
+      if (!s.includes("\n") && /Lv\.\s*\d+/i.test(s)) {
+        s = s.replace(/(Lv\.\s*\d+)/gi, "\n$1");
+      }
+      return s;
+    }
+
+    // 본체 CSV 파서 (정수 레벨, 누적/구간 자동)
+    function parseExpertCSV(text){
+      const pre = preprocessByLevel(text);
+      const lines = pre.split("\n").filter(l=>l.trim()!=="");
+      if (!lines.length) return { levels:[], expSteps:[], markSteps:[] };
+
+      const delim = detectDelim(lines[0]);
+      const hasHeader = /(레벨|lv|level|경험치|exp)/i.test(lines[0]);
+      const start = hasHeader ? 1 : 0;
+
+      const EXP = new Map(), MARK = new Map();
+      const rawLevels = [];
+      const toInt = s => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0], 10) : NaN; };
+      const toNum = s => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+
+      for (let i=start;i<lines.length;i++){
+        const c  = lines[i].split(delim);
+        const lv = toInt(c[0]);
+        if (!Number.isFinite(lv)) continue;
+        rawLevels.push(lv);
+        const ex = toNum(c[1]);
+        const mk = toNum(c[2]);
+        EXP.set(lv, ex);
+        MARK.set(lv, mk);
+      }
+
+      const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
+      if (levels.length < 2) return { levels, expSteps:[], markSteps:[] };
+
+      const isCum = (map)=>{
+        let prev=null, nondec=0, pos=0;
+        for (const lv of levels){
+          const v = map.get(lv) ?? 0;
+          if (prev!==null){ if (v>=prev) nondec++; if (v>prev) pos++; }
+          prev = v;
+        }
+        return nondec >= (levels.length-1) && pos>0;
       };
-    
-      // ===== STATE =====
-      let expertLevels = [], expertExp = [], expertMark = [];
-      const skillLevels = [[],[],[],[]];
-      const skillExp  = [[],[],[],[]];
-      const skillItem = [[],[],[],[]];
-    
-      // ===== DOM =====
-      const $ = (id)=>document.getElementById(id);
-      const selType = $("selType");
-      const expertCur = $("expertCur");
-      const expertTgt = $("expertTgt");
-      const expertWarn = document.getElementById("expertWarn"); // 없을 수 있음
-      const expertCap  = $("expertCap");
-      const sumExpertExp  = $("sumExpertExp");
-      const sumExpertMark = $("sumExpertMark");
-      const btnReset = $("btnReset");
-    
-      const sRef = [1,2,3,4].map(i=>({
-        cur:$(`s${i}Cur`), tgt:$(`s${i}Tgt`),
-        warn:$(`s${i}Warn`), cap:$(`s${i}Cap`),
-        outE:$(`s${i}Exp`), outI:$(`s${i}Item`)
-      }));
-    
-      const sumSkillExp = $("sumSkillExp");
-      const sumSkillItem = $("sumSkillItem");
-    
-      // ===== UTIL =====
-      const fmt = n => Number(n||0).toLocaleString("ko-KR");
-      const isFilled = v => v !== "" && v !== null && v !== undefined && !Number.isNaN(+v);
-    
-      function detectDelim(sample){
-        if (sample.includes("\t")) return "\t";
-        if (sample.includes(";"))  return ";";
-        return ",";
+      const cumExp  = isCum(EXP);
+      const cumMark = isCum(MARK);
+
+      const expSteps=[], markSteps=[];
+      for (let i=0;i<levels.length-1;i++){
+        const a=levels[i], b=levels[i+1];
+        expSteps[i]  = Math.max(0, cumExp  ? ((EXP.get(b)||0)-(EXP.get(a)||0)) : (EXP.get(a)||0));
+        markSteps[i] = Math.max(0, cumMark ? ((MARK.get(b)||0)-(MARK.get(a)||0)) : (MARK.get(a)||0));
       }
-    
-      // 본체 CSV 파서 (누적/구간 자동)
-      function parseExpertCSV(text){
-        const pre = preprocessExpertCSV(text);
-        const lines = pre.split("\n").filter(l=>l.trim()!=="");
-        if (!lines.length) return { levels:[], expSteps:[], markSteps:[] };
-      
-        const delim = detectDelim(lines[0]);
-        const hasHeader = /(레벨|lv|level|경험치|exp)/i.test(lines[0]);
-        const start = hasHeader ? 1 : 0;
-      
-        const EXP = new Map(), MARK = new Map();
-        const rawLevels = [];
-      
-        const toInt = s => {
-          const m = String(s||"").match(/\d+/);     // ← 정수만 추출
-          return m ? parseInt(m[0], 10) : NaN;
-        };
-        const toNum = s => {                        // exp/표식 숫자
-          const m = String(s||"").match(/-?\d+(\.\d+)?/);
-          return m ? Number(m[0]) : 0;
-        };
-      
-        for (let i=start;i<lines.length;i++){
-          const c  = lines[i].split(delim);
-          const lv = toInt(c[0]);
-          if (!Number.isFinite(lv)) continue;
-          rawLevels.push(lv);
-          const ex = toNum(c[1]);
-          const mk = toNum(c[2]);
-          EXP.set(lv, ex);
-          MARK.set(lv, mk);
+      return { levels, expSteps, markSteps };
+    }
+
+    // 스킬 CSV (2열/3열 자동)
+    function parseSkillCSV(text){
+      const pre = preprocessByLevel(text);
+      const rows = pre.split("\n").filter(l=>l.trim()!=="");
+      if (!rows.length) return { levels:[], expSteps:[], itemSteps:[] };
+      const delim = detectDelim(rows[0]);
+      const headerLooks = /(레벨|lv|level|exp|item|아이템|학습의 책|경험치)/i.test(rows[0]);
+      const start = headerLooks ? 1 : 0;
+
+      const exp=[], item=[], levelsFromFile=[];
+      const toInt = s => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+      const toNum = s => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+
+      for (let i=start;i<rows.length;i++){
+        const c = rows[i].split(delim);
+        if (c.length >= 3){                 // Level,Exp,Item
+          const lv = toInt(c[0]); if (Number.isFinite(lv)) levelsFromFile.push(lv);
+          exp.push(toNum(c[1])); item.push(toNum(c[2]));
+        }else{                              // Exp,Item
+          exp.push(toNum(c[0])); item.push(toNum(c[1]));
         }
-      
-        const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
-        if (levels.length < 2) return { levels, expSteps:[], markSteps:[] };
-      
-        // 누적/구간 자동판별
-        const isCum = (map)=>{
-          let prev=null, nondec=0, pos=0;
-          for (const lv of levels){
-            const v = map.get(lv) ?? 0;
-            if (prev!==null){ if (v>=prev) nondec++; if (v>prev) pos++; }
-            prev = v;
-          }
-          return nondec >= (levels.length-1) && pos>0;
-        };
-      
-        const cumExp  = isCum(EXP);
-        const cumMark = isCum(MARK);
-      
-        const expSteps=[], markSteps=[];
-        for (let i=0;i<levels.length-1;i++){
-          const a=levels[i], b=levels[i+1];
-          expSteps[i]  = Math.max(0, cumExp  ? ((EXP.get(b)||0)-(EXP.get(a)||0)) : (EXP.get(a)||0));
-          markSteps[i] = Math.max(0, cumMark ? ((MARK.get(b)||0)-(MARK.get(a)||0)) : (MARK.get(a)||0));
+      }
+      const L = Math.max(1, exp.length);
+      let levels;
+      if (levelsFromFile.length){
+        const uniq = [...new Set(levelsFromFile)].sort((a,b)=>a-b);
+        levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L+1}, (_,i)=>i);
+      }else{
+        levels = Array.from({length:L+1}, (_,i)=>i); // 0..L
+      }
+      return { levels, expSteps:exp, itemSteps:item };
+    }
+
+    // 옵션 렌더링
+    function renderOptions(selectEl, levels){
+      const opts = ['<option value=""></option>']
+        .concat(levels.map(lv => `<option value="${lv}">Lv${lv}</option>`))
+        .join("");
+      selectEl.innerHTML = opts;
+    }
+
+    // CORS 친화 fetch + 디버깅
+    async function fetchText(url){
+      try{
+        const r = await fetch(url, {
+          cache:"no-store",
+          mode:"cors",
+          redirect:"follow",
+          referrerPolicy:"no-referrer"
+        });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return await r.text();
+      }catch(err){
+        console.error("[CSV] 네트워크/CORS 에러:", url, err);
+        throw err;
+      }
+    }
+
+    async function loadDataFor(type){
+      const conf = SETTINGS[type];
+      // 본체
+      if (conf.base?.csv){
+        try{
+          const txt = await fetchText(conf.base.csv);
+          const { levels, expSteps, markSteps } = parseExpertCSV(txt);
+          expertLevels = levels;
+          expertExp    = expSteps;
+          expertMark   = markSteps;
+          const maxLv = levels.length ? Math.max(...levels) : null;
+          if (expertCap) expertCap.textContent = maxLv ? `(최대 레벨 ${maxLv})` : "";
+          renderOptions(expertCur, levels);
+          renderOptions(expertTgt, levels);
+          if (expertWarn) expertWarn.textContent = "";
+        }catch(e){
+          if (expertWarn) expertWarn.textContent = "본체 CSV를 불러오지 못했습니다. 경로/CORS 확인";
+          expertLevels = []; expertExp=[]; expertMark=[];
+          if (expertCap) expertCap.textContent = "";
+          renderOptions(expertCur, []);
+          renderOptions(expertTgt, []);
         }
-        return { levels, expSteps, markSteps };
       }
-    
-      // 스킬 CSV (2열 또는 3열 자동)
-      function parseSkillCSV(text){
-        const rows = text.replace(/\uFEFF/g,"").replace(/\r/g,"")
-                         .split("\n").filter(l=>l.trim()!=="");
-        if (!rows.length) return { levels:[], expSteps:[], itemSteps:[] };
-        const delim = detectDelim(rows[0]);
-        const headerLooks = /(레벨|lv|level|exp|item|학습의 책|경험치)/i.test(rows[0]);
-        const start = headerLooks ? 1 : 0;
-    
-        const exp=[], item=[], levelsFromFile=[];
-        for (let i=start;i<rows.length;i++){
-          const c = rows[i].split(delim);
-          if (c.length >= 3){
-            const lv = Number((c[0]||"").replace(/[^\d.-]/g,""));
-            const e  = Number((c[1]||"").replace(/[^\d.-]/g,""));
-            const it = Number((c[2]||"").replace(/[^\d.-]/g,""));
-            if (Number.isFinite(lv)) levelsFromFile.push(lv);
-            exp.push(Number.isFinite(e)?e:0);
-            item.push(Number.isFinite(it)?it:0);
-          }else{
-            const e  = Number((c[0]||"").replace(/[^\d.-]/g,""));
-            const it = Number((c[1]||"").replace(/[^\d.-]/g,""));
-            exp.push(Number.isFinite(e)?e:0);
-            item.push(Number.isFinite(it)?it:0);
-          }
-        }
-        const L = Math.max(1, exp.length);
-        let levels;
-        if (levelsFromFile.length){
-          const uniq = [...new Set(levelsFromFile)].sort((a,b)=>a-b);
-          levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L+1}, (_,i)=>i);
-        }else{
-          levels = Array.from({length:L+1}, (_,i)=>i); // 0..L
-        }
-        return { levels, expSteps:exp, itemSteps:item };
-      }
-    
-      function renderOptions(selectEl, levels){
-        const opts = ['<option value=""></option>']
-          .concat(levels.map(lv => `<option value="${lv}">Lv${lv}</option>`))
-          .join("");
-        selectEl.innerHTML = opts;
-      }
-    
-      async function fetchText(url){
-        const r = await fetch(url, {cache:"no-store"});
-        if (!r.ok) throw new Error(`CSV 로드 실패: ${r.status} ${url}`);
-        return r.text();
-      }
-    
-      async function loadDataFor(type){
-        const conf = SETTINGS[type];
-        // 본체
-        if (conf.base?.csv){
+      // 스킬 1~4
+      for (let i=0;i<4;i++){
+        const s = conf.skills?.[i];
+        const ref = sRef[i];
+        if (!ref) continue;
+        if (s && s.csv){
           try{
-            const txt = await fetchText(conf.base.csv);
-            const { levels, expSteps, markSteps } = parseExpertCSV(txt);
-            expertLevels = levels;
-            expertExp    = expSteps;
-            expertMark   = markSteps;
-            const maxLv = levels.length ? Math.max(...levels) : null;
-            if (expertCap) expertCap.textContent = maxLv ? `(최대 레벨 ${maxLv})` : "";
-            renderOptions(expertCur, levels);
-            renderOptions(expertTgt, levels);
+            const txt = await fetchText(s.csv);
+            const { levels, expSteps, itemSteps } = parseSkillCSV(txt);
+            skillLevels[i] = levels;
+            skillExp[i]    = expSteps;
+            skillItem[i]   = itemSteps;
+            ref.cap.textContent = levels.length ? `(최대 레벨 ${levels[levels.length-1]})` : "";
+            renderOptions(ref.cur, levels);
+            renderOptions(ref.tgt, levels);
+            ref.warn.textContent = "";
           }catch(e){
-            console.warn(e);
-            if (expertWarn) expertWarn.textContent = "본체 CSV를 불러오지 못했습니다. 경로/CORS 확인";
-            expertLevels = []; expertExp=[]; expertMark=[];
-            if (expertCap) expertCap.textContent = "";
-            renderOptions(expertCur, []);
-            renderOptions(expertTgt, []);
-          }
-        }
-        // 스킬 1~4
-        for (let i=0;i<4;i++){
-          const s = conf.skills?.[i];
-          const ref = sRef[i];
-          if (!ref) continue;
-          if (s && s.csv){
-            try{
-              const txt = await fetchText(s.csv);
-              const { levels, expSteps, itemSteps } = parseSkillCSV(txt);
-              skillLevels[i] = levels;
-              skillExp[i]    = expSteps;
-              skillItem[i]   = itemSteps;
-              ref.cap.textContent = levels.length ? `(최대 레벨 ${levels[levels.length-1]})` : "";
-              renderOptions(ref.cur, levels);
-              renderOptions(ref.tgt, levels);
-            }catch(e){
-              console.warn(e);
-              skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
-              ref.cap.textContent = "";
-              renderOptions(ref.cur, []);
-              renderOptions(ref.tgt, []);
-            }
-          }else{
+            console.warn("[CSV] 스킬 불러오기 실패", i+1, e);
             skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
             ref.cap.textContent = "";
             renderOptions(ref.cur, []);
             renderOptions(ref.tgt, []);
+            ref.warn.textContent = "스킬 CSV 로드 실패";
           }
+        }else{
+          skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
+          ref.cap.textContent = "";
+          renderOptions(ref.cur, []);
+          renderOptions(ref.tgt, []);
           ref.warn.textContent = "";
-          ref.outE.textContent = "0";
-          ref.outI.textContent = "0";
         }
-        // 총합 초기화
-        if (sumExpertExp)  sumExpertExp.textContent  = "0";
-        if (sumExpertMark) sumExpertMark.textContent = "0";
-        sumSkillExp.textContent  = "0";
-        sumSkillItem.textContent = "0";
+        ref.outE.textContent = "0";
+        ref.outI.textContent = "0";
       }
-    
-      function sumRangeSteps(steps, fromLv, toLv){
-        let s=0; for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0; return s;
-      }
-    
-      function calc(){
-        // 본체
-        let eExp=0, eMark=0;
-        const curLv = +expertCur.value, tgtLv = +expertTgt.value;
-        if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
-          const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
-          if (expertWarn) {
-            expertWarn.textContent =
-              (fi<0 || ti<0) ? "CSV에 없는 레벨입니다."
-              : (ti<=fi)     ? "목표 레벨은 현재보다 커야 합니다."
-              : "";
-          }
-          if (fi>=0 && ti>fi){
-            for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
-          }
-        } else {
-          if (expertWarn) expertWarn.textContent = "";
+      // 총합 초기화
+      if (sumExpertExp)  sumExpertExp.textContent  = "0";
+      if (sumExpertMark) sumExpertMark.textContent = "0";
+      sumSkillExp.textContent  = "0";
+      sumSkillItem.textContent = "0";
+      sendHeightToParent();
+    }
+
+    function sumRangeSteps(steps, fromLv, toLv){
+      let s=0; for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0; return s;
+    }
+
+    function calc(){
+      // 본체
+      let eExp=0, eMark=0;
+      const curLv = +expertCur.value, tgtLv = +expertTgt.value;
+      if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
+        const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
+        if (expertWarn) {
+          expertWarn.textContent =
+            (fi<0 || ti<0) ? "CSV에 없는 레벨입니다."
+            : (ti<=fi)     ? "목표 레벨은 현재보다 커야 합니다."
+            : "";
         }
-        if (sumExpertExp)  sumExpertExp.textContent  = fmt(eExp);
-        if (sumExpertMark) sumExpertMark.textContent = fmt(eMark);
-    
-        // 스킬
-        let tExp=0, tItem=0;
-        sRef.forEach((ref,i)=>{
-          let sE=0, sI=0;
-          const cV = ref.cur.value, tV = ref.tgt.value;
-          if (isFilled(cV) && isFilled(tV) && skillLevels[i].length>1){
-            const c=+cV, t=+tV;
-            ref.warn.textContent = (t<=c) ? "목표 레벨은 현재보다 커야 합니다." : "";
-            if (t>c){ sE = sumRangeSteps(skillExp[i], c, t); sI = sumRangeSteps(skillItem[i], c, t); }
-          } else {
-            ref.warn.textContent = "";
-          }
-          ref.outE.textContent = fmt(sE);
-          ref.outI.textContent = fmt(sI);
-          tExp += sE; tItem += sI;
-        });
-        sumSkillExp.textContent  = fmt(tExp);
-        sumSkillItem.textContent = fmt(tItem);
-      }
-    
-      function clearAll(){
-        expertCur.value = "";
-        expertTgt.value = "";
+        if (fi>=0 && ti>fi){
+          for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
+        }
+      } else {
         if (expertWarn) expertWarn.textContent = "";
-        if (sumExpertExp)  sumExpertExp.textContent  = "0";
-        if (sumExpertMark) sumExpertMark.textContent = "0";
-        sRef.forEach(ref=>{
-          ref.cur.value=""; ref.tgt.value="";
-          ref.warn.textContent=""; ref.outE.textContent="0"; ref.outI.textContent="0";
-        });
-        sumSkillExp.textContent  = "0";
-        sumSkillItem.textContent = "0";
       }
-    
-      selType.addEventListener("change", async ()=>{ await loadDataFor(selType.value); clearAll(); });
-      btnReset.addEventListener("click", clearAll);
-      [expertCur, expertTgt].forEach(el=>{ el.addEventListener("input", calc); el.addEventListener("change", calc); });
-      sRef.forEach(ref=>{
-        ref.cur.addEventListener("input", calc);
-        ref.tgt.addEventListener("input", calc);
-        ref.cur.addEventListener("change", calc);
-        ref.tgt.addEventListener("change", calc);
+      if (sumExpertExp)  sumExpertExp.textContent  = fmt(eExp);
+      if (sumExpertMark) sumExpertMark.textContent = fmt(eMark);
+
+      // 스킬
+      let tExp=0, tItem=0;
+      sRef.forEach((ref,i)=>{
+        let sE=0, sI=0;
+        const cV = ref.cur.value, tV = ref.tgt.value;
+        if (isFilled(cV) && isFilled(tV) && skillLevels[i].length>1){
+          const c=+cV, t=+tV;
+          ref.warn.textContent = (t<=c) ? "목표 레벨은 현재보다 커야 합니다." : "";
+          if (t>c){ sE = sumRangeSteps(skillExp[i], c, t); sI = sumRangeSteps(skillItem[i], c, t); }
+        } else {
+          ref.warn.textContent = "";
+        }
+        ref.outE.textContent = fmt(sE);
+        ref.outI.textContent = fmt(sI);
+        tExp += sE; tItem += sI;
       });
-      (async function init(){ await loadDataFor(selType.value); })();
+      sumSkillExp.textContent  = fmt(tExp);
+      sumSkillItem.textContent = fmt(tItem);
+    }
+
+    function clearAll(){
+      expertCur.value = "";
+      expertTgt.value = "";
+      if (expertWarn) expertWarn.textContent = "";
+      if (sumExpertExp)  sumExpertExp.textContent  = "0";
+      if (sumExpertMark) sumExpertMark.textContent = "0";
+      sRef.forEach(ref=>{
+        ref.cur.value=""; ref.tgt.value="";
+        ref.warn.textContent=""; ref.outE.textContent="0"; ref.outI.textContent="0";
+      });
+      sumSkillExp.textContent  = "0";
+      sumSkillItem.textContent = "0";
+    }
+
+    selType.addEventListener("change", async ()=>{ await loadDataFor(selType.value); clearAll(); });
+    btnReset.addEventListener("click", clearAll);
+    [expertCur, expertTgt].forEach(el=>{ el.addEventListener("input", calc); el.addEventListener("change", calc); });
+    sRef.forEach(ref=>{
+      ref.cur.addEventListener("input", calc);
+      ref.tgt.addEventListener("input", calc);
+      ref.cur.addEventListener("change", calc);
+      ref.tgt.addEventListener("change", calc);
     });
+
+    (async function init(){ await loadDataFor(selType.value); })();
+  });
   </script>
   <script>
-      function sendHeightToParent() {
-        const height = document.body.scrollHeight + 10;
-        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
-      }
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
     
-      // 페이지 최초 로드 시
-      window.addEventListener("load", () => {
-        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-      });
-      
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
-          window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-      }
-    </script>
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
 </body>
 </html>
