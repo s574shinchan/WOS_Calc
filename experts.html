@@ -6,11 +6,9 @@
   <title>WOS 전문가/스킬 레벨업 계산기 (자동 목표 = 현재+1)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 16px;box-shadow:0 6px 18px rgba(15,23,42,.06)}
     .muted{color:#6b7280}
     .value{min-width:3rem;text-align:right}
     .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
-    .toolbar{display:grid;grid-template-columns: 180px 1fr auto;gap:16px;align-items:center}
     @media (max-width: 900px){
       .toolbar{grid-template-columns: 1fr}
     }
@@ -80,13 +78,14 @@
   <main class="max-w-[1500] mx-auto bg-white p-2 rounded-xl shadow-md">
     <header class="flex items-center justify-between">
       <div class ="p-4">
-        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">WOS 전문가/스킬 레벨업 계산기</h1>
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">WOS 전문가/스킬 레벨업 계산기</h1>
         <p class="text-sm muted mt-1">레벨을 선택하면 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
       </div>
     </header>
 
     <section class="card mb-4">
-      <div class="toolbar">
+      <div class="toolbar text-gray-800"
+           style="display:grid;grid-template-columns:180px 1fr auto;gap:16px;align-items:center;">
         <div class="space-y-1">
           <div class="font-semibold">전문가 선택</div>
           <select id="selType" class="pill w-full">
@@ -115,7 +114,7 @@
     </section>
 
     <section class="grid md:grid-cols-2 gap-4 mb-4">
-      <div class="card">
+      <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
         <h3 class="text-base font-bold mb-3">스킬 1</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
@@ -136,7 +135,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
         <h3 class="text-base font-bold mb-3">스킬 2</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
@@ -157,7 +156,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
         <h3 class="text-base font-bold mb-3">스킬 3</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
@@ -178,7 +177,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
         <h3 class="text-base font-bold mb-3">스킬 4</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
