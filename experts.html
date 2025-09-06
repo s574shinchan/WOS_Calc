@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WOS 전문가/스킬 레벨업 계산기 (Lv. 표시 개선)</title>
+  <title>WOS 전문가/스킬 레벨업 계산기 (자동 목표 = 현재+1)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 16px;box-shadow:0 6px 18px rgba(15,23,42,.06)}
@@ -24,7 +24,7 @@
     <header class="flex items-center justify-between">
       <div>
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">WOS 전문가/스킬 레벨업 계산기</h1>
-        <p class="text-sm muted mt-1">레벨을 읽어 선택하고, 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
+        <p class="text-sm muted mt-1">레벨을 선택하면 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
       </div>
     </header>
 
@@ -290,8 +290,17 @@
       const expSteps=[], markSteps=[];
       for (let i=0;i<levels.length-1;i++){
         const a=levels[i], b=levels[i+1];
-        expSteps[i]  = Math.max(0, cumExp  ? ((EXP.get(b)||0)-(EXP.get(a)||0)) : (EXP.get(a)||0));
-        markSteps[i] = Math.max(0, cumMark ? ((MARK.get(b)||0)-(MARK.get(a)||0)) : (MARK.get(a)||0));
+        if (cumExp) {
+          expSteps[i] = Math.max(0, (EXP.get(b)||0) - (EXP.get(a)||0));
+        } else {
+          // 비누적 CSV: '해당(목표) 레벨 비용'을 사용 (1→2 = Lv2의 값)
+          expSteps[i] = Math.max(0, (EXP.get(b)||0));
+        }
+        if (cumMark) {
+          markSteps[i] = Math.max(0, (MARK.get(b)||0) - (MARK.get(a)||0));
+        } else {
+          markSteps[i] = Math.max(0, (MARK.get(b)||0));
+        }
       }
       return { levels, expSteps, markSteps };
     }
@@ -337,6 +346,14 @@
         .join("");
       selectEl.innerHTML = opts;
     }
+    function renderTargetOptions(selectEl, levels, greaterThan, useDot=false){
+      const label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
+      const filtered = levels.filter(lv => lv > greaterThan);
+      const opts = ['<option value=""></option>']
+        .concat(filtered.map(lv => `<option value="${lv}">${label(lv)}</option>`))
+        .join("");
+      selectEl.innerHTML = opts;
+    }
 
     // CORS 친화 fetch + 디버깅
     async function fetchText(url){
@@ -360,13 +377,12 @@
           expertLevels = levels;
           expertExp    = expSteps;
           expertMark   = markSteps;
-          renderOptions(expertCur, levels, true); // Lv.표기
-          renderOptions(expertTgt, levels, true); // Lv.표기
+          renderOptions(expertCur, levels, true);  // 현재: 전체
+          renderTargetOptions(expertTgt, [], 0, true); // 목표: 비워두기
           if (expertWarn) expertWarn.textContent = "";
         }catch(e){
           if (expertWarn) expertWarn.textContent = "데이터를 불러오지 못했습니다. 경로/CORS 확인";
           expertLevels = []; expertExp=[]; expertMark=[];
-          if (expertCap) expertCap.textContent = "";
           renderOptions(expertCur, [], true);
           renderOptions(expertTgt, [], true);
         }
@@ -383,12 +399,12 @@
             skillLevels[i] = levels;
             skillExp[i]    = expSteps;
             skillItem[i]   = itemSteps;
-            ref.cap.textContent = levels.length ? `(최대 레벨 ${levels[levels.length-1]})` : "";
-            renderOptions(ref.cur, levels, true); // Lv.표기
-            renderOptions(ref.tgt, levels, true); // Lv.표기
+            ref.cap.textContent = levels.length ? `(최대 레벨 Lv.${levels[levels.length-1]})` : "";
+            renderOptions(ref.cur, levels, true);           // 현재: 전체
+            renderTargetOptions(ref.tgt, [], 0, true);      // 목표: 비워두기
             ref.warn.textContent = "";
           }catch(e){
-            console.warn("스킬 불러오기 실패", i+1, e);
+            console.warn("[CSV] 스킬 불러오기 실패", i+1, e);
             skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
             ref.cap.textContent = "";
             renderOptions(ref.cur, [], true);
@@ -424,7 +440,7 @@
       if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
         const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
         if (expertWarn) {
-          expertWarn.textContent = (ti<=fi)     ? "목표 레벨은 현재보다 커야 합니다." : "";
+          expertWarn.textContent = (ti<=fi) ? "목표 레벨은 현재보다 커야 합니다." : "";
         }
         if (fi>=0 && ti>fi){
           for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
@@ -457,27 +473,48 @@
 
     function clearAll(){
       expertCur.value = "";
-      expertTgt.value = "";
+      expertTgt.innerHTML = '<option value=""></option>';
       if (expertWarn) expertWarn.textContent = "";
       if (sumExpertExp)  sumExpertExp.textContent  = "0";
       if (sumExpertMark) sumExpertMark.textContent = "0";
       sRef.forEach(ref=>{
-        ref.cur.value=""; ref.tgt.value="";
+        ref.cur.value="";
+        ref.tgt.innerHTML = '<option value=""></option>';
         ref.warn.textContent=""; ref.outE.textContent="0"; ref.outI.textContent="0";
       });
       sumSkillExp.textContent  = "0";
       sumSkillItem.textContent = "0";
     }
 
-    selType.addEventListener("change", async ()=>{ await loadDataFor(selType.value); clearAll(); });
-    btnReset.addEventListener("click", clearAll);
-    [expertCur, expertTgt].forEach(el=>{ el.addEventListener("input", calc); el.addEventListener("change", calc); });
+    // ====== 자동 목표 = 현재+1 ======
+    expertCur.addEventListener("change", () => {
+      const cur = +expertCur.value;
+      if (!isFilled(cur)) { expertTgt.innerHTML = '<option value=""></option>'; return; }
+      renderTargetOptions(expertTgt, expertLevels, cur, true);
+      // 첫 유효 옵션(=cur+1)이 있으면 자동 선택
+      if (expertTgt.options.length > 1) expertTgt.selectedIndex = 1;
+      calc();
+    });
+
+    sRef.forEach((ref, i) => {
+      ref.cur.addEventListener("change", () => {
+        const cur = +ref.cur.value;
+        if (!isFilled(cur)) { ref.tgt.innerHTML = '<option value=""></option>'; ref.warn.textContent=""; calc(); return; }
+        renderTargetOptions(ref.tgt, skillLevels[i], cur, true);
+        if (ref.tgt.options.length > 1) ref.tgt.selectedIndex = 1;
+        ref.warn.textContent = "";
+        calc();
+      });
+    });
+
+    // 변동에 따른 계산
+    [expertTgt].forEach(el=>{ el.addEventListener("change", calc); });
     sRef.forEach(ref=>{
-      ref.cur.addEventListener("input", calc);
-      ref.tgt.addEventListener("input", calc);
-      ref.cur.addEventListener("change", calc);
       ref.tgt.addEventListener("change", calc);
     });
+
+    selType.addEventListener("change", async ()=>{ await loadDataFor(selType.value); clearAll(); });
+    btnReset.addEventListener("click", clearAll);
 
     (async function init(){ await loadDataFor(selType.value); })();
   });
@@ -487,7 +524,7 @@
       const height = document.body.scrollHeight + 10;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
-  
+    
     // 페이지 최초 로드 시
     window.addEventListener("load", () => {
       setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
