@@ -349,7 +349,6 @@
     
       async function loadDataFor(type){
         const conf = SETTINGS[type];
-        expertWarn.textContent = "";
         if (conf.base?.csv){
           try{
             const txt = await fetchText(conf.base.csv);
@@ -358,7 +357,6 @@
             expertExp    = expSteps;
             expertMark   = markSteps;
             const maxLv = levels.length ? Math.max(...levels) : null;
-            expertCap.textContent = maxLv ? `(최대 레벨 ${maxLv})` : "";
             renderExpertLevelOptions(expertLevels);
             clearAll();
             sendHeightToParent();
