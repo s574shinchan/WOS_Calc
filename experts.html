@@ -361,10 +361,9 @@
             clearAll();
             sendHeightToParent();
           }catch(e){
-            console.warn(e);
-            expertWarn.textContent = "본체 CSV를 불러오지 못했습니다. 경로/CORS 확인";
-            expertLevels = []; expertExp=[]; expertMark=[];
-            expertCap.textContent = "";
+            expertLevels = []; 
+            expertExp=[]; 
+            expertMark=[];
             renderExpertLevelOptions(expertLevels);
             clearAll();
             sendHeightToParent();
