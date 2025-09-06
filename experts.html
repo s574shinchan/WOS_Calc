@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WOS 전문가/스킬 레벨업 계산기 (CORS/한줄 CSV 대응)</title>
+  <title>WOS 전문가/스킬 레벨업 계산기 (Lv. 표시 개선)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 16px;box-shadow:0 6px 18px rgba(15,23,42,.06)}
@@ -24,7 +24,7 @@
     <header class="flex items-center justify-between">
       <div>
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">WOS 전문가/스킬 레벨업 계산기</h1>
-        <p class="text-sm muted mt-1">CSV에서 레벨을 읽어 선택하고, 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
+        <p class="text-sm muted mt-1">레벨을 읽어 선택하고, 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
       </div>
     </header>
 
@@ -44,9 +44,9 @@
           <div class="font-semibold">레벨 범위 <span id="expertCap" class="muted"></span></div>
           <div class="flex flex-wrap items-center gap-6">
             <label class="inline-label"><span class="muted">현재</span>
-              <select id="expertCur" class="pill w-24"></select></label>
+              <select id="expertCur" class="pill w-28"></select></label>
             <label class="inline-label"><span class="muted">목표</span>
-              <select id="expertTgt" class="pill w-24"></select></label>
+              <select id="expertTgt" class="pill w-28"></select></label>
           </div>
           <p id="expertWarn" class="text-xs err mt-1"></p>
         </div>
@@ -64,8 +64,8 @@
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위 <span id="s1Cap" class="muted"></span></div>
             <div class="flex items-center gap-4">
-              <label class="inline-label"><span class="muted">현재</span><select id="s1Cur" class="pill w-20"></select></label>
-              <label class="inline-label"><span class="muted">목표</span><select id="s1Tgt" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">현재</span><select id="s1Cur" class="pill w-24"></select></label>
+              <label class="inline-label"><span class="muted">목표</span><select id="s1Tgt" class="pill w-24"></select></label>
             </div>
             <p id="s1Warn" class="text-xs err mt-1"></p>
           </div>
@@ -85,8 +85,8 @@
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위 <span id="s2Cap" class="muted"></span></div>
             <div class="flex items-center gap-4">
-              <label class="inline-label"><span class="muted">현재</span><select id="s2Cur" class="pill w-20"></select></label>
-              <label class="inline-label"><span class="muted">목표</span><select id="s2Tgt" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">현재</span><select id="s2Cur" class="pill w-24"></select></label>
+              <label class="inline-label"><span class="muted">목표</span><select id="s2Tgt" class="pill w-24"></select></label>
             </div>
             <p id="s2Warn" class="text-xs err mt-1"></p>
           </div>
@@ -106,8 +106,8 @@
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위 <span id="s3Cap" class="muted"></span></div>
             <div class="flex items-center gap-4">
-              <label class="inline-label"><span class="muted">현재</span><select id="s3Cur" class="pill w-20"></select></label>
-              <label class="inline-label"><span class="muted">목표</span><select id="s3Tgt" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">현재</span><select id="s3Cur" class="pill w-24"></select></label>
+              <label class="inline-label"><span class="muted">목표</span><select id="s3Tgt" class="pill w-24"></select></label>
             </div>
             <p id="s3Warn" class="text-xs err mt-1"></p>
           </div>
@@ -127,8 +127,8 @@
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위 <span id="s4Cap" class="muted"></span></div>
             <div class="flex items-center gap-4">
-              <label class="inline-label"><span class="muted">현재</span><select id="s4Cur" class="pill w-20"></select></label>
-              <label class="inline-label"><span class="muted">목표</span><select id="s4Tgt" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">현재</span><select id="s4Cur" class="pill w-24"></select></label>
+              <label class="inline-label"><span class="muted">목표</span><select id="s4Tgt" class="pill w-24"></select></label>
             </div>
             <p id="s4Warn" class="text-xs err mt-1"></p>
           </div>
@@ -329,10 +329,11 @@
       return { levels, expSteps:exp, itemSteps:item };
     }
 
-    // 옵션 렌더링
-    function renderOptions(selectEl, levels){
+    // 옵션 렌더링 (Lv.포맷 지원)
+    function renderOptions(selectEl, levels, useDot=false){
+      const label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
       const opts = ['<option value=""></option>']
-        .concat(levels.map(lv => `<option value="${lv}">Lv${lv}</option>`))
+        .concat(levels.map(lv => `<option value="${lv}">${label(lv)}</option>`))
         .join("");
       selectEl.innerHTML = opts;
     }
@@ -340,12 +341,7 @@
     // CORS 친화 fetch + 디버깅
     async function fetchText(url){
       try{
-        const r = await fetch(url, {
-          cache:"no-store",
-          mode:"cors",
-          redirect:"follow",
-          referrerPolicy:"no-referrer"
-        });
+        const r = await fetch(url, { cache:"no-store", mode:"cors", redirect:"follow", referrerPolicy:"no-referrer" });
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return await r.text();
       }catch(err){
@@ -364,17 +360,15 @@
           expertLevels = levels;
           expertExp    = expSteps;
           expertMark   = markSteps;
-          const maxLv = levels.length ? Math.max(...levels) : null;
-          if (expertCap) expertCap.textContent = maxLv ? `(최대 레벨 ${maxLv})` : "";
-          renderOptions(expertCur, levels);
-          renderOptions(expertTgt, levels);
+          renderOptions(expertCur, levels, true); // Lv.표기
+          renderOptions(expertTgt, levels, true); // Lv.표기
           if (expertWarn) expertWarn.textContent = "";
         }catch(e){
-          if (expertWarn) expertWarn.textContent = "본체 CSV를 불러오지 못했습니다. 경로/CORS 확인";
+          if (expertWarn) expertWarn.textContent = "데이터를 불러오지 못했습니다. 경로/CORS 확인";
           expertLevels = []; expertExp=[]; expertMark=[];
           if (expertCap) expertCap.textContent = "";
-          renderOptions(expertCur, []);
-          renderOptions(expertTgt, []);
+          renderOptions(expertCur, [], true);
+          renderOptions(expertTgt, [], true);
         }
       }
       // 스킬 1~4
@@ -390,22 +384,22 @@
             skillExp[i]    = expSteps;
             skillItem[i]   = itemSteps;
             ref.cap.textContent = levels.length ? `(최대 레벨 ${levels[levels.length-1]})` : "";
-            renderOptions(ref.cur, levels);
-            renderOptions(ref.tgt, levels);
+            renderOptions(ref.cur, levels, true); // Lv.표기
+            renderOptions(ref.tgt, levels, true); // Lv.표기
             ref.warn.textContent = "";
           }catch(e){
-            console.warn("[CSV] 스킬 불러오기 실패", i+1, e);
+            console.warn("스킬 불러오기 실패", i+1, e);
             skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
             ref.cap.textContent = "";
-            renderOptions(ref.cur, []);
-            renderOptions(ref.tgt, []);
-            ref.warn.textContent = "스킬 CSV 로드 실패";
+            renderOptions(ref.cur, [], true);
+            renderOptions(ref.tgt, [], true);
+            ref.warn.textContent = "스킬 로드 실패";
           }
         }else{
           skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
           ref.cap.textContent = "";
-          renderOptions(ref.cur, []);
-          renderOptions(ref.tgt, []);
+          renderOptions(ref.cur, [], true);
+          renderOptions(ref.tgt, [], true);
           ref.warn.textContent = "";
         }
         ref.outE.textContent = "0";
@@ -430,10 +424,7 @@
       if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
         const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
         if (expertWarn) {
-          expertWarn.textContent =
-            (fi<0 || ti<0) ? "CSV에 없는 레벨입니다."
-            : (ti<=fi)     ? "목표 레벨은 현재보다 커야 합니다."
-            : "";
+          expertWarn.textContent = (ti<=fi)     ? "목표 레벨은 현재보다 커야 합니다." : "";
         }
         if (fi>=0 && ti>fi){
           for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
@@ -496,7 +487,7 @@
       const height = document.body.scrollHeight + 10;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
-    
+  
     // 페이지 최초 로드 시
     window.addEventListener("load", () => {
       setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
