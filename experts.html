@@ -3,104 +3,92 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WOS 전문가/스킬 레벨업 계산기 · research 스타일</title>
+  <title>WOS 전문가/스킬 레벨업 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* ====== 밝은 카드 & 입력 ====== */
-    .card{
-      background:#ffffffcc;
-      border:1px solid rgba(0,0,0,.08);
-      border-radius:1rem;
-      padding:1rem;
-      box-shadow:0 6px 20px rgba(15,23,42,.06);
+    .card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 16px;box-shadow:0 6px 18px rgba(15,23,42,.06)}
+    .muted{color:#6b7280}
+    .value{min-width:3rem;text-align:right}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    .toolbar{display:grid;grid-template-columns: 180px 1fr 320px auto;gap:16px;align-items:center}
+    @media (max-width: 900px){
+      .toolbar{grid-template-columns: 1fr}
     }
-    .input{
-      width:5.5rem; padding:.25rem .5rem;
-      border:1px solid #d1d5db; border-radius:.5rem;
-      text-align:right; background:#fff; color:#111827;
-    }
-    .muted{ color:#6b7280; }
-
-    /* ====== research.html 톤의 상단 네비 ====== */
-    .topbar{
-      position:sticky; top:0; z-index:40;
-      background:rgba(255,255,255,.9);
-      border-bottom:1px solid #e5e7eb;
-      backdrop-filter:saturate(180%) blur(8px);
-    }
-    .brand{ font-weight:800; letter-spacing:-.02em; }
-    .nav a{ padding:.45rem .7rem; border-radius:.6rem; font-weight:600; color:#334155; }
-    .nav a:hover{ background:#eef2ff; color:#1e3a8a; }
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    select.pill, input.pill{height:32px}
   </style>
 </head>
-<body class="bg-gray-100 p-2 font-sans text-sm">
-  <main class="mx-auto max-w-5xl space-y-5 mt-4">
+<body class="bg-gray-100 p-3 font-sans text-sm">
+  <main class="mx-auto max-w-5xl space-y-4">
     <!-- 헤더 -->
+    <header class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">WOS 전문가/스킬 레벨업 계산기</h1>
+        <p class="text-sm muted mt-1">전문가 4종과 각 전문가 스킬 4종 — 현재/목표 레벨 입력 시 필요한 <b>경험치</b>와 <b>표식·아이템</b> 합계를 출력</p>
+      </div>
+    </header>
+    
+    <!-- 상단 바 -->
     <section class="card">
-      <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">WOS 전문가/스킬 레벨업 계산기</h1>
-      <p class="text-sm muted mt-1">전문가 4종 / 스킬 4종 — 현재/목표 레벨 입력 시 필요한 <b>경험치</b>와 <b>표식·아이템</b> 합계를 출력합니다.</p>
+      <div class="toolbar">
+        <!-- 전문가 선택 -->
+        <div class="space-y-1">
+          <div class="font-semibold">전문가 선택</div>
+          <select id="selType" class="pill w-full">
+            <option value="Cyrille">키릴</option>
+            <option value="Agnes">아그네스</option>
+            <option value="Holger">홀게르</option>
+            <option value="Romulus">로물루스</option>
+          </select>
+        </div>
+
+        <!-- 레벨 범위 -->
+        <div class="space-y-1">
+          <div class="font-semibold">레벨 범위</div>
+          <div class="flex flex-wrap items-center gap-6">
+            <label class="inline-label">
+              <span class="muted">현재</span>
+              <select id="expertCur" class="pill w-24"></select>
+            </label>
+            <label class="inline-label">
+              <span class="muted">목표</span>
+              <select id="expertTgt" class="pill w-24"></select>
+            </label>
+            <span id="expertCap" class="muted"></span>
+          </div>
+        </div>
+
+        <!-- 필요 합계 -->
+        <div class="space-y-1">
+          <div class="font-semibold">필요 합계</div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex items-center justify-between"><span class="muted">경험치</span><span id="expertExp" class="value">0</span></div>
+            <div class="flex items-center justify-between"><span class="muted">표식</span><span id="expertMark" class="value">0</span></div>
+          </div>
+        </div>
+  
+        <!-- 초기화 버튼 -->
+        <div class="text-right">
+          <button id="btnReset"
+            class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+            초기화
+          </button>
+        </div>
+      </div>
     </section>
-
-    <!-- 전문가 선택 -->
-    <!-- 상단 한 장 카드 (스크린샷 스타일) -->
-  <section class="card max-w-5xl mx-auto">
-    <div class="grid grid-cols-12 gap-6 items-center">
-      <!-- 1) 전문가 선택 -->
-      <div class="col-span-12 md:col-span-3">
-        <div class="font-semibold mb-1">전문가 선택</div>
-        <select id="selType" class="px-3 py-1.5 rounded-xl border w-full md:w-auto">
-          <option value="Cyrille">키릴</option>
-          <option value="Agnes">아그네스</option>
-          <option value="Holger">홀게르</option>
-          <option value="Romulus">로물루스</option>
-        </select>
-      </div>
-
-      <!-- 2) 레벨 범위 -->
-      <div class="col-span-12 md:col-span-5">
-        <div class="font-semibold mb-1">레벨 범위</div>
-        <div class="flex items-center gap-4">
-          <label class="flex items-center gap-2">
-            <span class="muted">현재레벨</span>
-            <input id="expertCur" type="number" min="1" max="99" class="input">
-          </label>
-          <label class="flex items-center gap-2">
-            <span class="muted">목표레벨</span>
-            <input id="expertTgt" type="number" min="2" max="100" class="input">
-          </label>
-          <span id="expertCap" class="muted"></span>
-        </div>
-        <p id="expertWarn" class="text-xs text-amber-600 mt-1"></p>
-      </div>
-
-      <!-- 3) 필요 합계 -->
-      <div class="col-span-12 md:col-span-4">
-        <div class="font-semibold mb-1">필요 합계</div>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="flex justify-between">
-             <span class="muted">경험치</span>
-             <span id="expertExp">0</span></div>
-          <div class="flex justify-between">
-             <span class="muted">표식</span>
-             <span id="expertMark">0</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-    <!-- 스킬 1~4 -->
-    <section class="grid md:grid-cols-2 gap-2">
+    
+    <!-- 스킬 카드 반복 (1~4) -->
+    <section class="grid md:grid-cols-2 gap-4">
+      <!-- 스킬 템플릿 1 -->
       <div class="card">
         <h3 class="text-base font-bold mb-3">스킬 1</h3>
-        <div class="grid md:grid-cols-2 gap-2">
+        <div class="grid md:grid-cols-2 gap-4">
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위</div>
-            <div class="flex items-center gap-2">
-              <label class="flex items-center"><span class="text-sm muted">현재레벨</span><input id="s1Cur" type="number" min="0" max="99" value="0" class="input"></label>
-              <label class="flex items-center"><span class="text-sm muted">목표레벨</span><input id="s1Tgt" type="number" min="1" max="100" value="1" class="input"></label>
+            <div class="flex items-center gap-4">
+              <label class="inline-label"><span class="muted">현재</span><select id="s1Cur" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">목표</span><select id="s1Tgt" class="pill w-20"></select></label>
             </div>
-            <p id="s1Warn" class="text-xs text-amber-600 mt-1"></p>
-            <p id="s1Cap" class="text-xs muted mt-1"></p>
           </div>
           <div>
             <div class="text-sm font-semibold mb-1">필요 합계</div>
@@ -112,17 +100,16 @@
         </div>
       </div>
 
+      <!-- 스킬 2 -->
       <div class="card">
         <h3 class="text-base font-bold mb-3">스킬 2</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위</div>
             <div class="flex items-center gap-4">
-              <label class="flex items-center gap-2"><span class="text-sm muted">현재</span><input id="s2Cur" type="number" min="0" max="99" value="0" class="input"></label>
-              <label class="flex items-center gap-2"><span class="text-sm muted">목표</span><input id="s2Tgt" type="number" min="1" max="100" value="1" class="input"></label>
+              <label class="inline-label"><span class="muted">현재</span><select id="s2Cur" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">목표</span><select id="s2Tgt" class="pill w-20"></select></label>
             </div>
-            <p id="s2Warn" class="text-xs text-amber-600 mt-1"></p>
-            <p id="s2Cap" class="text-xs muted mt-1"></p>
           </div>
           <div>
             <div class="text-sm font-semibold mb-1">필요 합계</div>
@@ -134,17 +121,16 @@
         </div>
       </div>
 
+      <!-- 스킬 3 -->
       <div class="card">
         <h3 class="text-base font-bold mb-3">스킬 3</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위</div>
             <div class="flex items-center gap-4">
-              <label class="flex items-center gap-2"><span class="text-sm muted">현재</span><input id="s3Cur" type="number" min="1" max="99" value="1" class="input"></label>
-              <label class="flex items-center gap-2"><span class="text-sm muted">목표</span><input id="s3Tgt" type="number" min="2" max="100" value="2" class="input"></label>
+              <label class="inline-label"><span class="muted">현재</span><select id="s3Cur" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">목표</span><select id="s3Tgt" class="pill w-20"></select></label>
             </div>
-            <p id="s3Warn" class="text-xs text-amber-600 mt-1"></p>
-            <p id="s3Cap" class="text-xs muted mt-1"></p>
           </div>
           <div>
             <div class="text-sm font-semibold mb-1">필요 합계</div>
@@ -156,33 +142,32 @@
         </div>
       </div>
 
+      <!-- 스킬 4 -->
       <div class="card">
         <h3 class="text-base font-bold mb-3">스킬 4</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위</div>
             <div class="flex items-center gap-4">
-              <label class="flex items-center gap-2"><span class="text-sm muted">현재</span><input id="s4Cur" type="number" min="1" max="99" value="1" class="input"></label>
-              <label class="flex items-center gap-2"><span class="text-sm muted">목표</span><input id="s4Tgt" type="number" min="2" max="100" value="2" class="input"></label>
+              <label class="inline-label"><span class="muted">현재</span><select id="s4Cur" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">목표</span><select id="s4Tgt" class="pill w-20"></select></label>
             </div>
-            <p id="s4Warn" class="text-xs text-amber-600 mt-1"></p>
-            <p id="s4Cap" class="text-xs muted mt-1"></p>
           </div>
           <div>
             <div class="text-sm font-semibold mb-1">필요 합계</div>
             <div class="space-y-1 text-sm">
               <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s4Exp">0</span></div>
-              <div class="flex justify-between"><span class="muted">아이템</span><span id="s4Item">0</span></div>
+              <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s4Item">0</span></div>
             </div>
           </div>
         </div>
       </div>
     </section>
-
+    
     <!-- 총합 -->
     <section class="card">
       <h2 class="text-base font-bold mb-3">총합</h2>
-      <div class="grid sm:grid-cols-4 gap-3 text-sm">
+      <div class="grid sm:grid-cols-3 gap-3 text-sm">
         <div>
           <div class="font-semibold mb-1">전문가</div>
           <div class="flex justify-between"><span class="muted">경험치</span><span id="sumExpertExp">0</span></div>
@@ -191,317 +176,200 @@
         <div>
           <div class="font-semibold mb-1">스킬 합계</div>
           <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="sumSkillExp">0</span></div>
-          <div class="flex justify-between"><span class="muted">아이템</span><span id="sumSkillItem">0</span></div>
-        </div>
-        <div class="sm:col-span-2">
-          <div class="font-semibold mb-1">전체 합계</div>
-          <div class="grid grid-cols-2 gap-2">
-            <div class="flex justify-between"><span class="muted">총 경험치</span><span id="sumAllExp">0</span></div>
-            <div class="flex justify-between"><span class="muted">총 소모 (표식+아이템)</span><span id="sumAllToken">0</span></div>
-          </div>
+          <div class="flex justify-between"><span class="muted">학습의 책</span><span id="sumSkillItem">0</span></div>
         </div>
       </div>
     </section>
   </main>
-
+  
   <script>
-    /* ===================== 1) 전문가별 CSV 경로 + 최대 레벨 설정 ===================== */
-    // ※ 본체 CSV는 "레벨, 경험치, 표식, 버프효과" (헤더 가능)
-    // ※ 스킬 CSV는 앞 2열(스킬경험치, 아이템)
-    const SETTINGS = {
-      "Cyrille": {
-        base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Cyrille.csv", max: 100 },
-        skills: [
-          { csv: "", max: 100 }, // 스킬1 CSV 경로 입력
-          { csv: "", max: 100 }, // 스킬2
-          { csv: "", max: 100 }, // 스킬3
-          { csv: "", max: 100 }  // 스킬4
-        ]
-      },
-      "Agnes":   { base: { csv: "", max: 100 }, skills: [{csv:"",max:100},{csv:"",max:100},{csv:"",max:100},{csv:"",max:100}] },
-      "Holger":  { base: { csv: "", max: 100 }, skills: [{csv:"",max:100},{csv:"",max:100},{csv:"",max:100},{csv:"",max:100}] },
-      "Romulus": { base: { csv: "", max: 100 }, skills: [{csv:"",max:100},{csv:"",max:100},{csv:"",max:100},{csv:"",max:100}] }
-    };
-
-    /* ===================== 2) 유틸리티 ===================== */
-    function fmt(n){ return Number(n||0).toLocaleString("ko-KR"); }
-    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-    // 본체 CSV (레벨, 경험치, 표식, 버프효과) → 단계별 요구치 배열로
-    function parseExpertCSV(text){
-      const rows = text.replace(/\r/g, "").split("\n").filter(Boolean);
-      if (!rows.length) return [[], [], 2];
-      const head = rows[0].split(/[,;\t]/).map(s=>s.trim());
-      const hasHeader = /(레벨|Lv|LEVEL|level)/.test(head[0] || "") ||
-                        /(경험치|Exp|EXP)/.test(head[1] || "");
-      const data = hasHeader ? rows.slice(1) : rows;
-
-      const levels=[], expAbs=[], markAbs=[];
-      for (const line of data){
-        const c = line.split(/[,;\t]/);
-        const lv   = Number((c[0]??"").replace(/[^0-9.-]/g,""));
-        const exp  = Number((c[1]??"").replace(/[^0-9.-]/g,""));
-        const mark = Number((c[2]??"").replace(/[^0-9.-]/g,""));
-        if (Number.isFinite(lv)) levels.push(lv);
-        expAbs.push(Number.isFinite(exp) ? exp : 0);
-        markAbs.push(Number.isFinite(mark)? mark: 0);
+    document.addEventListener("DOMContentLoaded", () => {
+      const SETTINGS = {
+        "Cyrille": {
+          base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille.csv" },
+          skills: [
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Cyrille_S1.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Cyrille_S2.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Cyrille_S3.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Cyrille_S4.csv" }
+          ]
+        },
+        "Agnes":   { 
+          base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes.csv" },
+          skills: [
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Agnes_S1.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Agnes_S2.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Agnes_S3.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Agnes_S4.csv" }
+          ]
+        },
+        "Holger":  { 
+          base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger.csv" },
+          skills: [
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Holger_S1.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Holger_S2.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Holger_S3.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Holger_S4.csv" }
+          ]
+        },
+        "Romulus": { 
+          base:   { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus.csv" },
+          skills: [
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Romulus_S1.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Romulus_S2.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Romulus_S3.csv" },
+            { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Romulus_S4.csv" }
+          ]
+        },
+      };
+    
+      let expertLevels = [];
+      let expertExp = [];
+      let expertMark = [];
+    
+      const $ = (id)=>document.getElementById(id);
+      const selType = $("selType");
+      const expertCur = $("expertCur");
+      const expertTgt = $("expertTgt");
+      const expertWarn = $("expertWarn");
+      const expertCap  = $("expertCap");
+      const outExpertExp  = $("expertExp");
+      const outExpertMark = $("expertMark");
+      const btnReset = $("btnReset");
+    
+      const fmt = n => Number(n||0).toLocaleString("ko-KR");
+      const isFilled = v => v !== "" && v !== null && v !== undefined && !Number.isNaN(+v);
+    
+      function detectDelim(sample){
+        return sample.includes("\\t") ? "\\t" : (sample.includes(";") ? ";" : ",");
       }
-
-      // 레벨 오름차순 정렬
-      const idx = levels.map((_,i)=>i).sort((a,b)=>levels[a]-levels[b]);
-      const E = idx.map(i=>expAbs[i]);
-      const M = idx.map(i=>markAbs[i]);
-
-      // 누적인지 판별 후 차분
-      function toSteps(abs){
-        if (abs.length <= 1) return [];
-        let pos=0; for(let i=0;i<abs.length-1;i++) if(abs[i+1]-abs[i]>0) pos++;
-        const cumulative = pos >= Math.max(1, Math.floor((abs.length-1)*0.6));
-        if (!cumulative) return abs;
-        const step=[]; for(let i=0;i<abs.length-1;i++) step.push(Math.max(0, abs[i+1]-abs[i]));
-        return step;
-      }
-
-      const expSteps  = toSteps(E);
-      const markSteps = toSteps(M);
-      const maxLevel  = Math.max(2, Math.min(levels.length, 100));
-      return [expSteps, markSteps, maxLevel];
-    }
-
-    // 스킬 CSV: 앞 2열(스킬경험치, 아이템)
-    function parseCSV2Cols(text){
-      const rows = text.replace(/\r/g, "").split("\n").filter(Boolean);
-      const a=[], b=[];
-      for(const line of rows){
-        const c = line.split(/[,;\t]/);
-        const v1 = Number((c[0]??"").replace(/[^0-9.-]/g,""));
-        const v2 = Number((c[1]??"").replace(/[^0-9.-]/g,""));
-        a.push(Number.isFinite(v1)?v1:0);
-        b.push(Number.isFinite(v2)?v2:0);
-      }
-      return [a,b];
-    }
-
-    // 구간 합 (설정 상한과 데이터 상한 중 작은 값 사용)
-    function sumRange(perLevel, fromLv, toLv, maxLv){
-      const dataMax = Math.max(2, Math.min((perLevel?.length||0)+1, 100));
-      const hardMax = Math.max(2, Math.min(maxLv ?? dataMax, dataMax));
-      const F = Math.max(1, Math.min(fromLv, hardMax-1));
-      const T = Math.max(2, Math.min(toLv,   hardMax));
-      if (T <= F) return 0;
-      let s = 0; for(let lv=F; lv<T; lv++) s += perLevel[lv-1] || 0;
-      return s;
-    }
-
-    async function fetchText(url){
-      const res = await fetch(url, { cache: "no-store" });
-      if(!res.ok) throw new Error("CSV 로드 실패: " + url);
-      return await res.text();
-    }
-
-    /* ===================== 3) 데이터 저장소 ===================== */
-    let expertExp = Array(100).fill(0);
-    let expertMark= Array(100).fill(0);
-    let skillExp  = [0,1,2,3].map(()=>Array(100).fill(0));
-    let skillItem = [0,1,2,3].map(()=>Array(100).fill(0));
-
-    /* ===================== 4) DOM 참조 ===================== */
-    const selType = document.getElementById("selType");
-    const expertCur = document.getElementById("expertCur");
-    const expertTgt = document.getElementById("expertTgt");
-    const expertWarn= document.getElementById("expertWarn");
-    const expertCap = document.getElementById("expertCap");
-    const outExpertExp  = document.getElementById("expertExp");
-    const outExpertMark = document.getElementById("expertMark");
-
-    const skillRefs = [1,2,3,4].map(i=>({
-      cur:  document.getElementById(`s${i}Cur`),
-      tgt:  document.getElementById(`s${i}Tgt`),
-      warn: document.getElementById(`s${i}Warn`),
-      cap:  document.getElementById(`s${i}Cap`),
-      outExp:  document.getElementById(`s${i}Exp`),
-      outItem: document.getElementById(`s${i}Item`)
-    }));
-
-    const sumExpertExp  = document.getElementById("sumExpertExp");
-    const sumExpertMark = document.getElementById("sumExpertMark");
-    const sumSkillExp   = document.getElementById("sumSkillExp");
-    const sumSkillItem  = document.getElementById("sumSkillItem");
-    const sumAllExp     = document.getElementById("sumAllExp");
-    const sumAllToken   = document.getElementById("sumAllToken");
-
-    /* ===================== 5) 상한 적용/보정 & 입력 정규화 ===================== */
-    function applyMaxCaps(type){
-      const conf = SETTINGS[type];
-      const baseMax = conf?.base?.max ?? Math.min(expertExp.length||100, 100);
-      expertCur.max = Math.max(1, baseMax-1);
-      expertTgt.max = baseMax;
-      expertCap.textContent = `(최대 레벨 ${baseMax})`;
-
-      conf.skills.forEach((s, i)=>{
-        const m = s?.max ?? Math.min(skillExp[i].length||100, 100);
-        skillRefs[i].cur.max = Math.max(0, m-1); // 0 레벨 시작 스킬 고려
-        skillRefs[i].tgt.max = m;
-        skillRefs[i].cap.textContent = `(최대 레벨 ${m})`;
-      });
-    }
-
-    function normalizeInputs(type){
-      const conf = SETTINGS[type];
-      const baseMax = conf?.base?.max ?? Math.min(expertExp.length||100, 100);
-      expertCur.value = clamp(+expertCur.value||1, 1, baseMax-1);
-      expertTgt.value = clamp(+expertTgt.value||2, 2, baseMax);
-      if (+expertTgt.value <= +expertCur.value) expertTgt.value = Math.min(+expertCur.value+1, baseMax);
-
-      conf.skills.forEach((s, i)=>{
-        const m = s?.max ?? Math.min(skillExp[i].length||100, 100);
-        const ref = skillRefs[i];
-        const curMin = +ref.cur.min || 0;
-        ref.cur.value = clamp(+ref.cur.value||curMin, curMin, m-1);
-        ref.tgt.value = clamp(+ref.tgt.value||curMin+1, curMin+1, m);
-        if (+ref.tgt.value <= +ref.cur.value) ref.tgt.value = Math.min(+ref.cur.value+1, m);
-      });
-    }
-
-    /* ===================== 6) 계산 ===================== */
-    function calc(){
-      const type = selType.value;
-      const conf = SETTINGS[type];
-
-      // 본체
-      const baseMax = conf?.base?.max ?? Math.min(expertExp.length||100, 100);
-      const cur = +expertCur.value || 1;
-      const tgt = +expertTgt.value || 2;
-      expertWarn.textContent = (tgt <= cur) ? "목표 레벨은 현재보다 커야 합니다." : "";
-      const eExp  = sumRange(expertExp, cur, tgt, baseMax);
-      const eMark = sumRange(expertMark, cur, tgt, baseMax);
-      outExpertExp.textContent  = fmt(eExp);
-      outExpertMark.textContent = fmt(eMark);
-
-      // 스킬
-      let tSkillExp=0, tSkillItem=0;
-      for(let i=0;i<4;i++){
-        const sMax = conf?.skills?.[i]?.max ?? Math.min(skillExp[i].length||100, 100);
-        const c = +skillRefs[i].cur.value || (+skillRefs[i].cur.min||0);
-        const t = +skillRefs[i].tgt.value || (c+1);
-        skillRefs[i].warn.textContent = (t <= c) ? "목표 레벨은 현재보다 커야 합니다." : "";
-        const sExp  = sumRange(skillExp[i],  c, t, sMax);
-        const sItem = sumRange(skillItem[i], c, t, sMax);
-        skillRefs[i].outExp.textContent  = fmt(sExp);
-        skillRefs[i].outItem.textContent = fmt(sItem);
-        tSkillExp  += sExp;
-        tSkillItem += sItem;
-      }
-
-      // 총합
-      sumExpertExp.textContent  = fmt(eExp);
-      sumExpertMark.textContent = fmt(eMark);
-      sumSkillExp.textContent   = fmt(tSkillExp);
-      sumSkillItem.textContent  = fmt(tSkillItem);
-      sumAllExp.textContent     = fmt(eExp + tSkillExp);
-      sumAllToken.textContent   = fmt(eMark + tSkillItem);
-    }
-
-    /* ===================== 7) CSV 로드 ===================== */
-    async function loadDataFor(type){
-      const conf = SETTINGS[type];
-
-      // 본체: base.csv
-      if (conf.base?.csv){
-        try{
-          const txt = await fetchText(conf.base.csv);
-          const [expSteps, markSteps, dataMax] = parseExpertCSV(txt);
-          expertExp = expSteps;
-          expertMark = markSteps;
-          conf.base.max = Math.min(conf.base.max ?? dataMax, dataMax);
-        }catch(e){
-          console.warn(e);
-          expertExp = Array(100).fill(0);
-          expertMark = Array(100).fill(0);
+    
+      function parseExpertCSV(text){
+        const lines = text.replace(/\\uFEFF/g,"").replace(/\\r/g,"")
+                          .split("\\n").filter(l=>l.trim()!=="");
+        if (!lines.length) return { levels:[], expSteps:[], markSteps:[] };
+        const delim = detectDelim(lines[0]);
+        const hasHeader = /(레벨|lv|level|경험치|exp)/i.test(lines[0]);
+        const start = hasHeader ? 1 : 0;
+        const EXP = new Map(), MARK = new Map();
+        const rawLevels = [];
+        for (let i=start;i<lines.length;i++){
+          const c  = lines[i].split(delim);
+          const lv = Number((c[0]||"").replace(/[^\\d.-]/g,""));
+          if (!Number.isFinite(lv)) continue;
+          rawLevels.push(lv);
+          const ex = Number((c[1]||"").replace(/[^\\d.-]/g,""));
+          const mk = Number((c[2]||"").replace(/[^\\d.-]/g,""));
+          EXP.set(lv, Number.isFinite(ex)?ex:0);
+          MARK.set(lv, Number.isFinite(mk)?mk:0);
         }
-      } else {
-        expertExp = Array(100).fill(0);
-        expertMark = Array(100).fill(0);
+        const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
+        if (levels.length < 2) return { levels, expSteps:[], markSteps:[] };
+    
+        const isCum = (map) => {
+          let prev=null, nondec=0, pos=0;
+          for (const lv of levels){
+            const v = map.get(lv)??0;
+            if (prev!==null){ if (v>=prev) nondec++; if (v>prev) pos++; }
+            prev = v;
+          }
+          return nondec >= (levels.length-1) && pos>0;
+        };
+        const cumExp  = isCum(EXP);
+        const cumMark = isCum(MARK);
+        const expSteps = [], markSteps = [];
+        for (let i=0;i<levels.length-1;i++){
+          const a=levels[i], b=levels[i+1];
+          expSteps[i]  = Math.max(0, cumExp  ? ((EXP.get(b)||0)-(EXP.get(a)||0)) : (EXP.get(a)||0));
+          markSteps[i] = Math.max(0, cumMark ? ((MARK.get(b)||0)-(MARK.get(a)||0)) : (MARK.get(a)||0));
+        }
+        return { levels, expSteps, markSteps };
       }
-
-      // 스킬 1~4: 각각 skills[i].csv
-      for(let i=0;i<4;i++){
-        const s = conf.skills[i] || {};
-        if (s.csv){
+    
+      function renderExpertLevelOptions(levels){
+        const opts = ['<option value=""> </option>']
+          .concat(levels.map(lv => `<option value="\${lv}">Lv\${lv}</option>`))
+          .join("");
+        expertCur.innerHTML = opts;
+        expertTgt.innerHTML = opts;
+      }
+    
+      async function fetchText(url){
+        const r = await fetch(url, {cache:"no-store"});
+        if (!r.ok) throw new Error(`CSV 로드 실패: \${r.status} \${url}`);
+        return r.text();
+      }
+    
+      async function loadDataFor(type){
+        const conf = SETTINGS[type];
+        expertWarn.textContent = "";
+        if (conf.base?.csv){
           try{
-            const txt = await fetchText(s.csv);
-            const [a,b] = parseCSV2Cols(txt);
-            skillExp[i]  = a;
-            skillItem[i] = b;
-            const dataMax = Math.max(2, Math.min(a.length + 1, 100));
-            s.max = Math.min(s.max ?? dataMax, dataMax);
+            const txt = await fetchText(conf.base.csv);
+            const { levels, expSteps, markSteps } = parseExpertCSV(txt);
+            expertLevels = levels;
+            expertExp    = expSteps;
+            expertMark   = markSteps;
+            const maxLv = levels.length ? Math.max(...levels) : null;
+            expertCap.textContent = maxLv ? `(최대 레벨 ${maxLv})` : "";
+            renderExpertLevelOptions(expertLevels);
+            clearAll();
           }catch(e){
             console.warn(e);
-            skillExp[i]  = Array(100).fill(0);
-            skillItem[i] = Array(100).fill(0);
+            expertWarn.textContent = "본체 CSV를 불러오지 못했습니다. 경로/CORS 확인";
+            expertLevels = []; expertExp=[]; expertMark=[];
+            expertCap.textContent = "";
+            renderExpertLevelOptions(expertLevels);
+            clearAll();
           }
-        } else {
-          skillExp[i]  = Array(100).fill(0);
-          skillItem[i] = Array(100).fill(0);
         }
       }
-    }
-
-    /* ===================== 8) 이벤트 & 초기화 ===================== */
-    document.getElementById("btnReset").addEventListener("click", ()=>{
-      const type = selType.value;
-      const conf = SETTINGS[type];
-      const baseMax = conf?.base?.max ?? 100;
-      expertCur.value = 1;
-      expertTgt.value = Math.min(2, baseMax);
-      conf.skills.forEach((s,i)=>{
-        const m = s?.max ?? 100;
-        const curMin = +skillRefs[i].cur.min || 0;
-        skillRefs[i].cur.value = curMin;
-        skillRefs[i].tgt.value = Math.min(curMin+1, m);
-      });
-      calc();
-    });
-
-    selType.addEventListener("change", async ()=>{
-      await loadDataFor(selType.value);
-      applyMaxCaps(selType.value);
-      normalizeInputs(selType.value);
-      calc();
-    });
-
-    [expertCur, expertTgt].forEach(el=>el.addEventListener("input", calc));
-    skillRefs.forEach(ref=>{
-      ref.cur.addEventListener("input", calc);
-      ref.tgt.addEventListener("input", calc);
-    });
-
-    // 최초 실행
-    (async function init(){
-      await loadDataFor(selType.value);
-      applyMaxCaps(selType.value);
-      normalizeInputs(selType.value);
-      calc();
-      sendHeightToParent();
-    })();
-  </script>
-  <script>
-      function sendHeightToParent() {
-        const height = document.body.scrollHeight + 10;
-        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    
+      function calc(){
+        let eExp=0, eMark=0;
+        const curLv = +expertCur.value;
+        const tgtLv = +expertTgt.value;
+        if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
+          const fi = expertLevels.indexOf(curLv);
+          const ti = expertLevels.indexOf(tgtLv);
+          expertWarn.textContent =
+            (fi<0 || ti<0) ? "CSV에 없는 레벨입니다."
+            : (ti<=fi)     ? "목표 레벨은 현재보다 커야 합니다."
+            : "";
+          if (fi>=0 && ti>fi){
+            for (let i=fi; i<ti; i++){
+              eExp  += expertExp[i]  || 0;
+              eMark += expertMark[i] || 0;
+            }
+            outExpertExp.textContent  = fmt(eExp);
+            outExpertMark.textContent = fmt(eMark);
+          } else {
+            outExpertExp.textContent  = "0";
+            outExpertMark.textContent = "0";
+          }
+        } else {
+          expertWarn.textContent = "";
+          outExpertExp.textContent  = "0";
+          outExpertMark.textContent = "0";
+        }
       }
-  
-      // 페이지 최초 로드 시
-      window.addEventListener("load", () => {
-        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-      });
-      
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
-          window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    
+      function clearAll(){
+        expertCur.value = "";
+        expertTgt.value = "";
+        outExpertExp.textContent = "0";
+        outExpertMark.textContent= "0";
       }
+    
+      selType.addEventListener("change", async ()=>{ await loadDataFor(selType.value); });
+      btnReset.addEventListener("click", clearAll);
+      [expertCur, expertTgt].forEach(el=>{
+        el.addEventListener("input", calc);
+        el.addEventListener("change", calc);
+      });
+    
+      (async function init(){ await loadDataFor(selType.value); })();
+    });
     </script>
 </body>
 </html>
