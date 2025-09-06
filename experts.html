@@ -6,6 +6,17 @@
   <title>WOS 전문가/스킬 레벨업 계산기 (자동 목표 = 현재+1)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    .card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 16px;box-shadow:0 6px 18px rgba(15,23,42,.06)}
+    .muted{color:#6b7280}
+    .value{min-width:3rem;text-align:right}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    .toolbar{display:grid;grid-template-columns: 180px 1fr auto;gap:16px;align-items:center}
+    @media (max-width: 900px){
+      .toolbar{grid-template-columns: 1fr}
+    }
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    select.pill{height:32px}
+    .err{color:#b45309}
      /* ✅ 다크모드 전용 */
     body.dark-mode {
       background-color: #121212;
@@ -56,6 +67,14 @@
     .dark-mode select { color: #000 !important; }
     .dark-mode input { color: #000 !important; }
   </style>
+  <!-- ✅ 다크모드 상태 유지 스크립트 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
 </head>
 <body class="bg-gray-100 p-3 font-sans text-sm">
   <main class="max-w-[1500] mx-auto bg-white p-2 rounded-xl shadow-md">
