@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SVS 점수계산</title>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>SVS 점수계산</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       /* 1) 라이트 기본 팔레트 */
@@ -70,45 +70,45 @@
       /* 좌우 2열 그리드 (모바일 1열) */
       .cols{ display:grid; grid-template-columns:1fr; gap:.75rem; align-items:start; }
       @media (min-width:900px){ .cols{ grid-template-columns:1fr 1fr; } }
-    </style>
-  </head>
-  <body class="p-3 md:p-6">
-    <div class="mx-auto maxw">
-      <!-- 탭 버튼 -->
-      <div class="tabs">
-        <button class="tab-btn" data-tab="day1" aria-selected="true">1일차</button>
-        <button class="tab-btn" data-tab="day2" aria-selected="false">2일차</button>
+		</style>
+	</head>
+	<body class="p-3 md:p-6">
+		<div class="mx-auto maxw">
+			<!-- 탭 버튼 -->
+			<div class="tabs">
+				<button class="tab-btn" data-tab="day1" aria-selected="true">1일차</button>
+				<button class="tab-btn" data-tab="day2" aria-selected="false">2일차</button>
         <button class="tab-btn" data-tab="day3" aria-selected="false">3일차</button>
         <button class="tab-btn" data-tab="day4" aria-selected="false">4일차</button>
         <button class="tab-btn" data-tab="day5" aria-selected="false">5일차</button>
       </div>
-
-      <!-- ==================== Day 1 ==================== -->
-      <section id="panel-day1" class="tab-panel active space-y-3">
-        <div class="flex items-center justify-between">
-          <h1 class="text-xl md:text-2xl font-bold">준비단계 1일차</h1>
-          <div class="text-right">
-            <span class="align-middle mr-2 font-semibold">총 점수</span>
-            <span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d1_total">-</span>
-          </div>
-        </div>
-
-        <!-- Day1 메인 -->
-        <section class="card rounded-xl overflow-hidden">
-          <table class="t">
-            <thead>
-              <tr class="head">
-                <th style="width:25%">1일차 미션</th>
-                <th class="r" style="width:25%">개별 점수</th>
-                <th class="r" style="width:25%">재료</th>
-                <th class="r" style="width:25%">Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>불의수정 소모</td>
-                <td class="r mono">2,000</td>
-                <td class="in"><input id="d1_qFire" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+			
+			<!-- ==================== Day 1 ==================== -->
+			<section id="panel-day1" class="tab-panel active space-y-3">
+				<div class="flex items-center justify-between">
+					<h1 class="text-xl md:text-2xl font-bold">준비단계 1일차</h1>
+					<div class="text-right">
+						<span class="align-middle mr-2 font-semibold">총 점수</span>
+						<span class="sum inline-block min-w-[140px] px-3 py-2 text-right rounded font-mono" id="d1_total">-</span>
+					</div>
+				</div>
+				
+				<!-- Day1 메인 -->
+				<section class="card rounded-xl overflow-hidden">
+					<table class="t">
+						<thead>
+							<tr class="head">
+								<th style="width:25%">1일차 미션</th>
+								<th class="r" style="width:25%">개별 점수</th>
+								<th class="r" style="width:25%">재료</th>
+								<th class="r" style="width:25%">Points</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>불의수정 소모</td>
+								<td class="r mono">2,000</td>
+								<td class="in"><input id="d1_qFire" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
                 <td class="r" id="d1_pFire">-</td>
               </tr>
               <tr>
@@ -124,28 +124,28 @@
                 <td class="r" id="d1_pRef">-</td>
               </tr>
               <tr>
-                <td>가속사용 (1분당)</td>
+                <td>가속사용 (1분당)[전문가 스킬학습 가속포함]</td>
                 <td class="r mono">30</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d1_pSpd">-</td>
               </tr>
               <tr>
-                <td>영주보석 업그레이드</td>
+								<td>영주보석 업그레이드</td>
                 <td class="r mono">70</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d1_pCharms">-</td>
               </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Day1 Speedups -->
+						</tbody>
+					</table>
+				</section>
+				
+				<!-- Day1 Speedups -->
         <div class="cols">
-          <section class="card rounded-xl overflow-hidden">
+					<section class="card rounded-xl overflow-hidden">
             <table class="t">
               <thead>
                 <tr class="head">
-                  <th style="width:25%">가속사용</th>
+									<th style="width:25%">가속사용</th>
                   <th style="width:25%">개별점수</th>
                   <th class="r" style="width:25%">개수</th>
                   <th class="r" style="width:25%">Points</th>
@@ -255,10 +255,22 @@
                 <td class="r" id="d2_pHero">-</td>
               </tr>
               <tr>
-                <td>가속사용 (1분당)</td>
+                <td>가속사용 (1분당)[전문가 스킬학습 가속포함]</td>
                 <td class="r mono">30</td>
                 <td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r" id="d2_pSpd">-</td>
+              </tr>
+              <tr>
+                <td>전문가 표식 1개 소모</td>
+                <td class="r mono">6,000</td>
+                <td class="in"><input id="d2_qExp1" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_pExp1">-</td>
+              </tr>
+              <tr>
+                <td>학문의 책 1권 소모</td>
+                <td class="r mono">60</td>
+                <td class="in"><input id="d2_qExp2" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d2_pExp2">-</td>
               </tr>
               <tr>
                 <td>자원채집</td>
@@ -430,6 +442,18 @@
                 <td class="r mono">30,000</td>
                 <td class="in r">아래표에서 입력</td>
                 <td class="r mono" id="d3_polarPtsTop">-</td>
+              </tr>
+              <tr>
+                <td>전문가 표식 1개 소모</td>
+                <td class="r mono">6,000</td>
+                <td class="in"><input id="d3_qExp1" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d3_pExp1">-</td>
+              </tr>
+              <tr>
+                <td>학문의 책 1권 소모</td>
+                <td class="r mono">60</td>
+                <td class="in"><input id="d3_qExp2" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+                <td class="r" id="d3_pExp2">-</td>
               </tr>
             </tbody>
           </table>
@@ -762,9 +786,9 @@
               </tr>
               <tr>
                 <td>마스터리석 1개 소모</td>
-                <td class="r mono">4,000</td>
-                <td class="in"><input id="d5_pEss" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-                <td class="r mono" id="d5_pEss">-</td>
+				<td class="r mono">4,000</td>
+				<td class="in"><input id="d5_pEss" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+				<td class="r mono" id="d5_pEss">-</td>
               </tr>
               <tr>
                 <td>미스릴 1개 소모</td>
@@ -773,27 +797,27 @@
                 <td class="r mono" id="d5_pMit">-</td>
               </tr>
               <tr>
-                <td>가속사용 (1분당)</td>
-                <td class="r mono">30</td>
-	    <td class="in text-center text-sm">아래표에서 입력</td>
+                <td>가속사용 (1분당)[전문가 스킬학습 가속포함]</td>
+				<td class="r mono">30</td>
+				<td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r mono" id="d5_pSpd">-</td>
               </tr>
               <tr>
                 <td>영주장비 업그레이드</td>
-                <td class="r mono">36</td>
-	    <td class="in text-center text-sm">아래표에서 입력</td>
+				<td class="r mono">36</td>
+				<td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r mono" id="d5_pChief">-</td>
               </tr>
               <tr>
                 <td>펫 돌파</td>
-                <td class="r mono">50</td>
-	    <td class="in text-center text-sm">아래표에서 입력</td>
+				<td class="r mono">50</td>
+				<td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r mono" id="d5_pPetAdv">-</td>
               </tr>
               <tr>
                 <td>펫 단련</td>
-                <td class="r mono">Various</td>
-	    <td class="in text-center text-sm">아래표에서 입력</td>
+				<td class="r mono">Various</td>
+				<td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r mono" id="d5_pPetRef">-</td>
               </tr>
             </tbody>
@@ -919,7 +943,6 @@
         </div>
       </section>
     </div>
-
     <script>
       /* ===================== 공통 유틸 ===================== */
       const fmt = n => (isFinite(n) ? n.toLocaleString() : "-");
@@ -1009,7 +1032,7 @@
       d1_calcMain();
 
       /* ===================== Day 2 ===================== */
-      const D2_UNIT = { fire:2000, shard:1000, refined:30000, wheel:8000, spdPerMin:30 };
+      const D2_UNIT = { fire:2000, shard:1000, refined:30000, wheel:8000, spdPerMin:30, exp1:6000, exp2:60 };
       const D2_HERO = { rare:350, epic:1220, myth:3040 };
       const D2_GATHER = [
         {k:"T8 (고기, 나무, 석탄, 철광)",v:28000},
@@ -1075,10 +1098,14 @@
         const pSha =(+((document.getElementById("d2_qShard").value)||0))*D2_UNIT.shard;
         const pRef =(+((document.getElementById("d2_qRef").value)||0))*D2_UNIT.refined;
         const pWh  =(+((document.getElementById("d2_qWheel").value)||0))*D2_UNIT.wheel;
+		const pExp1  =(+((document.getElementById("d2_qExp1").value)||0))*D2_UNIT.exp1;
+	    const pExp2  =(+((document.getElementById("d2_qExp2").value)||0))*D2_UNIT.exp2;
         document.getElementById("d2_pFire").textContent=fmt(pFire);
         document.getElementById("d2_pShard").textContent=fmt(pSha);
         document.getElementById("d2_pRef").textContent=fmt(pRef);
         document.getElementById("d2_pWheel").textContent=fmt(pWh);
+		document.getElementById("d2_pExp1").textContent=fmt(pExp1);
+		document.getElementById("d2_pExp2").textContent=fmt(pExp2);
         const hero=+((document.getElementById("d2_hsTot").dataset.val)||0);
         const sp  =+((document.getElementById("d2_spdTot").dataset.val)||0);
         const g   =+((document.getElementById("d2_gTot").dataset.val)||0);
@@ -1088,7 +1115,7 @@
         document.getElementById("d2_total").textContent=fmt(pFire+pSha+pRef+pWh+hero+sp+g);
       }
 
-      ["#d2_qFire","#d2_qShard","#d2_qRef","#d2_qWheel"].forEach(s=>document.querySelector(s).addEventListener("input", d2_calcMain));
+      ["#d2_qFire","#d2_qShard","#d2_qRef","#d2_qWheel", "#d2_qExp1", "#d2_qExp2"].forEach(s=>document.querySelector(s).addEventListener("input", d2_calcMain));
       ["#d2_hsR","#d2_hsE","#d2_hsM"].forEach(s=>document.querySelector(s).addEventListener("input", d2_calcHero));
       ["#d2_spdD","#d2_spdH","#d2_spdM"].forEach(s=>document.querySelector(s).addEventListener("input", d2_calcSpeed));
       d2_buildGather(); 
@@ -1098,7 +1125,7 @@
       d2_calcMain();
 
       /* ===================== Day 3 ===================== */
-      const D3_UNIT = { wheel:8000, charmMul:70, hero:{rare:350,epic:1220,myth:3040} };
+      const D3_UNIT = { wheel:8000, charmMul:70, hero:{rare:350,epic:1220,myth:3040}, exp1:6000, exp2:60 };
       const D3_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
       const D3_BEAST_BASE = {
         "Level 1-10": 9000,"Level 11-15": 9750,"Level 16-20": 10500,
@@ -1126,7 +1153,17 @@
         d3_calcTotal();
       }
       document.getElementById("d3_wQty").addEventListener("input", d3_calcWheel);
-
+		
+	  function d3_calcExps(){
+		const pExp1  =(+((document.getElementById("d3_qExp1").value)||0))*D3_UNIT.exp1;
+	    const pExp2  =(+((document.getElementById("d3_qExp2").value)||0))*D3_UNIT.exp2;        
+		document.getElementById("d3_pExp1").textContent = d3_show(pExp1);
+		document.getElementById("d3_pExp2").textContent = d3_show(pExp2);
+        d3_calcTotal();
+      }
+      document.getElementById("d3_qExp1").addEventListener("input", d3_calcExps);
+	  document.getElementById("d3_qExp2").addEventListener("input", d3_calcExps);
+		
       function d3_calcHero(){
         const r = +((document.getElementById("d3_hsR").value)||0) * D3_UNIT.hero.rare;
         const e = +((document.getElementById("d3_hsE").value)||0) * D3_UNIT.hero.epic;
@@ -1356,7 +1393,9 @@
           d3_parseNum(document.getElementById("d3_beastPtsTop").textContent) +
           d3_parseNum(document.getElementById("d3_petAdvPtsTop").textContent) +
           d3_parseNum(document.getElementById("d3_petRefPtsTop").textContent) +
-          d3_parseNum(document.getElementById("d3_polarPtsTop").textContent);
+          d3_parseNum(document.getElementById("d3_polarPtsTop").textContent) +
+		  d3_parseNum(document.getElementById("d3_pExp1").textContent) +
+		  d3_parseNum(document.getElementById("d3_pExp2").textContent);
         document.getElementById("d3_total").textContent = d3_show(total)||0;
       }
 
@@ -1372,6 +1411,7 @@
         d3_calcBeasts();
         d3_calcPetAdv(); 
         d3_calcPetRef(); 
+		d3_calcExps();
         d3_calcTotal();
       }
       d3_init();
