@@ -786,9 +786,9 @@
               </tr>
               <tr>
                 <td>마스터리석 1개 소모</td>
-				<td class="r mono">4,000</td>
-				<td class="in"><input id="d5_pEss" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
-				<td class="r mono" id="d5_pEss">-</td>
+								<td class="r mono">4,000</td>
+								<td class="in"><input id="d5_pEss" class="w-full r font-mono" type="number" min="0" step="1" value="0"></td>
+								<td class="r mono" id="d5_pEss">-</td>
               </tr>
               <tr>
                 <td>미스릴 1개 소모</td>
@@ -798,26 +798,26 @@
               </tr>
               <tr>
                 <td>가속사용 (1분당)[전문가 스킬학습 가속포함]</td>
-				<td class="r mono">30</td>
-				<td class="in text-center text-sm">아래표에서 입력</td>
+								<td class="r mono">30</td>
+								<td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r mono" id="d5_pSpd">-</td>
               </tr>
               <tr>
                 <td>영주장비 업그레이드</td>
-				<td class="r mono">36</td>
-				<td class="in text-center text-sm">아래표에서 입력</td>
+								<td class="r mono">36</td>
+								<td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r mono" id="d5_pChief">-</td>
               </tr>
               <tr>
                 <td>펫 돌파</td>
-				<td class="r mono">50</td>
-				<td class="in text-center text-sm">아래표에서 입력</td>
+								<td class="r mono">50</td>
+								<td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r mono" id="d5_pPetAdv">-</td>
               </tr>
               <tr>
                 <td>펫 단련</td>
-				<td class="r mono">Various</td>
-				<td class="in text-center text-sm">아래표에서 입력</td>
+								<td class="r mono">Various</td>
+								<td class="in text-center text-sm">아래표에서 입력</td>
                 <td class="r mono" id="d5_pPetRef">-</td>
               </tr>
             </tbody>
@@ -1098,21 +1098,21 @@
         const pSha =(+((document.getElementById("d2_qShard").value)||0))*D2_UNIT.shard;
         const pRef =(+((document.getElementById("d2_qRef").value)||0))*D2_UNIT.refined;
         const pWh  =(+((document.getElementById("d2_qWheel").value)||0))*D2_UNIT.wheel;
-		const pExp1  =(+((document.getElementById("d2_qExp1").value)||0))*D2_UNIT.exp1;
-	    const pExp2  =(+((document.getElementById("d2_qExp2").value)||0))*D2_UNIT.exp2;
+				const pExp1  =(+((document.getElementById("d2_qExp1").value)||0))*D2_UNIT.exp1;
+				const pExp2  =(+((document.getElementById("d2_qExp2").value)||0))*D2_UNIT.exp2;
         document.getElementById("d2_pFire").textContent=fmt(pFire);
         document.getElementById("d2_pShard").textContent=fmt(pSha);
         document.getElementById("d2_pRef").textContent=fmt(pRef);
         document.getElementById("d2_pWheel").textContent=fmt(pWh);
-		document.getElementById("d2_pExp1").textContent=fmt(pExp1);
-		document.getElementById("d2_pExp2").textContent=fmt(pExp2);
+				document.getElementById("d2_pExp1").textContent=fmt(pExp1);
+				document.getElementById("d2_pExp2").textContent=fmt(pExp2);
         const hero=+((document.getElementById("d2_hsTot").dataset.val)||0);
         const sp  =+((document.getElementById("d2_spdTot").dataset.val)||0);
         const g   =+((document.getElementById("d2_gTot").dataset.val)||0);
         document.getElementById("d2_pHero").textContent=fmt(hero);
         document.getElementById("d2_pSpd").textContent=fmt(sp);
         document.getElementById("d2_pGather").textContent=fmt(g);
-        document.getElementById("d2_total").textContent=fmt(pFire+pSha+pRef+pWh+hero+sp+g);
+        document.getElementById("d2_total").textContent=fmt(pFire+pSha+pRef+pWh+hero+sp+g+pExp1+pExp2);
       }
 
       ["#d2_qFire","#d2_qShard","#d2_qRef","#d2_qWheel", "#d2_qExp1", "#d2_qExp2"].forEach(s=>document.querySelector(s).addEventListener("input", d2_calcMain));
@@ -1153,18 +1153,19 @@
         d3_calcTotal();
       }
       document.getElementById("d3_wQty").addEventListener("input", d3_calcWheel);
-		
-	  function d3_calcExps(){
-		const pExp1  =(+((document.getElementById("d3_qExp1").value)||0))*D3_UNIT.exp1;
-	    const pExp2  =(+((document.getElementById("d3_qExp2").value)||0))*D3_UNIT.exp2;        
-		document.getElementById("d3_pExp1").textContent = d3_show(pExp1);
-		document.getElementById("d3_pExp2").textContent = d3_show(pExp2);
-        d3_calcTotal();
-      }
-      document.getElementById("d3_qExp1").addEventListener("input", d3_calcExps);
-	  document.getElementById("d3_qExp2").addEventListener("input", d3_calcExps);
-		
-      function d3_calcHero(){
+			
+			function d3_calcExps(){
+				const pExp1  =(+((document.getElementById("d3_qExp1").value)||0))*D3_UNIT.exp1;
+				const pExp2  =(+((document.getElementById("d3_qExp2").value)||0))*D3_UNIT.exp2; 
+				
+				document.getElementById("d3_pExp1").textContent = d3_show(pExp1);
+				document.getElementById("d3_pExp2").textContent = d3_show(pExp2);
+				d3_calcTotal();
+			}
+			document.getElementById("d3_qExp1").addEventListener("input", d3_calcExps);
+			document.getElementById("d3_qExp2").addEventListener("input", d3_calcExps);
+			
+			function d3_calcHero(){
         const r = +((document.getElementById("d3_hsR").value)||0) * D3_UNIT.hero.rare;
         const e = +((document.getElementById("d3_hsE").value)||0) * D3_UNIT.hero.epic;
         const m = +((document.getElementById("d3_hsM").value)||0) * D3_UNIT.hero.myth;
@@ -1394,8 +1395,8 @@
           d3_parseNum(document.getElementById("d3_petAdvPtsTop").textContent) +
           d3_parseNum(document.getElementById("d3_petRefPtsTop").textContent) +
           d3_parseNum(document.getElementById("d3_polarPtsTop").textContent) +
-		  d3_parseNum(document.getElementById("d3_pExp1").textContent) +
-		  d3_parseNum(document.getElementById("d3_pExp2").textContent);
+					d3_parseNum(document.getElementById("d3_pExp1").textContent) +
+					d3_parseNum(document.getElementById("d3_pExp2").textContent);
         document.getElementById("d3_total").textContent = d3_show(total)||0;
       }
 
@@ -1410,8 +1411,8 @@
         d3_calcCharms();
         d3_calcBeasts();
         d3_calcPetAdv(); 
-        d3_calcPetRef(); 
-		d3_calcExps();
+        d3_calcPetRef();
+				d3_calcExps();
         d3_calcTotal();
       }
       d3_init();
