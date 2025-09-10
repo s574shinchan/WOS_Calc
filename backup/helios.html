@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>연구 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+     /* ✅ 다크모드 전용 */
+    body.dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    
+    .dark-mode .border { border-color: #444 !important; }
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+  
+    .dark-mode .text-gray-800,
+    .dark-mode .text-gray-700,
+    .dark-mode .text-gray-600 { color: #dddddd !important; }
+  
+    .dark-mode .text-blue-700 { color: #66b0ff !important; }
+    .dark-mode .text-blue-600 { color: #80caff !important; }
+    .dark-mode .text-orange-500 { color: #ffa94d !important; }
+    .dark-mode .text-green-600 { color: #79e68c !important; }
+    .dark-mode .text-red-500 { color: #ff8080 !important; }
+    .dark-mode .text-gray-500 { color: #aaa !important; }    
+    
+    .dark-mode .text-gray-800, 
+    .dark-mode .text-gray-600 { color: #e0e0e0 !important; }
+    
+    .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
+    .dark-mode th, .dark-mode td { border-color: #444 !important; }
+    .dark-mode thead th { color: #000 !important; }
+    
+    .dark-mode .bg-amber-100,    
+    .dark-mode .bg-green-100,
+    .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
+    
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+    
+    .dark-mode .bg-amber-50,
+    .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
+
+    .dark-mode .bg-blue-100,
+    .dark-mode .bg-blue-50,
+    .dark-mode .bg-orange-50,
+    .dark-mode .bg-purple-50,
+    .dark-mode .bg-yellow-50,
+    .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
+    
+    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
+    .dark-mode ul li { color: #ddd; }
+    
+    .dark-mode select option { color: #000 !important; }
+    .dark-mode select { color: #000 !important; }
+    .dark-mode input { color: #000 !important; }
+  </style>
+
+  <!-- ✅ 다크모드 상태 유지 스크립트 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">🧪 헬리오스 연구 계산기</h1>
+    <!-- 설명 추가 -->
+    <div class="text-gray-600 mb-4 text-sm">
+      <div class="mb-6">
+        <p>이 페이지는 헬리오스 병사연구에 필요한 자원(불수가루, 철강재)를 계산하는 화면입니다.</p>
+        <p>연구항목별로 개별 선택이 가능하며 보유 중인 자원을 입력하면 추가로 필요한 수량만을 정확히 확인할 수 있습니다.</p>
+        <p>결과는 자원별 합계와 함께 표시되며, 소요시간은 정확하지 않아서 제외되었습니다..</p>
+      </div>
+      
+      <div class="grid grid-cols-6 gap-x-4 px-0 text-center">
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkInf" checked = true onchange="handleCheck('chkInf')" class="mr-1 w-4 h-4" /> 방패병
+        </div>
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkLan" onchange="handleCheck('chkLan')" class="mr-1 w-4 h-4" /> 창병
+        </div>
+        <div class="flex items-center text-sm font-semibold leading-tight">
+          <input type="checkbox" id="chkMask" onchange="handleCheck('chkMask')" class="mr-1 w-4 h-4" /> 궁병
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:flex md:flex-wrap md:items-center gap-4">
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkVP10" onchange="handleVPCheck('chkVP10')" class="mr-2 w-4 h-4">일반)부집행관 (10%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkVP15" onchange="handleVPCheck('chkVP15')" class="mr-2 w-4 h-4">최집)부집행관 (15%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkServerBuff" class="mr-2 w-4 h-4">연구서버버프 (10%)
+        </label>
+        <div class="flex items-center gap-2">
+          <label for="speedPercent" class="font-semibold whitespace-nowrap">연구속도 (%)</label>
+          <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
+        </div>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6" id="researchGrid"></div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div><label class="block font-semibold">보유 가루</label>
+        <input type="number" id="own-가루" class="w-full border rounded p-2" placeholder="0" min="0" />
+      </div>
+      <div><label class="block font-semibold">보유 철강재</label>
+        <input type="number" id="own-철강재" class="w-full border rounded p-2" placeholder="0" min="0" />
+      </div>
+    </div>
+    <button onclick="calculateResearch()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg">계산하기</button>
+  </div>
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+  <script>
+    const researchData = {
+      "I": [
+        { level: 1, 가루: 16, 철강재: 5000, 시간: "0d 08:00:00" },
+        { level: 2, 가루: 25, 철강재: 8000, 시간: "0d 12:48:00" },
+        { level: 3, 가루: 41, 철강재: 13000, 시간: "0d 20:48:00" },
+        { level: 4, 가루: 68, 철강재: 21000, 시간: "1d 10:24:00" },
+        { level: 5, 가루: 102, 철강재: 33000, 시간: "2d 06:00:00" },
+      ],
+      "II-A": [
+        { level: 1, 가루: 40, 철강재: 10000, 시간: "0d 20:00:00" },
+        { level: 2, 가루: 56, 철강재: 14000, 시간: "1d 04:00:00" },
+        { level: 3, 가루: 74, 철강재: 18000, 시간: "1d 13:00:00" },
+        { level: 4, 가루: 102, 철강재: 25000, 시간: "2d 03:00:00" },
+        { level: 5, 가루: 136, 철강재: 24000, 시간: "2d 20:00:00" },
+        { level: 6, 가루: 184, 철강재: 46000, 시간: "3d 20:00:00" },
+        { level: 7, 가루: 248, 철강재: 62000, 시간: "5d 04:00:00" },
+        { level: 8, 가루: 334, 철강재: 83000, 시간: "6d 23:00:00" },
+      ],
+      "II-B": [
+        { level: 1, 가루: 40, 철강재: 10000, 시간: "0d 20:00:00" },
+        { level: 2, 가루: 56, 철강재: 14000, 시간: "1d 04:00:00" },
+        { level: 3, 가루: 74, 철강재: 18000, 시간: "1d 13:00:00" },
+        { level: 4, 가루: 102, 철강재: 25000, 시간: "2d 03:00:00" },
+        { level: 5, 가루: 136, 철강재: 24000, 시간: "2d 20:00:00" },
+        { level: 6, 가루: 184, 철강재: 46000, 시간: "3d 20:00:00" },
+        { level: 7, 가루: 248, 철강재: 62000, 시간: "5d 04:00:00" },
+        { level: 8, 가루: 334, 철강재: 83000, 시간: "6d 23:00:00" },
+      ],
+      "III": [
+        { level: 1, 가루: 83, 철강재: 23000, 시간: "1d 05:20:17" },
+        { level: 2, 가루: 102, 철강재: 28000, 시간: "1d 12:05:08" },
+        { level: 3, 가루: 125, 철강재: 34000, 시간: "1d 20:00:25" },
+        { level: 4, 가루: 150, 철강재: 41000, 시간: "2d 04:48:30" },
+        { level: 5, 가루: 184, 철강재: 51000, 시간: "2d 16:32:37" },
+        { level: 6, 가루: 225, 철강재: 62000, 시간: "3d 07:12:45" },
+        { level: 7, 가루: 276, 철강재: 76000, 시간: "4d 00:58:56" },
+        { level: 8, 가루: 334, 철강재: 93000, 시간: "4d 21:21:08" },
+        { level: 9, 가루: 418, 철강재: 110000, 시간: "6d 02:41:25" },
+        { level: 10, 가루: 502, 철강재: 130000, 시간: "7d 08:01:42" },
+        { level: 11, 가루: 602, 철강재: 160000, 시간: "8d 19:14:02" },
+        { level: 12, 가루: 744, 철강재: 200000, 시간: "10d 21:06:31" },
+      ],
+      "IV-A": [
+        { level: 1, 가루: 54, 철강재: 15000, 시간: "0d 18:55:40" },
+        { level: 2, 가루: 66, 철강재: 18000, 시간: "0d 23:16:52" },
+        { level: 3, 가루: 81, 철강재: 22000, 시간: "1d 04:23:30" },
+        { level: 4, 가루: 97, 철강재: 27000, 시간: "1d 10:04:12" },
+        { level: 5, 가루: 118, 철강재: 33000, 시간: "1d 17:38:28" },
+        { level: 6, 가루: 145, 철강재: 40000, 시간: "2d 03:06:18" },
+        { level: 7, 가루: 178, 철강재: 49000, 시간: "2d 14:27:42" },
+        { level: 8, 가루: 216, 철강재: 60000, 시간: "3d 03:42:20" },
+        { level: 9, 가루: 270, 철강재: 75000, 시간: "3d 22:38:20" },
+        { level: 10, 가루: 324, 철강재: 90000, 시간: "4d 17:34:00" },
+        { level: 11, 가루: 388, 철강재: 100000, 시간: "5d 16:16:48" },
+        { level: 12, 가루: 480, 철강재: 130000, 시간: "7d 00:27:26" },
+      ],
+      "IV-B": [
+        { level: 1, 가루: 54, 철강재: 15000, 시간: "0d 18:55:40" },
+        { level: 2, 가루: 66, 철강재: 18000, 시간: "0d 23:16:52" },
+        { level: 3, 가루: 81, 철강재: 22000, 시간: "1d 04:23:30" },
+        { level: 4, 가루: 97, 철강재: 27000, 시간: "1d 10:04:12" },
+        { level: 5, 가루: 118, 철강재: 33000, 시간: "1d 17:38:28" },
+        { level: 6, 가루: 145, 철강재: 40000, 시간: "2d 03:06:18" },
+        { level: 7, 가루: 178, 철강재: 49000, 시간: "2d 14:27:42" },
+        { level: 8, 가루: 216, 철강재: 60000, 시간: "3d 03:42:20" },
+        { level: 9, 가루: 270, 철강재: 75000, 시간: "3d 22:38:20" },
+        { level: 10, 가루: 324, 철강재: 90000, 시간: "4d 17:34:00" },
+        { level: 11, 가루: 388, 철강재: 100000, 시간: "5d 16:16:48" },
+        { level: 12, 가루: 480, 철강재: 130000, 시간: "7d 00:27:26" },
+      ],
+      "V": [
+        { level: 1, 가루: 2236, 철강재: 1000000, 시간: "91d 08:15:00" },
+      ],
+      "Healing": [
+        { level: 1, 가루: 102, 철강재: 30000, 시간: "2d 02:00:00" },
+        { level: 2, 가루: 137, 철강재: 40000, 시간: "2d 19:30:00" },
+        { level: 3, 가루: 188, 철강재: 55000, 시간: "3d 20:30:00" },
+        { level: 4, 가루: 255, 철강재: 75000, 시간: "5d 05:00:00" },
+        { level: 5, 가루: 341, 철강재: 100000, 시간: "6d 23:30:00" },
+        { level: 6, 가루: 459, 철강재: 130000, 시간: "9d 09:00:00" },
+        { level: 7, 가루: 612, 철강재: 180000, 시간: "12d 12:00:00" },
+        { level: 8, 가루: 836, 철강재: 240000, 시간: "17d 02:00:00" },
+        { level: 9, 가루: 1122, 철강재: 330000, 시간: "22d 22:00:00" },
+        { level: 10, 가루: 1530, 철강재: 450000, 시간: "31d 06:00:00" },
+      ],
+      "Training": [
+        { level: 1, 가루: 102, 철강재: 30000, 시간: "2d 02:00:00" },
+        { level: 2, 가루: 137, 철강재: 40000, 시간: "2d 19:30:00" },
+        { level: 3, 가루: 188, 철강재: 55000, 시간: "3d 20:30:00" },
+        { level: 4, 가루: 255, 철강재: 75000, 시간: "5d 05:00:00" },
+        { level: 5, 가루: 341, 철강재: 100000, 시간: "6d 23:30:00" },
+        { level: 6, 가루: 459, 철강재: 130000, 시간: "9d 09:00:00" },
+        { level: 7, 가루: 612, 철강재: 180000, 시간: "12d 12:00:00" },
+        { level: 8, 가루: 836, 철강재: 240000, 시간: "17d 02:00:00" },
+        { level: 9, 가루: 1122, 철강재: 330000, 시간: "22d 22:00:00" },
+        { level: 10, 가루: 1530, 철강재: 450000, 시간: "31d 06:00:00" },
+      ],
+      "HealingTime": [
+        { level: 1, 가루: 51, 철강재: 15000, 시간: "1d 01:00:00" },
+        { level: 2, 가루: 68, 철강재: 20000, 시간: "1d 09:45:00" },
+        { level: 3, 가루: 94, 철강재: 27000, 시간: "1d 22:15:00" },
+        { level: 4, 가루: 127, 철강재: 37000, 시간: "2d 14:30:00" },
+        { level: 5, 가루: 170, 철강재: 50000, 시간: "3d 11:45:00" },
+        { level: 6, 가루: 229, 철강재: 67000, 시간: "4d 16:30:00" },
+        { level: 7, 가루: 306, 철강재: 90000, 시간: "6d 06:00:00" },
+        { level: 8, 가루: 418, 철강재: 120000, 시간: "8d 13:00:00" },
+        { level: 9, 가루: 561, 철강재: 160000, 시간: "11d 11:00:00" },
+        { level: 10, 가루: 765, 철강재: 220000, 시간: "15d 15:00:00" },
+      ]
+    };
+
+    let researchList = []; // 전역 변수로 선언
+    
+    function updateResearchList() {
+      const chkInf = document.getElementById("chkInf");
+      const chkLan = document.getElementById("chkLan");
+      const chkMask = document.getElementById("chkMask");
+
+      researchList = Object.entries(researchData).map(([key, value]) => {
+        let label = {
+          "I": "불꽃 부대",
+          "II-A": "파괴력 연구",
+          "II-B" : "HP 연구",
+          "III" : "불꽃 군단",
+          "IV-A" : "공격력 연구",
+          "IV-B" : "방어력 연구",
+          "V" : "헬리오스 병사",
+          "Healing" : "치료 연구",
+          "Training" : "훈련 연구",
+          "HealingTime" : "구급 연구",
+        }[key];
+
+        switch (key) {
+          case "II-A":
+            if (chkInf.checked) label = "불꽃 공격";
+            else if (chkLan.checked) label = "불의 돌격";
+            else if (chkMask.checked) label = "수정의 시야";
+            break;
+          case "II-B":
+            if (chkInf.checked) label = "불꽃 방패";
+            else if (chkLan.checked) label = "불의 방어";
+            else if (chkMask.checked) label = "수정 갑옷";
+            break;
+          case "IV-A":
+            if (chkInf.checked) label = "불꽃 도끼";
+            else if (chkLan.checked) label = "불의 창";
+            else if (chkMask.checked) label = "수정 화살";
+            break;
+          case "IV-B":
+            if (chkInf.checked) label = "불꽃 수호";
+            else if (chkLan.checked) label = "불의 수호";
+            else if (chkMask.checked) label = "수정의 가호";
+            break;
+          default:
+            break;
+        }
+
+        return {
+          key,
+          label,
+          max: Math.max(...value.map(v => v.level))
+        };
+      });
+    }
+
+    function createLevelOptions(max) {
+      return Array.from({ length: max + 1 }, (_, i) => `<option value="${i}">${i}</option>`).join('');
+    }
+
+    function renderResearchCards() {
+      const container = document.getElementById("researchGrid");
+      container.innerHTML = ""; // Clear previous content
+      researchList.forEach(item => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <div class="border p-2 rounded bg-purple-50 text-xs">
+            <label for="check-${item.key}" class="flex items-center text-sm font-semibold mb-1">
+              <input type="checkbox" id="check-${item.key}" class="mr-1 w-4 h-4 ">${item.label}
+            </label>
+            <div class="flex items-center gap-2 mb-1">
+              <label class="text-sm whitespace-nowrap">현재</label>
+              <select id="current-${item.key}" class="w-full border rounded py-1 px-2 text-sm">
+                ${createLevelOptions(item.max)}
+              </select>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+              <label class="text-sm whitespace-nowrap">목표</label>
+              <select id="target-${item.key}" class="w-full border rounded py-1 px-2 text-sm">
+                ${createLevelOptions(item.max)}
+              </select>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+
+        // 여기서 JS로 이벤트를 연결
+        const currentSelect = div.querySelector(`#current-${item.key}`);
+        const targetSelect = div.querySelector(`#target-${item.key}`);
+        currentSelect.addEventListener("change", () => {
+          let nextValue = parseInt(currentSelect.value) + 1;
+          if (nextValue > item.max) nextValue = item.max; // 최대값 초과 방지
+          targetSelect.value = nextValue;
+        });
+      });
+    }
+
+    function handleCheck(toggleId) {
+      const chkInf = document.getElementById("chkInf");
+      const chkLan = document.getElementById("chkLan");
+      const chkMask = document.getElementById("chkMask");
+
+      if (toggleId === "chkInf" && chkInf.checked) {
+        chkLan.checked = false;
+        chkMask.checked = false;
+      } else if (toggleId === "chkLan" && chkLan.checked) {
+        chkInf.checked = false;
+        chkMask.checked = false;
+      } else if (toggleId === "chkMask" && chkMask.checked) {
+        chkInf.checked = false;
+        chkLan.checked = false;
+      }
+
+      updateResearchList();
+      renderResearchCards();
+    }
+
+    function handleVPCheck(toggleId) {
+      const chkVP10 = document.getElementById("chkVP10");
+      const chkVP15 = document.getElementById("chkVP15");
+
+      if (toggleId === "chkVP10" && chkVP10.checked) {
+        chkVP15.checked = false;
+      } else if (toggleId === "chkVP15" && chkVP15.checked) {
+        chkVP10.checked = false;
+      }
+    }
+
+    function formatTime(sec) {
+      const d = Math.floor(sec / 86400);
+      sec %= 86400;
+      const h = Math.floor(sec / 3600);
+      sec %= 3600;
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${d}d ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function parseTimeToSeconds(timeStr) {
+      const [d, hms] = timeStr.split(" ");
+      const [h, m, s] = hms.split(":").map(Number);
+      return (parseInt(d) || 0) * 86400 + h * 3600 + m * 60 + s;
+    }
+
+    function calculateResearch() {
+      let total = { 가루: 0, 철강재: 0, 시간: 0 };
+      let rows = "";
+
+      let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+
+      if (document.getElementById("chkVP10").checked) factor += 0.10;
+      if (document.getElementById("chkVP15").checked) factor += 0.15;
+      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+
+      researchList.forEach(item => {
+        const checked = document.getElementById(`check-${item.key}`).checked;
+        if (!checked) return;
+
+        const cur = parseInt(document.getElementById(`current-${item.key}`).value);
+        const tgt = parseInt(document.getElementById(`target-${item.key}`).value);
+        if (cur >= tgt) return;
+
+        const data = researchData[item.key];
+        const subtotal = { 가루: 0, 철강재: 0, 시간: 0 };
+
+        for (let i = cur + 1; i <= tgt; i++) {
+          const row = data.find(r => r.level === i);
+          if (!row) continue;
+          subtotal.가루 += row.가루 || 0;
+          subtotal.철강재 += row.철강재 || 0;
+          subtotal.시간 += parseTimeToSeconds(row.시간 || 0);
+        }
+
+        total.가루 += subtotal.가루;
+        total.철강재 += subtotal.철강재;
+        total.시간 += subtotal.시간;
+
+        rows += `
+          <tr class="text-center">
+            <td class="border p-1">${item.label}</td>
+            <td class="border p-1">${cur} → ${tgt}</td>
+            <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
+            <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
+             <td class="border p-1">${formatTime(Math.round(subtotal.시간 / factor))}</td>
+          </tr>`;
+      });
+
+      const owned = {
+        가루: parseFloat(document.getElementById("own-가루").value) || 0,
+        철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
+      };
+
+      rows += `
+        <tr class="row-total text-center font-bold bg-purple-100">
+          <td class="border p-1" colspan="2">총합</td>
+          <td class="border p-1">${total.가루.toLocaleString()}</td>
+          <td class="border p-1">${total.철강재.toLocaleString()}</td>
+          <td class="border p-1">${formatTime(Math.round(total.시간 / factor))}</td>
+        </tr>
+        <tr class="row-owned text-center font-bold bg-orange-50">
+          <td class="border p-1" colspan="2">보유량</td>
+          <td class="border p-1">${owned.가루.toLocaleString()}</td>
+          <td class="border p-1">${owned.철강재.toLocaleString()}</td>
+          <td class="border p-1"></td>
+        </tr>
+        <tr class="row-deficit text-center font-bold bg-red-50">
+          <td class="border p-1" colspan="2">과부족</td>
+          <td class="border p-1">${(owned.가루 - total.가루).toLocaleString()}</td>
+          <td class="border p-1">${(owned.철강재 - total.철강재).toLocaleString()}</td>
+          <td class="border p-1"></td>
+        </tr>
+      `;
+
+      const resultHTML = `
+        <table class="w-full table-auto border text-sm text-center mt-4">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-1">연구</th>
+              <th class="border p-1">레벨</th>
+              <th class="border p-1">불수가루</th>
+              <th class="border p-1">철강재</th>
+              <th class="border p-1">소요시간</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
+    }
+
+    // 최초 실행
+    updateResearchList();
+    renderResearchCards();
+    sendHeightToParent();
+  </script>
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+        (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
+      {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
