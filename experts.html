@@ -300,6 +300,7 @@
     const sumExpertExp  = $("sumExpertExp");
     const sumExpertMark = $("sumExpertMark");
     const btnReset = $("btnReset");
+    const expertEffect =$("expertEffect");
 
     const sRef = [1,2,3,4].map(i=>({
       cur:$(`s${i}Cur`), tgt:$(`s${i}Tgt`),
@@ -568,10 +569,15 @@
       sRef.forEach(ref=>{
         ref.cur.value="";
         ref.tgt.innerHTML = '<option value=""></option>';
-        ref.warn.textContent=""; ref.outE.textContent="0"; ref.outI.textContent="0";
+        ref.warn.textContent=""; 
+        ref.outE.textContent="0"; 
+        ref.outI.textContent="0";
       });
       sumSkillExp.textContent  = "0";
       sumSkillItem.textContent = "0";
+      
+      document.querySelectorAll(".skill-effect").forEach(el => { el.textContent = "-"; });
+      expertEffect.textContent = "-";
     }
 
     // ====== 자동 목표 = 현재+1 ======
@@ -596,10 +602,10 @@
       });
     });
 
-expertTgt.addEventListener("change", () => {
-  calc();
-  updateExpertEffect();
-});
+    expertTgt.addEventListener("change", () => {
+      calc();
+      updateExpertEffect();
+    });
 
     // 변동에 따른 계산
     [expertTgt].forEach(el=>{ el.addEventListener("change", calc); });
@@ -608,15 +614,15 @@ expertTgt.addEventListener("change", () => {
     });
 
     selType.addEventListener("change", async ()=>{ 
-await loadDataFor(selType.value); 
-clearAll(); 
-  buildFullExpertEffects(selType.value, expertLevels); // ★ 추가
-  updateSkillTitles();                                  // (선택) 스킬 카드 제목 동기화
-  updateSkillEffects();                                 // 스킬 효과 즉시 반영
-  updateExpertEffect();                                 // ★ 추가
-});
+      await loadDataFor(selType.value); 
+      clearAll();
+      buildFullExpertEffects(selType.value, expertLevels);
+      updateSkillTitles();
+      updateSkillEffects();
+      updateExpertEffect();
+    });
     btnReset.addEventListener("click", clearAll);
-
+    
     (async function init(){ await loadDataFor(selType.value); })();
   });
   </script>
