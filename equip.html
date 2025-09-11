@@ -261,6 +261,8 @@
         </div>`;
       const el = document.getElementById("summaryBody");
       if (el) el.innerHTML = summaryBody;
+
+      sendHeightToParent();
     }
 
     // 디바운스
@@ -273,6 +275,14 @@
     // 초기화
     fetchCSVData();
 
+    /* 유틸 */
+    function sendHeightToParent(){ 
+      const h=document.body.scrollHeight+10; 
+      window.parent?.postMessage({type:"FRAME_CHANGE",height:h},"*"); 
+    }
+    
+    window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
+    
     // UX: 개발중 복사/디버그 방지 원코드 습관 유지
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("keydown", function (e) {
