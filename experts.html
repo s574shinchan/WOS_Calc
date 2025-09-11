@@ -111,11 +111,18 @@
           <button id="btnReset" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">초기화</button>
         </div>
       </div>
+
+      <!-- 전문가 카드(section) 내부 어딘가, 계산 영역 아래에 추가 -->
+      <div class="exp-divider border-t mt-4"></div>
+      <div class="pt-3 text-sm">
+        <div class="font-semibold mb-1">전문가 효과 (목표 기준)</div>
+        <div id="expertEffect" class="muted">-</div>
+      </div>
     </section>
 
     <section class="grid md:grid-cols-2 gap-4 mb-4">
       <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-        <h3 class="text-base font-bold mb-3">스킬 1</h3>
+        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="0">스킬 1</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위 <span id="s1Cap" class="muted"></span></div>
@@ -133,10 +140,15 @@
             </div>
           </div>
         </div>
+           <div class="exp-divider border-t mt-4"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1">스킬 효과 (목표 기준)</div>
+              <div class="skill-effect muted" data-index="0">-</div>
+            </div>
       </div>
 
       <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-        <h3 class="text-base font-bold mb-3">스킬 2</h3>
+        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="1">스킬 2</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위 <span id="s2Cap" class="muted"></span></div>
@@ -154,10 +166,15 @@
             </div>
           </div>
         </div>
+           <div class="exp-divider border-t mt-4"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1">스킬 효과 (목표 기준)</div>
+              <div class="skill-effect muted" data-index="1">-</div>
+            </div>
       </div>
 
       <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-        <h3 class="text-base font-bold mb-3">스킬 3</h3>
+        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="2">스킬 3</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위 <span id="s3Cap" class="muted"></span></div>
@@ -175,10 +192,15 @@
             </div>
           </div>
         </div>
+           <div class="exp-divider border-t mt-4"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1">스킬 효과 (목표 기준)</div>
+              <div class="skill-effect muted" data-index="2">-</div>
+            </div>
       </div>
 
       <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-        <h3 class="text-base font-bold mb-3">스킬 4</h3>
+        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="3">스킬 4</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <div class="text-sm font-semibold mb-1">레벨 범위 <span id="s4Cap" class="muted"></span></div>
@@ -196,6 +218,11 @@
             </div>
           </div>
         </div>
+           <div class="exp-divider border-t mt-4"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1">스킬 효과 (목표 기준)</div>
+              <div class="skill-effect muted" data-index="3">-</div>
+            </div>
       </div>
     </section>
 
@@ -402,6 +429,7 @@
         .join("");
       selectEl.innerHTML = opts;
     }
+
     function renderTargetOptions(selectEl, levels, greaterThan, useDot=false){
       const label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
       const filtered = levels.filter(lv => lv > greaterThan);
@@ -482,6 +510,10 @@
       if (sumExpertMark) sumExpertMark.textContent = "0";
       sumSkillExp.textContent  = "0";
       sumSkillItem.textContent = "0";
+
+      buildFullExpertEffects(type, expertLevels);
+      updateExpertEffect();
+
       sendHeightToParent();
     }
 
@@ -496,7 +528,7 @@
       if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
         const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
         if (expertWarn) {
-          expertWarn.textContent = (ti<=fi) ? "목표 레벨은 현재보다 커야 합니다." : "";
+          expertWarn.textContent = (ti<=fi) ? "" : "";
         }
         if (fi>=0 && ti>fi){
           for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
@@ -550,6 +582,7 @@
       // 첫 유효 옵션(=cur+1)이 있으면 자동 선택
       if (expertTgt.options.length > 1) expertTgt.selectedIndex = 1;
       calc();
+      updateExpertEffect();
     });
 
     sRef.forEach((ref, i) => {
@@ -563,18 +596,407 @@
       });
     });
 
+expertTgt.addEventListener("change", () => {
+  calc();
+  updateExpertEffect();
+});
+
     // 변동에 따른 계산
     [expertTgt].forEach(el=>{ el.addEventListener("change", calc); });
     sRef.forEach(ref=>{
       ref.tgt.addEventListener("change", calc);
     });
 
-    selType.addEventListener("change", async ()=>{ await loadDataFor(selType.value); clearAll(); });
+    selType.addEventListener("change", async ()=>{ 
+await loadDataFor(selType.value); 
+clearAll(); 
+  buildFullExpertEffects(selType.value, expertLevels); // ★ 추가
+  updateSkillTitles();                                  // (선택) 스킬 카드 제목 동기화
+  updateSkillEffects();                                 // 스킬 효과 즉시 반영
+  updateExpertEffect();                                 // ★ 추가
+});
     btnReset.addEventListener("click", clearAll);
 
     (async function init(){ await loadDataFor(selType.value); })();
   });
   </script>
+<script>
+// ───────── 본체(전문가) 레벨별 효과: 오버라이드 표 ─────────
+// EXPERT_EFFECTS_OVERRIDE[전문가키][레벨] = "문구"
+const EXPERT_EFFECTS_OVERRIDE = {
+  Cyrille: {
+    1:  "곰사냥에서 획득하는 자신의 피해포인트 +2%",
+    10: "곰사냥에서 획득하는 자신의 피해포인트 +4%",
+    20: "곰사냥에서 획득하는 자신의 피해포인트 +6%",
+    30: "곰사냥에서 획득하는 자신의 피해포인트 +9%",
+    40: "곰사냥에서 획득하는 자신의 피해포인트 +12%",
+    50: "곰사냥에서 획득하는 자신의 피해포인트 +15%",
+    60: "곰사냥에서 획득하는 자신의 피해포인트 +18%",
+    70: "곰사냥에서 획득하는 자신의 피해포인트 +21%",
+    80: "곰사냥에서 획득하는 자신의 피해포인트 +24%",
+    90: "곰사냥에서 획득하는 자신의 피해포인트 +27%",
+    100: "곰사냥에서 획득하는 자신의 피해포인트 +30%",
+  },
+  Agnes: {
+    1: "120분 채집마다 보물상자 1개 획득 / 일일상한 10개",
+    10: "120분 채집마다 보물상자 1개 획득 / 일일상한 12개",
+    20: "120분 채집마다 보물상자 1개 획득 / 일일상한 14개",
+    30: "120분 채집마다 보물상자 2개 획득 / 일일상한 16개",
+    40: "120분 채집마다 보물상자 2개 획득 / 일일상한 18개",
+    50: "120분 채집마다 보물상자 3개 획득 / 일일상한 20개",
+    60: "120분 채집마다 보물상자 3개 획득 / 일일상한 22개",
+    70: "120분 채집마다 보물상자 4개 획득 / 일일상한 24개",
+    80: "120분 채집마다 보물상자 4개 획득 / 일일상한 26개",
+    90: "120분 채집마다 보물상자 5개 획득 / 일일상한 28개",
+    100: "120분 채집마다 보물상자 5개 획득 / 일일상한 30개",
+  },
+  Holger:  { 
+    1: "경기장 전투 후 50% 확률로 보물상자 1개 획득",
+    10: "경기장 전투 후 55% 확률로 보물상자 1개 획득",
+    20: "경기장 전투 후 60% 확률로 보물상자 1개 획득",
+    30: "경기장 전투 후 65% 확률로 보물상자 1개 획득",
+    40: "경기장 전투 후 70% 확률로 보물상자 1개 획득",
+    50: "경기장 전투 후 75% 확률로 보물상자 2개 획득",
+    60: "경기장 전투 후 80% 확률로 보물상자 2개 획득",
+    70: "경기장 전투 후 85% 확률로 보물상자 2개 획득",
+    80: "경기장 전투 후 90% 확률로 보물상자 2개 획득",
+    90: "경기장 전투 후 95% 확률로 보물상자 2개 획득",
+    100: "경기장 전투 후 100% 확률로 보물상자 3개 획득",
+  },
+  Romulus: { 
+    1: "부대 출정량 300 증가",
+    10: "부대 출정량 600 증가",
+    20: "부대 출정량 1,000 증가",
+    30: "부대 출정량 1,500 증가",
+    40: "부대 출정량 2,000 증가",
+    50: "부대 출정량 3,000 증가",
+    60: "부대 출정량 4,000 증가",
+    70: "부대 출정량 5,500 증가",
+    80: "부대 출정량 7,000 증가",
+    90: "부대 출정량 8,500 증가",
+    100: "부대 출정량 10,000 증가",
+  },
+};
+
+// 런타임 풀커버리지 보관소
+const EXPERT_EFFECTS_FULL = { Cyrille:[], Agnes:[], Holger:[], Romulus:[] };
+
+// 현재 로드된 expertLevels를 기준으로 1~최대레벨까지 모두 채움
+function buildFullExpertEffects(expert, expertLevels) {
+  const maxLv = (expertLevels && expertLevels.length) ? expertLevels[expertLevels.length - 1] : 0;
+  const arr = Array.from({length: maxLv + 1}, (_, lv) => {
+    if (lv === 0) return ""; // Lv0 없음
+    return "-"; // 기본 문구
+  });
+  // 오버라이드 병합
+  const ov = EXPERT_EFFECTS_OVERRIDE[expert] || {};
+  Object.keys(ov).forEach(k => {
+    const lv = Number(k);
+    if (Number.isFinite(lv) && lv >= 1 && lv <= maxLv) arr[lv] = ov[k];
+  });
+  EXPERT_EFFECTS_FULL[expert] = arr;
+}
+
+function getExpertEffect(expert, level) {
+  return (EXPERT_EFFECTS_FULL[expert] || [])[level] || "";
+}
+
+function updateExpertEffect() {
+  const expert = document.getElementById("selType")?.value;
+  const tgtSel = document.getElementById("expertTgt");
+  const lv = Number(String(tgtSel?.value || "0").replace(/[^0-9]/g, "")) || 0;
+  const out = document.getElementById("expertEffect");
+  if (!out) return;
+  out.textContent = lv ? (getExpertEffect(expert, lv)) : "-";
+}
+</script>
+<script>
+// ================= 레벨별 효과 데이터 =================
+// 구조: SKILL_EFFECTS[전문가키][스킬인덱스][레벨] = "표시문구"
+//  - 전문가키: selType의 <option value="..."> 값과 일치 (Cyrille/Agnes/Holger/Romulus)
+//  - 스킬인덱스: 0=스킬1, 1=스킬2, 2=스킬3, 3=스킬4
+//  - 레벨: 정수 (목표 select의 값과 동일)
+const SKILL_EFFECTS = {
+  Cyrille: [
+    // 스킬1
+    {
+      1:"(곰사냥 한정)집결 수용량 30,000 증가",
+      2:"(곰사냥 한정)집결 수용량 60,000 증가",
+      3:"(곰사냥 한정)집결 수용량 90,000 증가",
+      4:"(곰사냥 한정)집결 수용량 120,000 증가",
+      5:"(곰사냥 한정)집결 수용량 150,000 증가",
+      6:"(곰사냥 한정)집결 수용량 180,000 증가",
+      7:"(곰사냥 한정)집결 수용량 210,000 증가",
+      8:"(곰사냥 한정)집결 수용량 240,000 증가",
+      9:"(곰사냥 한정)집결 수용량 270,000 증가",
+      10:"(곰사냥 한정)집결 수용량 300,000 증가",
+    },
+    // 스킬2
+    {
+      1:"보라너트 1개 추가 획득",
+      2:"보라너트 2개 추가 획득",
+      3:"보라너트 3개 추가 획득",
+      4:"보라너트 4개 추가 획득",
+      5:"보라너트 5개 추가 획득",
+    },
+    // 스킬3
+    {
+      1:"마스터리 에너지석 1개 추가 획득",
+      2:"마스터리 에너지석 2개 추가 획득",
+      3:"마스터리 에너지석 3개 추가 획득",
+      4:"마스터리 에너지석 4개 추가 획득",
+      5:"마스터리 에너지석 5개 추가 획득",
+    },
+    // 스킬4
+    {
+      1:"(곰사냥 한정)출정 수용량 3,000 증가",
+      2:"(곰사냥 한정)출정 수용량 6,000 증가",
+      3:"(곰사냥 한정)출정 수용량 9,000 증가",
+      4:"(곰사냥 한정)출정 수용량 12,000 증가",
+      5:"(곰사냥 한정)출정 수용량 15,000 증가",
+      6:"(곰사냥 한정)출정 수용량 18,000 증가",
+      7:"(곰사냥 한정)출정 수용량 21,000 증가",
+      8:"(곰사냥 한정)출정 수용량 24,000 증가",
+      9:"(곰사냥 한정)출정 수용량 27,000 증가",
+      10:"(곰사냥 한정)출정 수용량 30,000 증가",
+    },
+  ],
+  Agnes: [ 
+    // 스킬1
+    {
+      1:"등대 정보수량 2개 추가",
+      2:"등대 정보수량 3개 추가",
+      3:"등대 정보수량 4개 추가",
+      4:"등대 정보수량 6개 추가",
+      5:"등대 정보수량 8개 추가",
+    },
+    // 스킬2
+    {
+      1:"창고 스태미나 10 증가",
+      2:"창고 스태미나 15 증가",
+      3:"창고 스태미나 20 증가",
+      4:"창고 스태미나 30 증가",
+      5:"창고 스태미나 40 증가",
+    },
+    // 스킬3
+    {
+      1:"건설시간 2h 감소",
+      2:"건설시간 3h 감소",
+      3:"건설시간 4h 감소",
+      4:"건설시간 6h 감소",
+      5:"건설시간 8h 감소",
+    },
+    // 스킬4
+    {
+      1:"신비한 휘장 20개 증가 / 신비한 상점 무료새로고침 1회 증가",
+      2:"신비한 휘장 30개 증가 / 신비한 상점 무료새로고침 1회 증가",
+      3:"신비한 휘장 40개 증가 / 신비한 상점 무료새로고침 1회 증가",
+      4:"신비한 휘장 50개 증가 / 신비한 상점 무료새로고침 2회 증가",
+      5:"신비한 휘장 60개 증가 / 신비한 상점 무료새로고침 2회 증가",
+      6:"신비한 휘장 70개 증가 / 신비한 상점 무료새로고침 2회 증가",
+      7:"신비한 휘장 80개 증가 / 신비한 상점 무료새로고침 3회 증가",
+      8:"신비한 휘장 90개 증가 / 신비한 상점 무료새로고침 3회 증가",
+      9:"신비한 휘장 100개 증가 / 신비한 상점 무료새로고침 3회 증가",
+      10:"신비한 휘장 120개 증가 / 신비한 상점 무료새로고침 4회 증가",
+    },
+  ],  // 전 레벨 채워 넣기
+  Holger: [ 
+    // 스킬1
+    {
+      1:"경기장 병사 공격력 및 HP 2% 증가",
+      2:"경기장 병사 공격력 및 HP 4% 증가",
+      3:"경기장 병사 공격력 및 HP 6% 증가",
+      4:"경기장 병사 공격력 및 HP 8% 증가",
+      5:"경기장 병사 공격력 및 HP 10% 증가",
+      6:"경기장 병사 공격력 및 HP 12% 증가",
+      7:"경기장 병사 공격력 및 HP 14% 증가",
+      8:"경기장 병사 공격력 및 HP 16% 증가",
+      9:"경기장 병사 공격력 및 HP 18% 증가",
+      10:"경기장 병사 공격력 및 HP 20% 증가",
+    },
+    // 스킬2
+    {
+      1:"경기장 코인 5% 추가 획득",
+      2:"경기장 코인 10% 추가 획득",
+      3:"경기장 코인 15% 추가 획득",
+      4:"경기장 코인 20% 추가 획득",
+      5:"경기장 코인 25% 추가 획득",
+      6:"경기장 코인 30% 추가 획득",
+      7:"경기장 코인 35% 추가 획득",
+      8:"경기장 코인 40% 추가 획득",
+      9:"경기장 코인 45% 추가 획득",
+      10:"경기장 코인 50% 추가 획득",
+    },
+    // 스킬3
+    {
+      1:"경기장 상점 아이템 1개 추가 / 추가된 아이템 가격할인 5%",
+      2:"경기장 상점 아이템 1개 추가 / 추가된 아이템 가격할인 10%",
+      3:"경기장 상점 아이템 1개 추가 / 추가된 아이템 가격할인 15%",
+      4:"경기장 상점 아이템 1개 추가 / 추가된 아이템 가격할인 20%",
+      5:"경기장 상점 아이템 1개 추가 / 추가된 아이템 가격할인 25%",
+      6:"경기장 상점 아이템 2개 추가 / 추가된 아이템 가격할인 30%",
+      7:"경기장 상점 아이템 2개 추가 / 추가된 아이템 가격할인 35%",
+      8:"경기장 상점 아이템 2개 추가 / 추가된 아이템 가격할인 40%",
+      9:"경기장 상점 아이템 2개 추가 / 추가된 아이템 가격할인 45%",
+      10:"경기장 상점 아이템 3개 추가 / 추가된 아이템 가격할인 50%",
+    },
+    // 스킬4
+    {
+      1:"경기장 영웅 공격력 및 HP 2% 증가",
+      2:"경기장 영웅 공격력 및 HP 4% 증가",
+      3:"경기장 영웅 공격력 및 HP 6% 증가",
+      4:"경기장 영웅 공격력 및 HP 8% 증가",
+      5:"경기장 영웅 공격력 및 HP 10% 증가",
+      6:"경기장 영웅 공격력 및 HP 12% 증가",
+      7:"경기장 영웅 공격력 및 HP 14% 증가",
+      8:"경기장 영웅 공격력 및 HP 16% 증가",
+      9:"경기장 영웅 공격력 및 HP 18% 증가",
+      10:"경기장 영웅 공격력 및 HP 20% 증가",
+    },
+  ],
+  Romulus: [ 
+    // 스킬1
+    {
+      1:"병사 무료모집 : 150 / 군벌줄 1개 획득",
+      2:"병사 무료모집 : 200 / 군벌줄 2개 획득",
+      3:"병사 무료모집 : 250 / 군벌줄 3개 획득",
+      4:"병사 무료모집 : 300 / 군벌줄 4개 획득",
+      5:"병사 무료모집 : 350 / 군벌줄 5개 획득",
+      6:"병사 무료모집 : 400 / 군벌줄 6개 획득",
+      7:"병사 무료모집 : 450 / 군벌줄 7개 획득",
+      8:"병사 무료모집 : 500 / 군벌줄 8개 획득",
+      9:"병사 무료모집 : 550 / 군벌줄 9개 획득",
+      10:"병사 무료모집 : 600 / 군벌줄 10개 획득",
+    },
+    // 스킬2
+    {
+      1:"부대 공격력 : 0.5% / 부대 방어력 0.5% 증가",
+      2:"부대 공격력 : 1% / 부대 방어력 1% 증가",
+      3:"부대 공격력 : 1.5% / 부대 방어력 1.5% 증가",
+      4:"부대 공격력 : 2% / 부대 방어력 2% 증가",
+      5:"부대 공격력 : 2.5% / 부대 방어력 2.5% 증가",
+      6:"부대 공격력 : 3% / 부대 방어력 3% 증가",
+      7:"부대 공격력 : 3.5% / 부대 방어력 3.5% 증가",
+      8:"부대 공격력 : 4% / 부대 방어력 4% 증가",
+      9:"부대 공격력 : 4.5% / 부대 방어력 0.5% 증가",
+      10:"부대 공격력 : 5% / 부대 방어력 5% 증가",
+      11:"부대 공격력 : 5.5% / 부대 방어력 5.5% 증가",
+      12:"부대 공격력 : 6% / 부대 방어력 6% 증가",
+      13:"부대 공격력 : 6.5% / 부대 방어력 6.5% 증가",
+      14:"부대 공격력 : 7% / 부대 방어력 7% 증가",
+      15:"부대 공격력 : 7.5% / 부대 방어력 7.5% 증가",
+      16:"부대 공격력 : 8% / 부대 방어력 8% 증가",
+      17:"부대 공격력 : 8.5% / 부대 방어력 8.5% 증가",
+      18:"부대 공격력 : 9% / 부대 방어력 9% 증가",
+      19:"부대 공격력 : 9.5% / 부대 방어력 0.5% 증가",
+      20:"부대 공격력 : 10% / 부대 방어력 10% 증가",
+    },
+    // 스킬3
+    {
+      1:"부대 파괴력 : 0.5% / 부대 HP 0.5% 증가",
+      2:"부대 파괴력 : 1% / 부대 HP 1% 증가",
+      3:"부대 파괴력 : 1.5% / 부대 HP 1.5% 증가",
+      4:"부대 파괴력 : 2% / 부대 HP 2% 증가",
+      5:"부대 파괴력 : 2.5% / 부대 HP 2.5% 증가",
+      6:"부대 파괴력 : 3% / 부대 HP 3% 증가",
+      7:"부대 파괴력 : 3.5% / 부대 HP 3.5% 증가",
+      8:"부대 파괴력 : 4% / 부대 HP 4% 증가",
+      9:"부대 파괴력 : 4.5% / 부대 HP 0.5% 증가",
+      10:"부대 파괴력 : 5% / 부대 HP 5% 증가",
+      11:"부대 파괴력 : 5.5% / 부대 HP 5.5% 증가",
+      12:"부대 파괴력 : 6% / 부대 HP 6% 증가",
+      13:"부대 파괴력 : 6.5% / 부대 HP 6.5% 증가",
+      14:"부대 파괴력 : 7% / 부대 HP 7% 증가",
+      15:"부대 파괴력 : 7.5% / 부대 HP 7.5% 증가",
+      16:"부대 파괴력 : 8% / 부대 HP 8% 증가",
+      17:"부대 파괴력 : 8.5% / 부대 HP 8.5% 증가",
+      18:"부대 파괴력 : 9% / 부대 HP 9% 증가",
+      19:"부대 파괴력 : 9.5% / 부대 HP 0.5% 증가",
+      20:"부대 파괴력 : 10% / 부대 HP 10% 증가",
+    },
+    // 스킬4
+    {
+      1:"집결 수용량 5,000 증가",
+      2:"집결 수용량 10,000 증가",
+      3:"집결 수용량 15,000 증가",
+      4:"집결 수용량 20,000 증가",
+      5:"집결 수용량 25,000 증가",
+      6:"집결 수용량 30,000 증가",
+      7:"집결 수용량 35,000 증가",
+      8:"집결 수용량 40,000 증가",
+      9:"집결 수용량 45,000 증가",
+      10:"출정 수용량 50,000 증가",
+      11:"집결 수용량 55,000 증가",
+      12:"집결 수용량 60,000 증가",
+      13:"집결 수용량 65,000 증가",
+      14:"집결 수용량 70,000 증가",
+      15:"집결 수용량 75,000 증가",
+      16:"집결 수용량 80,000 증가",
+      17:"집결 수용량 85,000 증가",
+      18:"집결 수용량 90,000 증가",
+      19:"집결 수용량 95,000 증가",
+      20:"출정 수용량 100,000 증가",
+    },
+  ],
+};
+
+const SKILL_NAMES = {
+  Cyrille: ["사방포획", "재활용하기", "무기 마스터리", "곰의 천적"],
+  Agnes:   ["고효율 정찰", "스킬 레벨업", "엔지니어링 관리", "비밀지식"],
+  Holger:  ["엘레트 검투사", "빛나는 격투장", "경기장의 스타", "경기장의 용맹함"],
+  Romulus: ["전쟁의 부름", "최후의 방어선", "아이에테스의 위세", "한마음 한뜻"],
+};
+
+// ================ 표시 함수 ================
+function getEffectText(expert, skillIdx, level) {
+  const table = (SKILL_EFFECTS[expert] || [])[skillIdx] || {};
+  return table[level] || ""; // 없으면 빈 문자열
+}
+
+function updateSkillEffects() {
+  const expert = document.getElementById("selType")?.value;
+  if (!expert) return;
+
+  // 각 카드의 목표 select 값 읽어서 표시
+  document.querySelectorAll(".skill-effect").forEach(el => {
+    const idx = Number(el.dataset.index || 0); // 0..3
+    const tgtSel = document.getElementById(`s${idx+1}Tgt`);
+    const lv = Number(String(tgtSel?.value || "0").replace(/[^0-9]/g, "")) || 0;
+    el.textContent = lv ? (getEffectText(expert, idx, lv) || `Lv.${lv} 효과 데이터 없음`) : "-";
+  });
+}
+
+function updateSkillTitles() {
+  const expert = document.getElementById("selType")?.value;
+  const names = SKILL_NAMES[expert] || [];
+  document.querySelectorAll(".skill-title").forEach(el => {
+    const idx = Number(el.dataset.index || 0);
+    el.textContent = names[idx] || `스킬 ${idx+1}`;
+  });
+}
+
+// ================ 이벤트 연결 ================
+document.addEventListener("DOMContentLoaded", () => {
+  const selType = document.getElementById("selType");
+
+  // 전문가 변경 시: 제목/효과 동기화
+  selType?.addEventListener("change", () => {
+    updateSkillTitles();
+    updateSkillEffects();    
+  });
+
+  // 각 스킬 목표 변경 시: 효과 갱신
+  [1,2,3,4].forEach(n => {
+    document.getElementById(`s${n}Tgt`)?.addEventListener("change", updateSkillEffects);
+  });
+
+  // 초기 1회
+  updateSkillTitles();
+  updateSkillEffects();
+  updateExpertEffect();
+});
+</script>
+
   <script>
     function sendHeightToParent() {
       const height = document.body.scrollHeight + 10;
