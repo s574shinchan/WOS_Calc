@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>헬리오스 연구 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ========== 다크모드 기본 ========== */
+    body.dark-mode { background-color:#121212; color:#f0f0f0; }
+    .dark-mode .border { border-color:#444 !important; }
+    .dark-mode .bg-white { background-color:#2c2c2c !important; color:#f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color:#1e1e1e !important; }
+    .dark-mode .text-gray-800,
+    .dark-mode .text-gray-700,
+    .dark-mode .text-gray-600 { color:#dddddd !important; }
+    .dark-mode .text-blue-700 { color:#66b0ff !important; }
+    .dark-mode .text-blue-600 { color:#80caff !important; }
+    .dark-mode .text-orange-500 { color:#ffa94d !important; }
+    .dark-mode .text-green-600 { color:#79e68c !important; }
+    .dark-mode .text-red-500 { color:#ff8080 !important; }
+    .dark-mode .text-gray-500 { color:#aaa !important; }
+    .dark-mode table { background-color:#2c2c2c; color:#f0f0f0; }
+    .dark-mode th, .dark-mode td { border-color:#444 !important; }
+    .dark-mode thead th { color:#000 !important; }
+    .dark-mode summary { background-color:#333 !important; color:#fff !important; }
+    .dark-mode ul li { color:#ddd; }
+    .dark-mode select option { color:#000 !important; }
+    .dark-mode select { color:#000 !important; }
+    .dark-mode input { color:#000 !important; }
+
+    /* ========== experts 스타일 카드 ========== */
+    .exp-card{
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:16px;
+      background:#fff;
+      box-shadow:0 6px 18px rgba(15,23,42,.06);
+      transition: box-shadow .2s ease;
+    }
+    .exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
+    .exp-divider{ border-color:rgba(0,0,0,.08); }
+    .muted{ font-size:12px; color:#6b7280; }
+
+    /* 다크모드 카드 보정 */
+    body.dark-mode .exp-card{ background-color:#2c2c2c !important; border-color:#444 !important; }
+    body.dark-mode .exp-divider{ border-color:#444 !important; }
+    body.dark-mode .muted{ color:#b7b7b7 !important; }
+  </style>
+
+  <!-- ✅ 다크모드 상태 유지 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">🧪 火晶テクノロジー研究</h1>
+
+    <div class="text-gray-600 mb-4 text-sm">
+      <div class="mb-4">
+        <p>烈日盾兵研究に必要な資源（火晶微粒子、鋼材）を計算します。</p>
+        <p>研究項目を選択して現在/目標レベルを指定すると、自動的に合計されます。</p>
+      </div>
+
+      <!-- 병종 선택 -->
+      <div class="grid grid-cols-6 gap-x-4 px-0 text-center mb-2">
+        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
+          <input type="checkbox" id="chkInf" checked class="mr-1 w-4 h-4" /> 盾兵
+        </label>
+        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
+          <input type="checkbox" id="chkLan" class="mr-1 w-4 h-4" /> 槍兵
+        </label>
+        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
+          <input type="checkbox" id="chkMask" class="mr-1 w-4 h-4" /> 弓兵
+        </label>
+      </div>
+
+      <!-- 버프/속도 -->
+      <div class="grid grid-cols-2 md:flex md:flex-wrap md:items-center gap-4 mb-3">
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkVP10" class="mr-2 w-4 h-4">副執政官 (10%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkVP15" class="mr-2 w-4 h-4">副執政官 (15%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkServerBuff" class="mr-2 w-4 h-4">研究補助 (10%)
+        </label>
+        <div class="flex items-center gap-2">
+          <label for="speedPercent" class="font-semibold whitespace-nowrap">研究速度 (%)</label>
+          <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드 그리드 -->
+    <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-4"></div>
+
+    <!-- ✅ 보유 자원 카드 -->
+    <div class="exp-card mt-4">
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-[15px] font-semibold text-gray-800">保有資源</h3>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="own-가루" class="block text-[12px] text-gray-600 mb-1">保持した 火晶微粒子</label>
+            <input
+              type="number"
+              id="own-가루"
+              class="w-full border rounded-lg px-3 py-2 text-sm"
+              placeholder="0"
+              min="0"
+              inputmode="numeric"
+            />
+          </div>
+          <div>
+            <label for="own-철강재" class="block text-[12px] text-gray-600 mb-1">保有した 鋼材</label>
+            <input
+              type="number"
+              id="own-철강재"
+              class="w-full border rounded-lg px-3 py-2 text-sm"
+              placeholder="0"
+              min="0"
+              inputmode="numeric"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ 최하단 총합계 패널 -->
+    <div id="summaryPanel" class="exp-card mt-4">
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="muted"></span>
+        </div>
+        <div id="summaryBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ========== 데이터 ========== */
+    const researchData = {
+      "I": [
+        { level: 1, 가루: 16, 철강재: 5000, 시간: "0d 08:00:00" },
+        { level: 2, 가루: 25, 철강재: 8000, 시간: "0d 12:48:00" },
+        { level: 3, 가루: 41, 철강재: 13000, 시간: "0d 20:48:00" },
+        { level: 4, 가루: 68, 철강재: 21000, 시간: "1d 10:24:00" },
+        { level: 5, 가루: 102, 철강재: 33000, 시간: "2d 06:00:00" },
+      ],
+      "II-A": [
+        { level: 1, 가루: 40, 철강재: 10000, 시간: "0d 20:00:00" },
+        { level: 2, 가루: 56, 철강재: 14000, 시간: "1d 04:00:00" },
+        { level: 3, 가루: 74, 철강재: 18000, 시간: "1d 13:00:00" },
+        { level: 4, 가루: 102, 철강재: 25000, 시간: "2d 03:00:00" },
+        { level: 5, 가루: 136, 철강재: 24000, 시간: "2d 20:00:00" },
+        { level: 6, 가루: 184, 철강재: 46000, 시간: "3d 20:00:00" },
+        { level: 7, 가루: 248, 철강재: 62000, 시간: "5d 04:00:00" },
+        { level: 8, 가루: 334, 철강재: 83000, 시간: "6d 23:00:00" },
+      ],
+      "II-B": [
+        { level: 1, 가루: 40, 철강재: 10000, 시간: "0d 20:00:00" },
+        { level: 2, 가루: 56, 철강재: 14000, 시간: "1d 04:00:00" },
+        { level: 3, 가루: 74, 철강재: 18000, 시간: "1d 13:00:00" },
+        { level: 4, 가루: 102, 철강재: 25000, 시간: "2d 03:00:00" },
+        { level: 5, 가루: 136, 철강재: 24000, 시간: "2d 20:00:00" },
+        { level: 6, 가루: 184, 철강재: 46000, 시간: "3d 20:00:00" },
+        { level: 7, 가루: 248, 철강재: 62000, 시간: "5d 04:00:00" },
+        { level: 8, 가루: 334, 철강재: 83000, 시간: "6d 23:00:00" },
+      ],
+      "III": [
+        { level: 1, 가루: 83, 철강재: 23000, 시간: "1d 05:20:17" },
+        { level: 2, 가루: 102, 철강재: 28000, 시간: "1d 12:05:08" },
+        { level: 3, 가루: 125, 철강재: 34000, 시간: "1d 20:00:25" },
+        { level: 4, 가루: 150, 철강재: 41000, 시간: "2d 04:48:30" },
+        { level: 5, 가루: 184, 철강재: 51000, 시간: "2d 16:32:37" },
+        { level: 6, 가루: 225, 철강재: 62000, 시간: "3d 07:12:45" },
+        { level: 7, 가루: 276, 철강재: 76000, 시간: "4d 00:58:56" },
+        { level: 8, 가루: 334, 철강재: 93000, 시간: "4d 21:21:08" },
+        { level: 9, 가루: 418, 철강재: 110000, 시간: "6d 02:41:25" },
+        { level: 10, 가루: 502, 철강재: 130000, 시간: "7d 08:01:42" },
+        { level: 11, 가루: 602, 철강재: 160000, 시간: "8d 19:14:02" },
+        { level: 12, 가루: 744, 철강재: 200000, 시간: "10d 21:06:31" },
+      ],
+      "IV-A": [
+        { level: 1, 가루: 54, 철강재: 15000, 시간: "0d 18:55:40" },
+        { level: 2, 가루: 66, 철강재: 18000, 시간: "0d 23:16:52" },
+        { level: 3, 가루: 81, 철강재: 22000, 시간: "1d 04:23:30" },
+        { level: 4, 가루: 97, 철강재: 27000, 시간: "1d 10:04:12" },
+        { level: 5, 가루: 118, 철강재: 33000, 시간: "1d 17:38:28" },
+        { level: 6, 가루: 145, 철강재: 40000, 시간: "2d 03:06:18" },
+        { level: 7, 가루: 178, 철강재: 49000, 시간: "2d 14:27:42" },
+        { level: 8, 가루: 216, 철강재: 60000, 시간: "3d 03:42:20" },
+        { level: 9, 가루: 270, 철강재: 75000, 시간: "3d 22:38:20" },
+        { level: 10, 가루: 324, 철강재: 90000, 시간: "4d 17:34:00" },
+        { level: 11, 가루: 388, 철강재: 100000, 시간: "5d 16:16:48" },
+        { level: 12, 가루: 480, 철강재: 130000, 시간: "7d 00:27:26" },
+      ],
+      "IV-B": [
+        { level: 1, 가루: 54, 철강재: 15000, 시간: "0d 18:55:40" },
+        { level: 2, 가루: 66, 철강재: 18000, 시간: "0d 23:16:52" },
+        { level: 3, 가루: 81, 철강재: 22000, 시간: "1d 04:23:30" },
+        { level: 4, 가루: 97, 철강재: 27000, 시간: "1d 10:04:12" },
+        { level: 5, 가루: 118, 철강재: 33000, 시간: "1d 17:38:28" },
+        { level: 6, 가루: 145, 철강재: 40000, 시간: "2d 03:06:18" },
+        { level: 7, 가루: 178, 철강재: 49000, 시간: "2d 14:27:42" },
+        { level: 8, 가루: 216, 철강재: 60000, 시간: "3d 03:42:20" },
+        { level: 9, 가루: 270, 철강재: 75000, 시간: "3d 22:38:20" },
+        { level: 10, 가루: 324, 철강재: 90000, 시간: "4d 17:34:00" },
+        { level: 11, 가루: 388, 철강재: 100000, 시간: "5d 16:16:48" },
+        { level: 12, 가루: 480, 철강재: 130000, 시간: "7d 00:27:26" },
+      ],
+      "V": [
+        { level: 1, 가루: 2236, 철강재: 1000000, 시간: "91d 08:15:00" },
+      ],
+      "Healing": [
+        { level: 1, 가루: 102, 철강재: 30000, 시간: "2d 02:00:00" },
+        { level: 2, 가루: 137, 철강재: 40000, 시간: "2d 19:30:00" },
+        { level: 3, 가루: 188, 철강재: 55000, 시간: "3d 20:30:00" },
+        { level: 4, 가루: 255, 철강재: 75000, 시간: "5d 05:00:00" },
+        { level: 5, 가루: 341, 철강재: 100000, 시간: "6d 23:30:00" },
+        { level: 6, 가루: 459, 철강재: 130000, 시간: "9d 09:00:00" },
+        { level: 7, 가루: 612, 철강재: 180000, 시간: "12d 12:00:00" },
+        { level: 8, 가루: 836, 철강재: 240000, 시간: "17d 02:00:00" },
+        { level: 9, 가루: 1122, 철강재: 330000, 시간: "22d 22:00:00" },
+        { level: 10, 가루: 1530, 철강재: 450000, 시간: "31d 06:00:00" },
+      ],
+      "Training": [
+        { level: 1, 가루: 102, 철강재: 30000, 시간: "2d 02:00:00" },
+        { level: 2, 가루: 137, 철강재: 40000, 시간: "2d 19:30:00" },
+        { level: 3, 가루: 188, 철강재: 55000, 시간: "3d 20:30:00" },
+        { level: 4, 가루: 255, 철강재: 75000, 시간: "5d 05:00:00" },
+        { level: 5, 가루: 341, 철강재: 100000, 시간: "6d 23:30:00" },
+        { level: 6, 가루: 459, 철강재: 130000, 시간: "9d 09:00:00" },
+        { level: 7, 가루: 612, 철강재: 180000, 시간: "12d 12:00:00" },
+        { level: 8, 가루: 836, 철강재: 240000, 시간: "17d 02:00:00" },
+        { level: 9, 가루: 1122, 철강재: 330000, 시간: "22d 22:00:00" },
+        { level: 10, 가루: 1530, 철강재: 450000, 시간: "31d 06:00:00" },
+      ],
+      "HealingTime": [
+        { level: 1, 가루: 51, 철강재: 15000, 시간: "1d 01:00:00" },
+        { level: 2, 가루: 68, 철강재: 20000, 시간: "1d 09:45:00" },
+        { level: 3, 가루: 94, 철강재: 27000, 시간: "1d 22:15:00" },
+        { level: 4, 가루: 127, 철강재: 37000, 시간: "2d 14:30:00" },
+        { level: 5, 가루: 170, 철강재: 50000, 시간: "3d 11:45:00" },
+        { level: 6, 가루: 229, 철강재: 67000, 시간: "4d 16:30:00" },
+        { level: 7, 가루: 306, 철강재: 90000, 시간: "6d 06:00:00" },
+        { level: 8, 가루: 418, 철강재: 120000, 시간: "8d 13:00:00" },
+        { level: 9, 가루: 561, 철강재: 160000, 시간: "11d 11:00:00" },
+        { level: 10, 가루: 765, 철강재: 220000, 시간: "15d 15:00:00" },
+      ]
+    };
+
+    /* ========== 상태 & 유틸 ========== */
+    let researchList = [];
+
+    function parseTimeToSeconds(timeStr) {
+      const [d, hms] = timeStr.split(" ");
+      const [h, m, s] = hms.split(":").map(Number);
+      return (parseInt(d)||0)*86400 + h*3600 + m*60 + s;
+    }
+    function formatTime(sec) {
+      const d = Math.floor(sec / 86400);
+      sec %= 86400;
+      const h = Math.floor(sec / 3600);
+      sec %= 3600;
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    function createLevelOptions(max) {
+      return Array.from({length:max+1}, (_,i)=>`<option value="${i}">${i}</option>`).join('');
+    }
+
+    function updateResearchList() {
+      const chkInf = document.getElementById("chkInf");
+      const chkLan = document.getElementById("chkLan");
+      const chkMask = document.getElementById("chkMask");
+
+      researchList = Object.entries(researchData).map(([key, value]) => {
+        let label = {
+          "I": "烈焰戦隊",
+          "II-A": "파괴력 연구",
+          "II-B" : "HP 연구",
+          "III" : "烈焰軍団",
+          "IV-A" : "공격력 연구",
+          "IV-B" : "방어력 연구",
+          "V" : "烈日盾兵",
+          "Healing" : "烈日盾兵治療",
+          "Training" : "烈日盾兵訓練",
+          "HealingTime" : "烈日盾兵救急",
+        }[key];
+
+        switch (key) {
+          case "II-A":
+            if (chkInf.checked) label = "怒炎の猛撃";
+            else if (chkLan.checked) label = "熾烈な突撃";
+            else if (chkMask.checked) label = "燃晶視界";
+            break;
+          case "II-B":
+            if (chkInf.checked) label = "怒炎の盾";
+            else if (chkLan.checked) label = "熾烈な鎧";
+            else if (chkMask.checked) label = "燃晶鱗甲";
+            break;
+          case "IV-A":
+            if (chkInf.checked) label = "怒炎の戦斧";
+            else if (chkLan.checked) label = "熾烈な戦矛";
+            else if (chkMask.checked) label = "燃晶矢石";
+            break;
+          case "IV-B":
+            if (chkInf.checked) label = "怒炎の庇護";
+            else if (chkLan.checked) label = "熾烈な加護";
+            else if (chkMask.checked) label = "燃晶加護";
+            break;
+        }
+        return { key, label, max: Math.max(...value.map(v=>v.level)) };
+      });
+    }
+
+    function renderResearchCards() {
+      const container = document.getElementById("researchGrid");
+      container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-4";
+      container.innerHTML = "";
+
+      researchList.forEach(item => {
+        const wrap = document.createElement("div");
+        wrap.className = "exp-card";
+
+        const chkId = `check-${item.key}`;
+        const curId = `current-${item.key}`;
+        const tgtId = `target-${item.key}`;
+
+        wrap.innerHTML = `
+          <div class="p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <input id="${chkId}" type="checkbox" class="h-4 w-4">
+                  <h3 class="text-[15px] font-semibold text-gray-800">${item.label}</h3>
+                </div>
+                <p class="muted mb-3">レベル範囲(最大レベル Lv.${item.max})</p>
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[12px] text-gray-600">現在</span>
+                    <select id="${curId}" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
+                      ${createLevelOptions(item.max)}
+                    </select>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[12px] text-gray-600">目標</span>
+                    <select id="${tgtId}" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
+                      ${createLevelOptions(item.max)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="md:pl-4">
+                <div class="font-semibold text-gray-800 mb-2">小計</div>
+                <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
+                  <div class="text-gray-600">火晶微粒子</div>
+                  <div class="text-right tabular-nums" id="subtotal-dust-${item.key}">0</div>
+                  <div class="text-gray-600">鋼材</div>
+                  <div class="text-right tabular-nums" id="subtotal-steel-${item.key}">0</div>
+                  <div class="text-gray-600">所要時間</div>
+                  <div class="text-right tabular-nums" id="subtotal-time-${item.key}">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(wrap);
+
+        // 현재 변경 시 목표 자동 +1
+        const curSel = wrap.querySelector(`#${curId}`);
+        const tgtSel = wrap.querySelector(`#${tgtId}`);
+        curSel.addEventListener("change", () => {
+          let nextValue = parseInt(curSel.value) + 1;
+          if (nextValue > item.max) nextValue = item.max;
+          tgtSel.value = nextValue;
+          scheduleCalc();
+        });
+        tgtSel.addEventListener("change", scheduleCalc);
+
+        // 체크 변화
+        wrap.querySelector(`#${chkId}`).addEventListener("change", scheduleCalc);
+      });
+    }
+
+    /* ========== 옵션 토글 ========== */
+    function handleCheck(toggleId) {
+      const chkInf = document.getElementById("chkInf");
+      const chkLan = document.getElementById("chkLan");
+      const chkMask = document.getElementById("chkMask");
+
+      if (toggleId === "chkInf" && chkInf.checked) {
+        chkLan.checked = false; chkMask.checked = false;
+      } else if (toggleId === "chkLan" && chkLan.checked) {
+        chkInf.checked = false; chkMask.checked = false;
+      } else if (toggleId === "chkMask" && chkMask.checked) {
+        chkInf.checked = false; chkLan.checked = false;
+      }
+      updateResearchList();
+      renderResearchCards();
+      scheduleCalc();
+    }
+    function handleVPCheck(toggleId) {
+      const chkVP10 = document.getElementById("chkVP10");
+      const chkVP15 = document.getElementById("chkVP15");
+      if (toggleId === "chkVP10" && chkVP10.checked) chkVP15.checked = false;
+      else if (toggleId === "chkVP15" && chkVP15.checked) chkVP10.checked = false;
+      scheduleCalc();
+    }
+
+    // 이벤트 바인딩
+    document.addEventListener("change", (e) => {
+      if (e.target.id === "chkVP10" || e.target.id === "chkVP15" || e.target.id === "chkServerBuff") scheduleCalc();
+      if (e.target.id === "speedPercent" || e.target.id === "own-가루" || e.target.id === "own-철강재") scheduleCalc();
+      if (e.target.id === "chkInf") handleCheck("chkInf");
+      if (e.target.id === "chkLan") handleCheck("chkLan");
+      if (e.target.id === "chkMask") handleCheck("chkMask");
+      if (e.target.id === "chkVP10") handleVPCheck("chkVP10");
+      if (e.target.id === "chkVP15") handleVPCheck("chkVP15");
+    });
+
+    /* ========== 계산 로직 (자동) ========== */
+    function calculateResearch() {
+      let total = { 가루: 0, 철강재: 0, 시간: 0 };
+      let rows = "";
+
+      // 연구속도/버프 계수 (시간에만 적용)
+      let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+      if (document.getElementById("chkVP10").checked) factor += 0.10;
+      if (document.getElementById("chkVP15").checked) factor += 0.15;
+      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+
+      // 카드 우측 합계 초기화
+      researchList.forEach(item => {
+        const dEl = document.getElementById(`subtotal-dust-${item.key}`);
+        const sEl = document.getElementById(`subtotal-steel-${item.key}`);
+        const tEl = document.getElementById(`subtotal-time-${item.key}`);
+        if (dEl) dEl.textContent = "0";
+        if (sEl) sEl.textContent = "0";
+        if (tEl) tEl.textContent = "0";
+      });
+
+      // 각 카드별 계산
+      researchList.forEach(item => {
+        const cur = parseInt(document.getElementById(`current-${item.key}`).value);
+        const tgt = parseInt(document.getElementById(`target-${item.key}`).value);
+        const checked = document.getElementById(`check-${item.key}`)?.checked;
+
+        const data = researchData[item.key];
+        const subtotal = { 가루: 0, 철강재: 0, 시간: 0 };
+
+        if (cur < tgt) {
+          for (let lv = cur + 1; lv <= tgt; lv++) {
+            const row = data.find(r => r.level === lv);
+            if (!row) continue;
+            subtotal.가루 += row.가루 || 0;
+            subtotal.철강재 += row.철강재 || 0;
+            subtotal.시간 += parseTimeToSeconds(row.시간) || 0;
+          }
+        }
+
+        // ✅ 카드 우측 "필요 합계" 갱신(체크와 무관)
+        const dEl = document.getElementById(`subtotal-dust-${item.key}`);
+        const sEl = document.getElementById(`subtotal-steel-${item.key}`);
+        const tEl = document.getElementById(`subtotal-time-${item.key}`);
+        if (dEl) dEl.textContent = subtotal.가루.toLocaleString();
+        if (sEl) sEl.textContent = subtotal.철강재.toLocaleString();
+        if (tEl) tEl.textContent = formatTime(Math.round(subtotal.시간 / factor));
+
+        // ✅ 체크된 항목만 하단 총합/결과표에 포함
+        if (checked && cur < tgt) {
+          total.가루 += subtotal.가루;
+          total.철강재 += subtotal.철강재;
+          total.시간 += subtotal.시간;
+
+          rows += `
+            <tr class="text-center">
+              <td class="border p-1">${item.label}</td>
+              <td class="border p-1">${cur} → ${tgt}</td>
+              <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
+              <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
+              <td class="border p-1">${formatTime(Math.round(subtotal.시간 / factor))}</td>
+            </tr>`;
+        }
+      });
+
+      // 보유량
+      const owned = {
+        가루: parseFloat(document.getElementById("own-가루").value) || 0,
+        철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
+      };
+
+      // 하단 '총합계' 패널 갱신 (가루/철강재만)
+      const deficit = {
+        가루: (owned.가루 - total.가루),
+        철강재: (owned.철강재 - total.철강재),
+      };
+      const summaryBody = `
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">合計</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶微粒子</span><span>${total.가루.toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">鋼材</span><span>${total.철강재.toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">所要時間</span><span>${formatTime(total.시간)}</span></div>
+          </div>
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">所有数</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶微粒子</span><span>${owned.가루.toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">鋼材</span><span>${owned.철강재.toLocaleString()}</span></div>
+          </div>
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">過不足</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶微粒子</span><span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">鋼材</span><span class="${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span></div>
+          </div>
+        </div>
+      `;
+      const summaryEl = document.getElementById("summaryBody");
+      if (summaryEl) summaryEl.innerHTML = summaryBody;
+
+      sendHeightToParent();
+    }
+
+    // 변경 이벤트 디바운스
+    let calcTimer = null;
+    function scheduleCalc() {
+      if (calcTimer) clearTimeout(calcTimer);
+      calcTimer = setTimeout(calculateResearch, 120);
+    }
+
+    // 초기 세팅
+    updateResearchList();
+    renderResearchCards();
+    scheduleCalc();
+
+    // 숫자 입력 즉시 계산
+    ["own-가루","own-철강재","speedPercent"].forEach(id=>{
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("input", scheduleCalc);
+    });
+
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
+
+    // F12/복사 방지 (원코드 유지)
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
