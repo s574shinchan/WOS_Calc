@@ -94,7 +94,16 @@
     const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/chief/Gear.csv';
     let gearLevels = [];
     let gearData = [];
-
+    
+    const nameAliasMap = {
+      "장비1(창)": "Gear A",
+      "장비2(창)": "Gear B",
+      "장비3(방)": "Gear C",
+      "장비4(방)": "Gear D",
+      "장비5(궁)": "Gear E",
+      "장비6(궁)": "Gear F"
+    };
+    
     // CSV 로드
     async function fetchCSVData() {
       const res = await fetch(csvUrl);
@@ -106,7 +115,7 @@
         headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
         return obj;
       });
-      gearLevels = gearData.map(r => r["단계"]);
+      gearLevels = gearData.map(r =>replaceDisplayName(r["단계"]));
       renderGearCards();
       scheduleCalc();
     }
@@ -116,6 +125,7 @@
       const grid = document.getElementById("gearGrid");
       grid.innerHTML = "";
       gearSlots.forEach((name, i) => {
+        const displayName = nameAliasMap[name] || name
         const options = gearLevels.map(stage => `<option value="${stage}">${stage}</option>`).join("");
         const card = document.createElement("div");
         card.className = "exp-card";
@@ -125,7 +135,7 @@
               <div>
                 <div class="flex items-center gap-2 mb-2">
                   <input type="checkbox" id="check-${i}" class="h-4 w-4" />
-                  <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
+                  <h3 class="text-[15px] font-semibold text-gray-800">${displayName}</h3>
                 </div>
                 <!-- 현재/목표 세로 배치 -->
                 <div class="grid grid-cols-1 gap-2">
@@ -273,7 +283,55 @@
 
     // 초기화
     fetchCSVData();
-
+    
+    function replaceDisplayName(label) {
+      const baseMap = {
+        "고급": "Uncommon",
+        "고급1성": "Uncommon (1-Star)",
+        "레어": "Rare",
+        "레어1성": "Rare (1-Star)",
+        "레어2성": "Rare (2-Star)",
+        "레어3성": "Rare (3-Star)",
+        "에픽": "Epic",
+        "에픽1성": "Epic (1-Star)",
+        "에픽2성": "Epic (2-Star)",
+        "에픽3성": "Epic (3-Star)",
+        "에픽T1": "Epic T1",
+        "에픽T1-1": "Epic T1 (1-Star)",
+        "에픽T1-2": "Epic T1 (2-Star)",
+        "에픽T1-3": "Epic T1 (3-Star)",
+        "레전드": "Mythic",
+        "레전드1성": "Mythic (1-Star)",
+        "레전드2성": "Mythic (2-Star)",
+        "레전드3성": "Mythic (3-Star)",
+        "레전드T1": "Mythic T1",
+        "레전드T1-1": "Mythic T1 (1-Star)",
+        "레전드T1-2": "Mythic T1 (2-Star)",
+        "레전드T1-3": "Mythic T1 (3-Star)",
+        "레전드T2": "Mythic T2",
+        "레전드T2-1": "Mythic T2 (1-Star)",
+        "레전드T2-2": "Mythic T2 (2-Star)",
+        "레전드T2-3": "Mythic T2 (3-Star)",
+        "신화": "Legendary",
+        "신화1성": "Legendary (1-Star)",
+        "신화2성": "Legendary (2-Star)",
+        "신화3성": "Legendary (3-Star)",
+        "신화T1": "Legendary T1",
+        "신화T1-1": "Legendary T1 (1-Star)",
+        "신화T1-2": "Legendary T1 (2-Star)",
+        "신화T1-3": "Legendary T1 (3-Star)",
+        "신화T2": "Legendary T2",
+        "신화T2-1": "Legendary T2 (1-Star)",
+        "신화T2-2": "Legendary T2 (2-Star)",
+        "신화T2-3": "Legendary T2 (3-Star)",
+        "신화T3": "Legendary T3",
+        "신화T3-1": "Legendary T3 (1-Star)",
+        "신화T3-2": "Legendary T3 (2-Star)",
+        "신화T3-3": "Legendary T3 (3-Star)"
+      };
+    
+      return baseMap[label] || label;
+    }
     /* 유틸 */
     function sendHeightToParent(){ 
       const h=document.body.scrollHeight+10; 
