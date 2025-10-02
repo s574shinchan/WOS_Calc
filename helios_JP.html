@@ -507,13 +507,16 @@
         가루: (owned.가루 - total.가루),
         철강재: (owned.철강재 - total.철강재),
       };
+
+      const totalTime = Math.round(total.시간 / factor);
+      
       const summaryBody = `
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">合計</div>
             <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶微粒子</span><span>${total.가루.toLocaleString()}</span></div>
             <div class="flex justify-between text-[13px]"><span class="text-gray-600">鋼材</span><span>${total.철강재.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">所要時間</span><span>${formatTime(total.시간)}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">所要時間</span><span>${formatTime(totalTime)}</span></div>
           </div>
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">所有数</div>
