@@ -1,66 +1,39 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Chief Gem</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-     /* ✅ 다크모드 전용 */
-    body.dark-mode {
-      background-color: #121212;
-      color: #f0f0f0;
-    }
-    
-    .dark-mode .border { border-color: #444 !important; }
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-  
-    .dark-mode .text-gray-800,
-    .dark-mode .text-gray-700,
-    .dark-mode .text-gray-600 { color: #dddddd !important; }
-  
-    .dark-mode .text-blue-700 { color: #66b0ff !important; }
-    .dark-mode .text-blue-600 { color: #80caff !important; }
-    .dark-mode .text-orange-500 { color: #ffa94d !important; }
-    .dark-mode .text-green-600 { color: #79e68c !important; }
-    .dark-mode .text-red-500 { color: #ff8080 !important; }
-    .dark-mode .text-gray-500 { color: #aaa !important; }    
-    
-    .dark-mode .text-gray-800, 
-    .dark-mode .text-gray-600 { color: #e0e0e0 !important; }
-    
-    .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
-    .dark-mode th, .dark-mode td { border-color: #444 !important; }
-    .dark-mode thead th { color: #000 !important; }
-    
-    .dark-mode .bg-amber-100,    
-    .dark-mode .bg-green-100,
-    .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
-    
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-    
-    .dark-mode .bg-amber-50,
-    .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
+    .muted{color:#6b7280}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    .tabular-nums{font-variant-numeric: tabular-nums}
+    select.pill{height:32px}
+    .err{color:#b45309}
+    /* ✅ 다크모드 */
+    body.dark-mode{background-color:#121212;color:#f0f0f0}
+    .dark-mode .border{border-color:#444!important}
+    .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
+    .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#dddddd!important}
+    .dark-mode .bg-purple-50,.dark-mode .bg-orange-50,.dark-mode .bg-red-50{background-color:#2e2e2e!important}
+    .dark-mode select option{color:#000!important}
+    .dark-mode select{color:#000!important}
+    .dark-mode input{color:#000!important}
 
-    .dark-mode .bg-blue-100,
-    .dark-mode .bg-blue-50,
-    .dark-mode .bg-orange-50,
-    .dark-mode .bg-purple-50,
-    .dark-mode .bg-yellow-50,
-    .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
-    
-    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
-    .dark-mode ul li { color: #ddd; }
-    
-    .dark-mode select option { color: #000 !important; }
-    .dark-mode select { color: #000 !important; }
-    .dark-mode input { color: #000 !important; }
+    /* helios 스타일 감성의 합계 카드 */
+    .sum-card{border:1px solid rgba(0,0,0,.08); border-radius: .75rem; background: #fff; box-shadow: 0 6px 18px rgba(16,24,40,.08)}
+    .sum-title{font-weight:700}
+    .sum-item{display:flex; align-items:center; justify-content:space-between}
+    .pill-badge{display:inline-block; border-radius:9999px; padding:.1rem .5rem; font-size:12px; border:1px solid rgba(0,0,0,.08)}
+    .badge-total{background:#f3e8ff}   /* 보라 */
+    .badge-own{background:#fff7ed}     /* 오렌지 */
+    .badge-def{background:#fee2e2}     /* 레드 */
   </style>
-
-  <!-- ✅ 다크모드 상태 유지 스크립트 -->
   <script>
+    // 다크모드 유지
     window.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
@@ -68,323 +41,344 @@
     });
   </script>
 </head>
-  <body class="bg-gray-100 p-2 font-sans text-sm">
-    <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md"> 
-      <h1 class="text-2xl font-bold text-gray-800 mb-4">💎 Chief Gem</h2>
-      
-      <!-- 설명 추가 -->
-      <p class="text-gray-600 mb-6 text-center text-sm">
-        This page allows you to calculate the materials needed to upgrade your Chief Gem.
-      </p>
-      
-      <!-- 번호 체크박스 추가 -->
-      <div class="mb-6 text-center text-sm text-gray-700">
-        <label class="inline-flex items-center text-sm font-semibold mx-1">
-          <input type="checkbox" id="extra-check-S3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('S3')" /> Infantry * 3
-        </label>
-        <label class="inline-flex items-center text-sm font-semibold mx-1">
-          <input type="checkbox" id="extra-check-S6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('S6')" /> Infantry * 6
-        </label>
-        <label class="inline-flex items-center text-sm font-semibold mx-1">
-          <input type="checkbox" id="extra-check-L3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('L3')" /> Lancer * 3
-        </label>
-        <label class="inline-flex items-center text-sm font-semibold mx-1">
-          <input type="checkbox" id="extra-check-L6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('L6')" /> Lancer * 6
-        </label>
-        <label class="inline-flex items-center text-sm font-semibold mx-1">
-          <input type="checkbox" id="extra-check-M3" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('M3')" /> Marksman * 3
-        </label>
-        <label class="inline-flex items-center text-sm font-semibold mx-1">
-          <input type="checkbox" id="extra-check-M6" class="mr-1 w-4 h-4 accent-purple-500" onchange="syncGemCheck('M6')" /> Marksman * 6
-        </label>
+<body class="bg-gray-100 p-3 font-sans text-sm">
+  <main class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
+    <header class="flex items-center justify-between">
+      <div class="p-4">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">💎 Chief Gem</h1>
+        <p class="text-sm muted mt-1">This page allows you to calculate the materials needed to upgrade your Chief Gem.</p>
       </div>
-      
-      <form id="gemForm" class="space-y-6">
-        <div id="gemTableBody" class="grid grid-cols-2 md:grid-cols-3 gap-2"></div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-          <div><label class="block font-semibold">Owned Charm Guide</label><input type="number" id="own-매뉴얼" class="w-full border rounded p-2" /></div>
-          <div><label class="block font-semibold">Owned Charm Design</label><input type="number" id="own-도면" class="w-full border rounded p-2" /></div>
-          <div><label class="block font-semibold">Owned Charm Secrets</label><input type="number" id="own-비전" class="w-full border rounded p-2" /></div>
-        </div>
-        <button type="button" onclick="calculateGems()" class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">Calc</button>
-      </form>
-    </div>
-    <script>
-      function sendHeightToParent() {
-        const height = document.body.scrollHeight + 10;
-        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
-      }
-  
-      // 페이지 최초 로드 시
-      window.addEventListener("load", () => {
-        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-      });
-      
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
-          window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-      }
-    </script>
-    <script>
-      const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/ef3bd1665ddf73044b325143fb9fb16cf98ddcd3/data/chief/Gem.csv';
-      const gemSlots = [
-        "방패A", "방패B", "방패C", "방패D", "방패E", "방패F",
-        "창병A", "창병B", "창병C", "창병D", "창병E", "창병F",
-        "궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F"
-      ];
-      let gemLevels = [];
-      let gemData = [];
+    </header>
 
-      const nameAliasMap = {};
-      ["A", "B", "C", "D", "E", "F"].forEach(ch => {
-        nameAliasMap[`방패${ch}`] = `Infantry ${ch}`;
-        nameAliasMap[`창병${ch}`] = `Lancer ${ch}`;
-        nameAliasMap[`궁병${ch}`] = `Marksman ${ch}`;
-      });
-  
-      async function fetchCSVData() {
-        const response = await fetch(csvUrl);
-        const csvText = await response.text();
-        const lines = csvText.trim().split('\n');
-        const headers = lines[0].split(',');
-        gemData = lines.slice(1).map(line => {
-          const values = line.split(',');
-          const entry = {};
-          headers.forEach((header, index) => {
-            entry[header] = values[index];
-          });
-          return entry;
-        });
-        gemLevels = gemData.map(d => d["레벨"]);
+    <!-- 카드 그리드 -->
+    <section id="GemGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></section>
+
+    <!-- 보유 자원 -->
+    <section class="mt-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-[15px] font-semibold text-gray-800">Owned Items</h3>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold">Owned Charm Guide</label>
+          <input type="number" id="own-매뉴얼" class="w-full border rounded p-2" placeholder="0" min="0"/>
+        </div>
+        <div>
+          <label class="block font-semibold">Owned Charm Design</label>
+          <input type="number" id="own-도면" class="w-full border rounded p-2" placeholder="0" min="0"/>
+        </div>
+        <div>
+          <label class="block font-semibold">Owned Charm Secrets</label>
+          <input type="number" id="own-비전" class="w-full border rounded p-2" placeholder="0" min="0"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- 합계 패널 (helios 느낌) -->
+    <section id="summaryPanel" class="mt-4 grid md:grid-cols-3 gap-4">
+      <!-- JS에서 채움 -->
+    </section>
+  </main>
+
+  <script>
+    // ====== 임베드 높이 보고 ======
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
+
+    // ====== 데이터 소스 ======
+    // 👉 실제 CSV 경로로 바꿔 주세요.
+    // 스키마 가정: "단계,매뉴얼,도면,비전"  (각 행은 '해당(목표) 레벨 비용' 또는 누적값)
+    const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
+
+    // 슬롯 라벨 (개별 다수 — 예시는 유형별 A~F)
+    const gemSlots = [
+      "Infantry A","Infantry B","Infantry C","Infantry D","Infantry E","Infantry F",
+      "Lancer A","Lancer B","Lancer C","Lancer D","Lancer E","Lancer F",
+      "Marksman A","Marksman B","Marksman C","Marksman D","Marksman E","Marksman F",
+    ];
+
+    // ====== 상태 ======
+    let gemLevels = []; // [Lv0, Lv1, ..., LvMax]
+    window.__gemStepM = [];
+    window.__gemStepB = [];
+    window.__gemStepV = [];
+
+    // ====== 유틸 ======
+    const fmt = (n) => Number(n || 0).toLocaleString("ko-KR");
+    const detectDelim = (sample) => (sample.includes("\t") ? "\t" : (sample.includes(";") ? ";" : ","));
+    const toNum = (s) => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+    const toInt = (s) => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+
+    function preprocessByLevel(text){
+      let s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
+      if (!s.includes("\n") && /Lv\.?\s*\d+/i.test(s)) {
+        s = s.replace(/(Lv\.?\s*\d+)/gi, "\n$1");
       }
-  
-      async function createGemUI() {
-        await fetchCSVData();
-        const grid = document.getElementById("gemTableBody");
-        gemSlots.forEach((slot, i) => {
-          const displayName = nameAliasMap[slot] || slot
-          const options = gemLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
-          grid.innerHTML += `
-            <div class="border p-2 rounded bg-purple-50 text-xs">
-              <label class="flex items-center text-sm font-semibold mb-1">
-                <input type="checkbox" id="gem-check-${i}" class="mr-1 w-4 h-4 accent-purple-500" />
-                ${displayName}
-              </label>
-              <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">Current</label>
-              <select id="gem-cur-${i}" class="flex-1 border rounded p-1 text-xs">
-              ${options}
-              </select>
-              </div>
-              <div class="flex items-center gap-2 mb-1">
-              <label class="text-sm whitespace-nowrap">Target</label>
-              <select id="gem-tgt-${i}" class="flex-1 border rounded p-1 text-xs">
-              ${options}
-              </select>
+      return s;
+    }
+
+    // 누적/구간 자동 판별 → 구간비용 스텝으로 변환
+    function parseGemCSV(text){
+      const pre = preprocessByLevel(text);
+      const lines = pre.split("\n").filter(l => l.trim() !== "");
+      if (!lines.length) return { levels:[], manual:[], blue:[], vision:[] };
+
+      const delim = detectDelim(lines[0]);
+      const hasHeader = /(레벨|lv|level|매뉴얼|도면|비전|manual|blue|vision)/i.test(lines[0]);
+      const start = hasHeader ? 1 : 0;
+
+      const M = new Map(), B = new Map(), V = new Map();
+      const rawLevels = [];
+      for (let i=start;i<lines.length;i++){
+        const c = lines[i].split(delim);
+        if (!c.length) continue;
+        // 케이스1: "Lv.X, 매뉴얼, 도면, 비전"
+        // 케이스2: "매뉴얼, 도면, 비전" (레벨 없이 순차)
+        let lv, m, b, v;
+        if (c.length >= 4){
+          lv = toInt(c[0]); m = toNum(c[1]); b = toNum(c[2]); v = toNum(c[3]);
+        }else{
+          lv = i-start; m = toNum(c[0]); b = toNum(c[1]); v = toNum(c[2] || 0);
+        }
+        if (!Number.isFinite(lv)) continue;
+        rawLevels.push(lv);
+        M.set(lv, m); B.set(lv, b); V.set(lv, v);
+      }
+
+      const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
+      if (levels.length < 2) return { levels, manual:[], blue:[], vision:[] };
+
+      // 누적 여부 판별
+      const isCum = (map)=>{
+        let prev=null, nondec=0, pos=0;
+        for (const lv of levels){
+          const val = map.get(lv) ?? 0;
+          if (prev!==null){ if (val>=prev) nondec++; if (val>prev) pos++; }
+          prev = val;
+        }
+        return nondec >= (levels.length-1) && pos>0;
+      };
+      const cumM = isCum(M), cumB = isCum(B), cumV = isCum(V);
+
+      const stepM=[], stepB=[], stepV=[];
+      for (let i=0;i<levels.length-1;i++){
+        const a=levels[i], b=levels[i+1];
+        stepM[i] = Math.max(0, (cumM ? (M.get(b)||0)-(M.get(a)||0) : (M.get(b)||0)));
+        stepB[i] = Math.max(0, (cumB ? (B.get(b)||0)-(B.get(a)||0) : (B.get(b)||0)));
+        stepV[i] = Math.max(0, (cumV ? (V.get(b)||0)-(V.get(a)||0) : (V.get(b)||0)));
+      }
+      return { levels, manual:stepM, blue:stepB, vision:stepV };
+    }
+
+    function renderOptions(selectEl, levels){
+      const label = (lv)=>`Lv.${lv}`;
+      const opts = ['<option value=""></option>'].concat(
+        levels.map(lv => `<option value="${lv}">${label(lv)}</option>`)
+      ).join("");
+      selectEl.innerHTML = opts;
+    }
+    function renderTargetOptions(selectEl, levels, greaterThan){
+      const label = (lv)=>`Lv.${lv}`;
+      const filtered = levels.filter(lv => lv > greaterThan);
+      const opts = ['<option value=""></option>'].concat(
+        filtered.map(lv => `<option value="${lv}">${label(lv)}</option>`)
+      ).join("");
+      selectEl.innerHTML = opts;
+    }
+
+    // ====== 카드 UI 생성 (현재/목표 세로 배치) ======
+    function createGemCards(){
+      const grid = document.getElementById("GemGrid");
+      grid.innerHTML = "";
+      gemSlots.forEach((name, i) => {
+        const card = document.createElement("div");
+        card.className = "rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg";
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-base font-bold flex items-center gap-2">
+              <input type="checkbox" id="chk-${i}" class="w-4 h-4">
+              <span>${name}</span>
+            </label>
+            <span id="warn-${i}" class="text-xs err"></span>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-3">
+            <div>
+              <div class="text-sm font-semibold mb-2">Level Range<span id="cap-${i}" class="muted"></span></div>
+              <div class="space-y-2">
+                <label class="inline-label w-full justify-between">
+                  <span class="muted w-14">Current</span>
+                  <select id="cur-${i}" class="pill w-28"></select>
+                </label>
+                <label class="inline-label w-full justify-between">
+                  <span class="muted w-14">Target</span>
+                  <select id="tgt-${i}" class="pill w-28"></select>
+                </label>
               </div>
             </div>
-          `;
-        });
-
-        for (let i = 0; i < gemSlots.length; i++) {
-          const curSelect = document.getElementById(`gem-cur-${i}`);
-          const tgtSelect = document.getElementById(`gem-tgt-${i}`);
-        
-          curSelect.addEventListener("change", () => {
-            tgtSelect.value = curSelect.value;
-          });
-        }
-      }
-      
-      function calculateGems() {
-        let total = { 매뉴얼: 0, 도면: 0, 비전: 0 };
-        let rows = "";
-  
-        for (let i = 0; i < gemSlots.length; i++) {
-          if (!document.getElementById(`gem-check-${i}`).checked) continue;
-  
-          const cur = document.getElementById(`gem-cur-${i}`).value;
-          const tgt = document.getElementById(`gem-tgt-${i}`).value;
-          const start = gemLevels.indexOf(cur);
-          const end = gemLevels.indexOf(tgt);
-  
-          if (start === -1 || end === -1 || start >= end) {
-            rows += `<tr><td class="border p-1 text-center" colspan="6">⚠️ ${gemSlots[i]}: 잘못된 레벨 선택</td></tr>`;
-            continue;
-          }
-  
-          const subtotal = { 매뉴얼: 0, 도면: 0, 비전: 0 };
-          const displayName = nameAliasMap[gemSlots[i]] || gemSlots[i];
-  
-          for (let j = start + 1; j <= end; j++) {
-            const row = gemData[j];
-            subtotal.매뉴얼 += parseFloat(row["매뉴얼"] || 0);
-            subtotal.도면 += parseFloat(row["도면"] || 0);
-            subtotal.비전 += parseFloat(row["비전"] || 0);
-          }
-  
-          total.매뉴얼 += subtotal.매뉴얼;
-          total.도면 += subtotal.도면;
-          total.비전 += subtotal.비전;
-  
-          rows += `
-            <tr class="text-center">
-              <td class="border p-1">${displayName}</td>
-              <td class="border p-1">${cur} → ${tgt}</td>
-              <td class="border p-1">${subtotal.매뉴얼.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.도면.toLocaleString()}</td>
-              <td class="border p-1">${subtotal.비전.toLocaleString()}</td>
-            </tr>
-          `;
-        }
-  
-        const owned = {
-          매뉴얼: parseFloat(document.getElementById("own-매뉴얼").value) || 0,
-          도면: parseFloat(document.getElementById("own-도면").value) || 0,
-          비전: parseFloat(document.getElementById("own-비전").value) || 0,
-        };
-  
-        rows += `
-          <tr class="row-total text-center font-bold bg-purple-100">
-            <td class="border p-1" colspan="2">Total</td>
-            <td class="border p-1">${total.매뉴얼.toLocaleString()}</td>
-            <td class="border p-1">${total.도면.toLocaleString()}</td>
-            <td class="border p-1">${total.비전.toLocaleString()}</td>
-          </tr>
-          <tr class="row-owned text-center font-bold bg-orange-50">
-            <td class="border p-1" colspan="2">Stock</td>
-            <td class="border p-1">${owned.매뉴얼.toLocaleString()}</td>
-            <td class="border p-1">${owned.도면.toLocaleString()}</td>
-            <td class="border p-1">${owned.비전.toLocaleString()}</td>
-          </tr>
-          <tr class="row-deficit text-center font-bold bg-red-50">
-            <td class="border p-1" colspan="2">Quantity required</td>
-            <td class="border p-1">${(owned.매뉴얼 - total.매뉴얼).toLocaleString()}</td>
-            <td class="border p-1">${(owned.도면 - total.도면).toLocaleString()}</td>
-            <td class="border p-1">${(owned.비전 - total.비전).toLocaleString()}</td>
-          </tr>
+            <div class="md:pl-2">
+              <div class="font-semibold text-gray-800 mb-2">Sub Total</div>
+              <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
+                <div class="text-gray-600">Guide</div><div class="text-right tabular-nums" id="m-${i}">0</div>
+                <div class="text-gray-600">Design</div><div class="text-right tabular-nums" id="b-${i}">0</div>
+                <div class="text-gray-600">Secrets</div><div class="text-right tabular-nums" id="v-${i}">0</div>
+              </div>
+            </div>
+          </div>
         `;
-
-        const chkS3 = document.getElementById(`extra-check-S3`);
-        const chkS6 = document.getElementById(`extra-check-S6`);
-        const chkL3 = document.getElementById(`extra-check-L3`);
-        const chkL6 = document.getElementById(`extra-check-L6`);
-        const chkM3 = document.getElementById(`extra-check-M3`);
-        const chkM6 = document.getElementById(`extra-check-M6`);
-
-        if(chkS3 && chkS3.checked) {
-          rows += `
-            <tr class="text-center font-bold bg-purple-100">
-              <td class="border p-1" colspan="2">Infantry A - C</td>
-              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
-              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
-              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
-            </tr>
-          `;
-        } else if (chkS6 && chkS6.checked) {
-          rows += `
-            <tr class="text-center font-bold bg-purple-100">
-              <td class="border p-1" colspan="2">Infantry A - F</td>
-              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
-              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
-              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
-            </tr>
-          `;
-        } else if(chkL3 && chkL3.checked) {
-          rows += `
-            <tr class="text-center font-bold bg-purple-100">
-              <td class="border p-1" colspan="2">Lancer A - C</td>
-              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
-              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
-              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
-            </tr>
-          `;
-        } else if (chkL6 && chkL6.checked) {
-          rows += `
-            <tr class="text-center font-bold bg-purple-100">
-              <td class="border p-1" colspan="2">Lancer A - F</td>
-              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
-              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
-              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
-            </tr>
-          `;
-        } else if(chkM3 && chkM3.checked) {
-          rows += `
-            <tr class="text-center font-bold bg-purple-100">
-              <td class="border p-1" colspan="2">Marksman A - C</td>
-              <td class="border p-1">${(total.매뉴얼 * 3).toLocaleString()}</td>
-              <td class="border p-1">${(total.도면 * 3).toLocaleString()}</td>
-              <td class="border p-1">${(total.비전 * 3).toLocaleString()}</td>
-            </tr>
-          `;
-        } else if (chkM6 && chkM6.checked) {
-          rows += `
-            <tr class="text-center font-bold bg-purple-100">
-              <td class="border p-1" colspan="2">Marksman A - F</td>
-              <td class="border p-1">${(total.매뉴얼 * 6).toLocaleString()}</td>
-              <td class="border p-1">${(total.도면 * 6).toLocaleString()}</td>
-              <td class="border p-1">${(total.비전 * 6).toLocaleString()}</td>
-            </tr>
-          `;
-        }
-  
-        const resultHTML = `
-          <table class="w-full table-auto border text-sm text-center mt-4">
-            <thead class="bg-gray-100">
-              <tr>
-                <th class="border p-1">Slot</th>
-                <th class="border p-1">Level</th>
-                <th class="border p-1">Charm Guide</th>
-                <th class="border p-1">Charm Design</th>
-                <th class="border p-1">Charm Secrets</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        `;
-        
-        window.parent.postMessage({ type: "RESULT_POPUP", html: resultHTML }, "*");
-        //showPopup(resultHTML);
-      }
-
-      function syncGemCheck(group) {
-        if(group === "S3") {
-          document.getElementById(`extra-check-S6`).checked = false;
-        } else if(group === "S6") {
-          document.getElementById(`extra-check-S3`).checked = false;
-        } else if(group === "L3") {
-          document.getElementById(`extra-check-L6`).checked = false;
-        } else if(group === "L6") {
-          document.getElementById(`extra-check-L3`).checked = false;
-        } else if(group === "M3") {
-          document.getElementById(`extra-check-M6`).checked = false;
-        } else if(group === "M6") {
-          document.getElementById(`extra-check-M3`).checked = false;
-        } 
-      }
-      
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-      }
-      
-      createGemUI();
-      sendHeightToParent();
-    </script>
-    <script>
-      document.addEventListener("contextmenu", event => event.preventDefault());
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) 
-            || (e.ctrlKey && (e.key === "U" || e.key === "S")))
-        {
-          e.preventDefault();
-        }
+        grid.appendChild(card);
       });
-    </script>
-  </body>
-</html>
+    }
 
+    // ====== 계산 ======
+    function sumRange(steps, fromLv, toLv){
+      let s=0;
+      for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0;
+      return s;
+    }
+
+    function renderSummaryCards(total, owned, deficit){
+      const card = (title, data) => `
+        <div class="sum-card bg-white p-4 rounded-xl">
+          <div class="flex items-center justify-between mb-2">
+            <div class="sum-title">${title}</div>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="sum-item"><span class="muted">Guide</span><span class="tabular-nums">${fmt(data.m)}</span></div>
+            <div class="sum-item"><span class="muted">Design</span><span class="tabular-nums">${fmt(data.b)}</span></div>
+            <div class="sum-item"><span class="muted">Secrets</span><span class="tabular-nums">${fmt(data.v)}</span></div>
+          </div>
+        </div>
+      `;
+      document.getElementById("summaryPanel").innerHTML = [
+        card("Total",  total),
+        card("Stock", owned),
+        card("Quantity required", deficit),
+      ].join("");
+    }
+
+    function calculate(){
+      const total = { m:0, b:0, v:0 };
+      for (let i=0;i<gemSlots.length;i++){
+        const warn = document.getElementById(`warn-${i}`);
+        const chk  = document.getElementById(`chk-${i}`);
+        const curEl= document.getElementById(`cur-${i}`);
+        const tgtEl= document.getElementById(`tgt-${i}`);
+        const outM = document.getElementById(`m-${i}`);
+        const outB = document.getElementById(`b-${i}`);
+        const outV = document.getElementById(`v-${i}`);
+
+        outM.textContent = outB.textContent = outV.textContent = "0";
+        warn.textContent = "";
+
+        const cur = +curEl.value;
+        const tgt = +tgtEl.value;
+        if (cur && tgt) { // 두 값이 모두 선택된 경우에만 검사
+          if (tgt <= cur) {
+            warn.textContent = "Your goals should be bigger than what you have now.";
+            continue;
+          } else {
+            warn.textContent = "";
+          }
+        } else {
+          warn.textContent = ""; // 하나라도 비어 있으면 문구 표시 안 함
+        }
+        
+        const sM = sumRange(window.__gemStepM, cur, tgt);
+        const sB = sumRange(window.__gemStepB, cur, tgt);
+        const sV = sumRange(window.__gemStepV, cur, tgt);
+
+        total.m += sM; total.b += sB; total.v += sV;
+        outM.textContent = fmt(sM);
+        outB.textContent = fmt(sB);
+        outV.textContent = fmt(sV);
+
+        // 총합은 체크된 항목만 포함
+        if (chk.checked) {
+          total.m += sM;
+          total.b += sB;
+          total.v += sV;
+        }
+      }
+
+      const owned = {
+        m: +(document.getElementById("own-매뉴얼").value || 0),
+        b: +(document.getElementById("own-도면").value || 0),
+        v: +(document.getElementById("own-비전").value || 0),
+      };
+
+      const deficit = { m: owned.m - total.m, b: owned.b - total.b, v: owned.v - total.v };
+
+      // helios 느낌으로 3장 카드 렌더
+      renderSummaryCards(total, owned, deficit);
+      sendHeightToParent();
+    }
+
+    // ====== 이벤트 ======
+    function wireEvents(){
+      for (let i=0;i<gemSlots.length;i++){
+        const curEl= document.getElementById(`cur-${i}`);
+        const tgtEl= document.getElementById(`tgt-${i}`);
+        const chk  = document.getElementById(`chk-${i}`);
+        // 현재 → 목표 자동 (cur+1)
+        curEl.addEventListener("change", () => {
+          const cur = +curEl.value;
+          if (!cur){
+            tgtEl.innerHTML = '<option value=""></option>';
+          }else{
+            renderTargetOptions(tgtEl, gemLevels, cur);
+            if (tgtEl.options.length > 1) tgtEl.selectedIndex = 1;
+          }
+          calculate();
+        });
+        tgtEl.addEventListener("change", calculate);
+        chk.addEventListener("change", calculate);
+      }
+      ["own-매뉴얼","own-도면","own-비전"].forEach(id => {
+        document.getElementById(id).addEventListener("input", calculate);
+      });
+    }
+
+    // ====== 로드 ======
+    async function fetchCSVData(){
+      try{
+        const res = await fetch(csvUrl, { cache: "no-store", mode: "cors", redirect:"follow", referrerPolicy:"no-referrer" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const text = await res.text();
+
+        const { levels, manual, blue, vision } = parseGemCSV(text);
+        gemLevels = levels;
+        window.__gemStepM = manual;
+        window.__gemStepB = blue;
+        window.__gemStepV = vision;
+
+        // UI 생성 + 옵션 채우기
+        createGemCards();
+        for (let i=0;i<gemSlots.length;i++){
+          const curEl = document.getElementById(`cur-${i}`);
+          const tgtEl = document.getElementById(`tgt-${i}`);
+          const capEl = document.getElementById(`cap-${i}`);
+          renderOptions(curEl, gemLevels);
+          renderTargetOptions(tgtEl, [], 0);
+          capEl.textContent = gemLevels.length ? `(Max Lv.${gemLevels[gemLevels.length-1]})` : "";
+        }
+
+        wireEvents();
+        calculate();
+      }catch(err){
+        console.error("Error:", err);
+        document.getElementById("GemGrid").innerHTML =
+          '<div class="rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg text-sm err">Not Found Data. Check CSV Url.</div>';
+      }finally{
+        sendHeightToParent();
+      }
+    }
+
+    fetchCSVData();
+  </script>
+</body>
+</html>
