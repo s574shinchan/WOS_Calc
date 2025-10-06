@@ -5,67 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>建物計算機</title>
   <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-    if (window.innerWidth <= 768) {
-      window.location.href = "building_JP_m.html"; // 또는 원하는 모바일 전용 파일
+  <script>
+    /* 모바일 페이지 분기(원 코드 유지 가능) */
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const width = window.innerWidth;
+    const isMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua.toLowerCase()) && width <= 640;
+    const isOnMobilePage = location.pathname.includes('building_m');
+    if (isMobile && !isOnMobilePage) {
+      // 필요 시 모바일 전용 페이지가 있다면 사용
+      // window.location.href = "building_m.html";
     }
   </script>
   <style>
-     /* ✅ 다크모드 전용 */
-    body.dark-mode {
-      background-color: #121212;
-      color: #f0f0f0;
+    /* 다크모드 */
+    body.dark-mode { background:#121212; color:#f0f0f0; }
+    .dark-mode .border { border-color:#444 !important; }
+    .dark-mode .bg-white { background:#2c2c2c !important; color:#f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background:#1e1e1e !important; }
+    .dark-mode .text-gray-800, .dark-mode .text-gray-700, .dark-mode .text-gray-600 { color:#dddddd !important; }
+    .dark-mode table { background:#2c2c2c; color:#f0f0f0; }
+    .dark-mode th, .dark-mode td { border-color:#444 !important; }
+    .dark-mode select option, .dark-mode select, .dark-mode input { color:#000 !important; }
+    .dark-mode #buffSelect, .dark-mode #buffSelect option, .dark-mode #buffSelect:disabled {
+      color:#fff !important; background:#2c2c2c !important;
     }
-    
-    .dark-mode .border { border-color: #444 !important; }
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-  
-    .dark-mode .text-gray-800,
-    .dark-mode .text-gray-700,
-    .dark-mode .text-gray-600 { color: #dddddd !important; }
-  
-    .dark-mode .text-blue-700 { color: #66b0ff !important; }
-    .dark-mode .text-blue-600 { color: #80caff !important; }
-    .dark-mode .text-orange-500 { color: #ffa94d !important; }
-    .dark-mode .text-green-600 { color: #79e68c !important; }
-    .dark-mode .text-red-500 { color: #ff8080 !important; }
-    .dark-mode .text-gray-500 { color: #aaa !important; }    
-    
-    .dark-mode .text-gray-800, 
-    .dark-mode .text-gray-600 { color: #e0e0e0 !important; }
-    
-    .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
-    .dark-mode th, .dark-mode td { border-color: #444 !important; }
-    .dark-mode thead th { color: #000 !important; }
-    
-    .dark-mode .bg-amber-100,    
-    .dark-mode .bg-green-100,
-    .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
-    
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-    
-    .dark-mode .bg-amber-50,
-    .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
 
-    .dark-mode .bg-blue-100,
-    .dark-mode .bg-blue-50,
-    .dark-mode .bg-orange-50,
-    .dark-mode .bg-purple-50,
-    .dark-mode .bg-yellow-50,
-    .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
-    
-    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
-    .dark-mode ul li { color: #ddd; }
-    
-    .dark-mode select option { color: #000 !important; }
-    .dark-mode select { color: #000 !important; }
-    .dark-mode input { color: #000 !important; }
+    /* experts 스타일 카드 */
+    .exp-card{
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:16px;
+      background:#fff;
+      box-shadow:0 6px 18px rgba(15,23,42,.06);
+      transition: box-shadow .2s ease;
+    }
+    .exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
+    .muted{ font-size:12px; color:#6b7280; }
+    body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
+    body.dark-mode .muted{ color:#b7b7b7 !important; }
   </style>
-
-  <!-- ✅ 다크모드 상태 유지 스크립트 -->
   <script>
+    /* 다크모드 유지 */
     window.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
@@ -73,334 +52,383 @@
     });
   </script>
 </head>
-  <body class="bg-gray-100 p-2 font-sans text-sm">
-    <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md"> 
-      <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ 建物計算機</h1>
-      
-      <!-- 설명 영역 -->
-      <div class="text-gray-600 mb-4 text-center text-sm">
-        <div class="grid grid-cols-4 gap-x-4 px-0">
-          <!-- 첫 번째 행 -->
-          <div class="flex items-center text-sm font-semibold leading-tight">
-            <input type="checkbox" id="chkVP" onchange="handleVPCheck('chkVP')" class="mr-1 w-4 h-4" /> 副執政官 (10%)
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ 建物計算機</h1>
+
+    <!-- 설명 -->
+    <div class="text-gray-600 mb-4 text-sm">
+      <!-- 버프/속도 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkVP" class="mr-2 w-4 h-4"> 副執政官 (10%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkSPVP" class="mr-2 w-4 h-4"> 副執政官 (15%)
+        </label>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkServerBuff" class="mr-2 w-4 h-4"> 商業主義 (10%)
+        </label>
+        <div class="flex items-center">
+          <span class="font-semibold">建造速度 (%)</span>
+          <input type="number" id="buildSpeed" min="0" class="ml-2 border rounded p-2 text-sm w-20 text-right" placeholder="0" />
+        </div>
+        <div class="flex items-center">
+          <label class="inline-flex items-center font-semibold">
+            <input type="checkbox" id="chkPetBuff" class="mr-2 w-4 h-4" /> 洞窟ハイエナのバフ
+          </label>
+          <select id="buffSelect" class="ml-2 border rounded p-1 text-sm bg-gray-100 pointer-events-none" disabled>
+            <option value="0">None</option>
+            <option value="5">5%</option>
+            <option value="7">7%</option>
+            <option value="9">9%</option>
+            <option value="12">12%</option>
+            <option value="15">15%</option>
+          </select>
+        </div>
+        <label class="inline-flex items-center font-semibold">
+          <input type="checkbox" id="chkCityBuff" class="mr-2 w-4 h-4" /> 建造加速 (20%)
+        </label>
+      </div>
+    </div>
+
+    <!-- 건물 카드 그리드 -->
+    <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+
+    <!-- 보유 자원 카드 -->
+    <div class="exp-card mt-4">
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-[15px] font-semibold text-gray-800">保有資源</h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="owned-불수정" class="block text-[15px] text-gray-600 mb-1">火晶（所持数）</label>
+            <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
           </div>
-          <div class="flex items-center text-sm font-semibold leading-tight">
-            <input type="checkbox" id="chkServerBuff" class="mr-1 w-4 h-4" /> 商業主義 (10%)
-          </div>
-          <div class="flex items-center text-sm font-semibold leading-tight">
-            <input type="checkbox" id="chkPetBuff" onchange="togglePetBuffSelect()" class="mr-1 w-4 h-4" /> 洞窟ハイエナのバフ (5-15%)
-            <select id="buffSelect" class="ml-2 border rounded p-1 text-sm bg-gray-100 pointer-events-none" disabled>
-              <option value="0">None</option>
-              <option value="5">5%</option>
-              <option value="7">7%</option>
-              <option value="9">9%</option>
-              <option value="12">12%</option>
-              <option value="15">15%</option>
-            </select>
-          </div>
-          <div> <!--빈칸 --> </div>
-          
-          <!-- 두 번째 행 -->
-          <div class="flex items-center text-sm font-semibold leading-tight mt-2">
-            <input type="checkbox" id="chkSPVP" onchange="handleVPCheck('chkSPVP')" class="mr-1 w-4 h-4" /> 副執政官 (15%)
-          </div>
-          <div class="flex items-center text-sm font-semibold leading-tight mt-2">
-            <input type="checkbox" id="chkCityBuff" class="mr-1 w-4 h-4" /> 建造加速 (20%)
-          </div>
-          <div class="flex items-center text-sm font-semibold leading-tight">
-            建造速度 (%)
-            <input type="number" id="buildSpeed" class="ml-2 border rounded p-1 text-sm w-16 text-right" placeholder="0" />
+          <div>
+            <label for="owned-정제" class="block text-[15px] text-gray-600 mb-1">精錬火晶（所持数）</label>
+            <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
           </div>
         </div>
       </div>
-      
-      <form id="calcForm" class="space-y-4">
-        <div id="buildingGridBody" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-          <div>
-            <label class="block font-semibold">火晶（所持数）</label>
-            <input type="number" id="owned-불수정" class="w-full border rounded p-2" />
-          </div>
-          <div>
-            <label class="block font-semibold">精錬火晶（所持数）</label>
-            <input type="number" id="owned-정제" class="w-full border rounded p-2" />
-          </div>
-        </div>
-        <div id="ownedInputArea" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
-        <button type="button" onclick="calculateAll()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">計算する</button>
-      </form>
     </div>
-    <script>
-    function sendHeightToParent() {
-      const height = document.body.scrollHeight + 10;
-      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+
+    <!-- 총합계 패널 (제목 문구 제거) -->
+    <div id="summaryPanel" class="exp-card mt-4">
+      <div class="p-4">
+        <!-- 제목 제거 -->
+        <div id="summaryBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* 유틸 */
+    function sendHeightToParent(){ const h=document.body.scrollHeight+10; window.parent?.postMessage({type:"FRAME_CHANGE",height:h},"*"); }
+    window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
+
+    const buildingList = ["용광로","대사관","지휘부","방패병","창병","궁병","의무실","아카데미"];
+    const resources = ["불수정","정제","고기","나무","석탄","철광","변환시간"];
+    const nameAliasMap = {
+      "용광로": "大溶鉱炉",
+      "대사관": "大使館",
+      "지휘부": "司令部",
+      "의무실": "軍医所",
+      "방패병": "盾兵の兵舎",
+      "창병": "槍兵の兵舎",
+      "궁병": "弓兵の兵舎",
+      "아카데미": "戦争学園"
+    };
+    const buildingData = {};
+    let buildingCards = []; // {name, maxIndex}
+
+    function formatValue(value){
+      const num = parseFloat((value??0).toString().replace(/,/g,''));
+      if (isNaN(num)) return value;
+      // 원 코드 기준 포맷 유지
+      return num >= 1000 ? (num/1000).toFixed(1) + "B" : num + "M";
+    }
+    function formatHourToTime(hours){
+      if (!hours || isNaN(hours)) return "0분";
+      const totalMinutes = Math.round(hours*60);
+      const d = Math.floor(totalMinutes/1440);
+      const h = Math.floor((totalMinutes%1440)/60);
+      const m = totalMinutes%60;
+      return `${d?d+'일 ':''}${h?h+'시간 ':''}${(m||(!d&&!h))?m+'분':''}`.trim();
     }
 
-    // 페이지 최초 로드 시
-    window.addEventListener("load", () => {
-      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-    });
-    
-    function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    function handleVPCheck(which){
+      const v=document.getElementById("chkVP");
+      const s=document.getElementById("chkSPVP");
+      if(which==="chkVP" && v.checked) s.checked=false;
+      if(which==="chkSPVP" && s.checked) v.checked=false;
+      scheduleCalc();
     }
-  </script>
-    <script>
-      const buildingList = ["용광로", "대사관", "지휘부", "의무실", "방패병", "창병", "궁병", "아카데미"];
-      const resources = ["불수정", "정제", "고기", "나무", "석탄", "철광", "변환시간"];
-      const buildingData = {};
-      const nameAliasMap = {
-        "용광로": "大溶鉱炉",
-        "대사관": "大使館",
-        "지휘부": "司令部",
-        "의무실": "軍医所",
-        "방패병": "盾兵の兵舎",
-        "창병": "槍兵の兵舎",
-        "궁병": "弓兵の兵舎",
-        "아카데미": "戦争学園"
-      };
+    function togglePetBuffSelect(){
+      const cb=document.getElementById("chkPetBuff");
+      const sel=document.getElementById("buffSelect");
+      sel.disabled = !cb.checked;
+      sel.classList.toggle("pointer-events-none",!cb.checked);
+      sel.classList.toggle("bg-white",cb.checked);
+      sel.classList.toggle("bg-gray-100",!cb.checked);
+      scheduleCalc();
+    }
 
-      async function fetchBuildingData() {
-        for (const name of buildingList) {
-          const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
-          const res = await fetch(url);
-          const text = await res.text();
-          const lines = text.trim().split("\n");
-          const headers = lines[0].split(",");
-          const data = lines.slice(1).map(line => {
-            const obj = {};
-            const values = line.split(",");
-            headers.forEach((h, i) => {
-              obj[h.trim()] = values[i]?.trim() || "0";
-            });
-            return obj;
-          });
-          buildingData[name] = data;
-        }
-        renderBuildingSelectors();
-      }
-  
-      function renderBuildingSelectors() {
-        const container = document.getElementById("buildingGridBody");
-        buildingList.forEach(name => {
-          const displayName = nameAliasMap[name] || name
-          const levels = buildingData[name].map(d => d["레벨"]);
-          const options = levels.map((lv, i) => `<option value="${i}">${lv}</option>`).join("");
-          container.innerHTML += `
-            <div class="bg-blue-50 border p-2 rounded shadow">
-            <label class="flex items-center text-sm font-semibold mb-1">
-            <input type="checkbox" id="check-${name}" class="mr-1 w-4 h-4" /> ${displayName}</label>
-            <div class="flex items-center gap-2 mb-1">
-            <label class="text-sm whitespace-nowrap">現在</label>
-            <select id="start-${name}" class="w-full border rounded p-1 text-sm">${options}</select>
-            </div>
-            <div class="flex items-center gap-2 mb-1">
-            <label class="text-sm whitespace-nowrap">目標</label>
-            <select id="end-${name}" class="w-full border rounded p-1 text-sm">${options}</select>
-            </div>
-            </div>
-          `;
+    async function fetchBuildingData(){
+      for (const name of buildingList){
+        const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
+        const res = await fetch(url);
+        const text = await res.text();
+        const lines = text.trim().split("\n");
+        const headers = lines[0].split(",");
+        const data = lines.slice(1).map(line=>{
+          const obj = {};
+          const values = line.split(",");
+          headers.forEach((h,i)=> obj[h.trim()] = (values[i]?.trim() || "0"));
+          return obj;
         });
-        
-        // 현재값 변경 시 목표값 자동 반영
-        buildingList.forEach(name => {
-          const startSelect = document.getElementById(`start-${name}`);
-          const endSelect = document.getElementById(`end-${name}`);
-          if (startSelect && endSelect) {
-            startSelect.addEventListener("change", () => {
-              endSelect.value = startSelect.value;
-            });
-          }
-        });
+        buildingData[name]=data;
       }
-      
-      function formatValue(value) {     
-        const num = parseFloat(value.toString().replace(/,/g, ''));
-        if (isNaN(num)) return value;
-        
-        if (num >= 1000) {
-          return (num / 1000).toFixed(1) + "B";
-        } else {
-          return num + "M";
-        }
-      }
+      renderBuildingSelectors();
+      scheduleCalc();
+    }
 
-      function formatHourToTime(hours) {
-        if (!hours || isNaN(hours)) return "0min";
-        const totalMinutes = Math.round(hours * 60);
-        const days = Math.floor(totalMinutes / 1440);
-        const hrs = Math.floor((totalMinutes % 1440) / 60);
-        const mins = totalMinutes % 60;
-  
-        let result = "";
-        if (days > 0) result += `${days}d `;
-        if (hrs > 0) result += `${hrs}h `;
-        if (mins > 0 || result === "") result += `${mins}min`;
-        return result.trim();
-      }
-  
-      function handleVPCheck(toggleId) {
-        const chkVP = document.getElementById("chkVP");
-        const chkSPVP = document.getElementById("chkSPVP");
-      
-        if (toggleId === "chkVP" && chkVP.checked) {
-          chkSPVP.checked = false;
-        } else if (toggleId === "chkSPVP" && chkSPVP.checked) {
-          chkVP.checked = false;
-        }
-      }
-      
-      function calculateAll() {
-        let total = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
-        let totalConversionTime = 0; // 단위: 시간
-        let result = `
-          <table class="w-full border text-sm text-center table-auto mt-4">
-            <thead class="bg-blue-100">
-              <tr>
-                <th class="border p-1">建造</th>
-                <th class="border p-1">レベル</th>
-                <th class="border p-1">火晶</th>
-                <th class="border p-1">精錬火晶</th>
-                <th class="border p-1">生肉</th>
-                <th class="border p-1">木材</th>
-                <th class="border p-1">石炭</th>
-                <th class="border p-1">鐵鉱</th>
-                <th class="border p-1">かかる時間</th>
-              </tr>
-            </thead>
-            <tbody>
+    function renderBuildingSelectors(){
+      const container = document.getElementById("buildingGridBody");
+      container.innerHTML = "";
+      buildingCards = [];
+
+      buildingList.forEach(name=>{
+        const displayName = nameAliasMap[name] || name
+        const levels = buildingData[name].map(d=> d["레벨"]);
+        const options = levels.map((lv,i)=> `<option value="${i}">${lv}</option>`).join("");
+        const maxIndex = levels.length-1;
+
+        const card = document.createElement("div");
+        card.className = "exp-card";
+        card.innerHTML = `
+          <div class="p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <input id="check-${name}" type="checkbox" class="h-4 w-4">
+                  <h3 class="text-[15px] font-semibold text-gray-800">${displayName}</h3>
+                </div>
+                <p class="muted mb-3">レベル範囲 (最大レベル Lv.${levels[maxIndex]})</p>
+
+                <!-- ✅ 현재/목표 세로 배치 -->
+                <div class="grid grid-cols-1 gap-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-gray-600">現在</span>
+                    <select id="start-${name}" class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">
+                      ${options}
+                    </select>
+                  </div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-gray-600">目標</span>
+                    <select id="end-${name}" class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">
+                      ${options}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="md:pl-4">
+                <div class="font-semibold text-gray-800 mb-2">小計</div>
+                <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
+                  <div class="text-gray-600">火晶</div><div class="text-right tabular-nums" id="sub-불수정-${name}">0</div>
+                  <div class="text-gray-600">精錬火晶</div><div class="text-right tabular-nums" id="sub-정제-${name}">0</div>
+                  <div class="text-gray-600">生肉</div><div class="text-right tabular-nums" id="sub-고기-${name}">0</div>
+                  <div class="text-gray-600">木材</div><div class="text-right tabular-nums" id="sub-나무-${name}">0</div>
+                  <div class="text-gray-600">石炭</div><div class="text-right tabular-nums" id="sub-석탄-${name}">0</div>
+                  <div class="text-gray-600">鐵鉱</div><div class="text-right tabular-nums" id="sub-철광-${name}">0</div>
+                  <div class="text-gray-600">かかる時間</div><div class="text-right tabular-nums" id="sub-시간-${name}">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
         `;
-        
-        const owned = {
-          "불수정": parseInt(document.getElementById("owned-불수정").value || 0),
-          "정제": parseInt(document.getElementById("owned-정제").value || 0)
-        };
+        container.appendChild(card);
 
-        const buildSpeed = parseFloat(document.getElementById("buildSpeed").value || 0);
-        let factor = (buildSpeed * 0.01) + 1;
+        // 이벤트
+        const startSel = card.querySelector(`#start-${name}`);
+        const endSel   = card.querySelector(`#end-${name}`);
+        const chk      = card.querySelector(`#check-${name}`);
 
-        const chkVP = document.getElementById("chkVP").checked;
-        const chkSPVP = document.getElementById("chkSPVP").checked;
-        const chkServerBuff= document.getElementById("chkServerBuff").checked;
+        startSel.addEventListener("change", ()=>{
+          endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
+          scheduleCalc();
+        });
+        endSel.addEventListener("change", scheduleCalc);
+        chk.addEventListener("change", scheduleCalc);
 
-        if (chkVP) factor += 0.10;
-        else if (chkSPVP) factor += 0.15;
+        buildingCards.push({name, maxIndex});
+      });
+    }
 
-        if(chkServerBuff) factor += 0.10;
-
-        const chkPet = document.getElementById("chkPetBuff").checked
+    function getFactorForTime(){
+      const buildSpeed = parseFloat(document.getElementById("buildSpeed").value || 0);
+      let factor = (buildSpeed * 0.01) + 1;
+      if (document.getElementById("chkVP").checked) factor += 0.10;
+      if (document.getElementById("chkSPVP").checked) factor += 0.15;
+      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+      if (document.getElementById("chkPetBuff").checked){
         const petBuff = parseFloat(document.getElementById("buffSelect").value || "0");
+        if (!isNaN(petBuff)) factor += (petBuff/100);
+      }
+      return factor;
+    }
 
-        if (!isNaN(petBuff) && chkPet) {
-          factor = factor + (petBuff / 100);  // % 값을 소수점으로 반영
-        }
-        
-        buildingList.forEach(name => {
-          if (!document.getElementById("check-" + name).checked) return;
-  
-          const start = parseInt(document.getElementById("start-" + name).value);
-          const end = parseInt(document.getElementById("end-" + name).value);
-          const data = buildingData[name].slice(start + 1, end + 1);
-          let subtotal = { "불수정": 0, "정제": 0, "고기": 0, "나무": 0, "석탄": 0, "철광": 0 };
-          let buildingConversionTime = 0;        
-  
-          data.forEach(row => {
-            resources.forEach(res => {
-              const value = parseInt(row[res] || 0);
-              if (res === "변환시간") {
-                buildingConversionTime += value;
-                totalConversionTime += value;
-              } else {
-                subtotal[res] += value;
-                total[res] += value;
-              }
-            });
-          });
-  
-          let adjustedBuildingHours = buildingConversionTime / factor;
-          const chkCityBuff = document.getElementById("chkCityBuff").checked;
+    function calculateAll(){
+      // 합계
+      const total = { "불수정":0, "정제":0, "고기":0, "나무":0, "석탄":0, "철광":0 };
+      let totalHours = 0;
 
-          if(chkCityBuff) {
-            adjustedBuildingHours = adjustedBuildingHours * 0.8;
-          }
-
-          const levelStr = buildingData[name][start]["레벨"] + " → " + buildingData[name][end]["레벨"];
-          const displayName = nameAliasMap[name] || name
-          result += `
-            <tr>
-              <td class="border p-1 font-medium">${displayName}</td>
-              <td class="border p-1 text-xs">${levelStr}</td>
-              <td class="border p-1">${subtotal["불수정"].toLocaleString()}</td>
-              <td class="border p-1">${subtotal["정제"].toLocaleString()}</td>
-              <td class="border p-1">${formatValue(subtotal["고기"])}</td>
-              <td class="border p-1">${formatValue(subtotal["나무"])}</td>
-              <td class="border p-1">${formatValue(subtotal["석탄"])}</td>
-              <td class="border p-1">${formatValue(subtotal["철광"])}</td>
-             <td class="border p-1">${formatHourToTime(adjustedBuildingHours)}</td>
-            </tr>
-          `;
+      // 카드별 필요 합계 초기화
+      buildingCards.forEach(({name})=>{
+        ["불수정","정제","고기","나무","석탄","철광"].forEach(res=>{
+          const el = document.getElementById(`sub-${res}-${name}`);
+          if (el) el.textContent = "0";
         });
-  
-        result += `
-          <tr class="row-total bg-blue-50 font-bold">
-          <td class="border p-1" colspan="2">Total</td>
-          <td class="border p-1">${total["불수정"].toLocaleString()}</td>
-          <td class="border p-1">${total["정제"].toLocaleString()}</td>
-          <td class="border p-1">${formatValue(total["고기"])}</td>
-          <td class="border p-1">${formatValue(total["나무"])}</td>
-          <td class="border p-1">${formatValue(total["석탄"])}</td>
-          <td class="border p-1">${formatValue(total["철광"])}</td>
-          <td class="border p-1"></td>
-          </tr>
-          <tr class="row-owned text-center font-bold bg-orange-50">
-          <td class="border p-1" colspan="2">Stock</td>
-          <td class="border p-1">${owned["불수정"].toLocaleString()}</td>
-          <td class="border p-1">${owned["정제"].toLocaleString()}</td>
-          <td class="border p-1" colspan="5"></td>
-          </tr>
-          <tr class="row-deficit text-center font-bold bg-red-50">
-          <td class="border p-1" colspan="2">Quantity required</td>
-          <td class="border p-1">${(owned["불수정"] - total["불수정"]).toLocaleString()}</td>
-          <td class="border p-1">${(owned["정제"] - total["정제"]).toLocaleString()}</td>
-          <td class="border p-1" colspan="5"></td>
-          </tr>
-          </tbody></table>
-        `;
-        window.parent.postMessage({ type: "RESULT_POPUP", html: result }, "*");
-      }
-      
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-      }
-      
-      function togglePetBuffSelect() {
-        const checkbox = document.getElementById("chkPetBuff");
-        const selectBox = document.getElementById("buffSelect");
-        selectBox.disabled = !checkbox.checked;
-        selectBox.classList.toggle("pointer-events-none", !checkbox.checked);
-        selectBox.classList.toggle("bg-white", checkbox.checked);
-        selectBox.classList.toggle("bg-gray-100", !checkbox.checked);
-      }
+        const tEl = document.getElementById(`sub-시간-${name}`);
+        if (tEl) tEl.textContent = "0";
+      });
 
-      fetchBuildingData();
-      sendHeightToParent();
-    </script>
-    <script>      
-      document.addEventListener("contextmenu", event => event.preventDefault());
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "F12" ||
-          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
-        {
-          e.preventDefault();
+      const factor = getFactorForTime();
+      const cityBuff = document.getElementById("chkCityBuff").checked;
+
+      buildingCards.forEach(({name})=>{
+        const start = parseInt(document.getElementById(`start-${name}`).value);
+        const end   = parseInt(document.getElementById(`end-${name}`).value);
+        const checked = document.getElementById(`check-${name}`).checked;
+
+        // 구간 데이터
+        const data = buildingData[name].slice(start+1, end+1);
+        const sub = { "불수정":0, "정제":0, "고기":0, "나무":0, "석탄":0, "철광":0 };
+        let hours = 0; // 변환시간(시간)
+
+        data.forEach(row=>{
+          resources.forEach(res=>{
+            const v = parseFloat(row[res] || 0);
+            if (res === "변환시간") hours += (isNaN(v)?0:v);
+            else sub[res] += (isNaN(v)?0:v);
+          });
+        });
+
+        // 카드 우측 ‘필요 합계’ 갱신 (체크와 무관 / 항상 표시)
+        document.getElementById(`sub-불수정-${name}`).textContent = sub["불수정"].toLocaleString();
+        document.getElementById(`sub-정제-${name}`).textContent   = sub["정제"].toLocaleString();
+        document.getElementById(`sub-고기-${name}`).textContent    = formatValue(sub["고기"]);
+        document.getElementById(`sub-나무-${name}`).textContent    = formatValue(sub["나무"]);
+        document.getElementById(`sub-석탄-${name}`).textContent    = formatValue(sub["석탄"]);
+        document.getElementById(`sub-철광-${name}`).textContent    = formatValue(sub["철광"]);
+
+        let adjHours = hours / factor;
+        if (cityBuff) adjHours *= 0.8;
+        document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
+
+        // 체크된 카드만 총합 포함
+        if (checked && start < end){
+          Object.keys(total).forEach(k=> total[k] += sub[k]);
+          totalHours += adjHours;
         }
       });
-    </script>
-  </body>
+
+      // 보유(불수정/정제)
+      const owned = {
+        "불수정": parseFloat(document.getElementById("owned-불수정").value || 0),
+        "정제": parseFloat(document.getElementById("owned-정제").value || 0),
+      };
+
+      // 하단 요약(총합/보유/과부족) - 모든 자원 + 시간
+      const deficit = {
+        "불수정": owned["불수정"] - total["불수정"],
+        "정제": owned["정제"] - total["정제"],
+        // 나머지 자원은 보유치가 없으므로 과부족 미표시(원 요청대로 총합/보유/과부족은 불수정/정제 중심)
+      };
+
+      const summaryBody = `
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <!-- 총합 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">合計</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶</span><span>${total["불수정"].toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">精錬火晶</span><span>${total["정제"].toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">生肉</span><span>${formatValue(total["고기"])}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">木材</span><span>${formatValue(total["나무"])}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">石炭</span><span>${formatValue(total["석탄"])}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">鐵鉱</span><span>${formatValue(total["철광"])}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">かかる時間</span><span>${formatHourToTime(totalHours)}</span></div>
+          </div>
+
+          <!-- 보유량 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">所有数</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶</span><span>${owned["불수정"].toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">精錬火晶</span><span>${owned["정제"].toLocaleString()}</span></div>
+          </div>
+
+          <!-- 과부족 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">過不足</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶</span><span class="${deficit["불수정"]<0?'text-red-600':''}">${deficit["불수정"].toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">精錬火晶</span><span class="${deficit["정제"]<0?'text-red-600':''}">${deficit["정제"].toLocaleString()}</span></div>
+          </div>
+        </div>
+      `;
+      document.getElementById("summaryBody").innerHTML = summaryBody;
+
+      sendHeightToParent();
+    }
+
+    // 자동 계산(디바운스)
+    let calcTimer=null;
+    function scheduleCalc(){
+      if (calcTimer) clearTimeout(calcTimer);
+      calcTimer = setTimeout(calculateAll, 120);
+    }
+
+    // 상단 토글/입력 이벤트
+    document.addEventListener("change",(e)=>{
+      const id = e.target.id;
+      if (id==="chkVP") handleVPCheck("chkVP");
+      else if (id==="chkSPVP") handleVPCheck("chkSPVP");
+      else if (id==="chkServerBuff" || id==="chkCityBuff" || id==="buffSelect") scheduleCalc();
+      else if (id==="buildSpeed" || id==="owned-불수정" || id==="owned-정제") scheduleCalc();
+      else if (id==="chkPetBuff") togglePetBuffSelect();
+    });
+    ["buildSpeed","owned-불수정","owned-정제"].forEach(id=>{
+      const el=document.getElementById(id);
+      if (el) el.addEventListener("input", scheduleCalc);
+    });
+
+    // 데이터 로드 & 초기 렌더
+    fetchBuildingData();
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+  <script>
+    setInterval(() => {
+      debugger; // 개발자도구가 열리면 브라우저가 일시정지됨
+      alert("개발자 도구 접근이 감지되었습니다. 페이지를 새로고침합니다.");
+        location.reload();
+    }, 1000);
+  </script>
+</body>
 </html>
