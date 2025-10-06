@@ -276,9 +276,19 @@
         outM.textContent = outB.textContent = outV.textContent = "0";
         warn.textContent = "";
 
-        const cur = +curEl.value, tgt = +tgtEl.value;
-        if (tgt <= cur){ warn.textContent = "목표는 현재보다 커야 합니다."; continue; }
-
+        const cur = +curEl.value;
+        const tgt = +tgtEl.value;
+        if (cur && tgt) { // 두 값이 모두 선택된 경우에만 검사
+          if (tgt <= cur) {
+            warn.textContent = "목표는 현재보다 커야 합니다.";
+            continue;
+          } else {
+            warn.textContent = "";
+          }
+        } else {
+          warn.textContent = ""; // 하나라도 비어 있으면 문구 표시 안 함
+        }
+        
         const sM = sumRange(window.__gemStepM, cur, tgt);
         const sB = sumRange(window.__gemStepB, cur, tgt);
         const sV = sumRange(window.__gemStepV, cur, tgt);
