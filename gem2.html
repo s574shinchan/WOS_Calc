@@ -276,7 +276,6 @@
         outM.textContent = outB.textContent = outV.textContent = "0";
         warn.textContent = "";
 
-        if (!chk.checked) continue;
         const cur = +curEl.value, tgt = +tgtEl.value;
         if (!cur || !tgt){ warn.textContent = "레벨을 선택하세요"; continue; }
         if (tgt <= cur){ warn.textContent = "목표는 현재보다 커야 합니다."; continue; }
