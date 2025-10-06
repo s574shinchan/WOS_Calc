@@ -155,7 +155,7 @@
       const d = Math.floor(totalMinutes/1440);
       const h = Math.floor((totalMinutes%1440)/60);
       const m = totalMinutes%60;
-      return `${d?d+'일 ':''}${h?h+'시간 ':''}${(m||(!d&&!h))?m+'분':''}`.trim();
+      return `${d?d+'日 ':''}${h?h+'時間 ':''}${(m||(!d&&!h))?m+'分':''}`.trim();
     }
 
     function handleVPCheck(which){
@@ -215,7 +215,7 @@
                   <input id="check-${name}" type="checkbox" class="h-4 w-4">
                   <h3 class="text-[15px] font-semibold text-gray-800">${displayName}</h3>
                 </div>
-                <p class="muted mb-3">レベル範囲 (最大レベル Lv.${levels[maxIndex]})</p>
+                <p class="muted mb-3">レベル範囲 (最大レベル ${levels[maxIndex]})</p>
 
                 <!-- ✅ 현재/목표 세로 배치 -->
                 <div class="grid grid-cols-1 gap-2">
