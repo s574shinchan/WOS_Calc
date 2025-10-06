@@ -287,6 +287,13 @@
         outM.textContent = fmt(sM);
         outB.textContent = fmt(sB);
         outV.textContent = fmt(sV);
+
+        // 총합은 체크된 항목만 포함
+        if (chk.checked) {
+          total.m += sM;
+          total.b += sB;
+          total.v += sV;
+        }
       }
 
       const owned = {
