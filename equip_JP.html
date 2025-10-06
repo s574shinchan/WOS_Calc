@@ -340,15 +340,34 @@
     }
     
     window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
-    
-    // UX: 개발중 복사/디버그 방지 원코드 습관 유지
-    document.addEventListener("contextmenu", e => e.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
-        e.preventDefault();
-      }
-    });
   </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+  <script>
+    setInterval(() => {
+      const start = performance.now();
+      debugger; // 개발자도구가 열리면 브라우저가 일시정지됨
+      const end = performance.now();
+      if (end - start > 100) {
+        alert("개발자 도구 접근이 감지되었습니다. 페이지를 새로고침합니다.");
+        location.reload();
+      }
+    }, 1000);
+  </script>  
 </body>
 </html>
