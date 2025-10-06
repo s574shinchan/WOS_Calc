@@ -22,6 +22,15 @@
     .dark-mode select option{color:#000!important}
     .dark-mode select{color:#000!important}
     .dark-mode input{color:#000!important}
+
+    /* helios 스타일 감성의 합계 카드 */
+    .sum-card{border:1px solid rgba(0,0,0,.08); border-radius: .75rem; background: #fff; box-shadow: 0 6px 18px rgba(16,24,40,.08)}
+    .sum-title{font-weight:700}
+    .sum-item{display:flex; align-items:center; justify-content:space-between}
+    .pill-badge{display:inline-block; border-radius:9999px; padding:.1rem .5rem; font-size:12px; border:1px solid rgba(0,0,0,.08)}
+    .badge-total{background:#f3e8ff}   /* 보라 */
+    .badge-own{background:#fff7ed}     /* 오렌지 */
+    .badge-def{background:#fee2e2}     /* 레드 */
   </style>
   <script>
     // 다크모드 유지
@@ -37,11 +46,11 @@
     <header class="flex items-center justify-between">
       <div class="p-4">
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">🪙 영주보석 계산기</h1>
-        <p class="text-sm muted mt-1">보석 업그레이드에 필요한 <b>매뉴얼 / 도면 / 비전</b> 합계를 계산합니다. (최대 6개 슬롯 선택)</p>
+        <p class="text-sm muted mt-1">보석 업그레이드에 필요한 <b>매뉴얼 / 도면 / 비전</b> 합계를 계산합니다. (필요 슬롯 체크)</p>
       </div>
     </header>
 
-    <!-- 6개 슬롯 카드 -->
+    <!-- 카드 그리드 -->
     <section id="GemGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></section>
 
     <!-- 보유 자원 -->
@@ -66,9 +75,9 @@
       </div>
     </section>
 
-    <!-- 합계 패널 -->
-    <section id="summaryPanel" class="mt-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-      <div id="summaryBody"></div>
+    <!-- 합계 패널 (helios 느낌) -->
+    <section id="summaryPanel" class="mt-4 grid md:grid-cols-3 gap-4">
+      <!-- JS에서 채움 -->
     </section>
   </main>
 
@@ -85,14 +94,15 @@
     // 스키마 가정: "단계,매뉴얼,도면,비전"  (각 행은 '해당(목표) 레벨 비용' 또는 누적값)
     const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
 
-    // 슬롯 라벨 (원본 페이지의 6가지)
-    const gemSlots = ["방패A", "방패B", "방패C", "방패D", "방패E", "방패F",
-                      "창병A", "창병B", "창병C", "창병D", "창병E", "창병F",
-                      "궁병A", "궁병B", "궁병C", "궁병D", "궁병E", "궁병F",];
+    // 슬롯 라벨 (개별 다수 — 예시는 유형별 A~F)
+    const gemSlots = [
+      "방패A","방패B","방패C","방패D","방패E","방패F",
+      "창병A","창병B","창병C","창병D","창병E","창병F",
+      "궁병A","궁병B","궁병C","궁병D","궁병E","궁병F",
+    ];
 
     // ====== 상태 ======
     let gemLevels = []; // [Lv0, Lv1, ..., LvMax]
-    // 전역 스텝 (cur→tgt 합산에 사용)
     window.__gemStepM = [];
     window.__gemStepB = [];
     window.__gemStepV = [];
@@ -180,7 +190,7 @@
       selectEl.innerHTML = opts;
     }
 
-    // ====== 카드 UI 생성 ======
+    // ====== 카드 UI 생성 (현재/목표 세로 배치) ======
     function createGemCards(){
       const grid = document.getElementById("GemGrid");
       grid.innerHTML = "";
@@ -199,12 +209,16 @@
 
           <div class="grid md:grid-cols-2 gap-3">
             <div>
-              <div class="text-sm font-semibold mb-1">레벨 범위 <span id="cap-${i}" class="muted"></span></div>
-              <div class="flex items-center gap-4">
-                <label class="inline-label"><span class="muted">현재</span>
-                  <select id="cur-${i}" class="pill w-24"></select></label>
-                <label class="inline-label"><span class="muted">목표</span>
-                  <select id="tgt-${i}" class="pill w-24"></select></label>
+              <div class="text-sm font-semibold mb-2">레벨 범위 <span id="cap-${i}" class="muted"></span></div>
+              <div class="space-y-2">
+                <label class="inline-label w-full justify-between">
+                  <span class="muted w-14">현재</span>
+                  <select id="cur-${i}" class="pill w-28"></select>
+                </label>
+                <label class="inline-label w-full justify-between">
+                  <span class="muted w-14">목표</span>
+                  <select id="tgt-${i}" class="pill w-28"></select>
+                </label>
               </div>
             </div>
             <div class="md:pl-2">
@@ -226,6 +240,27 @@
       let s=0;
       for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0;
       return s;
+    }
+
+    function renderSummaryCards(total, owned, deficit){
+      const card = (title, badgeClass, data) => `
+        <div class="sum-card bg-white p-4 rounded-xl">
+          <div class="flex items-center justify-between mb-2">
+            <div class="sum-title">${title}</div>
+            <span class="pill-badge ${badgeClass}">${title}</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="sum-item"><span class="muted">매뉴얼</span><span class="tabular-nums">${fmt(data.m)}</span></div>
+            <div class="sum-item"><span class="muted">도면</span><span class="tabular-nums">${fmt(data.b)}</span></div>
+            <div class="sum-item"><span class="muted">비전</span><span class="tabular-nums">${fmt(data.v)}</span></div>
+          </div>
+        </div>
+      `;
+      document.getElementById("summaryPanel").innerHTML = [
+        card("총합", "badge-total", total),
+        card("보유량", "badge-own", owned),
+        card("과부족", "badge-def", deficit),
+      ].join("");
     }
 
     function calculate(){
@@ -265,39 +300,8 @@
 
       const deficit = { m: owned.m - total.m, b: owned.b - total.b, v: owned.v - total.v };
 
-      const html = `
-        <table class="w-full table-auto border text-sm text-center mt-2">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="border p-1">구분</th>
-              <th class="border p-1">매뉴얼</th>
-              <th class="border p-1">도면</th>
-              <th class="border p-1">비전</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="font-bold bg-purple-50">
-              <td class="border p-1">총합</td>
-              <td class="border p-1">${fmt(total.m)}</td>
-              <td class="border p-1">${fmt(total.b)}</td>
-              <td class="border p-1">${fmt(total.v)}</td>
-            </tr>
-            <tr class="font-bold bg-orange-50">
-              <td class="border p-1">보유량</td>
-              <td class="border p-1">${fmt(owned.m)}</td>
-              <td class="border p-1">${fmt(owned.b)}</td>
-              <td class="border p-1">${fmt(owned.v)}</td>
-            </tr>
-            <tr class="font-bold bg-red-50">
-              <td class="border p-1">과부족</td>
-              <td class="border p-1">${fmt(deficit.m)}</td>
-              <td class="border p-1">${fmt(deficit.b)}</td>
-              <td class="border p-1">${fmt(deficit.v)}</td>
-            </tr>
-          </tbody>
-        </table>
-      `;
-      document.getElementById("summaryBody").innerHTML = html;
+      // helios 느낌으로 3장 카드 렌더
+      renderSummaryCards(total, owned, deficit);
       sendHeightToParent();
     }
 
