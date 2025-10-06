@@ -484,7 +484,7 @@
             skillLevels[i] = levels;
             skillExp[i]    = expSteps;
             skillItem[i]   = itemSteps;
-            ref.cap.textContent = levels.length ? `(최대 레벨 Lv.${levels[levels.length-1]})` : "";
+            ref.cap.textContent = levels.length ? `(최대 Lv.${levels[levels.length-1]})` : "";
             renderOptions(ref.cur, levels, true);           // 현재: 전체
             renderTargetOptions(ref.tgt, [], 0, true);      // 목표: 비워두기
             ref.warn.textContent = "";
