@@ -243,11 +243,10 @@
     }
 
     function renderSummaryCards(total, owned, deficit){
-      const card = (title, badgeClass, data) => `
+      const card = (title, data) => `
         <div class="sum-card bg-white p-4 rounded-xl">
           <div class="flex items-center justify-between mb-2">
             <div class="sum-title">${title}</div>
-            <span class="pill-badge ${badgeClass}">${title}</span>
           </div>
           <div class="space-y-2 text-sm">
             <div class="sum-item"><span class="muted">매뉴얼</span><span class="tabular-nums">${fmt(data.m)}</span></div>
@@ -257,9 +256,9 @@
         </div>
       `;
       document.getElementById("summaryPanel").innerHTML = [
-        card("총합", "badge-total", total),
-        card("보유량", "badge-own", owned),
-        card("과부족", "badge-def", deficit),
+        card("총합",  total),
+        card("보유량", owned),
+        card("과부족", deficit),
       ].join("");
     }
 
