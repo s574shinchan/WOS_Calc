@@ -425,9 +425,13 @@
   </script>
   <script>
     setInterval(() => {
+      const start = performance.now();
       debugger; // 개발자도구가 열리면 브라우저가 일시정지됨
-      alert("개발자 도구 접근이 감지되었습니다. 페이지를 새로고침합니다.");
+      const end = performance.now();
+      if (end - start > 100) {
+        alert("개발자 도구 접근이 감지되었습니다. 페이지를 새로고침합니다.");
         location.reload();
+      }
     }, 1000);
   </script>
 </body>
