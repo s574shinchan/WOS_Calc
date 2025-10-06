@@ -150,7 +150,7 @@
       return num >= 1000 ? (num/1000).toFixed(1) + "B" : num + "M";
     }
     function formatHourToTime(hours){
-      if (!hours || isNaN(hours)) return "0분";
+      if (!hours || isNaN(hours)) return "0分";
       const totalMinutes = Math.round(hours*60);
       const d = Math.floor(totalMinutes/1440);
       const h = Math.floor((totalMinutes%1440)/60);
