@@ -484,17 +484,17 @@
             skillLevels[i] = levels;
             skillExp[i]    = expSteps;
             skillItem[i]   = itemSteps;
-            ref.cap.textContent = levels.length ? `(최대 Lv.${levels[levels.length-1]})` : "";
+            ref.cap.textContent = levels.length ? `(Max Lv.${levels[levels.length-1]})` : "";
             renderOptions(ref.cur, levels, true);           // Current: 전체
             renderTargetOptions(ref.tgt, [], 0, true);      // Target: 비워두기
             ref.warn.textContent = "";
           }catch(e){
-            console.warn("[CSV] Skill 불러오기 실패", i+1, e);
+            console.warn("[CSV] Skill Load Error", i+1, e);
             skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
             ref.cap.textContent = "";
             renderOptions(ref.cur, [], true);
             renderOptions(ref.tgt, [], true);
-            ref.warn.textContent = "Skill 로드 실패";
+            ref.warn.textContent = "Skill Load Error";
           }
         }else{
           skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
@@ -547,7 +547,7 @@
         const cV = ref.cur.value, tV = ref.tgt.value;
         if (isFilled(cV) && isFilled(tV) && skillLevels[i].length>1){
           const c=+cV, t=+tV;
-          ref.warn.textContent = (t<=c) ? "Target 레벨은 Current보다 커야 합니다." : "";
+          ref.warn.textContent = (t<=c) ? "The target level must be greater than the current level." : "";
           if (t>c){ sE = sumRangeSteps(skillExp[i], c, t); sI = sumRangeSteps(skillItem[i], c, t); }
         } else {
           ref.warn.textContent = "";
