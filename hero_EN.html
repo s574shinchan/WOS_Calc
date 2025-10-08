@@ -131,7 +131,7 @@
           <div class="exp-card">
             <div class="p-4">
               <div class="flex items-center justify-between mb-3">
-                <h3 class="text-[15px] font-semibold text-gray-800">Owned Items)</h3>
+                <h3 class="text-[15px] font-semibold text-gray-800">Owned Items</h3>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -373,7 +373,7 @@
   <script>
     const masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Hero/Mastery.csv";
     const masterySlots = ["고글", "장갑", "벨트", "신발"];
-    const nameAliasMap = {
+    const nameAliasMap2 = {
       "고글": "Goggles",
       "장갑": "Gauntlets",
       "벨트": "Belt",
@@ -414,7 +414,7 @@
       grid.innerHTML = "";
 
       masterySlots.forEach((name, i) => {
-        const displayName = nameAliasMap[name] || name
+        const displayName = nameAliasMap2[name] || name
         const options = masteryLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
         const card = document.createElement("div");
         card.className = "exp-card";
