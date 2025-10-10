@@ -212,7 +212,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <div class="flex items-center gap-2 mb-2">
-                  <input id="check-${name}" type="checkbox" class="h-4 w-4">
                   <h3 class="text-[15px] font-semibold text-gray-800">${displayName}</h3>
                 </div>
                 <p class="muted mb-3">Level Range (Max ${levels[maxIndex]})</p>
@@ -254,14 +253,12 @@
         // 이벤트
         const startSel = card.querySelector(`#start-${name}`);
         const endSel   = card.querySelector(`#end-${name}`);
-        const chk      = card.querySelector(`#check-${name}`);
 
         startSel.addEventListener("change", ()=>{
           endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
           scheduleCalc();
         });
         endSel.addEventListener("change", scheduleCalc);
-        chk.addEventListener("change", scheduleCalc);
 
         buildingCards.push({name, maxIndex});
       });
@@ -301,7 +298,6 @@
       buildingCards.forEach(({name})=>{
         const start = parseInt(document.getElementById(`start-${name}`).value);
         const end   = parseInt(document.getElementById(`end-${name}`).value);
-        const checked = document.getElementById(`check-${name}`).checked;
 
         // 구간 데이터
         const data = buildingData[name].slice(start+1, end+1);
@@ -329,7 +325,7 @@
         document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
 
         // 체크된 카드만 총합 포함
-        if (checked && start < end){
+        if (start < end){
           Object.keys(total).forEach(k=> total[k] += sub[k]);
           totalHours += adjHours;
         }
