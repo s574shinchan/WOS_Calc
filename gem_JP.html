@@ -199,7 +199,6 @@
         card.innerHTML = `
           <div class="flex items-center justify-between mb-2">
             <label class="text-base font-bold flex items-center gap-2">
-              <input type="checkbox" id="chk-${i}" class="w-4 h-4">
               <span>${name}</span>
             </label>
             <span id="warn-${i}" class="text-xs err"></span>
@@ -264,7 +263,6 @@
       const total = { m:0, b:0, v:0 };
       for (let i=0;i<gemSlots.length;i++){
         const warn = document.getElementById(`warn-${i}`);
-        const chk  = document.getElementById(`chk-${i}`);
         const curEl= document.getElementById(`cur-${i}`);
         const tgtEl= document.getElementById(`tgt-${i}`);
         const outM = document.getElementById(`m-${i}`);
@@ -291,17 +289,13 @@
         const sB = sumRange(window.__gemStepB, cur, tgt);
         const sV = sumRange(window.__gemStepV, cur, tgt);
 
-        total.m += sM; total.b += sB; total.v += sV;
+        total.m += sM; 
+        total.b += sB; 
+        total.v += sV;
+        
         outM.textContent = fmt(sM);
         outB.textContent = fmt(sB);
         outV.textContent = fmt(sV);
-
-        // 총합은 체크된 항목만 포함
-        if (chk.checked) {
-          total.m += sM;
-          total.b += sB;
-          total.v += sV;
-        }
       }
 
       const owned = {
@@ -322,7 +316,7 @@
       for (let i=0;i<gemSlots.length;i++){
         const curEl= document.getElementById(`cur-${i}`);
         const tgtEl= document.getElementById(`tgt-${i}`);
-        const chk  = document.getElementById(`chk-${i}`);
+
         // 현재 → 목표 자동 (cur+1)
         curEl.addEventListener("change", () => {
           const cur = +curEl.value;
@@ -335,7 +329,6 @@
           calculate();
         });
         tgtEl.addEventListener("change", calculate);
-        chk.addEventListener("change", calculate);
       }
       ["own-매뉴얼","own-도면","own-비전"].forEach(id => {
         document.getElementById(id).addEventListener("input", calculate);
