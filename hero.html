@@ -254,7 +254,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <div class="flex items-center gap-2 mb-2">
-                  <input type="checkbox" id="check-${i}" class="h-4 w-4 accent-purple-500" />
                   <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
                 </div>
                 <!-- 현재/목표 세로 배치 -->
@@ -285,12 +284,10 @@
 
         const curSelect = card.querySelector(`#start-${i}`);
         const tgtSelect = card.querySelector(`#end-${i}`);
-        const chk       = card.querySelector(`#check-${i}`);
 
         const onChange = () => { updateMithrilSubtotals(i); updateMithrilTotals(); };
         curSelect.addEventListener("change", () => { tgtSelect.value = curSelect.value; onChange(); });
         tgtSelect.addEventListener("change", onChange);
-        chk.addEventListener("change", onChange);
 
         // 초기 1회 계산
         updateMithrilSubtotals(i);
@@ -329,9 +326,6 @@
     function updateMithrilTotals(){
       let total = { exp:0, nut:0, mith:0, leg:0 };
       slotNames.forEach((_, i)=>{
-        const checked = document.getElementById(`check-${i}`)?.checked;
-        if(!checked) return;
-
         const cur = document.getElementById(`start-${i}`).value;
         const tgt = document.getElementById(`end-${i}`).value;
         const sIdx = stageList.indexOf(cur);
@@ -420,7 +414,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <div class="flex items-center gap-2 mb-2">
-                  <input type="checkbox" id="m-check-${i}" class="h-4 w-4 accent-yellow-500" />
                   <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
                 </div>
                 <div class="grid grid-cols-1 gap-2">
@@ -447,12 +440,10 @@
 
         const curSelect = card.querySelector(`#m-start-${i}`);
         const tgtSelect = card.querySelector(`#m-end-${i}`);
-        const chk       = card.querySelector(`#m-check-${i}`);
 
         const onChange = () => { updateMasterySubtotals(i); updateMasteryTotals(); };
         curSelect.addEventListener("change", () => { tgtSelect.value = curSelect.value; onChange(); });
         tgtSelect.addEventListener("change", onChange);
-        chk.addEventListener("change", onChange);
 
         updateMasterySubtotals(i);
       });
@@ -485,9 +476,6 @@
     function updateMasteryTotals(){
       let total = { stone:0, leg:0 };
       masterySlots.forEach((_, i)=>{
-        const checked = document.getElementById(`m-check-${i}`)?.checked;
-        if(!checked) return;
-
         const cur = document.getElementById(`m-start-${i}`).value;
         const tgt = document.getElementById(`m-end-${i}`).value;
         const sIdx = masteryLevels.indexOf(cur);
