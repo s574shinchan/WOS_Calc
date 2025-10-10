@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>펫 계산기 · Card UI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ✅ 다크모드 (기존 클래스명 유지) */
+    body.dark-mode{ background:#121212; color:#f0f0f0; }
+    .dark-mode .border{ border-color:#444 !important; }
+    .dark-mode .bg-white{ background:#2c2c2c !important; color:#f0f0f0 !important; }
+    .dark-mode .bg-gray-100{ background:#1e1e1e !important; }
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#dddddd !important; }
+    .dark-mode .text-blue-700{ color:#66b0ff !important; }
+    .dark-mode .text-blue-600{ color:#80caff !important; }
+    .dark-mode .text-orange-500{ color:#ffa94d !important; }
+    .dark-mode .text-green-600{ color:#79e68c !important; }
+    .dark-mode .text-red-500{ color:#ff8080 !important; }
+    .dark-mode .text-gray-500{ color:#aaa !important; }
+    .dark-mode table{ background:#2c2c2c; color:#f0f0f0; }
+    .dark-mode th,.dark-mode td{ border-color:#444 !important; }
+    .dark-mode .card{ background:#2b2b2b !important; border-color:#3a3a3a !important; }
+    .glass{ backdrop-filter:saturate(180%) blur(6px); }
+  </style>
+  <script>
+    // ✅ 기존 다크모드 상태 유지 스크립트 호환
+    window.addEventListener('DOMContentLoaded',()=>{
+      if(localStorage.getItem('darkMode')==='true'){ document.body.classList.add('dark-mode'); }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 text-sm">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 glass border-b border-slate-200">
+    <div class="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <h1 class="text-lg font-semibold">🐾 펫 계산기 <span class="ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-pink-100 text-pink-700">Card UI</span></h1>
+      </div>
+      <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+        <span class="text-sm">Dark</span>
+        <input id="darkToggle" type="checkbox" class="peer sr-only">
+        <span class="h-6 w-11 rounded-full bg-slate-300 peer-checked:bg-pink-500 relative transition">
+          <span class="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition peer-checked:left-5"></span>
+        </span>
+      </label>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="mx-auto max-w-7xl p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+    <!-- Card: 선택/그리드 -->
+    <section class="card bg-white border border-slate-200 rounded-2xl shadow-sm p-4 md:p-6 lg:col-span-2">
+      <h2 class="text-base md:text-lg font-semibold mb-1">펫 선택</h2>
+      <p class="text-gray-600 mb-4">체크한 펫만 계산됩니다. 각 펫의 현재/목표 레벨을 지정하세요.</p>
+      <div id="petGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+    </section>
+
+    <!-- Card: 보유재료 & 액션 -->
+    <section class="card bg-white border border-slate-200 rounded-2xl shadow-sm p-4 md:p-6">
+      <h2 class="text-base md:text-lg font-semibold mb-3">보유 재료</h2>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-sm font-medium">펫먹이</label><input type="number" id="own-펫먹이" class="w-full border rounded-xl px-3 py-2" placeholder="0" min="0" /></div>
+        <div><label class="block text-sm font-medium">조련매뉴얼</label><input type="number" id="own-조련매뉴얼" class="w-full border rounded-xl px-3 py-2" placeholder="0" min="0" /></div>
+        <div><label class="block text-sm font-medium">활력의약</label><input type="number" id="own-활력의약" class="w-full border rounded-xl px-3 py-2" placeholder="0" min="0" /></div>
+        <div><label class="block text-sm font-medium">강화혈청</label><input type="number" id="own-강화혈청" class="w-full border rounded-xl px-3 py-2" placeholder="0" min="0" /></div>
+      </div>
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button id="btnCalc" class="inline-flex items-center gap-2 rounded-xl bg-pink-600 hover:bg-pink-700 text-white px-4 py-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M12 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          계산하기
+        </button>
+        <button id="btnClear" class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 hover:bg-slate-50">초기화</button>
+      </div>
+    </section>
+
+    <!-- Card: 결과 -->
+    <section class="card bg-white border border-slate-200 rounded-2xl shadow-sm p-4 md:p-6 lg:col-span-3">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-base md:text-lg font-semibold">결과</h2>
+        <span id="selCount" class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">선택 0</span>
+      </div>
+      <div class="overflow-x-auto rounded-xl border border-slate-200">
+        <table class="w-full table-auto text-sm text-center">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="border p-2">등급</th>
+              <th class="border p-2">레벨</th>
+              <th class="border p-2">펫먹이</th>
+              <th class="border p-2">조련매뉴얼</th>
+              <th class="border p-2">활력의약</th>
+              <th class="border p-2">강화혈청</th>
+            </tr>
+          </thead>
+          <tbody id="resultBody"></tbody>
+          <tfoot>
+            <tr class="font-bold bg-pink-50" id="rowTotal"></tr>
+            <tr class="font-bold bg-orange-50" id="rowOwned"></tr>
+            <tr class="font-bold bg-red-50" id="rowDef"></tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mx-auto max-w-7xl px-4 pb-8 pt-2 text-center text-xs text-slate-500">
+    <p>© WOS 계산기 — Pet Card UI</p>
+  </footer>
+
+  <script>
+    // ===== 다크모드 토글 (기존 key 유지)
+    const darkToggle = document.getElementById('darkToggle');
+    darkToggle.checked = document.body.classList.contains('dark-mode');
+    darkToggle.addEventListener('change', ()=>{
+      document.body.classList.toggle('dark-mode', darkToggle.checked);
+      localStorage.setItem('darkMode', darkToggle.checked ? 'true' : 'false');
+    });
+
+    // ===== 기존 로직에서 가져온 등급/라벨/맵 구조 유지 =====
+    const grades = [
+      "기간토","매머드","호랑이","코뿔소","고릴라","동굴사자",
+      "흑표범","큰뿔사슴",
+      "티타니스","테이퍼",
+      "사향소","북극늑대",
+      "하이에나"
+    ];
+    const gradeLabels = {
+      "기간토":"SSR","매머드":"SSR","호랑이":"SSR","코뿔소":"SSR","고릴라":"SSR","동굴사자":"SSR",
+      "흑표범":"SR","큰뿔사슴":"SR",
+      "티타니스":"R","테이퍼":"R",
+      "사향소":"N","북극늑대":"N",
+      "하이에나":"UnKnown"
+    };
+    const petGrid = document.getElementById('petGrid');
+    let petDataMap = {};
+
+    // ===== CSV 로더 (기존 함수 유지) =====
+    async function fetchPetCSV(gradeKey){
+      const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Pet/Pet_${gradeKey}.csv`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const lines = text.trim().split("
+");
+      const headers = lines[0].split(",");
+      const data = lines.slice(1).map(line=>{
+        const values = line.split(",");
+        const obj = {}; headers.forEach((h,i)=>obj[h.trim()] = (values[i]?.trim() ?? "0"));
+        return obj;
+      });
+      return data;
+    }
+
+    // ===== UI 빌드 (카드 내부) – 기존 로직 호환 =====
+    async function loadPetUI(){
+      let checkedCount = 0;
+      for(const grade of grades){
+        const gradeKey = gradeLabels[grade];
+        const displayGrade = gradeKey === 'UnKnown' ? '하이에나' : grade;
+        try{
+          const data = await fetchPetCSV(gradeKey);
+          if(!data || !data.length) continue;
+          petDataMap[grade] = data;
+          const petNames = [...new Set(data.map(d=>d['이름']))];
+          petNames.forEach((petName, index)=>{
+            const petId = `${grade}-${index}`;
+            const petLevels = data.filter(d=>d['이름']===petName).map(d=>d['레벨']);
+            const card = document.createElement('div');
+            card.className = 'rounded-2xl border border-slate-200 p-3 bg-white dark:bg-slate-900';
+            card.innerHTML = `
+              <label class="flex items-center gap-2 text-sm font-semibold mb-2">
+                <input type="checkbox" id="pet-check-${petId}" class="w-4 h-4 accent-pink-500" />
+                <span>${displayGrade} · ${petName}</span>
+              </label>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="text-xs flex items-center gap-2"><span class="w-10 text-right">현재</span>
+                  <select id="pet-cur-${petId}" class="w-full border rounded-lg py-1.5 px-2 text-sm">
+                    ${petLevels.map(lv=>`<option value="${lv}">${lv}</option>`).join('')}
+                  </select>
+                </label>
+                <label class="text-xs flex items-center gap-2"><span class="w-10 text-right">목표</span>
+                  <select id="pet-tgt-${petId}" class="w-full border rounded-lg py-1.5 px-2 text-sm">
+                    ${petLevels.map(lv=>`<option value="${lv}">${lv}</option>`).join('')}
+                  </select>
+                </label>
+              </div>`;
+            petGrid.appendChild(card);
+            const curSelect = card.querySelector(`#pet-cur-${petId}`);
+            const tgtSelect = card.querySelector(`#pet-tgt-${petId}`);
+            const chk = card.querySelector(`#pet-check-${petId}`);
+            curSelect.addEventListener('change',()=>{ tgtSelect.value = curSelect.value; });
+            chk.addEventListener('change',()=>{
+              checkedCount += chk.checked ? 1 : -1; if(checkedCount<0) checkedCount=0;
+              document.getElementById('selCount').textContent = `선택 ${checkedCount}`;
+            });
+          });
+        }catch(e){ console.warn('CSV 로드 실패:', grade, e); }
+      }
+    }
+
+    // ===== 계산 (기존 알고리즘 유지, 결과를 카드 표에 렌더) =====
+    function calculatePet(){
+      let total = { 펫먹이:0, 조련매뉴얼:0, 활력의약:0, 강화혈청:0 };
+      let rowsHTML = '';
+
+      grades.forEach(grade=>{
+        const data = petDataMap[grade]; if(!data) return;
+        const petNames = [...new Set(data.map(d=>d['이름']))];
+        petNames.forEach((petName,index)=>{
+          const petId = `${grade}-${index}`;
+          const isChecked = document.getElementById(`pet-check-${petId}`)?.checked; if(!isChecked) return;
+          const cur = document.getElementById(`pet-cur-${petId}`).value;
+          const tgt = document.getElementById(`pet-tgt-${petId}`).value;
+          const filtered = data.filter(d=>d['이름']===petName);
+          const levels = filtered.map(d=>d['레벨']);
+          const start = levels.indexOf(cur);
+          const end   = levels.indexOf(tgt);
+          if(start===-1 || end===-1 || start>=end){
+            rowsHTML += `<tr><td class="border p-2" colspan="6">⚠️ ${grade}(${petName}) 선택 오류</td></tr>`; return;
+          }
+          const sub = { 펫먹이:0, 조련매뉴얼:0, 활력의약:0, 강화혈청:0 };
+          for(let i=start+1;i<=end;i++){
+            sub['펫먹이'] += parseFloat(filtered[i]['펫먹이']||'0');
+            sub['조련매뉴얼'] += parseFloat(filtered[i]['조련매뉴얼']||'0');
+            sub['활력의약'] += parseFloat(filtered[i]['활력의약']||'0');
+            sub['강화혈청'] += parseFloat(filtered[i]['강화혈청']||'0');
+          }
+          total['펫먹이'] += sub['펫먹이'];
+          total['조련매뉴얼'] += sub['조련매뉴얼'];
+          total['활력의약'] += sub['활력의약'];
+          total['강화혈청'] += sub['강화혈청'];
+          rowsHTML += `
+            <tr class="text-center">
+              <td class="border p-2">${grade}</td>
+              <td class="border p-2">${cur} → ${tgt}</td>
+              <td class="border p-2">${sub['펫먹이'].toLocaleString()}</td>
+              <td class="border p-2">${sub['조련매뉴얼'].toLocaleString()}</td>
+              <td class="border p-2">${sub['활력의약'].toLocaleString()}</td>
+              <td class="border p-2">${sub['강화혈청'].toLocaleString()}</td>
+            </tr>`;
+        });
+      });
+
+      const own = {
+        펫먹이: parseFloat(document.getElementById('own-펫먹이').value)||0,
+        조련매뉴얼: parseFloat(document.getElementById('own-조련매뉴얼').value)||0,
+        활력의약: parseFloat(document.getElementById('own-활력의약').value)||0,
+        강화혈청: parseFloat(document.getElementById('own-강화혈청').value)||0,
+      };
+
+      document.getElementById('resultBody').innerHTML = rowsHTML || `<tr><td class='border p-3 text-center' colspan='6'>선택된 펫이 없습니다.</td></tr>`;
+      const rowTotal = document.getElementById('rowTotal');
+      rowTotal.innerHTML = `
+        <td class='border p-2' colspan='2'>총합</td>
+        <td class='border p-2'>${total['펫먹이'].toLocaleString()}</td>
+        <td class='border p-2'>${total['조련매뉴얼'].toLocaleString()}</td>
+        <td class='border p-2'>${total['활력의약'].toLocaleString()}</td>
+        <td class='border p-2'>${total['강화혈청'].toLocaleString()}</td>`;
+      const rowOwned = document.getElementById('rowOwned');
+      rowOwned.innerHTML = `
+        <td class='border p-2' colspan='2'>보유량</td>
+        <td class='border p-2'>${own['펫먹이'].toLocaleString()}</td>
+        <td class='border p-2'>${own['조련매뉴얼'].toLocaleString()}</td>
+        <td class='border p-2'>${own['활력의약'].toLocaleString()}</td>
+        <td class='border p-2'>${own['강화혈청'].toLocaleString()}</td>`;
+      const rowDef = document.getElementById('rowDef');
+      rowDef.innerHTML = `
+        <td class='border p-2' colspan='2'>과부족</td>
+        <td class='border p-2'>${(own['펫먹이']-total['펫먹이']).toLocaleString()}</td>
+        <td class='border p-2'>${(own['조련매뉴얼']-total['조련매뉴얼']).toLocaleString()}</td>
+        <td class='border p-2'>${(own['활력의약']-total['활력의약']).toLocaleString()}</td>
+        <td class='border p-2'>${(own['강화혈청']-total['강화혈청']).toLocaleString()}</td>`;
+    }
+
+    document.getElementById('btnCalc').addEventListener('click', calculatePet);
+    document.getElementById('btnClear').addEventListener('click', ()=>{
+      ['own-펫먹이','own-조련매뉴얼','own-활력의약','own-강화혈청'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value='0'; });
+      document.getElementById('resultBody').innerHTML='';
+      document.getElementById('rowTotal').innerHTML='';
+      document.getElementById('rowOwned').innerHTML='';
+      document.getElementById('rowDef').innerHTML='';
+      document.getElementById('selCount').textContent = '선택 0';
+      // 체크 해제
+      document.querySelectorAll('#petGrid input[type=checkbox]').forEach(ch=>ch.checked=false);
+    });
+
+    // 초기 빌드
+    loadPetUI();
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>  
+</body>
+</html>
