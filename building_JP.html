@@ -5,17 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>建物計算機</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    /* 모바일 페이지 분기(원 코드 유지 가능) */
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const width = window.innerWidth;
-    const isMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua.toLowerCase()) && width <= 640;
-    const isOnMobilePage = location.pathname.includes('building_m');
-    if (isMobile && !isOnMobilePage) {
-      // 필요 시 모바일 전용 페이지가 있다면 사용
-      // window.location.href = "building_m.html";
-    }
-  </script>
   <style>
     /* 다크모드 */
     body.dark-mode { background:#121212; color:#f0f0f0; }
@@ -212,7 +201,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <div class="flex items-center gap-2 mb-2">
-                  <input id="check-${name}" type="checkbox" class="h-4 w-4">
                   <h3 class="text-[15px] font-semibold text-gray-800">${displayName}</h3>
                 </div>
                 <p class="muted mb-3">レベル範囲 (最大レベル ${levels[maxIndex]})</p>
@@ -254,14 +242,12 @@
         // 이벤트
         const startSel = card.querySelector(`#start-${name}`);
         const endSel   = card.querySelector(`#end-${name}`);
-        const chk      = card.querySelector(`#check-${name}`);
 
         startSel.addEventListener("change", ()=>{
           endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
           scheduleCalc();
         });
         endSel.addEventListener("change", scheduleCalc);
-        chk.addEventListener("change", scheduleCalc);
 
         buildingCards.push({name, maxIndex});
       });
@@ -301,7 +287,6 @@
       buildingCards.forEach(({name})=>{
         const start = parseInt(document.getElementById(`start-${name}`).value);
         const end   = parseInt(document.getElementById(`end-${name}`).value);
-        const checked = document.getElementById(`check-${name}`).checked;
 
         // 구간 데이터
         const data = buildingData[name].slice(start+1, end+1);
@@ -329,7 +314,7 @@
         document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
 
         // 체크된 카드만 총합 포함
-        if (checked && start < end){
+        if (start < end){
           Object.keys(total).forEach(k=> total[k] += sub[k]);
           totalHours += adjHours;
         }
