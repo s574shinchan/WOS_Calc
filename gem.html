@@ -293,17 +293,13 @@
         const sB = sumRange(window.__gemStepB, cur, tgt);
         const sV = sumRange(window.__gemStepV, cur, tgt);
 
-        total.m += sM; total.b += sB; total.v += sV;
+        total.m += sM; 
+        total.b += sB; 
+        total.v += sV;
+        
         outM.textContent = fmt(sM);
         outB.textContent = fmt(sB);
         outV.textContent = fmt(sV);
-
-        // 총합은 체크된 항목만 포함
-        if (chk.checked) {
-          total.m += sM;
-          total.b += sB;
-          total.v += sV;
-        }
       }
 
       const owned = {
