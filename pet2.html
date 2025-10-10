@@ -93,10 +93,18 @@
     // 등급 목록 및 CSV 맵핑
     const grades = ["기간토","매머드","호랑이","코뿔소","고릴라","동굴사자","흑표범","큰뿔사슴","티타니스","테이퍼","사향소","북극늑대","하이에나"];
     const gradeLabels = {
-      "기간토":"SSR","매머드":"SSR","호랑이":"SSR","코뿔소":"SSR","고릴라":"SSR","동굴사자":"SSR",
-      "흑표범":"SR","큰뿔사슴":"SR",
-      "티타니스":"R","테이퍼":"R",
-      "사향소":"N","북극늑대":"N",
+      "기간토":"SSR",
+      "매머드":"SSR",
+      "호랑이":"SSR",
+      "코뿔소":"SSR",
+      "고릴라":"SSR",
+      "동굴사자":"SSR",
+      "흑표범":"SR",
+      "큰뿔사슴":"SR",
+      "티타니스":"R",
+      "테이퍼":"R",
+      "사향소":"N",
+      "북극늑대":"N",
       "하이에나":"UnKnown" // 저장소에 해당 CSV가 없으면 건너뜀
     };
     const CSV_BASE = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Pet/";
@@ -172,19 +180,17 @@
         const names = petNamesByGrade[grade] || [];
         names.forEach((petName, idx) => {
           const key = `${grade}-${idx}`;
-          const lvList = levelsByPet[`${grade}|${petName}`] || [];
-
+          const lvList = levelsByPet[`${grade}|${gradeLabels}`] || [];
           const options = lvList.map(lv=>`<option value="${lv}">${lv}</option>`).join("");
-
           const card = document.createElement("div");
+          
           card.className = "exp-card";
           card.innerHTML = `
             <div class="p-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div class="flex items-center gap-2 mb-2">
-                    <input type="checkbox" id="check-${key}" class="h-4 w-4 accent-pink-500" />
-                    <h3 class="text-[15px] font-semibold text-gray-800">${grade} - ${petName}</h3>
+                    <h3 class="text-[15px] font-semibold text-gray-800">${grade} - ${gradeLabels}</h3>
                   </div>
                   <!-- 현재/목표 세로 배치 -->
                   <div class="grid grid-cols-1 gap-2">
@@ -214,12 +220,10 @@
 
           const curSel = card.querySelector(`#cur-${key}`);
           const tgtSel = card.querySelector(`#tgt-${key}`);
-          const chk    = card.querySelector(`#check-${key}`);
 
           const onChange = () => { updateCardSubtotal(grade, petName, key); scheduleCalc(); };
           curSel.addEventListener("change", () => { tgtSel.value = curSel.value; onChange(); });
           tgtSel.addEventListener("change", onChange);
-          chk.addEventListener("change", onChange);
 
           // 초기 계산
           updateCardSubtotal(grade, petName, key);
@@ -260,9 +264,7 @@
         const names = petNamesByGrade[grade] || [];
         names.forEach((petName, idx) => {
           const key = `${grade}-${idx}`;
-          const checked = document.getElementById(`check-${key}`)?.checked;
-          if (!checked) return;
-
+          
           const data = petDataMap[grade] || [];
           const list = data.filter(d => d["이름"] === petName);
           const lvArr = list.map(d => d["레벨"]);
