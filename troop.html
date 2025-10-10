@@ -49,11 +49,11 @@
           <div class="flex gap-4 flex-wrap mb-3">
             <label class="inline-flex items-center font-semibold">
               <input type="checkbox" id="edu1" class="mr-1" onclick="handleExclusiveCheck('edu1','edu2')" />
-              일반)교육부장관 (+200명, +50%)
+              일반)교육부장관
             </label>
             <label class="inline-flex items-center font-semibold">
               <input type="checkbox" id="edu2" class="mr-1" onclick="handleExclusiveCheck('edu2','edu1')" />
-              최집)교육부장관 (+300명, +75%)
+              최집)교육부장관
             </label>
             <label class="inline-flex items-center font-semibold">
               <input type="checkbox" id="serverBuff" class="mr-1" />
@@ -147,9 +147,9 @@
 
         // 체크박스 효과 적용
         const buffs = [];
-        if(document.getElementById('edu1').checked){ amountPerSession+=200; speedPercent+=50; buffs.push('일반 교육부 +200명 / +50%'); }
-        if(document.getElementById('edu2').checked){ amountPerSession+=300; speedPercent+=75; buffs.push('최집 교육부 +300명 / +75%'); }
-        if(document.getElementById('serverBuff').checked){ speedPercent+=30; buffs.push('서버버프 +30%'); }
+        if(document.getElementById('edu1').checked){ amountPerSession+=200; speedPercent+=50; buffs.push('훈련량 +200명 / 훈련속도 +50%'); }
+        if(document.getElementById('edu2').checked){ amountPerSession+=300; speedPercent+=75; buffs.push('훈련량 +300명 / 훈련속도 +75%'); }
+        if(document.getElementById('serverBuff').checked){ speedPercent+=30; buffs.push('훈련속도 +30%'); }
 
         const accelDay = parseInt(document.getElementById('accelDay').value,10) || 0;
         const accelHour = parseInt(document.getElementById('accelHour').value,10) || 0;
