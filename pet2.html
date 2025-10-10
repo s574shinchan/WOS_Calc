@@ -178,6 +178,8 @@
         if (!data) return; // 해당 등급 CSV 없으면 스킵
 
         const names = petNamesByGrade[grade] || [];
+        const gradeKey = gradeLabels[grade];
+        const displayGrade = gradeKey === "UnKnown" ? "하이에나" : grade;
         names.forEach((petName, idx) => {
           const key = `${grade}-${idx}`;
           const lvList = levelsByPet[`${grade}|${petName}`] || [];
@@ -190,7 +192,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div class="flex items-center gap-2 mb-2">
-                    <h3 class="text-[15px] font-semibold text-gray-800">${grade} - ${uniqueKeys}</h3>
+                    <h3 class="text-[15px] font-semibold text-gray-800">${grade} - ${displayGrade}</h3>
                   </div>
                   <!-- 현재/목표 세로 배치 -->
                   <div class="grid grid-cols-1 gap-2">
