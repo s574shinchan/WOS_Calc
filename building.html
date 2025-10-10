@@ -208,7 +208,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <div class="flex items-center gap-2 mb-2">
-                  <input id="check-${name}" type="checkbox" class="h-4 w-4">
                   <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
                 </div>
                 <p class="muted mb-3">레벨 범위 (최대 ${levels[maxIndex]})</p>
@@ -250,14 +249,12 @@
         // 이벤트
         const startSel = card.querySelector(`#start-${name}`);
         const endSel   = card.querySelector(`#end-${name}`);
-        const chk      = card.querySelector(`#check-${name}`);
 
         startSel.addEventListener("change", ()=>{
           endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
           scheduleCalc();
         });
         endSel.addEventListener("change", scheduleCalc);
-        chk.addEventListener("change", scheduleCalc);
 
         buildingCards.push({name, maxIndex});
       });
@@ -297,7 +294,6 @@
       buildingCards.forEach(({name})=>{
         const start = parseInt(document.getElementById(`start-${name}`).value);
         const end   = parseInt(document.getElementById(`end-${name}`).value);
-        const checked = document.getElementById(`check-${name}`).checked;
 
         // 구간 데이터
         const data = buildingData[name].slice(start+1, end+1);
@@ -401,15 +397,23 @@
 
     // 데이터 로드 & 초기 렌더
     fetchBuildingData();
-
-    // (선택) F12/복사 방지 유지
-    document.addEventListener("contextmenu", e=>e.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
         e.preventDefault();
+        return false;
       }
-    });
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
   </script>
 </body>
 </html>
