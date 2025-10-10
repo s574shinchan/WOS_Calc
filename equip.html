@@ -158,8 +158,6 @@
         const onChange = () => { updateSubtotals(i); scheduleCalc(); };
         startSel.addEventListener("change", () => { endSel.value = startSel.value; onChange(); });
         endSel.addEventListener("change", onChange);
-        chk.addEventListener("change", onChange);
-
         // 초기 계산
         updateSubtotals(i);
       });
