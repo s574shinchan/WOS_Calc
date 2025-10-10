@@ -1021,5 +1021,22 @@ document.addEventListener("DOMContentLoaded", () => {
       window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
   </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
 </body>
 </html>
