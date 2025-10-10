@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>장비 계산기 (experts 스타일)</title>
+  <title>장비 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* ========== 다크모드 ========== */
@@ -125,7 +125,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <div class="flex items-center gap-2 mb-2">
-                  <input type="checkbox" id="check-${i}" class="h-4 w-4" />
                   <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
                 </div>
                 <!-- 현재/목표 세로 배치 -->
@@ -155,7 +154,6 @@
 
         const startSel = card.querySelector(`#start-${i}`);
         const endSel   = card.querySelector(`#end-${i}`);
-        const chk      = card.querySelector(`#check-${i}`);
 
         const onChange = () => { updateSubtotals(i); scheduleCalc(); };
         startSel.addEventListener("change", () => { endSel.value = startSel.value; onChange(); });
@@ -200,9 +198,6 @@
     function calculateTotals() {
       const totals = { 합금:0, 설계도면:0, 광택제:0, 달빛앰버:0 };
       gearSlots.forEach((_, i) => {
-        const checked = document.getElementById(`check-${i}`)?.checked;
-        if (!checked) return;
-
         const start = document.getElementById(`start-${i}`).value;
         const end   = document.getElementById(`end-${i}`).value;
         const sIdx = gearLevels.indexOf(start);
@@ -282,15 +277,23 @@
     }
     
     window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
-    
-    // UX: 개발중 복사/디버그 방지 원코드 습관 유지
-    document.addEventListener("contextmenu", e => e.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
         e.preventDefault();
+        return false;
       }
-    });
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
   </script>
 </body>
 </html>
