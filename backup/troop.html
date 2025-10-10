@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>훈련 계산기 (2-Card UI)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* ✅ 다크모드 전용 */
+      body.dark-mode { background-color:#121212; color:#f0f0f0; }
+      .dark-mode .border{ border-color:#444 !important; }
+      .dark-mode .bg-white{ background-color:#2c2c2c !important; color:#f0f0f0 !important; }
+      .dark-mode .bg-gray-100{ background-color:#1e1e1e !important; }
+      .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#dddddd !important; }
+      .dark-mode table{ background-color:#2c2c2c; color:#f0f0f0; }
+      .dark-mode th,.dark-mode td{ border-color:#444 !important; }
+      .dark-mode select option{ color:#000 !important; }
+      .dark-mode select{ color:#000 !important; }
+      .dark-mode input{ color:#000 !important; }
+    </style>
+    <script>
+      // ✅ 다크모드 상태 유지
+      window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('darkMode') === 'true') {
+          document.body.classList.add('dark-mode');
+        }
+      });
+    </script>
+  </head>
+
+  <body class="bg-gray-100 p-3 font-sans text-sm">
+    <div class="max-w-[1500px] mx-auto">
+      <h1 class="text-2xl font-bold text-gray-800 mb-3">👮‍♂️ 훈련 계산기</h1>
+
+      <!-- ====== 카드 레이아웃 (2개 가로) ====== -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+
+        <!-- 카드1: 입력 -->
+        <section class="bg-white rounded-xl shadow-md border p-4">
+          <h2 class="text-lg font-bold mb-3">필요 항목 입력</h2>
+
+          <!-- 안내 -->
+          <div class="rounded-lg border bg-blue-50 p-2 text-[13px] leading-5 mb-3">
+            <p>훈련속도는 <b>서버/관직 버프 적용 전</b> 수치를 입력하세요.</p>
+            <p>ex) 일반교육부(50%), 서버버프(30%), 표시속도 375% → 입력값: <b>295%</b></p>
+          </div>
+
+          <!-- 체크박스 -->
+          <div class="flex gap-4 flex-wrap mb-3">
+            <label class="inline-flex items-center font-semibold">
+              <input type="checkbox" id="edu1" class="mr-1" onclick="handleExclusiveCheck('edu1','edu2')" />
+              일반)교육부장관 (+200명, +50%)
+            </label>
+            <label class="inline-flex items-center font-semibold">
+              <input type="checkbox" id="edu2" class="mr-1" onclick="handleExclusiveCheck('edu2','edu1')" />
+              최집)교육부장관 (+300명, +75%)
+            </label>
+            <label class="inline-flex items-center font-semibold">
+              <input type="checkbox" id="serverBuff" class="mr-1" />
+              서버훈련버프 (+30%)
+            </label>
+          </div>
+
+          <!-- 티어 / 속도 / 훈련량 -->
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <div>
+              <label for="tier" class="block font-semibold mb-1">병사 티어</label>
+              <select id="tier" class="border rounded w-full p-2">
+                <option value="T1">T1</option><option value="T2">T2</option><option value="T3">T3</option>
+                <option value="T4">T4</option><option value="T5">T5</option><option value="T6">T6</option>
+                <option value="T7">T7</option><option value="T8">T8</option><option value="T9">T9</option>
+                <option value="T10">T10</option><option value="T11" selected>T11</option>
+              </select>
+            </div>
+            <div>
+              <label for="speed" class="block font-semibold mb-1">훈련속도 (%)</label>
+              <input type="number" id="speed" class="border rounded w-full p-2" placeholder="0" min="0" step="0.1" />
+            </div>
+            <div>
+              <label for="amount" class="block font-semibold mb-1">1회 훈련량 (명)</label>
+              <input type="number" id="amount" class="border rounded w-full p-2" placeholder="0" min="0" />
+            </div>
+          </div>
+
+          <!-- 가속 입력 -->
+          <div class="grid grid-cols-3 gap-2 mb-4">
+            <div>
+              <label class="block font-semibold mb-1">가속 (일)</label>
+              <input type="number" id="accelDay" class="border rounded w-full p-2" placeholder="0" min="0" />
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">가속 (시간)</label>
+              <input type="number" id="accelHour" class="border rounded w-full p-2" placeholder="0" min="0" />
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">가속 (분)</label>
+              <input type="number" id="accelMinute" class="border rounded w-full p-2" placeholder="0" min="0" />
+            </div>
+          </div>
+
+          <button onclick="calculateTraining()"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full">
+            계산하기
+          </button>
+        </section>
+
+        <!-- 카드2: 결과 -->
+        <section class="bg-white rounded-xl shadow-md border p-4">
+          <h2 class="text-lg font-bold mb-3">계산 결과</h2>
+          <div id="result" class="text-[13px]">
+            <div class="border rounded-lg p-3 bg-amber-50">
+              결과가 이곳에 표시됩니다.<br>값을 입력하고 <b>계산하기</b> 버튼을 눌러주세요.
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ====== 스크립트 ====== -->
+    <script>
+      const trainingTimePerTier = {
+        T1:12, T2:17, T3:24, T4:32, T5:44, T6:60, T7:83, T8:113, T9:131, T10:152, T11:180
+      };
+      const tierScore = {
+        T1:3, T2:4, T3:5, T4:8, T5:12, T6:18, T7:25, T8:35, T9:45, T10:60, T11:75
+      };
+
+      function handleExclusiveCheck(clickedId, otherId){
+        const c=document.getElementById(clickedId), o=document.getElementById(otherId);
+        if(c.checked) o.checked=false;
+      }
+      const fmt = (n)=> (isFinite(n)? n.toLocaleString() : "-");
+      const toMmSs = (sec)=>{
+        sec = Math.max(0, Math.floor(sec||0));
+        const m = Math.floor(sec/60);
+        const s = sec%60;
+        return `${m.toLocaleString()}분 ${s.toString().padStart(2,'0')}초`;
+      };
+
+      function calculateTraining(){
+        const tier = document.getElementById('tier').value;
+        const baseTimeSec = trainingTimePerTier[tier];
+
+        let speedPercent = parseFloat(document.getElementById('speed').value) || 0;
+        let amountPerSession = parseInt(document.getElementById('amount').value,10) || 0;
+
+        // 체크박스 효과 적용
+        const buffs = [];
+        if(document.getElementById('edu1').checked){ amountPerSession+=200; speedPercent+=50; buffs.push('일반 교육부 +200명 / +50%'); }
+        if(document.getElementById('edu2').checked){ amountPerSession+=300; speedPercent+=75; buffs.push('최집 교육부 +300명 / +75%'); }
+        if(document.getElementById('serverBuff').checked){ speedPercent+=30; buffs.push('서버버프 +30%'); }
+
+        const accelDay = parseInt(document.getElementById('accelDay').value,10) || 0;
+        const accelHour = parseInt(document.getElementById('accelHour').value,10) || 0;
+        const accelMinute = parseInt(document.getElementById('accelMinute').value,10) || 0;
+        const totalAccelSec = accelDay*86400 + accelHour*3600 + accelMinute*60;
+
+        const speedRatio = speedPercent*0.01;
+        const adjustedTimePerUnitSec = baseTimeSec / (1 + speedRatio);
+        const totalTimePerSessionSec = adjustedTimePerUnitSec * amountPerSession;
+
+        const possibleTrainings = Math.floor(totalAccelSec / (totalTimePerSessionSec || 1));
+        const totalProduced = possibleTrainings * amountPerSession;
+        const totalScore = totalProduced * tierScore[tier];
+        const oneUnitScore = tierScore[tier]; // ✅ 선택 티어 1명 SVS
+
+        const usedSec = possibleTrainings * totalTimePerSessionSec;
+        const d = Math.floor(usedSec/86400);
+        const h = Math.floor((usedSec%86400)/3600);
+        const m = Math.floor((usedSec%3600)/60);
+
+        const resultEl = document.getElementById('result');
+        resultEl.innerHTML = `
+          <!-- 요약 표 -->
+          <table class="w-full border text-sm text-center table-auto mb-3">
+            <thead class="bg-blue-100">
+              <tr>
+                <th class="border p-2">병사 티어</th>
+                <th class="border p-2">총 생산 병사수</th>
+                <th class="border p-2">SVS 점수</th>
+                <th class="border p-2">총 소요 시간</th>
+                <th class="border p-2">훈련 횟수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border p-2 font-medium">${tier}</td>
+                <td class="border p-2">${fmt(totalProduced)} 명</td>
+                <td class="border p-2">${fmt(totalScore)}</td>
+                <td class="border p-2">${d}일 ${h}시간 ${m}분</td>
+                <td class="border p-2">${fmt(possibleTrainings)} 회</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- ✅ 세부 결과 (항상 열림) -->
+          <div class="border rounded-lg p-3 bg-gray-50">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div>
+                <div class="font-semibold mb-1">기본 정보</div>
+                <ul class="list-disc pl-5">
+                  <li>1명 기본 훈련시간: ${baseTimeSec.toLocaleString()}초</li>
+                  <li>최종 훈련속도: ${speedPercent.toFixed(1)}%</li>
+                  <li>1명당 SVS 점수: <b>${fmt(oneUnitScore)}</b></li>
+                </ul>
+              </div>
+              <div>
+                <div class="font-semibold mb-1">세션 및 가속</div>
+                <ul class="list-disc pl-5">
+                  <li>1회 훈련량(버프 포함): ${fmt(amountPerSession)}명</li>
+                  <li>1회 소요 시간(계산): ${toMmSs(totalTimePerSessionSec)}</li>
+                  <li>보유 가속 합계: ${accelDay}일 ${accelHour}시간 ${accelMinute}분</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 적용된 버프 (결과 박스 안에서만 표시) -->
+            <div class="mt-3">
+              <div class="font-semibold mb-1">적용된 버프</div>
+              <div id="activeBuffsClone" class="flex flex-wrap gap-2">
+                ${
+                  buffs.length
+                    ? buffs.map(b=>`<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[12px] bg-gray-50">${b}</span>`).join('')
+                    : `<span class="text-gray-500 text-[13px]">선택된 버프 없음</span>`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+
+        sendHeightToParent();
+      }
+    </script>
+
+    <!-- iframe 높이 조정 -->
+    <script>
+      function sendHeightToParent(){
+        const h=document.body.scrollHeight;
+        window.parent.postMessage({type:"FRAME_CHANGE",height:h},"*");
+      }
+      window.addEventListener("load",()=>setTimeout(sendHeightToParent,100));
+    </script>
+
+    <!-- 보호 -->
+    <script>
+      document.addEventListener("contextmenu", e=>e.preventDefault());
+      document.addEventListener("keydown", e=>{
+        if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="J"))||(e.ctrlKey&&(e.key==="U"||e.key==="S"))) e.preventDefault();
+      });
+    </script>
+  </body>
+</html>
