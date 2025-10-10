@@ -321,7 +321,7 @@
         document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
 
         // 체크된 카드만 총합 포함
-        if (checked && start < end){
+        if (start < end){
           Object.keys(total).forEach(k=> total[k] += sub[k]);
           totalHours += adjHours;
         }
