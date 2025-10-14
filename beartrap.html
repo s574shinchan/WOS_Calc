@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>곰사냥 부대 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 다크모드 (선택) */
+    body.dark-mode { background:#121212; color:#f0f0f0; }
+    .dark-mode .card { background:#1f1f1f; border-color:#2a2a2a; }
+    .dark-mode input, .dark-mode select { color:#000; }
+    /* 카드 공통 */
+    .card{
+      background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;
+      box-shadow:0 6px 18px rgba(15,23,42,.06)
+    }
+    .section-title{ font-weight:700; color:#334155 }
+    .subtle{ color:#64748b; font-size:12px }
+    .field-label{ font-size:12px; color:#475569 }
+    .num{ font-variant-numeric: tabular-nums }
+  </style>
+
+  <script>
+    // 다크모드 유지(옵션)
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">🐻 곰사냥 부대 계산기</h1>
+
+    <!-- 상: 사용자 입력항목 -->
+    <section class="card p-4 mb-2">
+      <h2 class="section-title mb-3">사용자 입력</h2>
+    
+      <!-- 윗줄: 4칸 -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div>
+          <label class="field-label">출정부대 수용량(기본)</label>
+          <input id="baseMarch" type="text"
+                 class="w-full border rounded-md p-2"
+                 oninput="UI.formatNumberInput(this); Calc.updateCapacityAndTable()"/>
+        </div>
+    
+        <div>
+          <label class="field-label">총 보유 방패병</label>
+          <input id="ownInf" type="text"
+                 class="w-full border rounded-md p-2"
+                 oninput="UI.formatNumberInput(this); Calc.updateTableOnly()"/>
+        </div>
+    
+        <div>
+          <label class="field-label">총 보유 창병</label>
+          <input id="ownLan" type="text"
+                 class="w-full border rounded-md p-2"
+                 oninput="UI.formatNumberInput(this); Calc.updateTableOnly()"/>
+        </div>
+    
+        <div>
+          <label class="field-label">총 보유 궁병</label>
+          <input id="ownMar" type="text"
+                 class="w-full border rounded-md p-2"
+                 oninput="UI.formatNumberInput(this); Calc.updateTableOnly()"/>
+        </div>
+      </div>
+    
+      <!-- 아랫줄: 4칸 -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 mt-3">
+        <div>
+          <label class="field-label">총 행군 수</label>
+          <input id="marchCount" type="text"
+                 class="w-full border rounded-md p-2"
+                 oninput="UI.formatNumberInput(this); Calc.updateTableOnly()"/>
+        </div>
+    
+        <div>
+          <label class="field-label">적용 비율 선택</label>
+          <select id="ratioPreset" class="w-full border rounded-md p-2"
+                  onchange="UI.onPresetChange()">
+            <option value="34/33/33">34 / 33 / 33</option>
+            <option value="20/40/40">20 / 40 / 40</option>
+            <option value="10/10/80">10 / 10 / 80</option>
+            <option value="60/40/0">60 / 40 / 0</option>
+            <option value="50/20/30">50 / 20 / 30</option>
+            <option value="custom">사용자 지정</option>
+          </select>
+        </div>
+    
+        <div>
+          <label class="field-label">방패(%)</label>
+          <input id="ratioInf" type="text"
+                 class="w-full border rounded-md p-2"
+                 oninput="UI.formatNumberInput(this); Calc.updateTableOnly()" disabled/>
+        </div>
+    
+        <div>
+          <label class="field-label">창(%)</label>
+          <input id="ratioLan" type="text"
+                 class="w-full border rounded-md p-2"
+                 oninput="UI.formatNumberInput(this); Calc.updateTableOnly()" disabled/>
+        </div>
+        <div>
+          <label class="field-label">궁(%)</label>
+          <input id="ratioMar" type="text"
+                 class="w-full border rounded-md p-2"
+                 oninput="UI.formatNumberInput(this); Calc.updateTableOnly()" disabled/>
+        </div>
+      </div>
+    </section>
+
+    <!-- 중: 버프 선택 -->
+    <section class="card p-4  mb-2">
+      <h2 class="section-title mb-3">버프 선택</h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 도시 버프 -->
+        <div class="space-y-2">
+          <div class="font-semibold text-slate-800">도시 버프</div>
+          <label class="flex items-center gap-2">
+            <input type="radio" name="cityBuff" value="0" checked
+                   onchange="Calc.updateCapacityAndTable()"/>
+            없음
+          </label>
+          <label class="flex items-center gap-2">
+            <input type="radio" name="cityBuff" value="10"
+                   onchange="Calc.updateCapacityAndTable()"/>
+            출정 수용량 증가 2h (+10%)
+          </label>
+          <label class="flex items-center gap-2">
+            <input type="radio" name="cityBuff" value="20"
+                   onchange="Calc.updateCapacityAndTable()"/>
+            출정 수용량 증가 12h (+20%)
+          </label>
+        </div>
+
+        <!-- 프로스타 고릴라 -->
+        <div class="space-y-2">
+          <div class="font-semibold text-slate-800">펫 버프</div>
+          <label class="flex items-center gap-2">
+            <input id="chkGorilla" type="checkbox"
+	         onchange="UI.toggle('gorillaWrap', this.checked); Calc.updateCapacityAndTable()"/>
+            프로스타 고릴라 버프
+          </label>
+          <div id="gorillaWrap" class="grid grid-cols-2 gap-2 hidden">
+            <select id="gorillaLv" class="border rounded-md p-2"
+                    onchange="Calc.updateCapacityAndTable()">
+              <option value="0">Lv.0</option>
+              <option value="1">Lv.1</option>
+              <option value="2">Lv.2</option>
+              <option value="3">Lv.3</option>
+              <option value="4">Lv.4</option>
+              <option value="5">Lv.5</option>
+              <option value="6">Lv.6</option>
+              <option value="7">Lv.7</option>
+              <option value="8">Lv.8</option>
+              <option value="9">Lv.9</option>
+              <option value="10" selected>Lv.10</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 전문가(키릴) -->
+        <div class="space-y-2">
+          <div class="font-semibold text-slate-800">전문가 버프</div>
+          <div class="flex items-center gap-2">
+            <input id="chkExpert" type="checkbox"
+                   onchange="UI.toggle('expertBox', this.checked); Calc.updateCapacityAndTable()"/>
+            <div class="font-semibold text-slate-800">전문가(키릴)</div>
+          </div>
+
+          <div id="expertBox" class="grid gap-3 mt-1 hidden">
+            <!-- 곰의천적 (출정 수용량 +n) -->
+            <div class="grid grid-cols-2 gap-2">
+              <div class="self-center">곰의천적</div>
+              <select id="nemLv" class="border rounded-md p-2"
+                      onchange="Calc.updateCapacityAndTable()">
+                <option value="0" selected>Lv.0</option>
+                <option value="1">Lv.1</option>
+                <option value="2">Lv.2</option>
+                <option value="3">Lv.3</option>
+                <option value="4">Lv.4</option>
+                <option value="5">Lv.5</option>
+                <option value="6">Lv.6</option>
+                <option value="7">Lv.7</option>
+                <option value="8">Lv.8</option>
+                <option value="9">Lv.9</option>
+                <option value="10">Lv.10</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 하: 결과 -->
+    <section class="card p-4">
+      <h2 class="section-title mb-3">결과</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+        <div>
+          <label class="field-label">출정부대 수용량 (버프 적용)</label>
+          <input id="finalMarch" type="text" readonly
+                 class="w-full border rounded-md p-2 bg-gray-100 num"/>
+        </div>
+        <div>
+          <label class="field-label">출정 수용량 보너스 (키릴·곰의천적)</label>
+          <input id="MarchBonus" type="text" readonly
+                 class="w-full border rounded-md p-2 bg-gray-100 num" />
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full border border-gray-200">
+          <thead class="bg-orange-50 text-slate-700">
+            <tr class="text-center">
+              <th class="border px-2 py-1">행군</th>
+              <th class="border px-2 py-1">방패병</th>
+              <th class="border px-2 py-1">창병</th>
+              <th class="border px-2 py-1">궁병</th>
+            </tr>
+          </thead>
+          <tbody id="resultTbody">
+            <tr><td class="border text-center p-2" colspan="4">결과 없음</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ========================= 스크립트 ========================= -->
+  <script>
+    /* ------------------------- 상수/테이블 ------------------------- */
+    const GorillaPerLevel = 1500; // 설명 텍스트용(임의 표시)
+    const ExpertNemesis = { // 곰의천적(출정 수용량 +)
+      0:0, 1:3000, 2:6000, 3:9000, 4:12000, 5:15000,6:18000, 7:21000, 8:24000, 9:27000, 10:30000
+    };
+
+    /* ------------------------- UI 유틸 ------------------------- */
+    const UI = {
+      // "1,234" 형식 입력 보정
+      formatNumberInput(el){
+        const raw = (el.value || '').replace(/,/g,'').replace(/[^\d]/g,'');
+        if (raw === '') { el.value = ''; return; }
+        el.value = Number(raw).toLocaleString();
+      },
+      // 보이기/숨기기
+      toggle(id, show){ document.getElementById(id).classList.toggle('hidden', !show); },
+      // 프리셋 변경 시 사용자 입력 활성/비활성
+      onPresetChange(){
+        const val = document.getElementById('ratioPreset').value;
+        const custom = (val === 'custom');
+        ['ratioInf','ratioLan','ratioMar'].forEach(id=>{
+          const el = document.getElementById(id);
+          el.disabled = !custom;
+          if (!custom) el.value = '';
+        });
+        // 프리셋이면 바로 테이블 업데이트
+        Calc.updateTableOnly();
+      }
+    };
+
+    /* ------------------------- 계산 로직 ------------------------- */
+    const Calc = {
+      // 현재 선택된 비율(%) 반환
+      getRatios(){
+        const preset = document.getElementById('ratioPreset').value;
+        if (preset !== 'custom'){
+          const [i,l,m] = preset.split('/').map(Number);
+          return { inf:i, lan:l, mar:m };
+        }
+        const inf = Number((document.getElementById('ratioInf').value||'').replace(/,/g,''))||0;
+        const lan = Number((document.getElementById('ratioLan').value||'').replace(/,/g,''))||0;
+        const mar = Number((document.getElementById('ratioMar').value||'').replace(/,/g,''))||0;
+        // 100% 안전장치
+        const sum = inf+lan+mar;
+        return sum>0 ? {inf,lan,mar} : {inf:34,lan:33,mar:33};
+      },
+
+      // 도시 버프 배수
+      cityMultiplier(){
+        const sel = document.querySelector('input[name="cityBuff"]:checked');
+        const pct = sel ? Number(sel.value) : 0;
+        return 1 + (pct/100);
+      },
+
+      // 최종 '출정부대 수용량' 계산
+      finalMarchCapacity(){
+        const base = Number((document.getElementById('baseMarch').value||'').replace(/,/g,''))||0;
+        const gorillaOn = document.getElementById('chkGorilla').checked;
+        const gorillaLv = Number(document.getElementById('gorillaLv').value||0);
+
+        const expertOn = document.getElementById('chkExpert').checked;
+        const nemLv = Number(document.getElementById('nemLv').value||0);
+        const expertMarchBonus = expertOn ? ExpertNemesis[nemLv] : 0;
+
+        // 설명에는 고릴라가 "표시용"이라 했지만, 효과를 출정 수용량에 더해도 무방하면 아래 주석을 해제.
+        const gorillaFlat = gorillaOn ? gorillaLv*GorillaPerLevel : 0;
+
+        // 도시 버프 배수
+        const mult = Calc.cityMultiplier();
+
+        // 최종: (기본 + 전문가 보너스) * 도시배수
+        // 필요 시 + gorillaFlat 추가 가능
+        return Math.floor((base + gorillaFlat +expertMarchBonus) * mult);
+      },
+
+      // 표 렌더
+      renderTable(capacity){
+        const tbody = document.getElementById('resultTbody');
+        const marches = Number((document.getElementById('marchCount').value||'').replace(/,/g,''))||0;
+        if (!capacity || !marches){
+          tbody.innerHTML = `<tr><td class="border text-center p-2" colspan="4">결과 없음</td></tr>`;
+          return;
+        }
+
+        const {inf,lan,mar} = Calc.getRatios();
+        let html = '', sumI=0,sumL=0,sumM=0;
+
+        for (let i=1;i<=marches;i++){
+          const vI = Math.floor(capacity * inf / 100);
+          const vL = Math.floor(capacity * lan / 100);
+          const vM = Math.floor(capacity * mar / 100);
+          sumI+=vI; sumL+=vL; sumM+=vM;
+
+          html+=`<tr class="text-center">
+            <td class="border px-2 py-1">${i}</td>
+            <td class="border px-2 py-1 num">${vI.toLocaleString()}</td>
+            <td class="border px-2 py-1 num">${vL.toLocaleString()}</td>
+            <td class="border px-2 py-1 num">${vM.toLocaleString()}</td>
+          </tr>`;
+        }
+
+        // 합계 & 남은값
+        const ownI = Number((document.getElementById('ownInf').value||'').replace(/,/g,''))||0;
+        const ownL = Number((document.getElementById('ownLan').value||'').replace(/,/g,''))||0;
+        const ownM = Number((document.getElementById('ownMar').value||'').replace(/,/g,''))||0;
+
+        html+=`<tr class="bg-gray-100 font-semibold text-center">
+          <td class="border px-2 py-1">합계</td>
+          <td class="border px-2 py-1 num">${sumI.toLocaleString()}</td>
+          <td class="border px-2 py-1 num">${sumL.toLocaleString()}</td>
+          <td class="border px-2 py-1 num">${sumM.toLocaleString()}</td>
+        </tr>
+        <tr class="bg-yellow-50 font-semibold text-center">
+          <td class="border px-2 py-1">남은값</td>
+          <td class="border px-2 py-1 num">${(ownI-sumI).toLocaleString()}</td>
+          <td class="border px-2 py-1 num">${(ownL-sumL).toLocaleString()}</td>
+          <td class="border px-2 py-1 num">${(ownM-sumM).toLocaleString()}</td>
+        </tr>`;
+
+        tbody.innerHTML = html;
+      },
+
+      // 상단/중단 변경 시 전체 갱신
+      updateCapacityAndTable(){
+        const cap = Calc.finalMarchCapacity();
+        document.getElementById('finalMarch').value = cap.toLocaleString();
+
+        // 보너스 표시
+        const nm = document.getElementById('chkExpert').checked
+          ? ExpertNemesis[ Number(document.getElementById('nemLv').value||0) ] : 0;
+        document.getElementById('MarchBonus').value = nm.toLocaleString();
+
+        Calc.renderTable(cap);
+      },
+
+      // 표만 갱신(비율/보유 변경 등)
+      updateTableOnly(){
+        const cap = Calc.finalMarchCapacity();
+        document.getElementById('finalMarch').value = cap.toLocaleString();
+        Calc.renderTable(cap);
+      }
+    };
+
+    /* ------------------------- 이벤트 바인딩 ------------------------- */
+    // 초기 프리셋(34/33/33)
+    document.addEventListener('DOMContentLoaded', ()=>{
+      Calc.updateCapacityAndTable();
+
+      // 입력/선택 변화 시 자동 반영
+      [
+        'baseMarch','marchCount','ownInf','ownLan','ownMar',
+        'ratioInf','ratioLan','ratioMar','gorillaLv','nemLv'
+      ].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', ()=>Calc.updateCapacityAndTable());
+        if (el) el.addEventListener('change', ()=>Calc.updateCapacityAndTable());
+      });
+    });
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+</body>
+</html>
