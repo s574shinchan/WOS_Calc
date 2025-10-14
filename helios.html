@@ -343,7 +343,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <div class="flex items-center gap-2 mb-2">
-                  <input id="${chkId}" type="checkbox" class="h-4 w-4">
                   <h3 class="text-[15px] font-semibold text-gray-800">${item.label}</h3>
                 </div>
                 <p class="muted mb-3">레벨 범위 (최대 Lv.${item.max})</p>
@@ -457,7 +456,6 @@
       researchList.forEach(item => {
         const cur = parseInt(document.getElementById(`current-${item.key}`).value);
         const tgt = parseInt(document.getElementById(`target-${item.key}`).value);
-        const checked = document.getElementById(`check-${item.key}`)?.checked;
 
         const data = researchData[item.key];
         const subtotal = { 가루: 0, 철강재: 0, 시간: 0 };
@@ -481,7 +479,7 @@
         if (tEl) tEl.textContent = formatTime(Math.round(subtotal.시간 / factor));
 
         // ✅ 체크된 항목만 하단 총합/결과표에 포함
-        if (checked && cur < tgt) {
+        if (cur < tgt) {
           total.가루 += subtotal.가루;
           total.철강재 += subtotal.철강재;
           total.시간 += subtotal.시간;
