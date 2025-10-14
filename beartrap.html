@@ -392,6 +392,14 @@
     });
   </script>
   <script>
+	  /* 유틸 */
+	  function sendHeightToParent(){ 
+		  const h=document.body.scrollHeight+10; 
+		  window.parent?.postMessage({type:"FRAME_CHANGE",height:h},"*"); 
+	  }
+    
+    window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
+	  
     // F12, Ctrl+Shift+I, Ctrl+U 등 방지
     document.onkeydown = function (e) {
       if (
