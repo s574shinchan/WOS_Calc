@@ -46,7 +46,6 @@
 
     <p class="text-gray-600 text-sm">
       펫(등급/이름)별로 <b>현재 → 목표</b>를 지정하면, 필요한 <b>펫먹이/조련매뉴얼/활력의약/강화혈청</b>이 자동 합산됩니다.
-      카드 체크 시 하단 총합에 포함됩니다.
     </p>
 
     <!-- 카드 그리드 -->
@@ -347,7 +346,7 @@
     // 시작
     loadAll();
     function sendHeightToParent() {
-      const height = document.body.scrollHeight + 10;
+      const height = document.body.scrollHeight + 20;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
     window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
