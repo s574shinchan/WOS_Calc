@@ -62,7 +62,7 @@
 
     <div class="text-gray-600 mb-4 text-sm">
       <div class="mb-4">
-        <p>헬리오스 병사연구에 필요한 자원(불수가루, 철강재)을 계산합니다.</p>
+        <p>헬리오스 병사연구에 필요한 자원(가루, 철강재)을 계산합니다.</p>
         <p>연구 항목을 선택하고 현재/목표 레벨을 지정하면 자동 합산됩니다. (소요시간은 참고용)</p>
       </div>
 
@@ -99,49 +99,47 @@
 
     <!-- 카드 그리드 -->
     <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-4"></div>
-
-    <!-- ✅ 보유 자원 카드 -->
-    <div class="exp-card mt-4">
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
-          <span class="muted">입력 시 자동 계산</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="own-가루" class="block text-[12px] text-gray-600 mb-1">보유 가루</label>
-            <input
-              type="number"
-              id="own-가루"
-              class="w-full border rounded-lg px-3 py-2 text-sm"
-              placeholder="0"
-              min="0"
-              inputmode="numeric"
-            />
-          </div>
-          <div>
-            <label for="own-철강재" class="block text-[12px] text-gray-600 mb-1">보유 철강재</label>
-            <input
-              type="number"
-              id="own-철강재"
-              class="w-full border rounded-lg px-3 py-2 text-sm"
-              placeholder="0"
-              min="0"
-              inputmode="numeric"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
+  
     <!-- ✅ 최하단 총합계 패널 -->
     <div id="summaryPanel" class="exp-card mt-4">
       <div class="p-4">
-        <div class="flex items-center justify-between mb-2">
-          <span class="muted"></span>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <!-- 총합 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">총합</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">가루</span><span id="sum-가루">0</span></div>
+			<div class="font-semibold mb-2"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="sum-철강재">0</span></div>           
+			<div class="font-semibold mb-2"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">소요시간</span><span id="sum-시간">0분</span></div>
+          </div>
+    
+          <!-- 보유량 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-semibold">보유량</div>
+              <span class="muted">입력 시 자동 계산</span>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label for="owned-가루" class="block text-[13px] text-gray-600 mb-1">보유 가루</label>
+                <input type="number" id="owned-가루" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+              </div>
+              <div>
+                <label for="owned-철강재" class="block text-[13px] text-gray-600 mb-1">보유 철강재</label>
+                <input type="number" id="owned-철강재" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+              </div>
+            </div>
+          </div>
+    
+          <!-- 과부족 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">과부족</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">가루</span><span id="def-가루">0</span></div>
+			<div class="font-semibold mb-2"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="def-철강재">0</span></div>
+          </div>
         </div>
-        <div id="summaryBody"></div>
       </div>
     </div>
   </div>
@@ -279,7 +277,7 @@
     function createLevelOptions(max) {
       return Array.from({length:max+1}, (_,i)=>`<option value="${i}">${i}</option>`).join('');
     }
-
+	  
     function updateResearchList() {
       const chkInf = document.getElementById("chkInf");
       const chkLan = document.getElementById("chkLan");
@@ -324,7 +322,7 @@
         return { key, label, max: Math.max(...value.map(v=>v.level)) };
       });
     }
-
+	  
     function renderResearchCards() {
       const container = document.getElementById("researchGrid");
       container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-4";
@@ -365,7 +363,7 @@
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
                 <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
-                  <div class="text-gray-600">불수가루</div>
+                  <div class="text-gray-600">가루</div>
                   <div class="text-right tabular-nums" id="subtotal-dust-${item.key}">0</div>
                   <div class="text-gray-600">철강재</div>
                   <div class="text-right tabular-nums" id="subtotal-steel-${item.key}">0</div>
@@ -475,7 +473,6 @@
         if (sEl) sEl.textContent = subtotal.철강재.toLocaleString();
         if (tEl) tEl.textContent = formatTime(Math.round(subtotal.시간 / factor));
 
-        // ✅ 체크된 항목만 하단 총합/결과표에 포함
         if (cur < tgt) {
           total.가루 += subtotal.가루;
           total.철강재 += subtotal.철강재;
@@ -494,8 +491,8 @@
 
       // 보유량
       const owned = {
-        가루: parseFloat(document.getElementById("own-가루").value) || 0,
-        철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
+        가루: parseFloat(document.getElementById("owned-가루").value) || 0,
+        철강재: parseFloat(document.getElementById("owned-철강재").value) || 0,
       };
 
       // 하단 '총합계' 패널 갱신 (가루/철강재만)
@@ -505,30 +502,18 @@
       };
       
       const totalTime = Math.round(total.시간 / factor);
-        
-      const summaryBody = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">총합</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수가루</span><span>${total.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span>${total.철강재.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">소요시간</span><span>${formatTime(totalTime)}</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">보유량</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수가루</span><span>${owned.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span>${owned.철강재.toLocaleString()}</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">과부족</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수가루</span><span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span class="${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span></div>
-          </div>
-        </div>
-      `;
-      const summaryEl = document.getElementById("summaryBody");
-      if (summaryEl) summaryEl.innerHTML = summaryBody;
-
+		
+	  document.getElementById("sum-가루").textContent = total["가루"].toLocaleString();
+      document.getElementById("sum-철강재").textContent = total["철강재"].toLocaleString();     
+      document.getElementById("sum-시간").textContent = formatTime(totalTime);
+      
+      const defA = document.getElementById("def-가루");
+      const defB = document.getElementById("def-철강재");
+      defA.textContent = ( (parseFloat(document.getElementById("owned-가루").value||0) - total["가루"]) ).toLocaleString();
+      defB.textContent = ( (parseFloat(document.getElementById("owned-철강재").value||0) - total["철강재"]) ).toLocaleString();
+      defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+		
       sendHeightToParent();
     }
 
