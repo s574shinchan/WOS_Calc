@@ -53,10 +53,19 @@
     <!-- 장비 카드 그리드 -->
     <div id="gearGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
 
-    <!-- 보유 자원 카드 -->
-    <div class="exp-card">
+    <!-- 하단 총합 패널 -->
+    <div id="summaryPanel" class="exp-card mt-4">
       <div class="p-4">
-        <div class="flex items-center justify-between mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">총합</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="sum-합금">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="sum-설계도면">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="sum-광택제">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="sum-달빛앰버">0</span></div>
+          </div>
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="flex items-center justify-between mb-3">
           <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
           <span class="muted">입력 시 자동 반영</span>
         </div>
@@ -78,15 +87,19 @@
             <input type="number" id="own-앰버" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
           </div>
         </div>
+          </div>
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">과부족</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="def-합금">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="def-설계도면">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="def-광택제">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="def-달빛앰버">0</span></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 하단 총합 패널 -->
-    <div id="summaryPanel" class="exp-card">
-      <div class="p-4">
-        <div id="summaryBody"></div>
-      </div>
-    </div>
+    
   </div>
 
   <!-- ========== 데이터 & 로직 ========== -->
@@ -228,33 +241,26 @@
         달빛앰버: owned.달빛앰버 - total.달빛앰버,
       };
 
-      const summaryBody = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">총합</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span>${total.합금.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span>${total.설계도면.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span>${total.광택제.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span>${total.달빛앰버.toLocaleString()}</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">보유량</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span>${owned.합금.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span>${owned.설계도면.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span>${owned.광택제.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span>${owned.달빛앰버.toLocaleString()}</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">과부족</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span class="${deficit.합금<0?'text-red-600':''}">${deficit.합금.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span class="${deficit.설계도면<0?'text-red-600':''}">${deficit.설계도면.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span class="${deficit.광택제<0?'text-red-600':''}">${deficit.광택제.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span class="${deficit.달빛앰버<0?'text-red-600':''}">${deficit.달빛앰버.toLocaleString()}</span></div>
-          </div>
-        </div>`;
-      const el = document.getElementById("summaryBody");
-      if (el) el.innerHTML = summaryBody;
-
+      document.getElementById("sum-합금").textContent = total["합금"].toLocaleString();
+      document.getElementById("sum-설계도면").textContent = total["설계도면"].toLocaleString();
+      document.getElementById("sum-광택제").textContent = total["광택제"].toLocaleString();
+      document.getElementById("sum-달빛앰버").textContent = total["달빛앰버"].toLocaleString();
+      
+      const defA = document.getElementById("def-합금");
+      const defB = document.getElementById("def-설계도면");
+      const defC = document.getElementById("def-광택제");
+      const defD = document.getElementById("def-달빛앰버");
+      
+      defA.textContent = ( (parseFloat(document.getElementById("owned-합금").value||0) - total["합금"]) ).toLocaleString();
+      defB.textContent = ( (parseFloat(document.getElementById("owned-설계도면").value||0) - total["설계도면"]) ).toLocaleString();
+      defC.textContent = ( (parseFloat(document.getElementById("owned-광택제").value||0) - total["광택제"]) ).toLocaleString();
+      defD.textContent = ( (parseFloat(document.getElementById("owned-달빛앰버").value||0) - total["달빛앰버"]) ).toLocaleString();
+      
+      defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+      defC.classList.toggle("text-red-600", parseFloat(defC.textContent.replace(/,/g,'')) < 0);
+      defD.classList.toggle("text-red-600", parseFloat(defD.textContent.replace(/,/g,'')) < 0);
+      
       sendHeightToParent();
     }
 
