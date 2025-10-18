@@ -98,10 +98,10 @@
       </div>
     </div>
 
-    <!-- 건물 카드 그리드 -->
-    <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3 gap-4"></div>
+    <!-- 건물 카드 그리드 -->    
+    <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
 
-    <!-- 보유 자원 카드 -->
+    <!-- 보유 자원 카드
     <div class="exp-card mt-4">
       <div class="p-4">
         <div class="flex items-center justify-between mb-3">
@@ -119,13 +119,57 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <!-- 총합계 패널 (제목 문구 제거) -->
+    <!-- 총합계 패널 (제목 문구 제거)
     <div id="summaryPanel" class="exp-card mt-4">
       <div class="p-4">
-        <!-- 제목 제거 -->
+        <!-- 제목 제거
         <div id="summaryBody"></div>
+      </div>
+    </div>
+    -->
+    <!-- 총합계 패널 (정적 DOM) -->
+    <div id="summaryPanel" class="exp-card mt-4">
+      <div class="p-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <!-- 총합 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">총합</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수정</span><span id="sum-불수정">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">정제</span><span id="sum-정제">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">고기</span><span id="sum-고기">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">나무</span><span id="sum-나무">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">석탄</span><span id="sum-석탄">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철광</span><span id="sum-철광">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">건설시간</span><span id="sum-시간">0분</span></div>
+          </div>
+    
+          <!-- 보유량 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-semibold">보유량</div>
+              <span class="muted">입력 시 자동 계산</span>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label for="owned-불수정" class="block text-[13px] text-gray-600 mb-1">보유 불수정</label>
+                <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+              </div>
+              <div>
+                <label for="owned-정제" class="block text-[13px] text-gray-600 mb-1">보유 정제</label>
+                <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+              </div>
+            </div>
+          </div>
+    
+          <!-- 과부족 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">과부족</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수정</span><span id="def-불수정">0</span></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">정제</span><span id="def-정제">0</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -135,7 +179,7 @@
     function sendHeightToParent(){ const h=document.body.scrollHeight+10; window.parent?.postMessage({type:"FRAME_CHANGE",height:h},"*"); }
     window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
 
-    const buildingList = ["용광로","대사관","지휘부","방패병","창병","궁병","의무실","아카데미"];
+    const buildingList = ["용광로","대사관","지휘부","의무실","방패병","창병","궁병","아카데미"];
     const resources = ["불수정","정제","고기","나무","석탄","철광","변환시간"];
     const buildingData = {};
     let buildingCards = []; // {name, maxIndex}
@@ -340,6 +384,7 @@
         // 나머지 자원은 보유치가 없으므로 과부족 미표시(원 요청대로 총합/보유/과부족은 불수정/정제 중심)
       };
 
+      /*
       const summaryBody = `
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <!-- 총합 -->
@@ -356,9 +401,20 @@
 
           <!-- 보유량 -->
           <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">보유량</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수정</span><span>${owned["불수정"].toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">정제</span><span>${owned["정제"].toLocaleString()}</span></div>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
+              <span class="muted">입력 시 자동 계산</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="owned-불수정" class="block text-[15px] text-gray-600 mb-1">보유 불수정</label>
+                <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+              </div>
+              <div>
+                <label for="owned-정제" class="block text-[15px] text-gray-600 mb-1">보유 정제</label>
+                <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+              </div>
+            </div>
           </div>
 
           <!-- 과부족 -->
@@ -370,7 +426,22 @@
         </div>
       `;
       document.getElementById("summaryBody").innerHTML = summaryBody;
-
+      */
+      document.getElementById("sum-불수정").textContent = total["불수정"].toLocaleString();
+      document.getElementById("sum-정제").textContent   = total["정제"].toLocaleString();
+      document.getElementById("sum-고기").textContent    = formatValue(total["고기"]);
+      document.getElementById("sum-나무").textContent    = formatValue(total["나무"]);
+      document.getElementById("sum-석탄").textContent    = formatValue(total["석탄"]);
+      document.getElementById("sum-철광").textContent    = formatValue(total["철광"]);
+      document.getElementById("sum-시간").textContent    = formatHourToTime(totalHours);
+      
+      const defA = document.getElementById("def-불수정");
+      const defB = document.getElementById("def-정제");
+      defA.textContent = ( (parseFloat(document.getElementById("owned-불수정").value||0) - total["불수정"]) ).toLocaleString();
+      defB.textContent = ( (parseFloat(document.getElementById("owned-정제").value||0) - total["정제"]) ).toLocaleString();
+      defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+      
       sendHeightToParent();
     }
 
