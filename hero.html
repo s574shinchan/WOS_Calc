@@ -61,30 +61,6 @@
         <form id="heroEquipForm" class="space-y-3">
           <div id="heroEquipGridBody" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
-          <!-- 보유 자원 -->
-          <div class="exp-card">
-            <div class="p-4">
-              <div class="flex items-center justify-between mb-3">
-                <h3 class="text-[15px] font-semibold text-gray-800">보유 자원 (미스릴)</h3>
-                <span class="muted">입력 시 총합계 과부족 계산에 사용</span>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label class="block text-[15px] text-gray-600 mb-1">보유 너트</label>
-                  <input type="number" id="own-너트" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-                </div>
-                <div>
-                  <label class="block text-[15px] text-gray-600 mb-1">보유 미스릴</label>
-                  <input type="number" id="own-미스릴" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-                </div>
-                <div>
-                  <label class="block text-[15px] text-gray-600 mb-1">보유 레전드장비</label>
-                  <input type="number" id="own-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- 📕 미스릴 총합계 -->
           <div id="mithrilTotals" class="exp-card">
             <div class="p-4">
@@ -95,29 +71,49 @@
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">경험치</span><span id="tot-exp" class="tabular-nums">0</span>
                   </div>
+									<div class="font-semibold mb-3"></div>
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">너트</span><span id="tot-nut" class="tabular-nums">0</span>
                   </div>
+									<div class="font-semibold mb-3"></div>
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">미스릴</span><span id="tot-mith" class="tabular-nums">0</span>
                   </div>
+									<div class="font-semibold mb-3"></div>
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">레전드장비</span><span id="tot-leg" class="tabular-nums">0</span>
                   </div>
                 </div>
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-2">보유량</div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">경험치</span><span>-</span></div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">너트</span><span id="own-nut" class="tabular-nums">0</span></div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">미스릴</span><span id="own-mith" class="tabular-nums">0</span></div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">레전드장비</span><span id="own-leg" class="tabular-nums">0</span></div>
+									<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+										<div class="grid grid-cols-1 md:grid-cols-1">
+											<span class="text-gray-600 mb-1">경험치</span>
+											<span class="text-gray-600 mb-1">　-　</span>
+										</div>
+										<div>
+											<label class="text-gray-600 mb-1">보유 너트</label>
+											<input type="number" id="own-너트" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+										</div>
+										<div>
+											<label class="block text-[15px] text-gray-600 mb-1">보유 미스릴</label>
+											<input type="number" id="own-미스릴" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+										</div>
+										<div>
+											<label class="block text-[15px] text-gray-600 mb-1">보유 레전드장비</label>
+											<input type="number" id="own-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+										</div>
+									</div>
                 </div>
                 <div class="rounded-xl border border-black/10 p-3">
-                  <div class="font-semibold mb-2">과부족</div>
+                  <div class="font-semibold mb-3">과부족</div>
                   <div class="flex justify-between text-[13px]"><span class="text-gray-600">경험치</span><span id="def-exp" class="tabular-nums">0</span></div>
+									<div class="font-semibold mb-3"></div>
                   <div class="flex justify-between text-[13px]"><span class="text-gray-600">너트</span><span id="def-nut" class="tabular-nums">0</span></div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">미스릴</span><span id="def-mith" class="tabular-nums">0</span></div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">레전드장비</span><span id="def-leg" class="tabular-nums">0</span></div>
+                  <div class="font-semibold mb-3"></div>
+									<div class="flex justify-between text-[13px]"><span class="text-gray-600">미스릴</span><span id="def-mith" class="tabular-nums">0</span></div>
+                  <div class="font-semibold mb-3"></div>
+									<div class="flex justify-between text-[13px]"><span class="text-gray-600">레전드장비</span><span id="def-leg" class="tabular-nums">0</span></div>
                 </div>
               </div>
             </div>
@@ -136,26 +132,6 @@
         <form id="masteryForm" class="space-y-3">
           <div id="masteryGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
-          <!-- 보유 자원 -->
-          <div class="exp-card">
-            <div class="p-4">
-              <div class="flex items-center justify-between mb-3">
-                <h3 class="text-[15px] font-semibold text-gray-800">보유 자원 (마스터리)</h3>
-                <span class="muted">입력 시 총합계 과부족 계산에 사용</span>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-[15px] text-gray-600 mb-1">보유 마스터리석</label>
-                  <input type="number" id="owned-마스터리석" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-                </div>
-                <div>
-                  <label class="block text-[15px] text-gray-600 mb-1">보유 레전드장비</label>
-                  <input type="number" id="owned-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- 📙 마스터리 총합계 -->
           <div id="masteryTotals" class="exp-card">
             <div class="p-4">
@@ -166,24 +142,30 @@
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">마스터리석</span><span id="ms-tot-stone" class="tabular-nums">0</span>
                   </div>
+									<div class="font-semibold mb-6"></div>
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">레전드장비</span><span id="ms-tot-leg" class="tabular-nums">0</span>
                   </div>
                 </div>
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-2">보유량</div>
-                  <div class="flex justify-between text-[13px]">
-                    <span class="text-gray-600">마스터리석</span><span id="ms-own-stone" class="tabular-nums">0</span>
-                  </div>
-                  <div class="flex justify-between text-[13px]">
-                    <span class="text-gray-600">레전드장비</span><span id="ms-own-leg" class="tabular-nums">0</span>
-                  </div>
+									<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+										<div>
+											<label class="block text-[15px] text-gray-600 mb-1">보유 마스터리석</label>
+											<input type="number" id="owned-마스터리석" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+										</div>
+										<div>
+											<label class="block text-[15px] text-gray-600 mb-1">보유 레전드장비</label>
+											<input type="number" id="owned-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+										</div>
+									</div>
                 </div>
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-2">과부족</div>
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">마스터리석</span><span id="ms-def-stone" class="tabular-nums">0</span>
                   </div>
+									<div class="font-semibold mb-6"></div>
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">레전드장비</span><span id="ms-def-leg" class="tabular-nums">0</span>
                   </div>
@@ -353,9 +335,9 @@
       document.getElementById("tot-mith").textContent = total.mith.toLocaleString();
       document.getElementById("tot-leg").textContent  = total.leg.toLocaleString();
 
-      document.getElementById("own-nut").textContent  = own.nut.toLocaleString();
-      document.getElementById("own-mith").textContent = own.mith.toLocaleString();
-      document.getElementById("own-leg").textContent  = own.leg.toLocaleString();
+      document.getElementById("own-너트").textContent  = own.nut.toLocaleString();
+      document.getElementById("own-미스릴").textContent = own.mith.toLocaleString();
+      document.getElementById("own-레전드장비").textContent  = own.leg.toLocaleString();
 
       document.getElementById("def-exp").textContent  = total.exp.toLocaleString(); // 경험치는 보유치 개념 없음
       document.getElementById("def-nut").textContent  = (own.nut-total.nut).toLocaleString();
@@ -496,8 +478,8 @@
 
       document.getElementById("ms-tot-stone").textContent = total.stone.toLocaleString();
       document.getElementById("ms-tot-leg").textContent   = total.leg.toLocaleString();
-      document.getElementById("ms-own-stone").textContent = own.stone.toLocaleString();
-      document.getElementById("ms-own-leg").textContent   = own.leg.toLocaleString();
+      document.getElementById("owned-마스터리석").textContent = own.stone.toLocaleString();
+      document.getElementById("owned-레전드장비").textContent   = own.leg.toLocaleString();
       document.getElementById("ms-def-stone").textContent = (own.stone-total.stone).toLocaleString();
       document.getElementById("ms-def-leg").textContent   = (own.leg-total.leg).toLocaleString();
     }
