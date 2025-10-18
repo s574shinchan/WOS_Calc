@@ -346,7 +346,7 @@
     // 시작
     loadAll();
     function sendHeightToParent() {
-      const height = document.body.scrollHeight + 80;
+      const height = document.body.scrollHeight + 160;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
     window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
