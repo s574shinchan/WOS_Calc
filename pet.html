@@ -50,41 +50,61 @@
 
     <!-- 카드 그리드 -->
     <div id="petGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-
-    <!-- 보유 자원 카드 -->
-    <div class="exp-card">
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
-          <span class="muted">입력 시 자동 반영</span>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div>
-            <label class="block text-[12px] text-gray-600 mb-1">보유 펫먹이</label>
-            <input type="number" id="own-펫먹이" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-          </div>
-          <div>
-            <label class="block text-[12px] text-gray-600 mb-1">보유 조련매뉴얼</label>
-            <input type="number" id="own-조련매뉴얼" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-          </div>
-          <div>
-            <label class="block text-[12px] text-gray-600 mb-1">보유 활력의약</label>
-            <input type="number" id="own-활력의약" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-          </div>
-          <div>
-            <label class="block text-[12px] text-gray-600 mb-1">보유 강화혈청</label>
-            <input type="number" id="own-강화혈청" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-          </div>
-        </div>
-      </div>
-    </div>
-
+		
     <!-- 하단 총합 패널 -->
-    <div id="summaryPanel" class="exp-card">
+    <div id="summaryPanel" class="exp-card mt-4">
       <div class="p-4">
-        <div id="summaryBody"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <!-- 총합 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">총합</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span id="sum-펫먹이">0</span></div>
+						<div class="font-semibold mb-4"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span id="sum-조련매뉴얼">0</span></div>
+						<div class="font-semibold mb-4"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span id="sum-활력의약">0</span></div>
+						<div class="font-semibold mb-4"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span id="sum-강화혈청">0</span></div>
+          </div>    
+          <!-- 보유량 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-semibold">보유량</div>
+              <span class="muted">입력 시 자동 계산</span>
+            </div>
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+							<div>
+								<label class="block text-[12px] text-gray-600 mb-1">보유 펫먹이</label>
+								<input type="number" id="own-펫먹이" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+							</div>
+							<div>
+								<label class="block text-[12px] text-gray-600 mb-1">보유 조련매뉴얼</label>
+								<input type="number" id="own-조련매뉴얼" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+							</div>
+							<div>
+								<label class="block text-[12px] text-gray-600 mb-1">보유 활력의약</label>
+								<input type="number" id="own-활력의약" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+							</div>
+							<div>
+								<label class="block text-[12px] text-gray-600 mb-1">보유 강화혈청</label>
+								<input type="number" id="own-강화혈청" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+							</div>
+						</div>
+          </div>    
+          <!-- 과부족 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">과부족</div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span id="def-펫먹이">0</span></div>
+						<div class="font-semibold mb-4"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span id="def-조련매뉴얼">0</span></div>
+						<div class="font-semibold mb-4"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span id="def-활력의약">0</span></div>
+						<div class="font-semibold mb-4"></div>
+            <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span id="def-강화혈청">0</span></div>
+          </div>
+        </div>
       </div>
-    </div>
+		</div>
   </div>
 
   <!-- ===== 데이터 & 로직 ===== -->
@@ -287,7 +307,7 @@
     }
 
     function renderSummary() {
-      const t = calculateTotals();
+      const total = calculateTotals();
       const owned = {
         food:   parseFloat(document.getElementById("own-펫먹이").value)||0,
         manual: parseFloat(document.getElementById("own-조련매뉴얼").value)||0,
@@ -295,38 +315,31 @@
         serum:  parseFloat(document.getElementById("own-강화혈청").value)||0,
       };
       const deficit = {
-        food: owned.food - t.food,
-        manual: owned.manual - t.manual,
-        vital: owned.vital - t.vital,
-        serum: owned.serum - t.serum,
+        food: owned.food - total.food,
+        manual: owned.manual - total.manual,
+        vital: owned.vital - total.vital,
+        serum: owned.serum - total.serum,
       };
 
-      const html = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">총합</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span>${t.food.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span>${t.manual.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span>${t.vital.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span>${t.serum.toLocaleString()}</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">보유량</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span>${owned.food.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span>${owned.manual.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span>${owned.vital.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span>${owned.serum.toLocaleString()}</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">과부족</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span class="${deficit.food<0?'text-red-600':''}">${deficit.food.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span class="${deficit.manual<0?'text-red-600':''}">${deficit.manual.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span class="${deficit.vital<0?'text-red-600':''}">${deficit.vital.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span class="${deficit.serum<0?'text-red-600':''}">${deficit.serum.toLocaleString()}</span></div>
-          </div>
-        </div>`;
-      const el = document.getElementById("summaryBody");
-      if (el) el.innerHTML = html;
+			document.getElementById("sum-펫먹이").textContent = total["food"].toLocaleString();
+      document.getElementById("sum-조련매뉴얼").textContent = total["manual"].toLocaleString();
+			document.getElementById("sum-활력의약").textContent = total["vital"].toLocaleString();
+			document.getElementById("sum-강화혈청").textContent = total["serum"].toLocaleString();
+      
+      const defA = document.getElementById("def-펫먹이");
+      const defB = document.getElementById("def-조련매뉴얼");
+      const defC = document.getElementById("def-활력의약");
+      const defD = document.getElementById("def-강화혈청");
+
+      defA.textContent = ( (parseFloat(document.getElementById("own-펫먹이").value||0) - total["food"]) ).toLocaleString();
+      defB.textContent = ( (parseFloat(document.getElementById("own-조련매뉴얼").value||0) - total["manual"]) ).toLocaleString();
+			defC.textContent = ( (parseFloat(document.getElementById("own-활력의약").value||0) - total["vital"]) ).toLocaleString();
+			defD.textContent = ( (parseFloat(document.getElementById("own-강화혈청").value||0) - total["serum"]) ).toLocaleString();
+
+      defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+			defC.classList.toggle("text-red-600", parseFloat(defC.textContent.replace(/,/g,'')) < 0);
+			defD.classList.toggle("text-red-600", parseFloat(defD.textContent.replace(/,/g,'')) < 0);
     }
 
     // 디바운스
