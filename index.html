@@ -1398,8 +1398,8 @@
       </footer>
     </div>
   </div>
-
-<!-- 콘텐츠 전체 폭 제한 -->
+  
+  <!-- 콘텐츠 전체 폭 제한 -->
   <div class="max-w-6xl mx-auto p-2">
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2"> 
       <!-- 광고1 -->
@@ -1432,6 +1432,30 @@
           style="display:inline-block; width:100%; max-width:300px; height:250px"
           data-ad-client="ca-pub-8205102847358210"
           data-ad-slot="5297084041"></ins>
+      </div>
+    </div>
+  </div>
+  <!-- ✅ 업데이트 내역 팝업 (고정 안내 포함 버전) -->
+  <div id="update-modal-backdrop" class="fixed inset-0 z-[1000] hidden">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-lg rounded-2xl bg-white shadow-xl dark:bg-[#1f1f1f]">
+        <div class="px-6 pt-5 pb-4">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">업데이트 내역</h2>
+  
+          <!-- 🔽 외부 HTML + 고정 안내문이 여기에 주입됨 -->
+          <div id="update-content" class="mt-3 text-sm text-gray-700 dark:text-gray-200 max-h-[50vh] overflow-auto">
+            <div class="text-gray-500 dark:text-gray-400">불러오는 중…</div>
+          </div>
+        </div>
+  
+        <div class="flex items-center justify-between border-t border-gray-200 px-6 py-3 dark:border-gray-700">
+          <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200 select-none">
+            <input id="update-hide-today" type="checkbox" class="h-4 w-4 rounded border-gray-300 dark:border-gray-500">
+            오늘 하루 그만보기
+          </label>
+          <button id="update-confirm" class="rounded-lg px-4 py-2 text-white bg-blue-600 hover:bg-blue-700">확인</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1765,6 +1789,113 @@
   
     // 우클릭 방지
     document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+  <script>
+    (() => {
+    // =========[ 설정 ]=========
+    const BASE_PATH = "/data/update"; // 월별 HTML이 있는 경로
+    const LOOKBACK_MONTHS = 6;
+    const HIDE_MS = 24 * 60 * 60 * 1000; // 24시간
+  
+    // ✅ 월 상관없이 항상 표시할 고정 안내문 (HTML 가능)
+    const fixedNotice = `
+      <div class="border-t border-gray-300 mt-4 pt-2 text-[13px] text-gray-600 dark:text-gray-400">
+        ※ 계산기 동작 방식이 변경되었습니다. 항목을 선택하면 자동으로 항목별로 소계가 계산되며, 하단에 총합이 계산됩니다.
+      </div>
+    `;
+  
+    const backdrop  = document.getElementById("update-modal-backdrop");
+    const contentEl = document.getElementById("update-content");
+    const confirmBtn = document.getElementById("update-confirm");
+    const checkbox = document.getElementById("update-hide-today");
+  
+    const lockScroll   = () => { document.documentElement.style.overflow = "hidden"; };
+    const unlockScroll = () => { document.documentElement.style.overflow = ""; };
+  
+    function ymStr(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      return `${y}-${m}`;
+    }
+  
+    function monthsAgo(date, n) {
+      const d = new Date(date);
+      d.setMonth(d.getMonth() - n);
+      return d;
+    }
+  
+    function storageKeyForYM(ym) {
+      return `updateModalHideUntil_${ym}`;
+    }
+  
+    function shouldShowForKey(key) {
+      try {
+        const until = localStorage.getItem(key);
+        if (!until) return true;
+        return Date.now() >= parseInt(until, 10);
+      } catch {
+        return true;
+      }
+    }
+  
+    function openModal() {
+      backdrop.classList.remove("hidden");
+      lockScroll();
+      confirmBtn.focus();
+      document.addEventListener("keydown", onKeydown);
+    }
+  
+    function closeModal() {
+      backdrop.classList.add("hidden");
+      unlockScroll();
+      document.removeEventListener("keydown", onKeydown);
+    }
+  
+    function onKeydown(e) {
+      if (e.key === "Escape") closeModal();
+    }
+  
+    async function loadMonthlyHTML() {
+      const now = new Date();
+      for (let i = 0; i < LOOKBACK_MONTHS; i++) {
+        const ym = ymStr(monthsAgo(now, i));
+        const url = `${BASE_PATH}/${ym}.html`;
+        try {
+          const res = await fetch(url, { cache: "no-cache" });
+          if (!res.ok) continue;
+          const html = await res.text();
+          const trimmed = html.replace(/\s+/g, "");
+          if (!trimmed) continue;
+          return { html, ym };
+        } catch (e) { continue; }
+      }
+      return { html: null, ym: null };
+    }
+  
+    (async function init() {
+      const { html, ym } = await loadMonthlyHTML();
+  
+      if (!html) {
+        contentEl.innerHTML = `<div class="text-gray-500 dark:text-gray-400">표시할 업데이트 내역이 없습니다.</div>${fixedNotice}`;
+        return;
+      }
+  
+      // ✅ 월별 내용 + 고정 안내문 함께 표시
+      contentEl.innerHTML = html + fixedNotice;
+  
+      const STORAGE_KEY = storageKeyForYM(ym);
+      if (shouldShowForKey(STORAGE_KEY)) {
+        openModal();
+  
+        confirmBtn.addEventListener("click", () => {
+          if (checkbox.checked) {
+            localStorage.setItem(STORAGE_KEY, String(Date.now() + HIDE_MS));
+          }
+          closeModal();
+        }, { once: true });
+      }
+    })();
+  })();
   </script>
 </body>
 </html>
