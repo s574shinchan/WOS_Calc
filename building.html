@@ -101,7 +101,7 @@
     <!-- 건물 카드 그리드 -->
     <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
 
-    <!-- 보유 자원 카드 -->
+    <!-- 보유 자원 카드
     <div class="exp-card mt-4">
       <div class="p-4">
         <div class="flex items-center justify-between mb-3">
@@ -119,7 +119,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- 총합계 패널 (제목 문구 제거) -->
     <div id="summaryPanel" class="exp-card mt-4">
@@ -342,6 +342,20 @@
 
       const summaryBody = `
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <!--보유자원 -->
+          <divclass="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">총합</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="owned-불수정" class="block text-[15px] text-gray-600 mb-1">보유 불수정</label>
+                <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+              </div>
+              <div>
+                <label for="owned-정제" class="block text-[15px] text-gray-600 mb-1">보유 정제</label>
+                <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+              </div>
+            </div>
+          </div>
           <!-- 총합 -->
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">총합</div>
