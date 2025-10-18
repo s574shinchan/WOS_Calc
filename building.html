@@ -184,12 +184,18 @@
     const buildingData = {};
     let buildingCards = []; // {name, maxIndex}
 
+    const nf1 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+
     function formatValue(value){
-      const num = parseFloat((value??0).toString().replace(/,/g,''));
+      const num = Number(String(value ?? 0).replace(/,/g, ''));
       if (isNaN(num)) return value;
-      // 원 코드 기준 포맷 유지
-      return num >= 1000 ? (num/1000).toFixed(1) + "B" : num + "M";
+      
+      const r1 = Math.round((num + Number.EPSILON) * 10) / 10;
+      if (r1 >= 1000) return nf1.format(r1 / 1000) + "B";
+      
+      return nf1.format(r1) + "M";
     }
+    
     function formatHourToTime(hours){
       if (!hours || isNaN(hours)) return "0분";
       const totalMinutes = Math.round(hours*60);
