@@ -1467,6 +1467,10 @@
       </div>
     </div>
   </div>
+	<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
   
   <!-- ✅ 업데이트 내역 팝업 (고정 안내 포함 버전) -->
   <div id="update-modal-backdrop" class="fixed inset-0 z-[1000] hidden">
@@ -1499,11 +1503,7 @@
       </div>
     </div>
   </div>
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-
+	
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       // 필요 경로를 여기에 각기 다르게 설정하세요.
@@ -1967,5 +1967,87 @@
       })();
     })();
   </script>
+	<!-- 이민예측 안내 모달 -->
+<div id="immigrationModal" class="fixed inset-0 z-[1000] hidden">
+  <div id="immigrationBackdrop" class="absolute inset-0 bg-black/50"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="immigrationModalTitle">
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-[#1f1f1f] shadow-xl border border-black/10 dark:border-white/10">
+      <div class="p-5">
+        <div class="flex items-start justify-between gap-4">
+          <h2 id="immigrationModalTitle" class="text-lg font-semibold">이민예측 안내</h2>
+          <button id="immigrationClose" class="rounded-full p-1 hover:bg-black/5 dark:hover:bg-white/10" aria-label="닫기">✕</button>
+        </div>
+        <div class="mt-3 text-sm text-gray-700 dark:text-gray-300 leading-6">
+          이민예측 페이지로 이동하기 전에 간단 안내를 확인해주세요.
+        </div>
+        <div class="mt-5 flex justify-end gap-2">
+          <button id="immigrationCancel" class="px-3 py-2 rounded-lg border border-black/10 dark:border-white/10">취소</button>
+          <button id="immigrationGo" class="px-3 py-2 rounded-lg bg-black text-white dark:bg-white dark:text-black">확인하고 이동</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  const IMM_ID = 'transfer'; // 이민예측 버튼 id (필요 시 수정)
+  const trigger = document.getElementById(IMM_ID);
+  if (!trigger) return;
+
+  // 모달 요소
+  const modal    = document.getElementById('immigrationModal');
+  const backdrop = document.getElementById('immigrationBackdrop');
+  const btnX     = document.getElementById('immigrationClose');
+  const btnNo    = document.getElementById('immigrationCancel');
+  const btnYes   = document.getElementById('immigrationGo');
+
+  // 기존 페이지 이동 함수(있으면 사용)
+  const originalOpenPage = window.openPage;
+
+  function openModal() {
+    modal.classList.remove('hidden');
+    btnYes?.focus();
+    document.addEventListener('keydown', onEsc);
+  }
+  function closeModal() {
+    modal.classList.add('hidden');
+    document.removeEventListener('keydown', onEsc);
+  }
+  function onEsc(e){ if(e.key === 'Escape') closeModal(); }
+
+  // 실제 이동(기존 로직 최대한 활용)
+  function navigateById(id) {
+    if (typeof originalOpenPage === 'function') {
+      // 기존 openPage를 쓰는 사이트면 그대로 위임
+      originalOpenPage(id);
+      return;
+    }
+    // openPage가 없으면 mainframe에 직접 주입
+    const frame = document.getElementById('mainframe') 
+               || document.querySelector('iframe#mainframe, iframe[name="mainframe"]');
+    const url = `${id}.html`;
+    if (frame) frame.src = url;
+    else window.location.href = url; // 혹시 iframe이 없다면 폴백
+  }
+
+  // transfer 버튼만 모달을 거치도록 클릭 가로채기
+  trigger.addEventListener('click', (e) => {
+    // 기존 공통 핸들러(캡처/버블링)에서 mainframe.src를 바꾸기 전에 막아야 함
+    e.preventDefault();
+    e.stopPropagation();
+    openModal();
+  }, true); // 캡처 단계에서 가로채면 더 안전
+
+  // 모달 버튼
+  backdrop?.addEventListener('click', closeModal);
+  btnX?.addEventListener('click', closeModal);
+  btnNo?.addEventListener('click', closeModal);
+  btnYes?.addEventListener('click', () => {
+    closeModal();
+    navigateById(IMM_ID); // 확인 누르면 원래처럼 transfer.html 로드
+  });
+})();
+</script>
+
 </body>
 </html>
