@@ -42,7 +42,7 @@
   </script>
 </head>
 <body class="bg-gray-100 p-3 font-sans text-sm">
-  <main class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
+  <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
     <header class="flex items-center justify-between">
       <div class="p-4">
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">💎 영주보석 계산기</h1>
@@ -53,7 +53,7 @@
     <!-- 카드 그리드 -->
     <section id="GemGrid" class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-4"></section>
 
-    <!-- 보유 자원 -->
+    <!-- 보유 자원 
     <section class="mt-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
@@ -74,12 +74,70 @@
         </div>
       </div>
     </section>
+    -->
 
-    <!-- 합계 패널 (helios 느낌) -->
+    <!-- 합계 패널 (helios 느낌) 
     <section id="summaryPanel" class="mt-4 grid md:grid-cols-3 gap-4">
-      <!-- JS에서 채움 -->
+      <!-- JS에서 채움 
     </section>
-  </main>
+    -->
+    <!-- 하단 총합 패널 -->
+    <div id="summaryPanel" class="exp-card mt-4">
+      <div class="p-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <!-- 총합 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">총합</div>
+            <div class="flex justify-between text-[13px]">
+              <span class="text-gray-600">매뉴얼</span><span id="sum-매뉴얼">0</span>
+            </div>
+            <div class="flex justify-between text-[13px] mt-1">
+              <span class="text-gray-600">도면</span><span id="sum-도면">0</span>
+            </div>
+            <div class="flex justify-between text-[13px] mt-1">
+              <span class="text-gray-600">비전</span><span id="sum-비전">0</span>
+            </div>
+          </div>
+    
+          <!-- 보유 자원 (합계 패널 안에서 직접 입력) -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
+              <span class="muted">입력 시 자동 반영</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-[12px] text-gray-600 mb-1">보유 매뉴얼</label>
+                <input type="number" id="own-매뉴얼" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              </div>
+              <div>
+                <label class="block text-[12px] text-gray-600 mb-1">보유 도면</label>
+                <input type="number" id="own-도면" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              </div>
+              <div>
+                <label class="block text-[12px] text-gray-600 mb-1">보유 비전</label>
+                <input type="number" id="own-비전" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              </div>
+            </div>
+          </div>
+    
+          <!-- 과부족 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="font-semibold mb-2">과부족</div>
+            <div class="flex justify-between text-[13px]">
+              <span class="text-gray-600">매뉴얼</span><span id="def-매뉴얼">0</span>
+            </div>
+            <div class="flex justify-between text-[13px] mt-1">
+              <span class="text-gray-600">도면</span><span id="def-도면">0</span>
+            </div>
+            <div class="flex justify-between text-[13px] mt-1">
+              <span class="text-gray-600">비전</span><span id="def-비전">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     // ====== 임베드 높이 보고 ======
@@ -254,27 +312,7 @@
       }
       return s;
     }
-
-    function renderSummaryCards(total, owned, deficit){
-      const card = (title, data) => `
-        <div class="sum-card bg-white p-4 rounded-xl">
-          <div class="flex items-center justify-between mb-2">
-            <div class="sum-title">${title}</div>
-          </div>
-          <div class="space-y-2 text-sm">
-            <div class="sum-item"><span class="muted">매뉴얼</span><span class="tabular-nums">${fmt(data.m)}</span></div>
-            <div class="sum-item"><span class="muted">도면</span><span class="tabular-nums">${fmt(data.b)}</span></div>
-            <div class="sum-item"><span class="muted">비전</span><span class="tabular-nums">${fmt(data.v)}</span></div>
-          </div>
-        </div>
-      `;
-      document.getElementById("summaryPanel").innerHTML = [
-        card("총합",  total),
-        card("보유량", owned),
-        card("과부족", deficit),
-      ].join("");
-    }
-
+    
     function calculate(){
       const total = { m:0, b:0, v:0 };
       for (let i=0;i<gemSlots.length;i++){
@@ -323,10 +361,22 @@
         b: +(document.getElementById("own-도면").value || 0),
         v: +(document.getElementById("own-비전").value || 0),
       };
+      const def = { m: owned.m - total.m, b: owned.b - total.b, v: owned.v - total.v };
 
-      const deficit = { m: owned.m - total.m, b: owned.b - total.b, v: owned.v - total.v };
-
-      renderSummaryCards(total, owned, deficit);
+      const sM = document.getElementById("sum-매뉴얼");
+      const sB = document.getElementById("sum-도면");
+      const sV = document.getElementById("sum-비전");
+      const dM = document.getElementById("def-매뉴얼");
+      const dB = document.getElementById("def-도면");
+      const dV = document.getElementById("def-비전");
+  
+      if (sM) sM.textContent = fmt(total.m);
+      if (sB) sB.textContent = fmt(total.b);
+      if (sV) sV.textContent = fmt(total.v);
+      if (dM) dM.textContent = fmt(def.m);
+      if (dB) dB.textContent = fmt(def.b);
+      if (dV) dV.textContent = fmt(def.v);
+      
       sendHeightToParent();
     }
 
