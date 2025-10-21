@@ -126,23 +126,27 @@
       if (!lines.length) return { levels:[], manual:[], blue:[], vision:[] };
 
       const delim = detectDelim(lines[0]);
-      const hasHeader = /(레벨|lv|level|매뉴얼|도면|비전|manual|blue|vision)/i.test(lines[0]);
+      const hasHeader = /(레벨|lv|level|매뉴얼|도면|비전|manual|blue|vision|합계|누적|total|cumulative)/i.test(lines[0]);
       const start = hasHeader ? 1 : 0;
+      const headerLine = hasHeader ? lines[0] : "";
+      const markCumulative = /(누적|합계|total|cumulative)/i.test(headerLine);
 
       const M = new Map(), B = new Map(), V = new Map();
       const rawLevels = [];
       for (let i=start;i<lines.length;i++){
         const c = lines[i].split(delim);
         if (!c.length) continue;
-        // 케이스1: "Lv.X, 매뉴얼, 도면, 비전"
-        // 케이스2: "매뉴얼, 도면, 비전" (레벨 없이 순차)
+
         let lv, m, b, v;
         if (c.length >= 4){
           lv = toInt(c[0]); m = toNum(c[1]); b = toNum(c[2]); v = toNum(c[3]);
         }else{
-          lv = i-start; m = toNum(c[0]); b = toNum(c[1]); v = toNum(c[2] || 0);
+          // 레벨이 생략된 3열 CSV일 경우 1부터 순번으로 가정
+          lv = (i - start) + 1;
+          m = toNum(c[0]); b = toNum(c[1]); v = toNum(c[2] || 0);
         }
         if (!Number.isFinite(lv)) continue;
+
         rawLevels.push(lv);
         M.set(lv, m); B.set(lv, b); V.set(lv, v);
       }
@@ -150,25 +154,23 @@
       const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
       if (levels.length < 2) return { levels, manual:[], blue:[], vision:[] };
 
-      // 누적 여부 판별
-      const isCum = (map)=>{
-        let prev=null, nondec=0, pos=0;
-        for (const lv of levels){
-          const val = map.get(lv) ?? 0;
-          if (prev!==null){ if (val>=prev) nondec++; if (val>prev) pos++; }
-          prev = val;
-        }
-        return nondec >= (levels.length-1) && pos>0;
-      };
-      const cumM = isCum(M), cumB = isCum(B), cumV = isCum(V);
-
+      // 스텝 배열 만들기
+      // i번째 스텝은 "levels[i] → levels[i+1]" 업그레이드 비용
+      // 기본(구간): step[i] = 값(levels[i+1])  → 즉, 15→16 스텝은 'Lv.16'의 값
       const stepM=[], stepB=[], stepV=[];
       for (let i=0;i<levels.length-1;i++){
-        const a=levels[i], b=levels[i+1];
-        stepM[i] = Math.max(0, (cumM ? (M.get(b)||0)-(M.get(a)||0) : (M.get(b)||0)));
-        stepB[i] = Math.max(0, (cumB ? (B.get(b)||0)-(B.get(a)||0) : (B.get(b)||0)));
-        stepV[i] = Math.max(0, (cumV ? (V.get(b)||0)-(V.get(a)||0) : (V.get(b)||0)));
+        const a = levels[i], b = levels[i+1];
+        if (markCumulative) {
+          stepM[i] = Math.max(0, (M.get(b)||0) - (M.get(a)||0));
+          stepB[i] = Math.max(0, (B.get(b)||0) - (B.get(a)||0));
+          stepV[i] = Math.max(0, (V.get(b)||0) - (V.get(a)||0));
+        } else {
+          stepM[i] = Math.max(0, (M.get(b)||0));
+          stepB[i] = Math.max(0, (B.get(b)||0));
+          stepV[i] = Math.max(0, (V.get(b)||0));
+        }
       }
+
       return { levels, manual:stepM, blue:stepB, vision:stepV };
     }
 
@@ -233,11 +235,19 @@
     }
 
     // ====== 계산 ======
+    // fromLv→toLv 합: 요구사항에 따라 (fromLv+1 ... toLv)까지 포함
     function sumRange(steps, fromLv, toLv){
+      if (!Array.isArray(steps) || steps.length === 0) return 0;
       let s = 0;
+      // lv는 '시작 레벨'이 아니라 '목표 레벨'을 1씩 증가시키며 합산:
+      // 우리가 만든 steps[idx]는 'levels[idx]→levels[idx+1]' 스텝이며 값은 levels[idx+1](=목표 레벨)의 비용
+      // 따라서 lv를 fromLv부터 toLv-1까지 돌리면서 idx를 매핑하면
+      // 실제 합산되는 비용은 (fromLv+1 ... toLv)의 값이 됨
       for (let lv = fromLv; lv < toLv; lv++) {
-        const idx = gemLevels.indexOf(lv); // 레벨 숫자를 배열 위치로 변환
-        if (idx >= 0) s += steps[idx] || 0; // idx == (lv가 시작 레벨인 위치)
+        const idx = levelToIdx.get(lv); // lv→(lv+1) 스텝의 인덱스
+        if (idx !== undefined && idx >= 0 && idx < steps.length) {
+          s += steps[idx] || 0;
+        }
       }
       return s;
     }
