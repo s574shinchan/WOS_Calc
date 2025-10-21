@@ -376,6 +376,10 @@
       if (dM) dM.textContent = fmt(def.m);
       if (dB) dB.textContent = fmt(def.b);
       if (dV) dV.textContent = fmt(def.v);
+
+      dM.classList.toggle("text-red-600", parseFloat(dM.textContent.replace(/,/g,'')) < 0);
+      dB.classList.toggle("text-red-600", parseFloat(dB.textContent.replace(/,/g,'')) < 0);
+      dV.classList.toggle("text-red-600", parseFloat(dV.textContent.replace(/,/g,'')) < 0);
       
       sendHeightToParent();
     }
