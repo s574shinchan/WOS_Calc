@@ -234,8 +234,11 @@
 
     // ====== 계산 ======
     function sumRange(steps, fromLv, toLv){
-      let s=0;
-      for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0;
+      let s = 0;
+      for (let lv = fromLv; lv < toLv; lv++) {
+        const idx = gemLevels.indexOf(lv); // 레벨 숫자를 배열 위치로 변환
+        if (idx >= 0) s += steps[idx] || 0; // idx == (lv가 시작 레벨인 위치)
+      }
       return s;
     }
 
