@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>영주보석 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .muted{color:#6b7280}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    .tabular-nums{font-variant-numeric: tabular-nums}
+    select.pill{height:32px}
+    .err{color:#b45309}
+    /* ✅ 다크모드 */
+    body.dark-mode{background-color:#121212;color:#f0f0f0}
+    .dark-mode .border{border-color:#444!important}
+    .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
+    .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#dddddd!important}
+    .dark-mode .bg-purple-50,.dark-mode .bg-orange-50,.dark-mode .bg-red-50{background-color:#2e2e2e!important}
+    .dark-mode select option{color:#000!important}
+    .dark-mode select{color:#000!important}
+    .dark-mode input{color:#000!important}
+
+    /* helios 스타일 감성의 합계 카드 */
+    .sum-card{border:1px solid rgba(0,0,0,.08); border-radius: .75rem; background: #fff; box-shadow: 0 6px 18px rgba(16,24,40,.08)}
+    .sum-title{font-weight:700}
+    .sum-item{display:flex; align-items:center; justify-content:space-between}
+    .pill-badge{display:inline-block; border-radius:9999px; padding:.1rem .5rem; font-size:12px; border:1px solid rgba(0,0,0,.08)}
+    .badge-total{background:#f3e8ff}   /* 보라 */
+    .badge-own{background:#fff7ed}     /* 오렌지 */
+    .badge-def{background:#fee2e2}     /* 레드 */
+  </style>
+  <script>
+    // 다크모드 유지
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-3 font-sans text-sm">
+  <main class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
+    <header class="flex items-center justify-between">
+      <div class="p-4">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">💎 영주보석 계산기</h1>
+        <p class="text-sm muted mt-1">보석 업그레이드에 필요한 <b>매뉴얼 / 도면 / 비전</b> 합계를 계산합니다.</p>
+      </div>
+    </header>
+
+    <!-- 카드 그리드 -->
+    <section id="GemGrid" class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-4"></section>
+
+    <!-- 보유 자원 -->
+    <section class="mt-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
+        <span class="muted">입력 시 자동 계산</span>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold">보유 매뉴얼</label>
+          <input type="number" id="own-매뉴얼" class="w-full border rounded p-2" placeholder="0" min="0"/>
+        </div>
+        <div>
+          <label class="block font-semibold">보유 도면</label>
+          <input type="number" id="own-도면" class="w-full border rounded p-2" placeholder="0" min="0"/>
+        </div>
+        <div>
+          <label class="block font-semibold">보유 비전</label>
+          <input type="number" id="own-비전" class="w-full border rounded p-2" placeholder="0" min="0"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- 합계 패널 (helios 느낌) -->
+    <section id="summaryPanel" class="mt-4 grid md:grid-cols-3 gap-4">
+      <!-- JS에서 채움 -->
+    </section>
+  </main>
+
+  <script>
+    // ====== 임베드 높이 보고 ======
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
+
+    // ====== 데이터 소스 ======
+    // 스키마 가정: "레벨,매뉴얼,도면,비전" or "Lv.X, manual, blue, vision"
+    // 값은 '해당(목표) 레벨로 올릴 때의 구간 비용'이 기본 (예: 15→16 시 16행 값 사용)
+    const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
+
+    // 슬롯 라벨 (예시)
+    const gemSlots = [
+      "방패A","방패B","방패C","방패D","방패E","방패F",
+      "창병A","창병B","창병C","창병D","창병E","창병F",
+      "궁병A","궁병B","궁병C","궁병D","궁병E","궁병F",
+    ];
+
+    // ====== 상태 ======
+    let gemLevels = []; // 정렬된 레벨 리스트 (예: [1,2,3,...,16,...])
+    let levelToIdx = new Map(); // 레벨 숫자 → 스텝 인덱스
+    window.__gemStepM = [];
+    window.__gemStepB = [];
+    window.__gemStepV = [];
+
+    // ====== 유틸 ======
+    const fmt = (n) => Number(n || 0).toLocaleString("ko-KR");
+    const detectDelim = (sample) => (sample.includes("\t") ? "\t" : (sample.includes(";") ? ";" : ","));
+    const toNum = (s) => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+    const toInt = (s) => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+
+    function preprocessByLevel(text){
+      let s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
+      if (!s.includes("\n") && /Lv\.?\s*\d+/i.test(s)) {
+        s = s.replace(/(Lv\.?\s*\d+)/gi, "\n$1");
+      }
+      return s;
+    }
+
+    // ====== CSV 파서 (기본: 구간비용, 헤더에 '누적/합계/total/cumulative' 있으면 누적 해석 후 차분) ======
+    function parseGemCSV(text){
+      const pre = preprocessByLevel(text);
+      const lines = pre.split("\n").filter(l => l.trim() !== "");
+      if (!lines.length) return { levels:[], manual:[], blue:[], vision:[] };
+
+      const delim = detectDelim(lines[0]);
+      const hasHeader = /(레벨|lv|level|매뉴얼|도면|비전|manual|blue|vision|합계|누적|total|cumulative)/i.test(lines[0]);
+      const start = hasHeader ? 1 : 0;
+      const headerLine = hasHeader ? lines[0] : "";
+      const markCumulative = /(누적|합계|total|cumulative)/i.test(headerLine);
+
+      const M = new Map(), B = new Map(), V = new Map();
+      const rawLevels = [];
+      for (let i=start;i<lines.length;i++){
+        const c = lines[i].split(delim);
+        if (!c.length) continue;
+
+        let lv, m, b, v;
+        if (c.length >= 4){
+          lv = toInt(c[0]); m = toNum(c[1]); b = toNum(c[2]); v = toNum(c[3]);
+        }else{
+          // 레벨이 생략된 3열 CSV일 경우 1부터 순번으로 가정
+          lv = (i - start) + 1;
+          m = toNum(c[0]); b = toNum(c[1]); v = toNum(c[2] || 0);
+        }
+        if (!Number.isFinite(lv)) continue;
+
+        rawLevels.push(lv);
+        M.set(lv, m); B.set(lv, b); V.set(lv, v);
+      }
+
+      const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
+      if (levels.length < 2) return { levels, manual:[], blue:[], vision:[] };
+
+      // 스텝 배열 만들기
+      // i번째 스텝은 "levels[i] → levels[i+1]" 업그레이드 비용
+      // 기본(구간): step[i] = 값(levels[i+1])  → 즉, 15→16 스텝은 'Lv.16'의 값
+      const stepM=[], stepB=[], stepV=[];
+      for (let i=0;i<levels.length-1;i++){
+        const a = levels[i], b = levels[i+1];
+        if (markCumulative) {
+          stepM[i] = Math.max(0, (M.get(b)||0) - (M.get(a)||0));
+          stepB[i] = Math.max(0, (B.get(b)||0) - (B.get(a)||0));
+          stepV[i] = Math.max(0, (V.get(b)||0) - (V.get(a)||0));
+        } else {
+          stepM[i] = Math.max(0, (M.get(b)||0));
+          stepB[i] = Math.max(0, (B.get(b)||0));
+          stepV[i] = Math.max(0, (V.get(b)||0));
+        }
+      }
+
+      return { levels, manual:stepM, blue:stepB, vision:stepV };
+    }
+
+    function renderOptions(selectEl, levels){
+      const label = (lv)=>`Lv.${lv}`;
+      const opts = ['<option value=""></option>'].concat(
+        levels.map(lv => `<option value="${lv}">${label(lv)}</option>`)
+      ).join("");
+      selectEl.innerHTML = opts;
+    }
+    function renderTargetOptions(selectEl, levels, greaterThan){
+      const label = (lv)=>`Lv.${lv}`;
+      const filtered = levels.filter(lv => lv > greaterThan);
+      const opts = ['<option value=""></option>'].concat(
+        filtered.map(lv => `<option value="${lv}">${label(lv)}</option>`)
+      ).join("");
+      selectEl.innerHTML = opts;
+    }
+
+    // ====== 카드 UI 생성 (현재/목표 세로 배치) ======
+    function createGemCards(){
+      const grid = document.getElementById("GemGrid");
+      grid.innerHTML = "";
+      gemSlots.forEach((name, i) => {
+        const card = document.createElement("div");
+        card.className = "rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg";
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-base font-bold flex items-center gap-2">
+              <span>${name}</span>
+            </label>
+            <span id="warn-${i}" class="text-xs err"></span>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-3">
+            <div>
+              <div class="text-sm font-semibold mb-2">레벨 범위 <span id="cap-${i}" class="muted"></span></div>
+              <div class="space-y-2">
+                <label class="inline-label w-full justify-between">
+                  <span class="muted w-14">현재</span>
+                  <select id="cur-${i}" class="pill w-28"></select>
+                </label>
+                <label class="inline-label w-full justify-between">
+                  <span class="muted w-14">목표</span>
+                  <select id="tgt-${i}" class="pill w-28"></select>
+                </label>
+              </div>
+            </div>
+            <div class="md:pl-2">
+              <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
+              <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
+                <div class="text-gray-600">매뉴얼</div><div class="text-right tabular-nums" id="m-${i}">0</div>
+                <div class="text-gray-600">도면</div><div class="text-right tabular-nums" id="b-${i}">0</div>
+                <div class="text-gray-600">비전</div><div class="text-right tabular-nums" id="v-${i}">0</div>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // ====== 계산 ======
+    // fromLv→toLv 합: 요구사항에 따라 (fromLv+1 ... toLv)까지 포함
+    function sumRange(steps, fromLv, toLv){
+      if (!Array.isArray(steps) || steps.length === 0) return 0;
+      let s = 0;
+      // lv는 '시작 레벨'이 아니라 '목표 레벨'을 1씩 증가시키며 합산:
+      // 우리가 만든 steps[idx]는 'levels[idx]→levels[idx+1]' 스텝이며 값은 levels[idx+1](=목표 레벨)의 비용
+      // 따라서 lv를 fromLv부터 toLv-1까지 돌리면서 idx를 매핑하면
+      // 실제 합산되는 비용은 (fromLv+1 ... toLv)의 값이 됨
+      for (let lv = fromLv; lv < toLv; lv++) {
+        const idx = levelToIdx.get(lv); // lv→(lv+1) 스텝의 인덱스
+        if (idx !== undefined && idx >= 0 && idx < steps.length) {
+          s += steps[idx] || 0;
+        }
+      }
+      return s;
+    }
+
+    function renderSummaryCards(total, owned, deficit){
+      const card = (title, data) => `
+        <div class="sum-card bg-white p-4 rounded-xl">
+          <div class="flex items-center justify-between mb-2">
+            <div class="sum-title">${title}</div>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="sum-item"><span class="muted">매뉴얼</span><span class="tabular-nums">${fmt(data.m)}</span></div>
+            <div class="sum-item"><span class="muted">도면</span><span class="tabular-nums">${fmt(data.b)}</span></div>
+            <div class="sum-item"><span class="muted">비전</span><span class="tabular-nums">${fmt(data.v)}</span></div>
+          </div>
+        </div>
+      `;
+      document.getElementById("summaryPanel").innerHTML = [
+        card("총합",  total),
+        card("보유량", owned),
+        card("과부족", deficit),
+      ].join("");
+    }
+
+    function calculate(){
+      const total = { m:0, b:0, v:0 };
+      for (let i=0;i<gemSlots.length;i++){
+        const warn = document.getElementById(`warn-${i}`);
+        const curEl= document.getElementById(`cur-${i}`);
+        const tgtEl= document.getElementById(`tgt-${i}`);
+        const outM = document.getElementById(`m-${i}`);
+        const outB = document.getElementById(`b-${i}`);
+        const outV = document.getElementById(`v-${i}`);
+
+        outM.textContent = outB.textContent = outV.textContent = "0";
+        warn.textContent = "";
+
+        const cur = +curEl.value;
+        const tgt = +tgtEl.value;
+
+        if (cur && tgt) {
+          if (tgt <= cur) {
+            warn.textContent = "목표는 현재보다 커야 합니다.";
+            continue;
+          } else {
+            warn.textContent = "";
+          }
+        } else {
+          // 하나라도 비어 있으면 문구 표시 안 함 (필요합계도 0 유지)
+          warn.textContent = "";
+          continue;
+        }
+
+        // 요구사항: cur=1,tgt=16 → Lv.2~16 합 / cur=15,tgt=16 → Lv.16만
+        const sM = sumRange(window.__gemStepM, cur, tgt);
+        const sB = sumRange(window.__gemStepB, cur, tgt);
+        const sV = sumRange(window.__gemStepV, cur, tgt);
+
+        total.m += sM; 
+        total.b += sB; 
+        total.v += sV;
+        
+        outM.textContent = fmt(sM);
+        outB.textContent = fmt(sB);
+        outV.textContent = fmt(sV);
+      }
+
+      const owned = {
+        m: +(document.getElementById("own-매뉴얼").value || 0),
+        b: +(document.getElementById("own-도면").value || 0),
+        v: +(document.getElementById("own-비전").value || 0),
+      };
+
+      const deficit = { m: owned.m - total.m, b: owned.b - total.b, v: owned.v - total.v };
+
+      renderSummaryCards(total, owned, deficit);
+      sendHeightToParent();
+    }
+
+    // ====== 이벤트 ======
+    function wireEvents(){
+      for (let i=0;i<gemSlots.length;i++){
+        const curEl= document.getElementById(`cur-${i}`);
+        const tgtEl= document.getElementById(`tgt-${i}`);
+        // 현재 → 목표 자동 (cur+1)
+        curEl.addEventListener("change", () => {
+          const cur = +curEl.value;
+          if (!cur){
+            tgtEl.innerHTML = '<option value=""></option>';
+          }else{
+            renderTargetOptions(tgtEl, gemLevels, cur);
+            if (tgtEl.options.length > 1) tgtEl.selectedIndex = 1; // 기본 cur+1
+          }
+          calculate();
+        });
+        tgtEl.addEventListener("change", calculate);
+      }
+      ["own-매뉴얼","own-도면","own-비전"].forEach(id => {
+        document.getElementById(id).addEventListener("input", calculate);
+      });
+    }
+
+    // ====== 로드 ======
+    async function fetchCSVData(){
+      try{
+        const res = await fetch(csvUrl, { cache: "no-store", mode: "cors", redirect:"follow", referrerPolicy:"no-referrer" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const text = await res.text();
+
+        const { levels, manual, blue, vision } = parseGemCSV(text);
+        gemLevels = levels;
+        window.__gemStepM = manual;
+        window.__gemStepB = blue;
+        window.__gemStepV = vision;
+
+        // 레벨 → 스텝 인덱스 맵 (lv→lv+1 스텝의 인덱스)
+        levelToIdx = new Map(gemLevels.map((lv, i) => [lv, i]));
+
+        // UI 생성 + 옵션 채우기
+        createGemCards();
+        for (let i=0;i<gemSlots.length;i++){
+          const curEl = document.getElementById(`cur-${i}`);
+          const tgtEl = document.getElementById(`tgt-${i}`);
+          const capEl = document.getElementById(`cap-${i}`);
+          renderOptions(curEl, gemLevels);
+          tgtEl.innerHTML = '<option value=""></option>'; // 현재 선택 후 목표 구성
+          capEl.textContent = gemLevels.length ? `(최대 Lv.${gemLevels[gemLevels.length-1]})` : "";
+        }
+
+        wireEvents();
+        calculate();
+      }catch(err){
+        console.error("CSV 로드 실패:", err);
+        document.getElementById("GemGrid").innerHTML =
+          '<div class="rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg text-sm err">데이터를 불러오지 못했습니다. CSV 경로를 확인하세요.</div>';
+      }finally{
+        sendHeightToParent();
+      }
+    }
+
+    fetchCSVData();
+  </script>
+
+  <!-- 선택: 개발자도구/우클릭 방지 (원 코드 유지) -->
+  <script>
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+</body>
+</html>
