@@ -186,7 +186,7 @@
       });
 
       // 보유 입력 변화시 전체 재계산
-      ["own-합금","own-설계도면","own-광택제","own-앰버"].forEach(id=>{
+      ["owned-합금","owned-설계도면","owned-광택제","owned-앰버"].forEach(id=>{
         const el = document.getElementById(id);
         if (el) el.addEventListener("input", scheduleCalc);
       });
@@ -239,10 +239,10 @@
     function renderSummary() {
       const total = calculateTotals();
       const owned = {
-        합금: parseFloat(document.getElementById("own-합금").value)||0,
-        설계도면: parseFloat(document.getElementById("own-설계도면").value)||0,
-        광택제: parseFloat(document.getElementById("own-광택제").value)||0,
-        달빛앰버: parseFloat(document.getElementById("own-앰버").value)||0,
+        합금: parseFloat(document.getElementById("owned-합금").value)||0,
+        설계도면: parseFloat(document.getElementById("owned-설계도면").value)||0,
+        광택제: parseFloat(document.getElementById("owned-광택제").value)||0,
+        달빛앰버: parseFloat(document.getElementById("owned-앰버").value)||0,
       };
       const deficit = {
         합금: owned.합금 - total.합금,
@@ -261,10 +261,10 @@
       const defC = document.getElementById("def-광택제");
       const defD = document.getElementById("def-달빛앰버");
       
-      defA.textContent = ( (parseFloat(document.getElementById("owned-합금").value||0) - total["합금"]) ).toLocaleString();
-      defB.textContent = ( (parseFloat(document.getElementById("owned-설계도면").value||0) - total["설계도면"]) ).toLocaleString();
-      defC.textContent = ( (parseFloat(document.getElementById("owned-광택제").value||0) - total["광택제"]) ).toLocaleString();
-      defD.textContent = ( (parseFloat(document.getElementById("owned-달빛앰버").value||0) - total["달빛앰버"]) ).toLocaleString();
+      defA.textContent = parseFloat(deficit.합금).toLocaleString();
+      defB.textContent = parseFloat(deficit.설계도면).toLocaleString();
+      defC.textContent = parseFloat(deficit.광택제).toLocaleString();
+      defD.textContent = parseFloat(deficit.달빛앰버).toLocaleString();
       
       defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
       defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
