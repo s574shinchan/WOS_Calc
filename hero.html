@@ -324,10 +324,18 @@
       document.getElementById("own-미스릴").textContent = own.mith.toLocaleString();
       document.getElementById("own-레전드장비").textContent  = own.leg.toLocaleString();
 
+			const defA = document.getElementById("def-exp");
+      const defB = document.getElementById("def-mith");
+      const defC = document.getElementById("def-leg");
+			
       document.getElementById("def-exp").textContent  = total.exp.toLocaleString(); // 경험치는 보유치 개념 없음
       document.getElementById("def-nut").textContent  = (own.nut-total.nut).toLocaleString();
       document.getElementById("def-mith").textContent = (own.mith-total.mith).toLocaleString();
       document.getElementById("def-leg").textContent  = (own.leg-total.leg).toLocaleString();
+
+			defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+      defC.classList.toggle("text-red-600", parseFloat(defC.textContent.replace(/,/g,'')) < 0);
     }
 
     // 최초 로딩
@@ -463,10 +471,18 @@
 
       document.getElementById("ms-tot-stone").textContent = total.stone.toLocaleString();
       document.getElementById("ms-tot-leg").textContent   = total.leg.toLocaleString();
-      document.getElementById("owned-마스터리석").textContent = own.stone.toLocaleString();
+      
+			document.getElementById("owned-마스터리석").textContent = own.stone.toLocaleString();
       document.getElementById("owned-레전드장비").textContent   = own.leg.toLocaleString();
-      document.getElementById("ms-def-stone").textContent = (own.stone-total.stone).toLocaleString();
+			
+			const defA = document.getElementById("ms-def-ston");
+      const defB = document.getElementById("ms-def-leg");
+			
+			document.getElementById("ms-def-stone").textContent = (own.stone-total.stone).toLocaleString();
       document.getElementById("ms-def-leg").textContent   = (own.leg-total.leg).toLocaleString();
+
+			defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
     }
 
     // 최초 로딩
