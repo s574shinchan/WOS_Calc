@@ -153,6 +153,7 @@
       if (levels.length < 2) return { levels, manual:[], blue:[], vision:[] };
 
       // 누적 여부 판별
+      /*
       const isCum = (map)=>{
         let prev=null, nondec=0, pos=0;
         for (const lv of levels){
@@ -170,6 +171,27 @@
         stepM[i] = Math.max(0, (cumM ? (M.get(b)||0)-(M.get(a)||0) : (M.get(b)||0)));
         stepB[i] = Math.max(0, (cumB ? (B.get(b)||0)-(B.get(a)||0) : (B.get(b)||0)));
         stepV[i] = Math.max(0, (cumV ? (V.get(b)||0)-(V.get(a)||0) : (V.get(b)||0)));
+      }
+      */
+      // ✅ 헤더에 '누적|합계|total|cumulative'가 있을 때만 누적으로 처리하고,
+      // 기본은 '구간(스텝) 비용'으로 간주
+      const headerLine = hasHeader ? lines[0] : "";
+      const markCumulative = /(누적|합계|total|cumulative)/i.test(headerLine);
+      
+      const stepM=[], stepB=[], stepV=[];
+      for (let i=0;i<levels.length-1;i++){
+        const a=levels[i], b=levels[i+1];
+        if (markCumulative) {
+          // 누적일 때만 차분
+          stepM[i] = Math.max(0, (M.get(b)||0) - (M.get(a)||0));
+          stepB[i] = Math.max(0, (B.get(b)||0) - (B.get(a)||0));
+          stepV[i] = Math.max(0, (V.get(b)||0) - (V.get(a)||0));
+        } else {
+          // ✅ 기본: 구간(스텝) 비용 — b(목표레벨)의 값이 곧 a→b 업그레이드 비용
+          stepM[i] = Math.max(0, (M.get(b)||0));
+          stepB[i] = Math.max(0, (B.get(b)||0));
+          stepV[i] = Math.max(0, (V.get(b)||0));
+        }
       }
       return { levels, manual:stepM, blue:stepB, vision:stepV };
     }
@@ -235,11 +257,14 @@
     }
 
     // ====== 계산 ======
+    const levelToIdx = new Map(gemLevels.map((lv, i) => [lv, i]));
+
+    // 합계
     function sumRange(steps, fromLv, toLv){
       let s = 0;
       for (let lv = fromLv; lv < toLv; lv++) {
-        const idx = gemLevels.indexOf(lv); // 레벨 숫자를 배열 위치로 변환
-        if (idx >= 0) s += steps[idx] || 0; // idx == (lv가 시작 레벨인 위치)
+        const idx = levelToIdx.get(lv);
+        if (idx !== undefined) s += steps[idx] || 0; // idx는 (lv → lv+1)의 스텝 위치
       }
       return s;
     }
