@@ -59,7 +59,7 @@
         </div>
 
         <form id="heroEquipForm" class="space-y-3">
-          <div id="heroEquipGridBody" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          <div id="heroEquipGridBody" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
 
           <!-- 📕 미스릴 총합계 -->
           <div id="mithrilTotals" class="exp-card">
@@ -68,16 +68,16 @@
               <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-2">필요 총합</div>
-                  <div class="flex justify-between text-[13px]">
+                  <div class="flex justify-between text-[12px]">
                     <span class="text-gray-600">경험치</span><span id="tot-exp" class="tabular-nums">0</span>
                   </div>
-                  <div class="flex justify-between text-[13px]">
+                  <div class="flex justify-between text-[12px]">
                     <span class="text-gray-600">너트</span><span id="tot-nut" class="tabular-nums">0</span>
                   </div>
-                  <div class="flex justify-between text-[13px]">
+                  <div class="flex justify-between text-[12px]">
                     <span class="text-gray-600">미스릴</span><span id="tot-mith" class="tabular-nums">0</span>
                   </div>
-                  <div class="flex justify-between text-[13px]">
+                  <div class="flex justify-between text-[12px]">
                     <span class="text-gray-600">레전드장비</span><span id="tot-leg" class="tabular-nums">0</span>
                   </div>
                 </div>
@@ -100,10 +100,10 @@
                 </div>
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-3">과부족</div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">경험치</span><span id="def-exp" class="tabular-nums">0</span></div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">너트</span><span id="def-nut" class="tabular-nums">0</span></div>
-									<div class="flex justify-between text-[13px]"><span class="text-gray-600">미스릴</span><span id="def-mith" class="tabular-nums">0</span></div>
-									<div class="flex justify-between text-[13px]"><span class="text-gray-600">레전드장비</span><span id="def-leg" class="tabular-nums">0</span></div>
+                  <div class="flex justify-between text-[12px]"><span class="text-gray-600">경험치</span><span id="def-exp" class="tabular-nums">0</span></div>
+                  <div class="flex justify-between text-[12px]"><span class="text-gray-600">너트</span><span id="def-nut" class="tabular-nums">0</span></div>
+									<div class="flex justify-between text-[12px]"><span class="text-gray-600">미스릴</span><span id="def-mith" class="tabular-nums">0</span></div>
+									<div class="flex justify-between text-[12px]"><span class="text-gray-600">레전드장비</span><span id="def-leg" class="tabular-nums">0</span></div>
                 </div>
               </div>
             </div>
@@ -120,7 +120,7 @@
         </div>
 
         <form id="masteryForm" class="space-y-3">
-          <div id="masteryGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          <div id="masteryGrid" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
 
           <!-- 📙 마스터리 총합계 -->
           <div id="masteryTotals" class="exp-card">
@@ -129,11 +129,11 @@
               <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-2">필요 총합</div>
-                  <div class="flex justify-between text-[13px]">
+                  <div class="flex justify-between text-[12px]">
                     <span class="text-gray-600">마스터리석</span><span id="ms-tot-stone" class="tabular-nums">0</span>
                   </div>
 									<div class="font-semibold mb-6"></div>
-                  <div class="flex justify-between text-[13px]">
+                  <div class="flex justify-between text-[12px]">
                     <span class="text-gray-600">레전드장비</span><span id="ms-tot-leg" class="tabular-nums">0</span>
                   </div>
                 </div>
@@ -152,9 +152,9 @@
                 </div>
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-2">과부족</div>
-									<div class="flex justify-between text-[13px]"><span class="text-gray-600">마스터리석</span><span id="ms-def-stone" class="tabular-nums">0</span></div>
+									<div class="flex justify-between text-[12px]"><span class="text-gray-600">마스터리석</span><span id="ms-def-stone" class="tabular-nums">0</span></div>
 									<div class="font-semibold mb-6"></div>
-                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">레전드장비</span><span id="ms-def-leg" class="tabular-nums">0</span></div>
+                  <div class="flex justify-between text-[12px]"><span class="text-gray-600">레전드장비</span><span id="ms-def-leg" class="tabular-nums">0</span></div>
                 </div>
               </div>
             </div>
@@ -226,18 +226,18 @@
                 <!-- 현재/목표 세로 배치 -->
                 <div class="grid grid-cols-1 gap-2">
                   <div class="flex items-center justify-between gap-2">
-                    <span class="text-gray-600">현재</span>
-                    <select id="start-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">${options}</select>
+                    <span class="text-[13px] text-gray-600">현재</span>
+                    <select id="start-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[100px]">${options}</select>
                   </div>
                   <div class="flex items-center justify-between gap-2">
-                    <span class="text-gray-600">목표</span>
-                    <select id="end-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">${options}</select>
+                    <span class="text-[13px] text-gray-600">목표</span>
+                    <select id="end-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[100px]">${options}</select>
                   </div>
                 </div>
               </div>
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
-                <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
+                <div class="grid grid-cols-[1fr_auto] gap-x-1 text-[12px]">
                   <div class="text-gray-600">경험치</div><div class="text-right tabular-nums" id="m-sub-exp-${i}">0</div>
                   <div class="text-gray-600">너트</div><div class="text-right tabular-nums" id="m-sub-nut-${i}">0</div>
                   <div class="text-gray-600">미스릴</div><div class="text-right tabular-nums" id="m-sub-mith-${i}">0</div>
@@ -393,18 +393,18 @@
                 </div>
                 <div class="grid grid-cols-1 gap-2">
                   <div class="flex items-center justify-between gap-2">
-                    <span class="text-[12px] text-gray-600">현재</span>
-                    <select id="m-start-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">${options}</select>
+                    <span class="text-[13px] text-gray-600">현재</span>
+                    <select id="m-start-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[100px]">${options}</select>
                   </div>
                   <div class="flex items-center justify-between gap-2">
-                    <span class="text-[12px] text-gray-600">목표</span>
-                    <select id="m-end-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">${options}</select>
+                    <span class="text-[13px] text-gray-600">목표</span>
+                    <select id="m-end-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[100px]">${options}</select>
                   </div>
                 </div>
               </div>
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
-                <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
+                <div class="grid grid-cols-[1fr_auto] gap-x-1 text-[12px]">
                   <div class="text-gray-600">마스터리석</div><div class="text-right tabular-nums" id="ms-sub-stone-${i}">0</div>
                   <div class="text-gray-600">레전드장비</div><div class="text-right tabular-nums" id="ms-sub-legend-${i}">0</div>
                 </div>
