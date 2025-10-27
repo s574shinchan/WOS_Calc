@@ -136,6 +136,7 @@
         <button onclick="switchTab('hero')" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">🦸 英雄装備</button>
         <button onclick="switchTab('pet')" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded">🐾 ペット</button>
         <button onclick="switchTab('helios')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🔬 烈日兵士</button>
+        <button onclick="switchTab('experts')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">⛑ 専門家</button>
         <button onclick="switchTab('troop')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">👮‍ 兵士訓練</button>        
       </div>
       
@@ -345,14 +346,14 @@
         guide.style.display = "block";
         wrapper.style.display = "none";
         document.body.style.overflowX = "hidden";
-      } else if (page === 'transfer' && lang === 'jp') {
+      } else if ( (page === 'transfer' || page === 'experts') && lang === 'jp') {
         guide.style.display = "none";
         wrapper.style.display = "block";
         frame.src =  `${page}_EN.html`;
         
         // ✅ 추가: 탭 전환시 우측 여백 제거
         document.body.style.overflowX = "hidden";
-        document.documentElement.style.overflowX = "hidden";      
+        document.documentElement.style.overflowX = "hidden";   
       } else {
         guide.style.display = "none";
         wrapper.style.display = "block";
