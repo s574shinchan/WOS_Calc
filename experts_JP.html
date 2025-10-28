@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>専門家</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .muted{color:#6b7280}
+    .value{min-width:3rem;text-align:right}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    @media (max-width: 900px){
+      .toolbar{grid-template-columns: 1fr}
+    }
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    select.pill{height:32px}
+    .err{color:#b45309}
+     /* ✅ 다크모드 전용 */
+    body.dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    
+    .dark-mode .border { border-color: #444 !important; }
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+  
+    .dark-mode .text-gray-800,
+    .dark-mode .text-gray-700,
+    .dark-mode .text-gray-600 { color: #dddddd !important; }
+  
+    .dark-mode .text-blue-700 { color: #66b0ff !important; }
+    .dark-mode .text-blue-600 { color: #80caff !important; }
+    .dark-mode .text-orange-500 { color: #ffa94d !important; }
+    .dark-mode .text-green-600 { color: #79e68c !important; }
+    .dark-mode .text-red-500 { color: #ff8080 !important; }
+    .dark-mode .text-gray-500 { color: #aaa !important; }    
+    
+    .dark-mode .text-gray-800, 
+    .dark-mode .text-gray-600 { color: #e0e0e0 !important; }
+    
+    .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
+    .dark-mode th, .dark-mode td { border-color: #444 !important; }
+    .dark-mode thead th { color: #000 !important; }
+    
+    .dark-mode .bg-amber-100,    
+    .dark-mode .bg-green-100,
+    .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
+    
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+    
+    .dark-mode .bg-amber-50,
+    .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
+
+    .dark-mode .bg-blue-100,
+    .dark-mode .bg-blue-50,
+    .dark-mode .bg-orange-50,
+    .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
+    
+    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
+    .dark-mode ul li { color: #ddd; }
+    
+    .dark-mode select option { color: #000 !important; }
+    .dark-mode select { color: #000 !important; }
+    .dark-mode input { color: #000 !important; }
+  </style>
+  <!-- ✅ 다크모드 상태 유지 스크립트 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-3 font-sans text-sm">
+  <main class="max-w-[1500] mx-auto bg-white p-2 rounded-xl shadow-md">
+    <header class="flex items-center justify-between">
+      <div class ="p-4">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">専門家/スキルレベルアップ計算機</h1>
+        <p class="text-sm muted mt-1">レベルを選択すると、必要な<b>好感度</b>と<b>関係進展・学識の書</b>の合計を計算します。</p>
+      </div>
+    </header>
+
+    <section class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+      <div class="toolbar text-gray-800"
+           style="display:grid;grid-template-columns:180px 1fr auto;gap:16px;align-items:center;">
+        <div class="space-y-1">
+          <div class="font-semibold">専門家 </div>
+          <select id="selType" class="pill w-full">
+            <option value="Cyrille">シリル</option>
+            <option value="Agnes">アグネス</option>
+            <option value="Holger">ホルガー</option>
+            <option value="Romulus">ロムルス</option>
+            <!-- <option value="Baldur">バルド</option> -->
+            <!-- <option value="Fabian">ファビアン</option> -->
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <div class="font-semibold">レベル範囲 <span id="expertCap" class="muted"></span></div>
+          <div class="flex flex-wrap items-center gap-6">
+            <label class="inline-label"><span class="muted">現在</span>
+              <select id="expertCur" class="pill w-28"></select></label>
+            <label class="inline-label"><span class="muted">目標</span>
+              <select id="expertTgt" class="pill w-28"></select></label>
+          </div>
+          <p id="expertWarn" class="text-xs err mt-1"></p>
+        </div>
+
+        <div class="text-right">
+          <button id="btnReset" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">초기화</button>
+        </div>
+      </div>
+
+      <!-- 専門家 카드(section) 내부 어딘가, 계산 영역 아래에 추가 -->
+      <div class="exp-divider border-t mt-4"></div>
+      <div class="pt-3 text-sm">
+        <div class="font-semibold mb-1">専門家の効果 (目標基準)</div>
+        <div id="expertEffect" class="muted">-</div>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-2 gap-4 mb-4">
+      <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="0">スキル 1</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <div class="text-sm font-semibold mb-1">レベル範囲 <span id="s1Cap" class="muted"></span></div>
+            <div class="flex items-center gap-4">
+              <label class="inline-label"><span class="muted">現在</span><select id="s1Cur" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">目標</span><select id="s1Tgt" class="pill w-20"></select></label>
+            </div>
+            <p id="s1Warn" class="text-xs err mt-1"></p>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-1">小計</div>
+            <div class="space-y-1 text-sm">
+              <div class="flex justify-between"><span class="muted">学習経験</span><span id="s1Exp">0</span></div>
+              <div class="flex justify-between"><span class="muted">学識の書</span><span id="s1Item">0</span></div>
+            </div>
+          </div>
+        </div>
+           <div class="exp-divider border-t mt-4"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1">スキル効果 (目標基準)</div>
+              <div class="skill-effect muted" data-index="0">-</div>
+            </div>
+      </div>
+
+      <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="1">スキル 2</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <div class="text-sm font-semibold mb-1">レベル範囲 <span id="s2Cap" class="muted"></span></div>
+            <div class="flex items-center gap-4">
+              <label class="inline-label"><span class="muted">現在</span><select id="s2Cur" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">目標</span><select id="s2Tgt" class="pill w-20"></select></label>
+            </div>
+            <p id="s2Warn" class="text-xs err mt-1"></p>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-1">小計</div>
+            <div class="space-y-1 text-sm">
+              <div class="flex justify-between"><span class="muted">学習経験</span><span id="s2Exp">0</span></div>
+              <div class="flex justify-between"><span class="muted">学識の書</span><span id="s2Item">0</span></div>
+            </div>
+          </div>
+        </div>
+           <div class="exp-divider border-t mt-4"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1">スキル効果 (目標基準)</div>
+              <div class="skill-effect muted" data-index="1">-</div>
+            </div>
+      </div>
+
+      <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="2">スキル 3</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <div class="text-sm font-semibold mb-1">レベル範囲 <span id="s3Cap" class="muted"></span></div>
+            <div class="flex items-center gap-4">
+              <label class="inline-label"><span class="muted">現在</span><select id="s3Cur" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">目標</span><select id="s3Tgt" class="pill w-20"></select></label>
+            </div>
+            <p id="s3Warn" class="text-xs err mt-1"></p>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-1">小計</div>
+            <div class="space-y-1 text-sm">
+              <div class="flex justify-between"><span class="muted">学習経験</span><span id="s3Exp">0</span></div>
+              <div class="flex justify-between"><span class="muted">学識の書</span><span id="s3Item">0</span></div>
+            </div>
+          </div>
+        </div>
+           <div class="exp-divider border-t mt-4"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1">スキル効果 (目標基準)</div>
+              <div class="skill-effect muted" data-index="2">-</div>
+            </div>
+      </div>
+
+      <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="3">スキル 4</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <div class="text-sm font-semibold mb-1">レベル範囲 <span id="s4Cap" class="muted"></span></div>
+            <div class="flex items-center gap-4">
+              <label class="inline-label"><span class="muted">現在</span><select id="s4Cur" class="pill w-20"></select></label>
+              <label class="inline-label"><span class="muted">目標</span><select id="s4Tgt" class="pill w-20"></select></label>
+            </div>
+            <p id="s4Warn" class="text-xs err mt-1"></p>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-1">小計</div>
+            <div class="space-y-1 text-sm">
+              <div class="flex justify-between"><span class="muted">学習経験</span><span id="s4Exp">0</span></div>
+              <div class="flex justify-between"><span class="muted">学識の書</span><span id="s4Item">0</span></div>
+            </div>
+          </div>
+        </div>
+           <div class="exp-divider border-t mt-4"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1">スキル効果 (目標基準)</div>
+              <div class="skill-effect muted" data-index="3">-</div>
+            </div>
+      </div>
+    </section>
+
+    <div class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+      <h2 class="text-base font-bold mb-3">合計</h2>
+      <div class="grid sm:grid-cols-2 gap-4 text-sm">
+        <div>
+          <div class="font-semibold mb-1">専門家</div>
+          <div class="flex justify-between"><span class="muted">好感度</span><span id="sumExpertExp">0</span></div>
+          <div class="flex justify-between"><span class="muted">関係進展</span><span id="sumExpertMark">0</span></div>
+        </div>
+        <div>
+          <div class="font-semibold mb-1">スキル</div>
+          <div class="flex justify-between"><span class="muted">学習経験</span><span id="sumSkillExp">0</span></div>
+          <div class="flex justify-between"><span class="muted">学識の書</span><span id="sumSkillItem">0</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const SETTINGS = {
+      "Cyrille": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S4.csv" },
+        ]
+      },
+      "Agnes": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S4.csv" },
+        ]
+      },
+      "Holger": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S4.csv" },
+        ]
+      },
+      "Romulus": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S4.csv" },
+        ]
+      },
+      "Baldur": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S4.csv" },
+        ]
+      },
+      "Fabian": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S4.csv" },
+        ]
+      },
+    };
+
+    // ===== STATE =====
+    let expertLevels = [], expertExp = [], expertMark = [];
+    const skillLevels = [[],[],[],[]];
+    const skillExp  = [[],[],[],[]];
+    const skillItem = [[],[],[],[]];
+
+    // ===== DOM =====
+    const $ = (id)=>document.getElementById(id);
+    const selType = $("selType");
+    const expertCur = $("expertCur");
+    const expertTgt = $("expertTgt");
+    const expertWarn = document.getElementById("expertWarn"); // 없을 수 있음
+    const expertCap  = $("expertCap");
+    const sumExpertExp  = $("sumExpertExp");
+    const sumExpertMark = $("sumExpertMark");
+    const btnReset = $("btnReset");
+    const expertEffect =$("expertEffect");
+
+    const sRef = [1,2,3,4].map(i=>({
+      cur:$(`s${i}Cur`), tgt:$(`s${i}Tgt`),
+      warn:$(`s${i}Warn`), cap:$(`s${i}Cap`),
+      outE:$(`s${i}Exp`), outI:$(`s${i}Item`)
+    }));
+
+    const sumSkillExp = $("sumSkillExp");
+    const sumSkillItem = $("sumSkillItem");
+
+    // ===== UTIL =====
+    const fmt = n => Number(n||0).toLocaleString("ko-KR");
+    const isFilled = v => v !== "" && v !== null && v !== undefined && !Number.isNaN(+v);
+
+    function detectDelim(sample){
+      if (sample.includes("\t")) return "\t";
+      if (sample.includes(";"))  return ";";
+      return ",";
+    }
+
+    // 한 줄 CSV를 'Lv.N' 앞에서 강제 줄바꿈 (본체/スキル 공통)
+    function preprocessByLevel(text){
+      let s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
+      if (!s.includes("\n") && /Lv\.\s*\d+/i.test(s)) {
+        s = s.replace(/(Lv\.\s*\d+)/gi, "\n$1");
+      }
+      return s;
+    }
+
+    // 본체 CSV 파서 (정수 레벨, 누적/구간 자동)
+    function parseExpertCSV(text){
+      const pre = preprocessByLevel(text);
+      const lines = pre.split("\n").filter(l=>l.trim()!=="");
+      if (!lines.length) return { levels:[], expSteps:[], markSteps:[] };
+
+      const delim = detectDelim(lines[0]);
+      const hasHeader = /(레벨|lv|level|好感度|exp)/i.test(lines[0]);
+      const start = hasHeader ? 1 : 0;
+
+      const EXP = new Map(), MARK = new Map();
+      const rawLevels = [];
+      const toInt = s => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0], 10) : NaN; };
+      const toNum = s => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+
+      for (let i=start;i<lines.length;i++){
+        const c  = lines[i].split(delim);
+        const lv = toInt(c[0]);
+        if (!Number.isFinite(lv)) continue;
+        rawLevels.push(lv);
+        const ex = toNum(c[1]);
+        const mk = toNum(c[2]);
+        EXP.set(lv, ex);
+        MARK.set(lv, mk);
+      }
+
+      const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
+      if (levels.length < 2) return { levels, expSteps:[], markSteps:[] };
+
+      const isCum = (map)=>{
+        let prev=null, nondec=0, pos=0;
+        for (const lv of levels){
+          const v = map.get(lv) ?? 0;
+          if (prev!==null){ if (v>=prev) nondec++; if (v>prev) pos++; }
+          prev = v;
+        }
+        return nondec >= (levels.length-1) && pos>0;
+      };
+      const cumExp  = isCum(EXP);
+      const cumMark = isCum(MARK);
+
+      const expSteps=[], markSteps=[];
+      for (let i=0;i<levels.length-1;i++){
+        const a=levels[i], b=levels[i+1];
+        if (cumExp) {
+          expSteps[i] = Math.max(0, (EXP.get(b)||0) - (EXP.get(a)||0));
+        } else {
+          // 비누적 CSV: '해당(目標) 레벨 비용'을 사용 (1→2 = Lv2의 값)
+          expSteps[i] = Math.max(0, (EXP.get(b)||0));
+        }
+        if (cumMark) {
+          markSteps[i] = Math.max(0, (MARK.get(b)||0) - (MARK.get(a)||0));
+        } else {
+          markSteps[i] = Math.max(0, (MARK.get(b)||0));
+        }
+      }
+      return { levels, expSteps, markSteps };
+    }
+
+    // スキル CSV (2열/3열 자동)
+    function parseSkillCSV(text){
+      const pre = preprocessByLevel(text);
+      const rows = pre.split("\n").filter(l=>l.trim()!=="");
+      if (!rows.length) return { levels:[], expSteps:[], itemSteps:[] };
+      const delim = detectDelim(rows[0]);
+      const headerLooks = /(레벨|lv|level|exp|item|아이템|学識の書|好感度)/i.test(rows[0]);
+      const start = headerLooks ? 1 : 0;
+
+      const exp=[], item=[], levelsFromFile=[];
+      const toInt = s => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+      const toNum = s => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+
+      for (let i=start;i<rows.length;i++){
+        const c = rows[i].split(delim);
+        if (c.length >= 3){                 // Level,Exp,Item
+          const lv = toInt(c[0]); if (Number.isFinite(lv)) levelsFromFile.push(lv);
+          exp.push(toNum(c[1])); item.push(toNum(c[2]));
+        }else{                              // Exp,Item
+          exp.push(toNum(c[0])); item.push(toNum(c[1]));
+        }
+      }
+      const L = Math.max(1, exp.length);
+      let levels;
+      if (levelsFromFile.length){
+        const uniq = [...new Set(levelsFromFile)].sort((a,b)=>a-b);
+        levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L+1}, (_,i)=>i);
+      }else{
+        levels = Array.from({length:L+1}, (_,i)=>i); // 0..L
+      }
+      return { levels, expSteps:exp, itemSteps:item };
+    }
+
+    // 옵션 렌더링 (Lv.포맷 지원)
+    function renderOptions(selectEl, levels, useDot=false){
+      const label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
+      const opts = ['<option value=""></option>']
+        .concat(levels.map(lv => `<option value="${lv}">${label(lv)}</option>`))
+        .join("");
+      selectEl.innerHTML = opts;
+    }
+
+    function renderTargetOptions(selectEl, levels, greaterThan, useDot=false){
+      const label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
+      const filtered = levels.filter(lv => lv > greaterThan);
+      const opts = ['<option value=""></option>']
+        .concat(filtered.map(lv => `<option value="${lv}">${label(lv)}</option>`))
+        .join("");
+      selectEl.innerHTML = opts;
+    }
+
+    // CORS 친화 fetch + 디버깅
+    async function fetchText(url){
+      try{
+        const r = await fetch(url, { cache:"no-store", mode:"cors", redirect:"follow", referrerPolicy:"no-referrer" });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return await r.text();
+      }catch(err){
+        console.error("Network/CORS Error:", url, err);
+        throw err;
+      }
+    }
+
+    async function loadDataFor(type){
+      const conf = SETTINGS[type];
+      // 본체
+      if (conf.base?.csv){
+        try{
+          const txt = await fetchText(conf.base.csv);
+          const { levels, expSteps, markSteps } = parseExpertCSV(txt);
+          expertLevels = levels;
+          expertExp    = expSteps;
+          expertMark   = markSteps;
+          renderOptions(expertCur, levels, true);  // 現在: 전체
+          renderTargetOptions(expertTgt, [], 0, true); // 目標: 비워두기
+          if (expertWarn) expertWarn.textContent = "";
+        }catch(e){
+          if (expertWarn) expertWarn.textContent = "Not Found Data. Url/CORS Check";
+          expertLevels = []; expertExp=[]; expertMark=[];
+          renderOptions(expertCur, [], true);
+          renderOptions(expertTgt, [], true);
+        }
+      }
+      // スキル 1~4
+      for (let i=0;i<4;i++){
+        const s = conf.skills?.[i];
+        const ref = sRef[i];
+        if (!ref) continue;
+        if (s && s.csv){
+          try{
+            const txt = await fetchText(s.csv);
+            const { levels, expSteps, itemSteps } = parseSkillCSV(txt);
+            skillLevels[i] = levels;
+            skillExp[i]    = expSteps;
+            skillItem[i]   = itemSteps;
+            ref.cap.textContent = levels.length ? `(Max Lv.${levels[levels.length-1]})` : "";
+            renderOptions(ref.cur, levels, true);           // 現在: 전체
+            renderTargetOptions(ref.tgt, [], 0, true);      // 目標: 비워두기
+            ref.warn.textContent = "";
+          }catch(e){
+            console.warn("[CSV] スキル 読み込みに失敗しました", i+1, e);
+            skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
+            ref.cap.textContent = "";
+            renderOptions(ref.cur, [], true);
+            renderOptions(ref.tgt, [], true);
+            ref.warn.textContent = "スキル 読み込みに失敗しました";
+          }
+        }else{
+          skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
+          ref.cap.textContent = "";
+          renderOptions(ref.cur, [], true);
+          renderOptions(ref.tgt, [], true);
+          ref.warn.textContent = "";
+        }
+        ref.outE.textContent = "0";
+        ref.outI.textContent = "0";
+      }
+      // 총합 초기화
+      if (sumExpertExp)  sumExpertExp.textContent  = "0";
+      if (sumExpertMark) sumExpertMark.textContent = "0";
+      sumSkillExp.textContent  = "0";
+      sumSkillItem.textContent = "0";
+
+      buildFullExpertEffects(type, expertLevels);
+      updateExpertEffect();
+
+      sendHeightToParent();
+    }
+
+    function sumRangeSteps(steps, fromLv, toLv){
+      let s=0; for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0; return s;
+    }
+
+    function calc(){
+      // 본체
+      let eExp=0, eMark=0;
+      const curLv = +expertCur.value, tgtLv = +expertTgt.value;
+      if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
+        const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
+        if (expertWarn) {
+          expertWarn.textContent = (ti<=fi) ? "" : "";
+        }
+        if (fi>=0 && ti>fi){
+          for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
+        }
+      } else {
+        if (expertWarn) expertWarn.textContent = "";
+      }
+      if (sumExpertExp)  sumExpertExp.textContent  = fmt(eExp);
+      if (sumExpertMark) sumExpertMark.textContent = fmt(eMark);
+
+      // スキル
+      let tExp=0, tItem=0;
+      sRef.forEach((ref,i)=>{
+        let sE=0, sI=0;
+        const cV = ref.cur.value, tV = ref.tgt.value;
+        if (isFilled(cV) && isFilled(tV) && skillLevels[i].length>1){
+          const c=+cV, t=+tV;
+          ref.warn.textContent = (t<=c) ? "目標レベルは現在より大きくなければなりません." : "";
+          if (t>c){ sE = sumRangeSteps(skillExp[i], c, t); sI = sumRangeSteps(skillItem[i], c, t); }
+        } else {
+          ref.warn.textContent = "";
+        }
+        ref.outE.textContent = fmt(sE);
+        ref.outI.textContent = fmt(sI);
+        tExp += sE; tItem += sI;
+      });
+      sumSkillExp.textContent  = fmt(tExp);
+      sumSkillItem.textContent = fmt(tItem);
+    }
+
+    function clearAll(){
+      expertCur.value = "";
+      expertTgt.innerHTML = '<option value=""></option>';
+      if (expertWarn) expertWarn.textContent = "";
+      if (sumExpertExp)  sumExpertExp.textContent  = "0";
+      if (sumExpertMark) sumExpertMark.textContent = "0";
+      sRef.forEach(ref=>{
+        ref.cur.value="";
+        ref.tgt.innerHTML = '<option value=""></option>';
+        ref.warn.textContent=""; 
+        ref.outE.textContent="0"; 
+        ref.outI.textContent="0";
+      });
+      sumSkillExp.textContent  = "0";
+      sumSkillItem.textContent = "0";
+      
+      document.querySelectorAll(".skill-effect").forEach(el => { el.textContent = "-"; });
+      expertEffect.textContent = "-";
+    }
+
+    // ====== 자동 目標 = 現在+1 ======
+    expertCur.addEventListener("change", () => {
+      const cur = +expertCur.value;
+      if (!isFilled(cur)) { expertTgt.innerHTML = '<option value=""></option>'; return; }
+      renderTargetOptions(expertTgt, expertLevels, cur, true);
+      // 첫 유효 옵션(=cur+1)이 있으면 자동 선택
+      if (expertTgt.options.length > 1) expertTgt.selectedIndex = 1;
+      calc();
+      updateExpertEffect();
+    });
+
+    sRef.forEach((ref, i) => {
+      ref.cur.addEventListener("change", () => {
+        const cur = +ref.cur.value;
+        if (!isFilled(cur)) { ref.tgt.innerHTML = '<option value=""></option>'; ref.warn.textContent=""; calc(); return; }
+        renderTargetOptions(ref.tgt, skillLevels[i], cur, true);
+        if (ref.tgt.options.length > 1) ref.tgt.selectedIndex = 1;
+        ref.warn.textContent = "";
+        calc();
+      });
+    });
+
+    expertTgt.addEventListener("change", () => {
+      calc();
+      updateExpertEffect();
+    });
+
+    // 변동에 따른 계산
+    [expertTgt].forEach(el=>{ el.addEventListener("change", calc); });
+    sRef.forEach(ref=>{
+      ref.tgt.addEventListener("change", calc);
+    });
+
+    selType.addEventListener("change", async ()=>{ 
+      await loadDataFor(selType.value); 
+      clearAll();
+      buildFullExpertEffects(selType.value, expertLevels);
+      updateSkillTitles();
+      updateSkillEffects();
+      updateExpertEffect();
+    });
+    btnReset.addEventListener("click", clearAll);
+    
+    (async function init(){ await loadDataFor(selType.value); })();
+  });
+  </script>
+<script>
+// ───────── 본체(専門家) 레벨별 효과: 오버라이드 표 ─────────
+// EXPERT_EFFECTS_OVERRIDE[専門家키][레벨] = "문구"
+const EXPERT_EFFECTS_OVERRIDE = {
+  Cyrille: {
+    1:  "熊狩行動で獲得するダメージポイントが +2% 増加。（自身のみ有効）",
+    10: "熊狩行動で獲得するダメージポイントが +4% 増加。（自身のみ有効）",
+    20: "熊狩行動で獲得するダメージポイントが +6% 増加。（自身のみ有効）",
+    30: "熊狩行動で獲得するダメージポイントが +9% 増加。（自身のみ有効）",
+    40: "熊狩行動で獲得するダメージポイントが +12% 増加。（自身のみ有効）",
+    50: "熊狩行動で獲得するダメージポイントが +15% 増加。（自身のみ有効）",
+    60: "熊狩行動で獲得するダメージポイントが +18% 増加。（自身のみ有効）",
+    70: "熊狩行動で獲得するダメージポイントが +21% 増加。（自身のみ有効）",
+    80: "熊狩行動で獲得するダメージポイントが +24% 増加。（自身のみ有効）",
+    90: "熊狩行動で獲得するダメージポイントが +27% 増加。（自身のみ有効）",
+    100: "熊狩行動で獲得するダメージポイントが +30% 増加。（自身のみ有効）",
+  },
+  Agnes: {
+    1: "120分毎に 1 個の探究者の宝箱を、毎日最大 10 個まで獲得可能。獲得数はUTC0時にリセット。",
+    10: "120分毎に 1 個の探究者の宝箱を、毎日最大 12 個まで獲得可能。獲得数はUTC0時にリセット。",
+    20: "120分毎に 1 個の探究者の宝箱を、毎日最大 14 個まで獲得可能。獲得数はUTC0時にリセット。",
+    30: "120分毎に 2 個の探究者の宝箱を、毎日最大 16 個まで獲得可能。獲得数はUTC0時にリセット。",
+    40: "120分毎に 2 個の探究者の宝箱を、毎日最大 18 個まで獲得可能。獲得数はUTC0時にリセット。",
+    50: "120分毎に 3 個の探究者の宝箱を、毎日最大 20 個まで獲得可能。獲得数はUTC0時にリセット。",
+    60: "120分毎に 3 個の探究者の宝箱を、毎日最大 22 個まで獲得可能。獲得数はUTC0時にリセット。",
+    70: "120分毎に 4 個の探究者の宝箱を、毎日最大 24 個まで獲得可能。獲得数はUTC0時にリセット。",
+    80: "120分毎に 4 個の探究者の宝箱を、毎日最大 26 個まで獲得可能。獲得数はUTC0時にリセット。",
+    90: "120分毎に 5 個の探究者の宝箱を、毎日最大 28 個まで獲得可能。獲得数はUTC0時にリセット。",
+    100: "120分毎に 5 個の探究者の宝箱を、毎日最大 30 個まで獲得可能。獲得数はUTC0時にリセット。",
+  },
+  Holger:  { 
+    1: "各闘技場での戦闘終了後、50% の確率で観客から贈り物として 1個の剣闘士の星宝箱を獲得。",
+    10: "各闘技場での戦闘終了後、55% の確率で観客から贈り物として 1個の剣闘士の星宝箱を獲得。",
+    20: "各闘技場での戦闘終了後、60% の確率で観客から贈り物として 1個の剣闘士の星宝箱を獲得。",
+    30: "各闘技場での戦闘終了後、65% の確率で観客から贈り物として 1個の剣闘士の星宝箱を獲得。",
+    40: "各闘技場での戦闘終了後、70% の確率で観客から贈り物として 1個の剣闘士の星宝箱を獲得。",
+    50: "各闘技場での戦闘終了後、75% の確率で観客から贈り物として 2個の剣闘士の星宝箱を獲得。",
+    60: "各闘技場での戦闘終了後、80% の確率で観客から贈り物として 2個の剣闘士の星宝箱を獲得。",
+    70: "各闘技場での戦闘終了後、85% の確率で観客から贈り物として 2個の剣闘士の星宝箱を獲得。",
+    80: "各闘技場での戦闘終了後、90% の確率で観客から贈り物として 2個の剣闘士の星宝箱を獲得。",
+    90: "各闘技場での戦闘終了後、95% の確率で観客から贈り物として 2個の剣闘士の星宝箱を獲得。",
+    100: "各闘技場での戦闘終了後、100% の確率で観客から贈り物として 3個の剣闘士の星宝箱を獲得。",
+  },
+  Romulus: { 
+    1: "出撃部隊の上限が 300 上昇。",
+    10: "出撃部隊の上限が 600 上昇。",
+    20: "出撃部隊の上限が 1,000 上昇。",
+    30: "出撃部隊の上限が 1,500 上昇。",
+    40: "出撃部隊の上限が 2,000 上昇。",
+    50: "出撃部隊の上限が 3,000 上昇。",
+    60: "出撃部隊の上限が 4,000 上昇。",
+    70: "出撃部隊の上限が 5,500 上昇。",
+    80: "出撃部隊の上限が 7,000 上昇。",
+    90: "出撃部隊の上限が 8,500 上昇。",
+    100: "出撃部隊の上限が 10,000 上昇。",
+  },
+  Baldur: {
+    1: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 20% 증가",
+    10: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 28% 증가",
+    20: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 36% 증가",
+    30: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 44% 증가",
+    40: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 52% 증가",
+    50: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 60% 증가",
+    60: "연맹상점 상품 10% 할인, 개인 격려 보물상자 보상 68% 증가",
+    70: "연맹상점 상품 10% 할인, 개인 격려 보물상자 보상 76% 증가",
+    80: "연맹상점 상품 10% 할인, 개인 격려 보물상자 보상 84% 증가",
+    90: "연맹상점 상품 10% 할인, 개인 격려 보물상자 보상 92% 증가",
+    100: "연맹상점 상품 15% 할인, 개인 격려 보물상자 보상 100% 증가",
+  },
+  Fabian: {
+    1: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 2% 증가",
+    10: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 4% 증가",
+    20: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 6% 증가",
+    30: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 9% 증가",
+    40: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 12% 증가",
+    50: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 15% 증가",
+    60: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 18% 증가",
+    70: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 21% 증가",
+    80: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 24% 증가",
+    90: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 27% 증가",
+    100: "무기공장 및 설원전쟁에서 아군부대의 공격력 및 방어력 30% 증가",
+  },
+};
+
+// 런타임 풀커버리지 보관소
+const EXPERT_EFFECTS_FULL = { Cyrille:[], Agnes:[], Holger:[], Romulus:[] };
+
+// 現在 로드된 expertLevels를 기준으로 1~최대레벨까지 모두 채움
+function buildFullExpertEffects(expert, expertLevels) {
+  const maxLv = (expertLevels && expertLevels.length) ? expertLevels[expertLevels.length - 1] : 0;
+  const arr = Array.from({length: maxLv + 1}, (_, lv) => {
+    if (lv === 0) return ""; // Lv0 없음
+    return "-"; // 기본 문구
+  });
+  // 오버라이드 병합
+  const ov = EXPERT_EFFECTS_OVERRIDE[expert] || {};
+  Object.keys(ov).forEach(k => {
+    const lv = Number(k);
+    if (Number.isFinite(lv) && lv >= 1 && lv <= maxLv) arr[lv] = ov[k];
+  });
+  EXPERT_EFFECTS_FULL[expert] = arr;
+}
+
+function getExpertEffect(expert, level) {
+  return (EXPERT_EFFECTS_FULL[expert] || [])[level] || "";
+}
+
+function updateExpertEffect() {
+  const expert = document.getElementById("selType")?.value;
+  const tgtSel = document.getElementById("expertTgt");
+  const lv = Number(String(tgtSel?.value || "0").replace(/[^0-9]/g, "")) || 0;
+  const out = document.getElementById("expertEffect");
+  if (!out) return;
+  out.textContent = lv ? (getExpertEffect(expert, lv)) : "-";
+}
+</script>
+<script>
+// ================= 레벨별 효과 데이터 =================
+// 구조: SKILL_EFFECTS[専門家키][スキル인덱스][레벨] = "표시문구"
+//  - 専門家키: selType의 <option value="..."> 값과 일치 (Cyrille/Agnes/Holger/Romulus)
+//  - スキル인덱스: 0=スキル1, 1=スキル2, 2=スキル3, 3=スキル4
+//  - 레벨: 정수 (目標 select의 값과 동일)
+const SKILL_EFFECTS = {
+  Cyrille: [
+    // スキル1
+    {
+      1:"熊狩行動で発起する集結の容量上限が 30,000 上昇。",
+      2:"熊狩行動で発起する集結の容量上限が 60,000 上昇。",
+      3:"熊狩行動で発起する集結の容量上限が 90,000 上昇。",
+      4:"熊狩行動で発起する集結の容量上限が 120,000 上昇。",
+      5:"熊狩行動で発起する集結の容量上限が 150,000 上昇。",
+      6:"熊狩行動で発起する集結の容量上限が 180,000 上昇。",
+      7:"熊狩行動で発起する集結の容量上限が 210,000 上昇。",
+      8:"熊狩行動で発起する集結の容量上限が 240,000 上昇。",
+      9:"熊狩行動で発起する集結の容量上限が 270,000 上昇。",
+      10:"熊狩行動で発起する集結の容量上限が 300,000 上昇。",
+    },
+    // スキル2
+    {
+      1:"各期の熊狩行動に参加すると追加で 1 個の「経験強化パーツ100ポイント」を獲得。",
+      2:"各期の熊狩行動に参加すると追加で 2 個の「経験強化パーツ100ポイント」を獲得。",
+      3:"各期の熊狩行動に参加すると追加で 3 個の「経験強化パーツ100ポイント」を獲得。",
+      4:"各期の熊狩行動に参加すると追加で 4 個の「経験強化パーツ100ポイント」を獲得。",
+      5:"各期の熊狩行動に参加すると追加で 5 個の「経験強化パーツ100ポイント」を獲得。",
+    },
+    // スキル3
+    {
+      1:"各期の熊狩行動に参加すると追加で 1 個の精錬エナジー源石を獲得。",
+      2:"各期の熊狩行動に参加すると追加で 2 個の精錬エナジー源石を獲得。",
+      3:"各期の熊狩行動に参加すると追加で 3 個の精錬エナジー源石を獲得。",
+      4:"各期の熊狩行動に参加すると追加で 4 個の精錬エナジー源石を獲得。",
+      5:"各期の熊狩行動に参加すると追加で 5 個の精錬エナジー源石を獲得。",
+    },
+    // スキル4
+    {
+      1:"熊狩行動に参加する出征部隊の容量上限が 3,000 上昇。",
+      2:"熊狩行動に参加する出征部隊の容量上限が 6,000 上昇。",
+      3:"熊狩行動に参加する出征部隊の容量上限が 9,000 上昇。",
+      4:"熊狩行動に参加する出征部隊の容量上限が 12,000 上昇。",
+      5:"熊狩行動に参加する出征部隊の容量上限が 15,000 上昇。",
+      6:"熊狩行動に参加する出征部隊の容量上限が 18,000 上昇。",
+      7:"熊狩行動に参加する出征部隊の容量上限が 21,000 上昇。",
+      8:"熊狩行動に参加する出征部隊の容量上限が 24,000 上昇。",
+      9:"熊狩行動に参加する出征部隊の容量上限が 27,000 上昇。",
+      10:"熊狩行動に参加する出征部隊の容量上限が 30,000 上昇。",
+    },
+  ],
+  Agnes: [ 
+    // スキル1
+    {
+      1:"毎日追加で 2 件の情報イベントを発見できるようになる。",
+      2:"毎日追加で 3 件の情報イベントを発見できるようになる。",
+      3:"毎日追加で 4 件の情報イベントを発見できるようになる。",
+      4:"毎日追加で 6 件の情報イベントを発見できるようになる。",
+      5:"毎日追加で 8 件の情報イベントを発見できるようになる。",
+    },
+    // スキル2
+    {
+      1:"倉庫で1回あたりに産出される領主の体力が 10 増加。",
+      2:"倉庫で1回あたりに産出される領主の体力が 15 増加。",
+      3:"倉庫で1回あたりに産出される領主の体力が 20 増加。",
+      4:"倉庫で1回あたりに産出される領主の体力が 30 増加。",
+      5:"倉庫で1回あたりに産出される領主の体力が 40 増加。",
+    },
+    // スキル3
+    {
+      1:"各建造時間を 2 時間短縮。",
+      2:"各建造時間を 3 時間短縮。",
+      3:"各建造時間を 4 時間短縮。",
+      4:"各建造時間を 6 時間短縮。",
+      5:"各建造時間を 8 時間短縮。",
+    },
+    // スキル4
+    {
+      1:"最後のデイリーミッション完了時に宝箱を開けると、追加で 20 枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 1 回増加。",
+      2:"最後のデイリーミッション完了時に宝箱を開けると、追加で 30枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 1 回増加。",
+      3:"最後のデイリーミッション完了時に宝箱を開けると、追加で 40枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 1 回増加。",
+      4:"最後のデイリーミッション完了時に宝箱を開けると、追加で 50枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 2 回増加。",
+      5:"最後のデイリーミッション完了時に宝箱を開けると、追加で 60枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 2 回増加。",
+      6:"最後のデイリーミッション完了時に宝箱を開けると、追加で 70枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 2 回増加。",
+      7:"最後のデイリーミッション完了時に宝箱を開けると、追加で 80枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 3 回増加。",
+      8:"最後のデイリーミッション完了時に宝箱を開けると、追加で 90枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 3 回増加。",
+      9:"最後のデイリーミッション完了時に宝箱を開けると、追加で 100枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 3 回増加。",
+      10:"最後のデイリーミッション完了時に宝箱を開けると、追加で 120枚の神秘の紋章を獲得。さらに神秘ショップの無料更新回数が 4 回増加。",
+    },
+  ],  // 전 레벨 채워 넣기
+  Holger: [ 
+    // スキル1
+    {
+      1: "闘技場での戦闘時に攻撃力とHPが 2% 上昇。",
+      2: "闘技場での戦闘時に攻撃力とHPが 4% 上昇。",
+      3: "闘技場での戦闘時に攻撃力とHPが 6% 上昇。",
+      4: "闘技場での戦闘時に攻撃力とHPが 8% 上昇。",
+      5: "闘技場での戦闘時に攻撃力とHPが 10% 上昇。",
+      6: "闘技場での戦闘時に攻撃力とHPが 12% 上昇。",
+      7: "闘技場での戦闘時に攻撃力とHPが 14% 上昇。",
+      8: "闘技場での戦闘時に攻撃力とHPが 16% 上昇。",
+      9: "闘技場での戦闘時に攻撃力とHPが 18% 上昇。",
+      10: "闘技場での戦闘時に攻撃力とHPが 20% 上昇。",
+    },
+    // スキル2
+    {
+      1:"それぞれ競技コイン 5% を追加獲得。",
+      2:"それぞれ競技コイン 10% を追加獲得。",
+      3:"それぞれ競技コイン 15% を追加獲得。",
+      4:"それぞれ競技コイン 20% を追加獲得。",
+      5:"それぞれ競技コイン 25% を追加獲得。",
+      6:"それぞれ競技コイン 30% を追加獲得。",
+      7:"それぞれ競技コイン 35% を追加獲得。",
+      8:"それぞれ競技コイン 40% を追加獲得。",
+      9:"それぞれ競技コイン 45% を追加獲得。",
+      10:"それぞれ競技コイン 50% を追加獲得。",
+    },
+    // スキル3
+    {
+      1: "競技ショップで 1 個の追加アイテムを購入可能、これらの商品の価格を 5% 割引。",
+      2: "競技ショップで 1 個の追加アイテムを購入可能、これらの商品の価格を 10% 割引。",
+      3: "競技ショップで 1 個の追加アイテムを購入可能、これらの商品の価格を 15% 割引。",
+      4: "競技ショップで 1 個の追加アイテムを購入可能、これらの商品の価格を 20% 割引。",
+      5: "競技ショップで 1 個の追加アイテムを購入可能、これらの商品の価格を 25% 割引。",
+      6: "競技ショップで 2 個の追加アイテムを購入可能、これらの商品の価格を 30% 割引。",
+      7: "競技ショップで 2 個の追加アイテムを購入可能、これらの商品の価格を 35% 割引。",
+      8: "競技ショップで 2 個の追加アイテムを購入可能、これらの商品の価格を 40% 割引。",
+      9: "競技ショップで 2 個の追加アイテムを購入可能、これらの商品の価格を 45% 割引。",
+      10:"競技ショップで 3 個の追加アイテムを購入可能、これらの商品の価格を 50% 割引。",
+    },
+    // スキル4
+    {
+      1: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 2% 上昇。",
+      2: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 4% 上昇。",
+      3: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 6% 上昇。",
+      4: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 8% 上昇。",
+      5: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 10% 上昇。",
+      6: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 12% 上昇。",
+      7: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 14% 上昇。",
+      8: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 16% 上昇。",
+      9: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 18% 上昇。",
+      10: "ホルガーの特訓により、競技場の戦闘時に英雄達の攻撃力とHPが 20% 上昇。",
+    },
+  ],
+  Romulus: [ 
+    // スキル1
+    {
+      1: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 150 名まで無料募集でき、兵士募集所から追加で 1 枚の忠誠タグを獲得。",
+      2: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 200 名まで無料募集でき、兵士募集所から追加で 2 枚の忠誠タグを獲得。",
+      3: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 250 名まで無料募集でき、兵士募集所から追加で 3 枚の忠誠タグを獲得。",
+      4: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 300 名まで無料募集でき、兵士募集所から追加で 4 枚の忠誠タグを獲得。",
+      5: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 350 名まで無料募集でき、兵士募集所から追加で 5 枚の忠誠タグを獲得。",
+      6: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 400 名まで無料募集でき、兵士募集所から追加で 6 枚の忠誠タグを獲得。",
+      7: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 450 名まで無料募集でき、兵士募集所から追加で 7 枚の忠誠タグを獲得。",
+      8: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 500 名まで無料募集でき、兵士募集所から追加で 8 枚の忠誠タグを獲得。",
+      9: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 550 名まで無料募集でき、兵士募集所から追加で 9 枚の忠誠タグを獲得。",
+      10: "毎日任意の兵営から、その兵営で解放済の最高レベルの兵士を 600 名まで無料募集でき、兵士募集所から追加で 10 枚の忠誠タグを獲得。",
+    },
+    // スキル2
+    {
+      1:"部隊の攻撃力と防御力が 0.5% 上昇。",
+      2:"部隊の攻撃力と防御力が 1.0% 上昇。",
+      3:"部隊の攻撃力と防御力が 1.5% 上昇。",
+      4:"部隊の攻撃力と防御力が 2.0% 上昇。",
+      5:"部隊の攻撃力と防御力が 2.5% 上昇。",
+      6:"部隊の攻撃力と防御力が 3.0% 上昇。",
+      7:"部隊の攻撃力と防御力が 3.5% 上昇。",
+      8:"部隊の攻撃力と防御力が 4.0% 上昇。",
+      9:"部隊の攻撃力と防御力が 4.5% 上昇。",
+      10:"部隊の攻撃力と防御力が 5.0% 上昇。",
+      11:"部隊の攻撃力と防御力が 5.5% 上昇。",
+      12:"部隊の攻撃力と防御力が 6.0% 上昇。",
+      13:"部隊の攻撃力と防御力が 6.5% 上昇。",
+      14:"部隊の攻撃力と防御力が 7.0% 上昇。",
+      15:"部隊の攻撃力と防御力が 7.5% 上昇。",
+      16:"部隊の攻撃力と防御力が 8.0% 上昇。",
+      17:"部隊の攻撃力と防御力が 8.5% 上昇。",
+      18:"部隊の攻撃力と防御力が 9.0% 上昇。",
+      19:"部隊の攻撃力と防御力が 0.5% 上昇。",
+      20:"部隊の攻撃力と防御力が 10% 上昇。",
+    },
+    // スキル3
+    {
+      1:"部隊の殺傷力とHPが 0.5% 上昇。",
+      2:"部隊の殺傷力とHPが 1.0% 上昇。",
+      3:"部隊の殺傷力とHPが 1.5% 上昇。",
+      4:"部隊の殺傷力とHPが 2.0% 上昇。",
+      5:"部隊の殺傷力とHPが 2.5% 上昇。",
+      6:"部隊の殺傷力とHPが 3.0% 上昇。",
+      7:"部隊の殺傷力とHPが 3.5% 上昇。",
+      8:"部隊の殺傷力とHPが 4.0% 上昇。",
+      9:"部隊の殺傷力とHPが 4.5% 上昇。",
+      10:"部隊の殺傷力とHPが 5.0% 上昇。",
+      11:"部隊の殺傷力とHPが 5.5% 上昇。",
+      12:"部隊の殺傷力とHPが 6.0% 上昇。",
+      13:"部隊の殺傷力とHPが 6.5% 上昇。",
+      14:"部隊の殺傷力とHPが 7.0% 上昇。",
+      15:"部隊の殺傷力とHPが 7.5% 上昇。",
+      16:"部隊の殺傷力とHPが 8.0% 上昇。",
+      17:"部隊の殺傷力とHPが 8.5% 上昇。",
+      18:"部隊の殺傷力とHPが 9.0% 上昇。",
+      19:"部隊の殺傷力とHPが 0.5% 上昇。",
+      20:"部隊の殺傷力とHPが 10% 上昇。",
+    },
+    // スキル4
+    {
+      1:"集結容量が 5,000 上昇。",
+      2:"集結容量が 10,000 上昇。",
+      3:"集結容量が 15,000 上昇。",
+      4:"集結容量が 20,000 上昇。",
+      5:"集結容量が 25,000 上昇。",
+      6:"集結容量が 30,000 上昇。",
+      7:"集結容量が 35,000 上昇。",
+      8:"集結容量が 40,000 上昇。",
+      9:"集結容量が 45,000 上昇。",
+      10:"集結容量が 50,000 上昇。",
+      11:"集結容量が 55,000 上昇。",
+      12:"集結容量が 60,000 上昇。",
+      13:"集結容量が 65,000 上昇。",
+      14:"集結容量が 70,000 上昇。",
+      15:"集結容量が 75,000 上昇。",
+      16:"集結容量が 80,000 上昇。",
+      17:"集結容量が 85,000 上昇。",
+      18:"集結容量が 90,000 上昇。",
+      19:"集結容量が 95,000 上昇。",
+      20:"集結容量が 100,000 上昇。",
+    },
+  ],
+  Baldur: [
+    //スキル1
+    {
+      1:"연맹총동원 포인트 2% 증가, 이정표 등급 1개 증가",
+      2:"연맹총동원 포인트 4% 증가, 이정표 등급 1개 증가",
+      3:"연맹총동원 포인트 6% 증가, 이정표 등급 1개 증가",
+      4:"연맹총동원 포인트 8% 증가, 이정표 등급 1개 증가",
+      5:"연맹총동원 포인트 10% 증가, 이정표 등급 1개 증가",
+      6:"연맹총동원 포인트 12% 증가, 이정표 등급 2개 증가",
+      7:"연맹총동원 포인트 14% 증가, 이정표 등급 2개 증가",
+      8:"연맹총동원 포인트 16% 증가, 이정표 등급 2개 증가",
+      9:"연맹총동원 포인트 18% 증가, 이정표 등급 2개 증가",
+      10:"연맹총동원 포인트 20% 증가, 이정표 등급 3개 증가",
+    },
+    //スキル2
+    {
+      1:"연맹챔피언십 배지 획득 수량 5% 증가, 챔피언십 상점 상품 1개 추가",
+      2:"연맹챔피언십 배지 획득 수량 10% 증가, 챔피언십 상점 상품 1개 추가",
+      3:"연맹챔피언십 배지 획득 수량 15% 증가, 챔피언십 상점 상품 1개 추가",
+      4:"연맹챔피언십 배지 획득 수량 20% 증가, 챔피언십 상점 상품 1개 추가",
+      5:"연맹챔피언십 배지 획득 수량 25% 증가, 챔피언십 상점 상품 1개 추가",
+      6:"연맹챔피언십 배지 획득 수량 30% 증가, 챔피언십 상점 상품 2개 추가",
+      7:"연맹챔피언십 배지 획득 수량 35% 증가, 챔피언십 상점 상품 2개 추가",
+      8:"연맹챔피언십 배지 획득 수량 40% 증가, 챔피언십 상점 상품 2개 추가",
+      9:"연맹챔피언십 배지 획득 수량 45% 증가, 챔피언십 상점 상품 2개 추가",
+      10:"연맹챔피언십 배지 획득 수량 50% 증가, 챔피언십 상점 상품 3개 추가",
+    },
+    //スキル3
+    {
+      1:"미치광이 조이 획득 포인트 5% 증가, 20만 포인트당 보물상자 1개 획득",
+      2:"미치광이 조이 획득 포인트 10% 증가, 20만 포인트당 보물상자 2개 획득",
+      3:"미치광이 조이 획득 포인트 15% 증가, 20만 포인트당 보물상자 3개 획득",
+      4:"미치광이 조이 획득 포인트 20% 증가, 20만 포인트당 보물상자 4개 획득",
+      5:"미치광이 조이 획득 포인트 25% 증가, 20만 포인트당 보물상자 5개 획득",
+      6:"미치광이 조이 획득 포인트 30% 증가, 20만 포인트당 보물상자 6개 획득",
+      7:"미치광이 조이 획득 포인트 35% 증가, 20만 포인트당 보물상자 7개 획득",
+      8:"미치광이 조이 획득 포인트 40% 증가, 20만 포인트당 보물상자 8개 획득",
+      9:"미치광이 조이 획득 포인트 45% 증가, 20만 포인트당 보물상자 9개 획득",
+      10:"미치광이 조이 획득 포인트 50% 증가, 20만 포인트당 보물상자 10개 획득",
+    },
+    //スキル4
+    {
+      1:"연맹 대작전 획득 포인트 5% 증가, 일일진행도 보상 1등급 증가",
+      2:"연맹 대작전 획득 포인트 10% 증가, 일일진행도 보상 1등급 증가",
+      3:"연맹 대작전 획득 포인트 15% 증가, 일일진행도 보상 1등급 증가",
+      4:"연맹 대작전 획득 포인트 20% 증가, 일일진행도 보상 1등급 증가",
+      5:"연맹 대작전 획득 포인트 25% 증가, 일일진행도 보상 1등급 증가",
+      6:"연맹 대작전 획득 포인트 30% 증가, 일일진행도 보상 2등급 증가",
+      7:"연맹 대작전 획득 포인트 35% 증가, 일일진행도 보상 2등급 증가",
+      8:"연맹 대작전 획득 포인트 40% 증가, 일일진행도 보상 2등급 증가",
+      9:"연맹 대작전 획득 포인트 45% 증가, 일일진행도 보상 2등급 증가",
+      10:"연맹 대작전 획득 포인트 50% 증가, 일일진행도 보상 3등급 증가",
+    },
+  ],
+  Fabian: [
+    //スキル1
+    {
+      1:"무기공장 및 설원전쟁에서 빙산코인 증가 10%",
+      2:"무기공장 및 설원전쟁에서 빙산코인 증가 20%",
+      3:"무기공장 및 설원전쟁에서 빙산코인 증가 30%",
+      4:"무기공장 및 설원전쟁에서 빙산코인 증가 40%",
+      5:"무기공장 및 설원전쟁에서 빙산코인 증가 50%",
+      6:"무기공장 및 설원전쟁에서 빙산코인 증가 60%",
+      7:"무기공장 및 설원전쟁에서 빙산코인 증가 70%",
+      8:"무기공장 및 설원전쟁에서 빙산코인 증가 80%",
+      9:"무기공장 및 설원전쟁에서 빙산코인 증가 90%",
+      10:"무기공장 및 설원전쟁에서 빙산코인 증가 100%",
+    },
+    //スキル2
+    {
+      1:"무기공장 및 설원전쟁에서 무료치료 병사수 : 100,000",
+      2:"무기공장 및 설원전쟁에서 무료치료 병사수 : 200,000",
+      3:"무기공장 및 설원전쟁에서 무료치료 병사수 : 300,000",
+      4:"무기공장 및 설원전쟁에서 무료치료 병사수 : 400,000",
+      5:"무기공장 및 설원전쟁에서 무료치료 병사수 : 500,000",
+      6:"무기공장 및 설원전쟁에서 무료치료 병사수 : 600,000",
+      7:"무기공장 및 설원전쟁에서 무료치료 병사수 : 700,000",
+      8:"무기공장 및 설원전쟁에서 무료치료 병사수 : 800,000",
+      9:"무기공장 및 설원전쟁에서 무료치료 병사수 : 900,000",
+      10:"무기공장 및 설원전쟁에서 무료치료 병사수 : 1,000,000",
+    },
+    //スキル3
+    {
+      1:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 1.5% 증가",
+      2:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 3.0% 증가",
+      3:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 4.5% 증가",
+      4:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 6.0% 증가",
+      5:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 7.5% 증가",
+      6:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 9.0% 증가",
+      7:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 10.5% 증가",
+      8:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 12.0% 증가",
+      9:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 13.5% 증가",
+      10:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 15.0% 증가",
+      11:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 16.5% 증가",
+      12:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 18.0% 증가",
+      13:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 19.5% 증가",
+      14:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 21.0% 증가",
+      15:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 22.5% 증가",
+      16:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 24.0% 증가",
+      17:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 25.5% 증가",
+      18:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 27.0% 증가",
+      19:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 28.5% 증가",
+      20:"무기공장 및 설원전쟁에서 부대 파괴력 / HP 30.0% 증가",
+    },
+    //スキル4
+    {
+      1:"무기공장 및 설원전쟁에서 집결 수용량 7,500 증가",
+      2:"무기공장 및 설원전쟁에서 집결 수용량 15,000 증가",
+      3:"무기공장 및 설원전쟁에서 집결 수용량 22,500 증가",
+      4:"무기공장 및 설원전쟁에서 집결 수용량 30,000 증가",
+      5:"무기공장 및 설원전쟁에서 집결 수용량 37,500 증가",
+      6:"무기공장 및 설원전쟁에서 집결 수용량 45,000 증가",
+      7:"무기공장 및 설원전쟁에서 집결 수용량 52,500 증가",
+      8:"무기공장 및 설원전쟁에서 집결 수용량 60,000 증가",
+      9:"무기공장 및 설원전쟁에서 집결 수용량 67,500 증가",
+      10:"무기공장 및 설원전쟁에서 집결 수용량 75,000 증가",
+      11:"무기공장 및 설원전쟁에서 집결 수용량 82,500 증가",
+      12:"무기공장 및 설원전쟁에서 집결 수용량 90,000 증가",
+      13:"무기공장 및 설원전쟁에서 집결 수용량 97,500 증가",
+      14:"무기공장 및 설원전쟁에서 집결 수용량 105,000 증가",
+      15:"무기공장 및 설원전쟁에서 집결 수용량 112,500 증가",
+      16:"무기공장 및 설원전쟁에서 집결 수용량 120,000 증가",
+      17:"무기공장 및 설원전쟁에서 집결 수용량 127,500 증가",
+      18:"무기공장 및 설원전쟁에서 집결 수용량 135,000 증가",
+      19:"무기공장 및 설원전쟁에서 집결 수용량 142,500 증가",
+      20:"무기공장 및 설원전쟁에서 집결 수용량 150,000 증가",
+    },
+  ]
+};
+
+const SKILL_NAMES = {
+  Cyrille: ["包囲狩猟", "リサイクル", "武装特化", "巨熊キラー"],
+  Agnes:   ["高効率偵察", "生産革命", "工程管理", "神秘の知識"],
+  Holger:  ["エリート剣闘士", "煌めくリング", "競技場の星", "勇猛果敢"],
+  Romulus: ["戦火の咆哮", "最終防衛線", "アイエーテースの威光", "一致団結"],
+  Baldur: ["새벽빛 영광", "전쟁과 명예", "거액의 현상금", "희망의 노래"],
+  Fabian: ["회수 및 주조", "절망에서 구원", "열화 무장", "군수 거목"],
+};
+
+// ================ 표시 함수 ================
+function getEffectText(expert, skillIdx, level) {
+  const table = (SKILL_EFFECTS[expert] || [])[skillIdx] || {};
+  return table[level] || ""; // 없으면 빈 문자열
+}
+
+function updateSkillEffects() {
+  const expert = document.getElementById("selType")?.value;
+  if (!expert) return;
+
+  // 각 카드의 目標 select 값 읽어서 표시
+  document.querySelectorAll(".skill-effect").forEach(el => {
+    const idx = Number(el.dataset.index || 0); // 0..3
+    const tgtSel = document.getElementById(`s${idx+1}Tgt`);
+    const lv = Number(String(tgtSel?.value || "0").replace(/[^0-9]/g, "")) || 0;
+    el.textContent = lv ? (getEffectText(expert, idx, lv) || `Lv.${lv} 효과 데이터 없음`) : "-";
+  });
+}
+
+function updateSkillTitles() {
+  const expert = document.getElementById("selType")?.value;
+  const names = SKILL_NAMES[expert] || [];
+  document.querySelectorAll(".skill-title").forEach(el => {
+    const idx = Number(el.dataset.index || 0);
+    el.textContent = names[idx] || `スキル ${idx+1}`;
+  });
+}
+
+// ================ 이벤트 연결 ================
+document.addEventListener("DOMContentLoaded", () => {
+  const selType = document.getElementById("selType");
+
+  // 専門家 변경 시: 제목/효과 동기화
+  selType?.addEventListener("change", () => {
+    updateSkillTitles();
+    updateSkillEffects();    
+  });
+
+  // 각 スキル 目標 변경 시: 효과 갱신
+  [1,2,3,4].forEach(n => {
+    document.getElementById(`s${n}Tgt`)?.addEventListener("change", updateSkillEffects);
+  });
+
+  // 초기 1회
+  updateSkillTitles();
+  updateSkillEffects();
+  updateExpertEffect();
+});
+</script>
+
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+    
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+</body>
+</html>
