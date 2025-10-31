@@ -63,6 +63,10 @@
         <p>건물별로 현재/목표 레벨을 지정하면 자동 합산됩니다. FC1 이상 구간만 반영되어 있습니다.</p>
         <p>건물명 앞에 체크를 하게되면, 하단에 총합계에 체크한 건물의 필요합계들을 합산하여 표시합니다.</p>
       </div>
+			
+			<label class="inline-flex items-center gap-2 mb-2 font-semibold text-[15px] text-red-600 ">
+				<input type="checkbox" id="fireCrystalToggle">불의 수정 단계
+			</label>
 
       <!-- 버프/속도 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -172,8 +176,7 @@
         </div>
       </div>
     </div>
-  </div>
-
+  </div>	
   <script>
     /* 유틸 */
     function sendHeightToParent(){ const h=document.body.scrollHeight+10; window.parent?.postMessage({type:"FRAME_CHANGE",height:h},"*"); }
@@ -243,13 +246,38 @@
 
     function renderBuildingSelectors(){
       const container = document.getElementById("buildingGridBody");
+			
+      // ✅ 기존 선택값 보존
+			const prev = {};
+			if (container && container.children.length) {
+				[...container.querySelectorAll('.exp-card')].forEach(card => {
+					const nameEl = card.querySelector('h3');
+					if (!nameEl) return;
+					const bname = nameEl.textContent.trim();
+					const startSel = card.querySelector(`#start-${bname}`);
+					const endSel   = card.querySelector(`#end-${bname}`);
+					if (startSel && endSel) {
+						prev[bname] = { start: startSel.value, end: endSel.value };
+					}
+				});
+			}
+													
       container.innerHTML = "";
       buildingCards = [];
 
       buildingList.forEach(name=>{
-        const levels = buildingData[name].map(d=> d["레벨"]);
-        const options = levels.map((lv,i)=> `<option value="${i}">${lv}</option>`).join("");
-        const maxIndex = levels.length-1;
+        //const levels = buildingData[name].map(d=> d["레벨"]);
+        //const options = levels.map((lv,i)=> `<option value="${i}">${lv}</option>`).join("");
+        //const maxIndex = levels.length-1;
+				const levelsFull = buildingData[name].map(d=> d["레벨"]); // 원본 모든 라벨
+				const filtered = filterLevelsWithIndex(levelsFull, useFireCrystal); // [{idx,label}]
+
+				// ✅ 옵션은 "화면 라벨은 filtered.label" / "value는 원본 idx"
+				const options = filtered
+					.map(({idx, label}) => `<option value="${idx}">${label}</option>`)
+					.join("");
+
+				const maxLabel = filtered.length ? filtered[filtered.length-1].label : (levelsFull[levelsFull.length-1] || '');
 
         const card = document.createElement("div");
         card.className = "exp-card";
@@ -260,7 +288,7 @@
                 <div class="flex items-center gap-2 mb-2">
                   <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
                 </div>
-                <p class="muted mb-3">레벨 범위 (최대 ${levels[maxIndex]})</p>
+                <p class="muted mb-3">레벨 범위 (최대 ${maxLabel})</p>
 
                 <!-- ✅ 현재/목표 세로 배치 -->
                 <div class="grid grid-cols-1 gap-2">
@@ -299,7 +327,8 @@
         // 이벤트
         const startSel = card.querySelector(`#start-${name}`);
         const endSel   = card.querySelector(`#end-${name}`);
-
+				
+			  /*
         startSel.addEventListener("change", ()=>{
           endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
           scheduleCalc();
@@ -307,6 +336,25 @@
         endSel.addEventListener("change", scheduleCalc);
 
         buildingCards.push({name, maxIndex});
+				*/
+				// ✅ 이전 선택값 복원 (가능하면), 아니면 기본값
+				const saved = prev[name];
+				if (saved) {
+					if ([...startSel.options].some(o => o.value === saved.start)) startSel.value = saved.start;
+					if ([...endSel.options].some(o => o.value === saved.end))     endSel.value   = saved.end;
+				} else {
+					// 기본: 동일 레벨로 맞춤
+					endSel.value = startSel.value;
+				}
+
+				startSel.addEventListener("change", ()=>{
+					endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
+					scheduleCalc();
+				});
+				endSel.addEventListener("change", scheduleCalc);
+
+				const maxIndex = buildingData[name].length - 1; // 원본 기준
+				buildingCards.push({name, maxIndex});
       });
     }
 
@@ -475,7 +523,70 @@
     // 데이터 로드 & 초기 렌더
     fetchBuildingData();
   </script>
-  <script>
+	<script>
+		// 토글 상태 기억
+		let useFireCrystal = localStorage.getItem('useFireCrystal') === '1';
+
+		// 레벨 라벨 필터 → 원본 인덱스/라벨 쌍 반환
+		function filterLevelsWithIndex(levelLabels, useFire) {
+			// CSV 원본 라벨 정제
+			const labels = levelLabels.map(v => String(v ?? '').trim());
+			const out = [];
+
+			if (useFire) {
+				// 🔥 불의수정 모드: CSV 안에서 '30-1' ~ 'FC10' 구간을 "실제 위치"로 잘라서 사용
+				const startIdx = labels.findIndex(lv => lv === '30-1');
+				// FC10은 대소문자 섞일 수 있으므로 대문자 비교
+				const endIdx   = labels.findIndex(lv => lv.toUpperCase() === 'FC10');
+
+				if (startIdx !== -1 && endIdx !== -1 && startIdx <= endIdx) {
+					for (let i = startIdx; i <= endIdx; i++) out.push({ idx: i, label: labels[i] });
+					return out;
+				}
+
+				// 🔁 혹시 CSV에서 찾지 못한 예외 케이스 대비(예: 공백/대소문자/숨은문자)
+				// 30-? 패턴과 FC10을 다시 한 번 CSV 순서대로 수집
+				labels.forEach((lv, i) => {
+					const norm = lv.replace(/\s+/g, '');
+					if (/^30-\d$/.test(norm) || norm.toUpperCase() === 'FC10') out.push({ idx: i, label: labels[i] });
+				});
+				return out;
+			}
+
+			// 🟦 일반 모드: CSV에서 숫자 1~30 라벨만 그대로 사용(생성 X, CSV 순서 유지)
+			labels.forEach((lv, i) => {
+				if (/^\d+$/.test(lv)) {
+					const n = parseInt(lv, 10);
+					if (n >= 1 && n <= 30) out.push({ idx: i, label: lv });
+				}
+			});
+			return out;
+		}
+
+		// 토글 핸들러
+		function hookFireCrystalToggle() {
+			const el = document.getElementById('fireCrystalToggle');
+			if (!el) return;
+
+			// ✅ 항상 체크 상태로 시작
+			useFireCrystal = true;
+			el.checked = true;
+
+			// ✅ localStorage에 즉시 저장해서 새로고침 후에도 유지
+			localStorage.setItem('useFireCrystal', '1');
+
+			el.addEventListener('change', () => {
+				useFireCrystal = el.checked;
+				localStorage.setItem('useFireCrystal', useFireCrystal ? '1' : '0');
+				renderBuildingSelectors();
+				scheduleCalc();
+			});
+		}
+
+		// 페이지 로드 시 1번만 호출
+		document.addEventListener('DOMContentLoaded', hookFireCrystalToggle);
+	</script>	
+	<script>
     // F12, Ctrl+Shift+I, Ctrl+U 등 방지
     document.onkeydown = function (e) {
       if (
