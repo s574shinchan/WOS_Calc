@@ -1395,19 +1395,7 @@
           </div>
         </div>
       </div>
-  
-      <!-- 결과 팝업 -->
-      <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 text-sm">
-          <h3 class="text-xl font-bold mb-4 text-center">📊 계산 결과</h3>
-          <div id="popupContent" class="overflow-auto max-h-[65vh] text-center"></div>
-          <div class="text-center mt-4">
-            <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"> 확인
-            </button>
-          </div>
-        </div>
-      </div>
-      
+        
       <!-- Scroll to Top Button -->
       <button id="scrollToTopBtn"
         class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
@@ -1678,14 +1666,6 @@
       }
     }
     
-    window.addEventListener("message", function (event) {
-      if (event.data.type === "RESULT_POPUP") {
-        const html = event.data.html;
-        document.getElementById("popupContent").innerHTML = html;
-        document.getElementById("popupModal").classList.remove("hidden");
-      }  //RESULT_POPUP
-    });
-
     window.addEventListener("message", function (event) {
       if (event.data.type === "SET_FRAME_SIZE") {
         const frame = document.getElementById("mainFrame");

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SVS 점수계산 — 4일차 (정적 테이블 보장)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --bg:#ffffff; --text:#111827; --card:#ffffff; --head:#f3f4f6; --border:#e5e7eb;
+      --in:#e8fff4; --sum:#fde68a; --tab-bg:#f9fafb; --muted:#5f6368;
+      --shadow:0 8px 22px rgba(0,0,0,.06);
+    }
+    body.dark-mode{
+      --bg:#0b1220; --text:#e5e7eb; --card:#0f172a; --head:#111827; --border:#374151;
+      --in:#0f3e36; --sum:#a57c00; --tab-bg:#1f2937; --muted:#9aa0a6;
+      --shadow:0 10px 26px rgba(0,0,0,.35);
+    }
+    html{ font-size:15px; }
+    body{ background:var(--bg); color:var(--text); }
+    .maxw{max-width:1200px}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; text-align: right}
+    .sum{ background:var(--sum) }
+    .tcap{ font-size:.83rem; color:var(--muted) }
+    .tlabel{ font-size:1.05rem; font-weight:800 }
+    .tile{
+      background:var(--card); border:1px solid var(--border); border-radius:16px;
+      box-shadow:var(--shadow); padding:1.05rem 1.1rem;
+    }
+    .tin{ background:var(--in); border:1px solid var(--border); border-radius:9999px; padding:.45rem .95rem; text-align:right; font-size:1rem }
+		.tintb { background:var(--in); padding:.45rem .95rem; text-align:right; font-size:1rem }
+    input[type="number"]{-moz-appearance:textfield; appearance:textfield}
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{ appearance:none; margin:0 }
+    select{ border:1px solid var(--border); background:var(--card); border-radius:12px; padding:.35rem .6rem }
+    .tabs{ display:flex; gap:.35rem; border-bottom:1px solid var(--border); margin-bottom:1rem }
+    .tab-btn{ padding:.55rem 1rem; font-weight:700; border:1px solid var(--border); border-bottom:0;
+      border-top-left-radius:.7rem; border-top-right-radius:.7rem; background:var(--tab-bg) }
+    .tab-btn[aria-selected="true"]{ background:var(--card) }
+    table{ border-collapse:collapse; width:100% }
+    th, td{ border:1px solid var(--border); padding:.6rem .5rem; vertical-align:middle; font-size:.95rem }
+    thead th{ background:var(--head); font-weight:700 }
+    tbody td input{ width:100% }
+    .col-qty{ background:var(--in) }
+    .row-sub td{ background:var(--sum); font-weight:700 }
+    .grid-wrap{ display:grid; grid-template-columns:1fr; gap:1rem }
+    @media (min-width:1100px){ .grid-wrap{ grid-template-columns: 1fr 1.2fr; } }
+
+    /* ▼ 병사 테이블 밀집 모드 */
+    .table-dense th, .table-dense td{
+      padding:.32rem .42rem;
+      line-height:1.15;
+      font-size:.92rem;
+    }
+    .table-dense thead th{ padding:.36rem .42rem }
+    .table-dense .col-qty input.tin.qty{
+      height:40px; padding:.22rem .6rem; font-size:.9rem;
+    }
+    .table-dense .pts{ white-space:nowrap; }
+		.btn{padding:.3rem .6rem;border:1px solid var(--border);border-radius:.5rem;background:var(--tab-bg)}
+		.icon-x{display:inline-block;width:28px;height:28px;line-height:26px;border:1px solid var(--border);border-radius:.5rem}		
+  </style>
+</head>
+<body class="p-3 md:p-6">
+  <div class="max-w-[1500px]">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-3">
+      <h1 class="text-[1.55rem] font-extrabold">준비단계 4일차</h1>
+      <div class="text-right">
+        <span class="align-middle mr-2 font-semibold">총 점수</span>
+        <span id="d4_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+			<!-- 마스터리석 -->
+			<section class="tile">
+				<div class="tlabel mb-2">마스터리석 1개 소모</div>
+				<div class="flex items-center justify-between tcap mt-2">
+					<span>개별 점수</span><span class="mono">4,000</span>
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">개수</span>
+					<input id="qEss" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span><span id="pEss" class="mono">0</span>
+				</div>
+			</section>
+
+			<!-- 미스릴 -->
+			<section class="tile">
+				<div class="tlabel mb-2">미스릴 1개 소모</div>
+				<div class="flex items-center justify-between tcap mt-2">
+					<span>개별 점수</span><span class="mono">144,000</span>
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">개수</span>
+					<input id="qMit" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span><span id="pMit" class="mono">0</span>
+				</div>
+			</section>
+		</div>
+		
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+			<!-- 영웅전용장비 -->
+			<section class="tile">
+          <div class="tlabel mb-2">영웅전용장비 1개 소모</div>
+          <div class="flex items-center justify-between tcap mt-2">
+            <span>개별 점수</span><span class="mono">8,000</span>
+          </div>
+          <div class="flex items-center justify-between mt-2">
+            <span class="tcap">개수</span>
+            <input id="qWid" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+          </div>
+          <div class="flex items-center justify-between mt-2">
+            <span class="tcap">Points</span><span id="pWid" class="mono">0</span>
+          </div>
+        </section>
+			
+			<!-- 영주보석 업그레이드 -->			
+			<section class="tile">
+          <div class="flex items-center justify-between mt-2">
+            <div class="tlabel">영주보석 업그레이드</div>
+          </div>
+
+          <div class="mt-2 grid grid-cols-2 gap-2 items-center">
+            <div class="tcap text-[13px]">보석 레벨</div>
+            <select id="cLv" class="w-full h-[30px] text-s px-2">
+              <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
+              <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
+              <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
+              <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
+              <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
+              <option value="16">Lv 16</option>
+            </select>
+            <div class="tcap text-[13px] mt-2">평점</div>
+            <div id="cBase" class="mono tcap mt-2">625</div>
+          </div>
+
+          <div class="flex items-center justify-between mt-2">
+            <span class="tcap">개수</span>
+            <input id="cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-44 h-[30px]">
+          </div>
+          <div class="flex items-center justify-between mt-2">
+            <span class="tcap">Points</span><span id="cPts" class="mono">0</span>
+          </div>
+        </section>
+		</div>
+
+		<div>
+			<!-- 병사생산 (드롭다운 행 + 추가/삭제) -->
+			<section class="tile">
+				<div class="flex items-center justify-between mb-3">
+					<div class="tlabel">병사 생산</div>
+					<button id="troopAdd" class="btn text-sm">+ 행 추가</button>
+				</div>
+				<table class="mt-2 w-full border-collapse dense">
+					<thead>
+						<tr>
+							<th style="width:25%">병사 티어</th>
+							<th style="width:25%">생산량</th>
+							<th style="width:25%">개별 점수</th>
+							<th style="width:25%">Points</th>
+						</tr>
+					</thead>
+					<tbody id="troopBody">
+						<!-- 동적 행 -->
+					</tbody>
+					<tfoot>
+						<tr class="row-sub">
+							<td class="text-right" colspan="3">소계</td>
+							<td class="mono text-right" id="d4_tTot">0</td>
+							<td></td>
+						</tr>
+					</tfoot>
+					</table>
+					<p class="tcap mt-2">※ 여러 티어를 계산하려면 행추가를 누르세요.</p>
+				</section>
+			</div>
+  </div>
+
+  <script>
+    // ===== 데이터 =====
+    const UNIT = { widgets:8000, essence:4000, mithril:144000 };
+    const CHARM_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
+    const CHARM_MUL = 70;
+
+    // ===== 유틸 =====
+    const fmt = n => (isFinite(n) ? n.toLocaleString() : "0");
+    const den = s => (+String(s).replace(/,/g,"") || 0);
+    const on  = (el,evts,fn)=> evts.split(' ').forEach(e=> el && el.addEventListener(e,fn));
+    const getText = id => {
+      const el = document.getElementById(id);
+      return el ? el.textContent : "0";
+    };
+
+    // 좌측 카드 계산
+    const qWid = document.getElementById('qWid');
+    const qEss = document.getElementById('qEss');
+    const qMit = document.getElementById('qMit');
+    const pWid = document.getElementById('pWid');
+    const pEss = document.getElementById('pEss');
+    const pMit = document.getElementById('pMit');
+    function calcTop(){
+      pWid.textContent = fmt((+qWid.value||0)*UNIT.widgets);
+      pEss.textContent = fmt((+qEss.value||0)*UNIT.essence);
+      pMit.textContent = fmt((+qMit.value||0)*UNIT.mithril);
+      sumAll();
+    }
+    [qWid,qEss,qMit].forEach(el=> on(el,'input change keyup blur',calcTop));
+    calcTop();
+
+    // 보석 카드
+    const cLv  = document.getElementById('cLv');
+    const cBase= document.getElementById('cBase');
+    const cQty = document.getElementById('cQty');
+    const cPts = document.getElementById('cPts');
+    function calcCharm(){
+      const base = CHARM_BASE[+cLv.value] || 0;
+      if (cBase) cBase.textContent = fmt(base);
+      let qty = +cQty.value || 0; if(qty>18){ qty=18; cQty.value=18; }
+      cPts.textContent = fmt(base * CHARM_MUL * qty);
+      sumAll();
+    }
+    on(cLv,'input change',calcCharm);
+    on(cQty,'input change keyup blur',calcCharm);
+    calcCharm();
+
+    /* ===== 병사 드롭다운 테이블 ===== */
+		// 티어별 1명당 점수
+		const TROOP_PER = { T1:3, T2:4, T3:5, T4:8, T5:12, T6:18, T7:25, T8:35, T9:45, T10:60, T11:75 };
+		const TROOP_LEVELS = Object.keys(TROOP_PER);
+
+		const troopBody = document.getElementById('troopBody');
+		const troopAdd  = document.getElementById('troopAdd');
+		const tSubEl    = document.getElementById('d4_tTot');
+
+		// 한 행 템플릿
+		function troopRowTemplate(level='T11', qty=0){
+			const tr = document.createElement('tr');
+			tr.className = 'troop-row';
+			tr.innerHTML = `
+				<td>
+					<select class="troop-tier w-full h-[30px] text-sm px-2">
+						${TROOP_LEVELS.map(l => `<option value="${l}" ${l===level?'selected':''}>${l}</option>`).join('')}
+					</select>
+				</td>
+				<td class="col-qty">
+					<!-- 생산량: 표 칼럼을 꽉 채우도록 100% -->
+					<input class="tintb mono troop-qty" type="number" min="0" step="1" value="${qty}">
+				</td>
+				<td class="mono troop-per">${(TROOP_PER[level]||0).toLocaleString()}</td>
+				<td class="mono troop-pts">0</td>
+				<td class="text-center"><button class="icon-x" title="삭제">×</button></td>
+			`;
+
+			const sel   = tr.querySelector('.troop-tier');
+			const qtyEl = tr.querySelector('.troop-qty');
+			const del   = tr.querySelector('.icon-x');
+
+			// 이벤트: 티어 변경 시 단가 갱신 → 재계산
+			['change','input'].forEach(ev => sel.addEventListener(ev, () => {
+				tr.querySelector('.troop-per').textContent = (TROOP_PER[sel.value]||0).toLocaleString();
+				calcTroops();
+			}));
+			// 생산량 변경 시 재계산
+			['input','change','keyup','blur'].forEach(ev => qtyEl.addEventListener(ev, calcTroops));
+			// 삭제
+			del.addEventListener('click', () => { tr.remove(); calcTroops(); });
+
+			return tr;
+		}
+
+		function addTroopRow(level='T11', qty=0){
+			troopBody.appendChild(troopRowTemplate(level, qty));
+			calcTroops();
+		}
+
+		function calcTroops(){
+			let sub = 0;
+			troopBody.querySelectorAll('.troop-row').forEach(row => {
+				const level = row.querySelector('.troop-tier').value;
+				const per   = TROOP_PER[level] || 0;
+				const qty   = +(row.querySelector('.troop-qty').value || 0);
+				const pts   = per * qty;
+				row.querySelector('.troop-pts').textContent = pts.toLocaleString();
+				sub += pts;
+			});
+			tSubEl.textContent = sub.toLocaleString();
+
+			// 페이지에 sumAll()가 있다면 총합 반영
+			if (typeof sumAll === 'function') sumAll();
+		}
+
+		// +행 버튼
+		troopAdd.addEventListener('click', () => addTroopRow());
+
+		addTroopRow('T11', 0);
+		
+    // 총합 (엘리먼트를 직접 조회해서 TDZ 회피)
+    function sumAll(){
+      const top   = den(getText('pWid')) + den(getText('pEss')) + den(getText('pMit'));
+      const charm = den(getText('cPts'));
+      const troop = den(getText('d4_tTot'));
+      document.getElementById('d4_total').textContent = fmt(top + charm + troop);
+    }
+    sumAll();
+	</script>
+	<script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+    
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+	
+	<script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+	</body>
+</html>
