@@ -529,38 +529,70 @@
 
 		// 레벨 라벨 필터 → 원본 인덱스/라벨 쌍 반환
 		function filterLevelsWithIndex(levelLabels, useFire) {
-			// CSV 원본 라벨 정제
+			// CSV 라벨 정제
 			const labels = levelLabels.map(v => String(v ?? '').trim());
 			const out = [];
 
-			if (useFire) {
-				// 🔥 불의수정 모드: CSV 안에서 '30-1' ~ 'FC10' 구간을 "실제 위치"로 잘라서 사용
-				const startIdx = labels.findIndex(lv => lv === '30-1');
-				// FC10은 대소문자 섞일 수 있으므로 대문자 비교
-				const endIdx   = labels.findIndex(lv => lv.toUpperCase() === 'FC10');
+			// 헬퍼: 특정 라벨을 "대소문자/공백 무시"로 찾기
+			const findIdx = (want) =>
+				labels.findIndex(lv => lv.replace(/\s+/g, '').toUpperCase() === want.toUpperCase());
 
-				if (startIdx !== -1 && endIdx !== -1 && startIdx <= endIdx) {
-					for (let i = startIdx; i <= endIdx; i++) out.push({ idx: i, label: labels[i] });
-					return out;
+			// 헬퍼: 원본 순서를 유지한 채, 정규식에 맞는 것만 추출
+			const collectBy = (regex) => {
+				labels.forEach((lv, i) => {
+					const norm = lv.replace(/\s+/g, '').toUpperCase();
+					if (regex.test(norm)) out.push({ idx: i, label: labels[i] });
+				});
+				return out;
+			};
+
+			if (useFire) {
+				// 1) 이상적: CSV에 30-1 ~ FC10 모두 있는 경우
+				const s1 = findIdx('30-1');
+				const e1 = findIdx('FC10');
+				if (s1 !== -1 && e1 !== -1 && s1 <= e1) {
+					const arr = [];
+					for (let i = s1; i <= e1; i++) arr.push({ idx: i, label: labels[i] });
+					return arr;
 				}
 
-				// 🔁 혹시 CSV에서 찾지 못한 예외 케이스 대비(예: 공백/대소문자/숨은문자)
-				// 30-? 패턴과 FC10을 다시 한 번 CSV 순서대로 수집
-				labels.forEach((lv, i) => {
-					const norm = lv.replace(/\s+/g, '');
-					if (/^30-\d$/.test(norm) || norm.toUpperCase() === 'FC10') out.push({ idx: i, label: labels[i] });
-				});
+				// 2) 아카데미 같은 케이스: FC1 ~ FC10만 있는 경우
+				const s2 = labels.findIndex(lv => /^FC\s*0*1$/i.test(lv));
+				const e2 = labels.findIndex(lv => /^FC\s*0*10$/i.test(lv));
+				if (s2 !== -1 && e2 !== -1 && s2 <= e2) {
+					const arr = [];
+					for (let i = s2; i <= e2; i++) arr.push({ idx: i, label: labels[i] });
+					return arr;
+				}
+
+				// 3) 백업: 30-x 또는 FC1~FC10 패턴만 모아서(원본 순서 유지)
+				out.length = 0;
+				collectBy(/^(30-\d|FC0*[1-9]|FC0*10)$/i);
 				return out;
 			}
 
-			// 🟦 일반 모드: CSV에서 숫자 1~30 라벨만 그대로 사용(생성 X, CSV 순서 유지)
+			// 일반 모드: 1~30이 있으면 그 범위, 없으면 FC1~FC10 범위
+			const numeric = [];
 			labels.forEach((lv, i) => {
-				if (/^\d+$/.test(lv)) {
-					const n = parseInt(lv, 10);
-					if (n >= 1 && n <= 30) out.push({ idx: i, label: lv });
+				const m = lv.match(/^\s*(\d+)\s*$/);
+				if (m) {
+					const n = parseInt(m[1], 10);
+					if (n >= 1 && n <= 30) numeric.push({ idx: i, label: lv });
 				}
 			});
-			return out;
+			if (numeric.length) return numeric;
+
+			// 숫자 1~30이 없다면 FC1~FC10 시도
+			const s3 = labels.findIndex(lv => /^FC\s*0*1$/i.test(lv));
+			const e3 = labels.findIndex(lv => /^FC\s*0*10$/i.test(lv));
+			if (s3 !== -1 && e3 !== -1 && s3 <= e3) {
+				const arr = [];
+				for (let i = s3; i <= e3; i++) arr.push({ idx: i, label: labels[i] });
+				return arr;
+			}
+
+			// 최후: 원본 전체(어떤 CSV든 최소한 전부 노출)
+			return labels.map((lv, i) => ({ idx: i, label: lv }));
 		}
 
 		// 토글 핸들러
