@@ -136,6 +136,7 @@
       </div>
     </div>
   </div>
+	
 	<!-- ✅ 공통 함수 -->
   <script>
     function sendHeightToParent() {
@@ -254,9 +255,9 @@
     });
   </script>
 
- <!-- ✅ 목록/계산/결과 -->
+	<!-- ✅ 목록/계산/결과 -->
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+		document.addEventListener("DOMContentLoaded", () => {
       // 항목 추가
       document.querySelectorAll(".add-btn").forEach(button => {
         button.addEventListener("click", () => {
@@ -440,7 +441,27 @@
       });
     });
   </script>
-  <!-- 우클릭/단축키 제한 (기존 유지) -->
+	
+	<script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+    
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+  
+	<!-- 우클릭/단축키 제한 (기존 유지) -->
   <script>
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("keydown", function (e) {
