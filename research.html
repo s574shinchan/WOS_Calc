@@ -30,7 +30,7 @@
     });
   </script></head>
 <body class="bg-gray-100 p-2 font-sans text-sm">
-  <div class="max-w-6xl mx-auto space-y-3">
+  <div class="max-w-[1500px] mx-auto space-y-3">
     <!-- 헤더 카드 -->
     <div class="bg-white border rounded-xl shadow-sm p-3">
       <h1 class="text-xl md:text-2xl font-bold text-gray-800">🧪 연구 계산기</h1>
@@ -444,7 +444,7 @@
 	
 	<script>
     function sendHeightToParent() {
-      const height = document.body.scrollHeight + 10;
+      const height = document.body.scrollHeight + 20;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
     
@@ -454,9 +454,7 @@
     });
     
     function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
+			window.location.href = page;
       window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
   </script>
