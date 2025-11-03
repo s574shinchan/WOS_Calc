@@ -296,6 +296,7 @@
   </div>
   <script>
 		/* 상수 */
+    const UNIT = { widgets:8000, essence:4000, mithril:144000 };    
     const D5_UNIT = { fire:2000, shard:1000, refined:30000, spdPerMin:30 };		
 		const D5_PET_ADV_BASE = {
 			"Level 10":500,"Level 20":1000,"Level 30":2000,"Level 40":3000,"Level 50":4500,
@@ -326,6 +327,19 @@
     [qFire,qShard,qRef].forEach(el=> on(el,'input change keyup blur', calcMats));
     calcMats();
 		
+    /* ===== 영주장비, 마석, 미스릴 ==== */
+    const pWid = document.getElementById('pWid');
+    const pEss = document.getElementById('pEss');
+    const pMit = document.getElementById('pMit');
+    function calcTop(){
+      pWid.textContent = fmt((+qWid.value||0)*UNIT.widgets);
+      pEss.textContent = fmt((+qEss.value||0)*UNIT.essence);
+      pMit.textContent = fmt((+qMit.value||0)*UNIT.mithril);
+      sumAll();
+    }
+    [qWid,qEss,qMit].forEach(el=> on(el,'input change keyup blur',calcTop));
+    calcTop();
+    
 		/* ===== 가속 ===== */
     const spdD = document.getElementById('d5_spdD');
     const spdH = document.getElementById('d5_spdH');
