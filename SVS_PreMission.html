@@ -95,6 +95,11 @@
 				height:40px; padding:.22rem .6rem; font-size:.9rem;
 			}
 			.table-dense .pts{ white-space:nowrap; }
+			.tab-btn[aria-selected="true"] {
+			  background-color: #2563eb;  /* 예: 파란색 */
+			  color: #fff;                /* 글자 흰색 */
+			  border-color: #1d4ed8;
+			}
 		</style>
 	</head>
 	<body class="p-3 md:p-6">
@@ -103,10 +108,10 @@
 			<div class="tabs">
 				<button class="tab-btn" data-tab="day1" aria-selected="true">1일차</button>
 				<button class="tab-btn" data-tab="day2" aria-selected="false">2일차</button>
-        <button class="tab-btn" data-tab="day3" aria-selected="false">3일차</button>
-        <button class="tab-btn" data-tab="day4" aria-selected="false">4일차</button>
-        <button class="tab-btn" data-tab="day5" aria-selected="false">5일차</button>
-      </div>
+				<button class="tab-btn" data-tab="day3" aria-selected="false">3일차</button>
+				<button class="tab-btn" data-tab="day4" aria-selected="false">4일차</button>
+				<button class="tab-btn" data-tab="day5" aria-selected="false">5일차</button>
+			</div>
 
 			<!-- 탭 컨텐츠(iframe 하나만 사용) -->
 			<iframe class="w-full" id="tab-frame" title="SVS 탭 컨텐츠" referrerpolicy="no-referrer" style="height: 1420px;"></iframe>
