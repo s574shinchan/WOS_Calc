@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SVS 점수계산 — 1일차 (카드형)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --bg:#ffffff; --text:#111827; --card:#ffffff; --head:#f3f4f6; --border:#e5e7eb;
+      --in:#e8fff4; --sum:#fde68a; --tab-bg:#f9fafb; --muted:#5f6368;
+      --shadow:0 8px 22px rgba(0,0,0,.06);
+    }
+    body.dark-mode{
+      --bg:#0b1220; --text:#e5e7eb; --card:#0f172a; --head:#111827; --border:#374151;
+      --in:#0f3e36; --sum:#a57c00; --tab-bg:#1f2937; --muted:#9aa0a6;
+      --shadow:0 10px 26px rgba(0,0,0,.35);
+    }
+    html{ font-size:15px; }
+    body{ background:var(--bg); color:var(--text); }
+    .maxw{max-width:1200px}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; text-align: right}
+    .sum{ background:var(--sum) }
+    .tcap{ font-size:.83rem; color:var(--muted) }
+    .tlabel{ font-size:1.05rem; font-weight:800 }
+    .tile{
+      background:var(--card); border:1px solid var(--border); border-radius:16px;
+      box-shadow:var(--shadow); padding:1.05rem 1.1rem;
+    }
+    .tin{ background:var(--in); border:1px solid var(--border); border-radius:9999px; padding:.45rem .95rem; text-align:right; font-size:1rem }
+  	.tintb { background:var(--in); padding:.45rem .95rem; text-align:right; font-size:1rem }
+
+    input[type="number"]{-moz-appearance:textfield; appearance:textfield}
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{ appearance:none; margin:0 }
+    select{ border:1px solid var(--border); background:var(--card); border-radius:12px; padding:.35rem .6rem }
+    .tabs{ display:flex; gap:.35rem; border-bottom:1px solid var(--border); margin-bottom:1rem }
+    .tab-btn{ padding:.55rem 1rem; font-weight:700; border:1px solid var(--border); border-bottom:0;
+      border-top-left-radius:.7rem; border-top-right-radius:.7rem; background:var(--tab-bg) }
+    .tab-btn[aria-selected="true"]{ background:var(--card) }
+    table{ border-collapse:collapse; width:100% }
+    th, td{ border:1px solid var(--border); padding:.6rem .5rem; vertical-align:middle; font-size:.95rem }
+    thead th{ background:var(--head); font-weight:700 }
+    tbody td input{ width:100% }
+    .col-qty{ background:var(--in) }
+    .row-sub td{ background:var(--sum); font-weight:700 }
+    .grid-wrap{ display:grid; grid-template-columns:1fr; gap:1rem }
+    @media (min-width:1100px){ .grid-wrap{ grid-template-columns: 1fr 1.2fr; } }
+		
+    .dense th, .dense td{ padding:.36rem .42rem; font-size:.92rem; line-height:1.25 }
+    .dense .col-qty input{ height:38px; padding:.2rem .6rem; font-size:.9rem }
+		
+    /* ▼ 병사 테이블 밀집 모드 */
+    .table-dense th, .table-dense td{
+      padding:.32rem .42rem;
+      line-height:1.15;
+      font-size:.92rem;
+    }
+    .table-dense thead th{ padding:.36rem .42rem }
+    .table-dense .col-qty input.tin.qty{
+      height:40px; padding:.22rem .6rem; font-size:.9rem;
+    }
+    .table-dense .pts{ white-space:nowrap; }
+  </style>
+</head>
+<body class="p-3 md:p-6">
+  <div class="max-w-[1500px]">
+    <!-- 헤더 -->
+    <div class="flex items-center justify-between mb-3">
+      <h1 class="text-[1.55rem] font-extrabold">Preparation Day 1</h1>
+      <div class="text-right">
+        <span class="align-middle mr-2 font-semibold">Total Score</span>
+        <span id="d1_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
+      </div>
+    </div>
+
+    <!-- 2열 레이아웃 -->
+    <div class="grid grid-cols-1 gap-3 lg:grid-cols-2 mb-3">
+			<!-- 불의수정 -->
+			<section class="tile">
+				<div class="tlabel mb-2">Use Fire Crystal</div>
+				<div class="flex items-center justify-between tcap mt-2">
+					<span>1 Usage Score</span>
+					<span class="mono">2,000</span>
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Use</span>
+					<input id="d1_qFire" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span>
+					<span id="d1_pFire" class="mono">0</span>
+				</div>
+			</section>
+
+			<!-- 제련된 불의수정(FC6+) -->
+			<section class="tile">
+				<div class="tlabel mb-2">Use Refined Fire Crystal (FC6+)</div>
+				<div class="flex items-center justify-between tcap mt-2">
+					<span>1 Usage Score</span>
+          <span class="mono">30,000</span>
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Use</span>
+					<input id="d1_qRef" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span>
+          <span id="d1_pRef" class="mono">0</span>
+				</div>
+			</section>
+		</div>
+
+		<div class="grid grid-cols-1 gap-3 lg:grid-cols-2 mb-3">
+			<!-- 불의수정 조각(연구) -->
+			<section class="tile">
+				<div class="tlabel mb-2">Use Fire Crystal shards</div>
+				<div class="flex items-center justify-between tcap mt-2">
+					<span>1 Usage Score</span>
+          <span class="mono">1,000</span>
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Use</span>
+					<input id="d1_qShard" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span>
+          <span id="d1_pShard" class="mono">0</span>
+				</div>
+			</section>
+			
+			<!-- 영주보석 업그레이드 -->
+			<section class="tile">
+				<div class="tlabel">Upgrade Chief's Charms</div>
+				<div class="mt-2 grid grid-cols-2 gap-2 items-center">
+					<div class="tcap text-[13px]">Level</div>
+					<select id="d1_cLv" class="w-full h-[30px] text-sm px-2 ">
+						<option value="1">Lv 1</option>
+            <option value="2">Lv 2</option>
+            <option value="3">Lv 3</option>
+						<option value="4">Lv 4</option>
+            <option value="5">Lv 5</option>
+            <option value="6">Lv 6</option>
+						<option value="7">Lv 7</option>
+            <option value="8">Lv 8</option>
+            <option value="9">Lv 9</option>
+						<option value="10">Lv 10</option>
+            <option value="11">Lv 11</option>
+            <option value="12">Lv 12</option>
+						<option value="13">Lv 13</option>
+            <option value="14">Lv 14</option>
+            <option value="15">Lv 15</option>
+						<option value="16">Lv 16</option>
+					</select>
+					<div class="tcap text-[13px]">Rating</div>
+					<div id="d1_cBase" class="mono tcap text-right">625</div>
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Use</span>
+					<input id="d1_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-44 h-[30px]">
+				</div>
+				<div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span>
+          <span id="d1_cPts" class="mono">0</span>
+				</div>
+			</section>
+		</div>
+
+		<div>
+			<!-- RIGHT: 가속 사용 -->
+      <section class="tile">
+        <div class="tlabel">Use 1m Speedup(Construction, Research, Troop Training, Expert Skills Learning)</div>
+        <table class="mt-2 w-full border-collapse dense">
+          <thead>
+            <tr>
+              <th style="width:15%">Unit</th>
+              <th style="width:15%">1 Usage Score</th>
+              <th style="width:20%">Use</th>
+              <th style="width:50%">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Day</td>
+              <td class="mono">43,200</td>
+              <td class="col-qty">
+								<input id="d1_spdD" class="tintb mono" type="number" min="0" step="1" value="0">
+							</td>
+              <td class="mono" id="d1_spdDP">0</td>
+            </tr>
+            <tr>
+              <td>Hour</td>
+              <td class="mono">1,800</td>
+              <td class="col-qty">
+								<input id="d1_spdH" class="tintb mono" type="number" min="0" step="1" value="0">
+							</td>
+              <td class="mono" id="d1_spdHP">0</td>
+            </tr>
+            <tr>
+              <td>Min</td>
+              <td class="mono">30</td>
+              <td class="col-qty">
+								<input id="d1_spdM" class="tintb mono" type="number" min="0" step="1" value="0">
+							</td>
+              <td class="mono" id="d1_spdMP">0</td>
+            </tr>
+            <tr>
+              <td class="text-right font-semibold" colspan="2">SubTotal(Min)</td>
+              <td class="sum mono" id="d1_spdMin">0</td>
+              <td class="sum mono" id="d1_spdTot">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    /* ===== 상수 ===== */
+    const D1_UNIT = { fire:2000, shard:1000, refined:30000, spdPerMin:30 };
+    const D1_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
+    const CHARM_MUL = 70;
+
+    /* ===== 유틸 ===== */
+    const fmt = n => (isFinite(n) ? n.toLocaleString() : "0");
+    const den = s => (+String(s).replace(/,/g,"") || 0);
+    const on  = (el,evts,fn)=> evts.split(' ').forEach(e=> el && el.addEventListener(e,fn));
+    const txt = id => { const el=document.getElementById(id); return el ? el.textContent : "0"; };
+
+    /* ===== 재료 3종 ===== */
+    const qFire = document.getElementById('d1_qFire');
+    const qShard= document.getElementById('d1_qShard');
+    const qRef  = document.getElementById('d1_qRef');
+    const pFire = document.getElementById('d1_pFire');
+    const pShard= document.getElementById('d1_pShard');
+    const pRef  = document.getElementById('d1_pRef');
+
+    function calcMats(){
+      pFire.textContent = fmt((+qFire.value||0)*D1_UNIT.fire);
+      pShard.textContent= fmt((+qShard.value||0)*D1_UNIT.shard);
+      pRef.textContent  = fmt((+qRef.value||0)*D1_UNIT.refined);
+      sumAll();
+    }
+    [qFire,qShard,qRef].forEach(el=> on(el,'input change keyup blur', calcMats));
+    calcMats();
+
+    /* ===== 가속 ===== */
+    const spdD = document.getElementById('d1_spdD');
+    const spdH = document.getElementById('d1_spdH');
+    const spdM = document.getElementById('d1_spdM');
+
+    function calcSpeed(){
+      const d=+(spdD.value||0), h=+(spdH.value||0), m=+(spdM.value||0);
+      const mins = d*1440 + h*60 + m;
+      const pts  = mins * D1_UNIT.spdPerMin;
+      document.getElementById('d1_spdDP').textContent = fmt(d*1440*D1_UNIT.spdPerMin);
+      document.getElementById('d1_spdHP').textContent = fmt(h*60*D1_UNIT.spdPerMin);
+      document.getElementById('d1_spdMP').textContent = fmt(m*D1_UNIT.spdPerMin);
+      document.getElementById('d1_spdMin').textContent= fmt(mins);
+      document.getElementById('d1_spdTot').textContent= fmt(pts);
+      sumAll();
+    }
+    [spdD,spdH,spdM].forEach(el=> on(el,'input change keyup blur', calcSpeed));
+    calcSpeed();
+
+    /* ===== 보석 ===== */
+    const cLv  = document.getElementById('d1_cLv');
+    const cBase= document.getElementById('d1_cBase');
+    const cQty = document.getElementById('d1_cQty');
+
+    function calcCharm(){
+      const base = D1_CHAR_BASE[+cLv.value] || 0;
+      if (cBase) cBase.textContent = fmt(base);
+      let qty = +cQty.value || 0;
+      if(qty>18){ qty=18; cQty.value=18; }
+      const pts = base * CHARM_MUL * qty;
+      document.getElementById('d1_cPts').textContent = fmt(pts);
+      sumAll();
+    }
+    on(cLv,'input change',calcCharm);
+    on(cQty,'input change keyup blur',calcCharm);
+    calcCharm();
+
+    /* ===== 총합 ===== */
+    function sumAll(){
+      const mats = den(txt('d1_pFire')) + den(txt('d1_pShard')) + den(txt('d1_pRef'));
+      const spd  = den(txt('d1_spdTot'));
+      const charm= den(txt('d1_cPts'));
+      document.getElementById('d1_total').textContent = fmt(mats + spd + charm);
+    }
+    sumAll();
+  </script>
+	
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+    
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+	
+	<script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SVS 점수계산 — 3일차 (카드형 완성)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --bg:#ffffff; --text:#111827; --card:#ffffff; --head:#f3f4f6; --border:#e5e7eb;
+      --in:#e8fff4; --sum:#fde68a; --tab-bg:#f9fafb; --muted:#5f6368;
+      --shadow:0 8px 22px rgba(0,0,0,.06);
+    }
+    body.dark-mode{
+      --bg:#0b1220; --text:#e5e7eb; --card:#0f172a; --head:#111827; --border:#374151;
+      --in:#0f3e36; --sum:#a57c00; --tab-bg:#1f2937; --muted:#9aa0a6;
+      --shadow:0 10px 26px rgba(0,0,0,.35);
+    }
+    html{ font-size:15px; }
+    body{ background:var(--bg); color:var(--text); }
+    .maxw{max-width:1200px}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; text-align: right}
+    .sum{ background:var(--sum) }
+    .tcap{ font-size:.83rem; color:var(--muted) }
+    .tlabel{ font-size:1.05rem; font-weight:800 }
+    .tile{
+      background:var(--card); border:1px solid var(--border); border-radius:16px;
+      box-shadow:var(--shadow); padding:1.05rem 1.1rem;
+    }
+    .tin{ background:var(--in); border:1px solid var(--border); border-radius:9999px;
+      padding:.45rem .95rem; text-align:right; font-size:1rem }
+		.tintb {
+			background:var(--in); 
+			padding:.45rem .95rem; 
+			text-align:right; 
+			font-size:1rem 
+		}
+    input[type="number"]{-moz-appearance:textfield; appearance:textfield}
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{ appearance:none; margin:0 }
+    select{ border:1px solid var(--border); background:var(--card); border-radius:12px; padding:.35rem .6rem }
+
+    table{ border-collapse:collapse; width:100% }
+    th, td{ border:1px solid var(--border); padding:.55rem .5rem; vertical-align:middle; font-size:.95rem }
+    thead th{ background:var(--head); font-weight:700 }
+    .row-sub td{ background:var(--sum); font-weight:700 }
+    .col-qty{ background:var(--in) }
+    .dense th, .dense td{ padding:.36rem .42rem; font-size:.92rem; line-height:1.25 }
+    .dense .col-qty input{ height:38px; padding:.2rem .6rem; font-size:.9rem }
+
+    /* 버튼 (선택) */
+    .btn{padding:.35rem .6rem;border:1px solid var(--border);border-radius:.55rem;background:var(--tab-bg)}
+    .icon-x{display:inline-block;width:28px;height:28px;line-height:26px;border:1px solid var(--border);border-radius:.5rem}
+  </style>
+</head>
+<body class="p-3 md:p-6">
+  <div class="max-w-[1500px]">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-3">
+      <h1 class="text-[1.55rem] font-extrabold">Preparation Day 3</h1>
+      <div class="text-right">
+        <span class="align-middle mr-2 font-semibold">Total Score</span>
+        <span id="d3_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
+      </div>
+    </div>
+
+    <!-- 상단 3카드 -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
+      <!-- 행운의 룰렛 -->
+      <section class="tile">
+				<div class="tlabel mb-2">Spin the Lucky Wheel</div>
+        <div class="flex items-center justify-between tcap mt-1">
+					<span>1 Time</span>
+					<span class="mono">8,000</span>
+				</div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="tcap">Time</span>
+          <input id="d3_wQty" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+        </div>
+        <div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span>
+					<span id="d3_wPts" class="mono">0</span>
+				</div>
+      </section>
+
+      <!-- 전문가 표식 -->
+      <section class="tile">
+        <div class="tlabel mb-2">Use Expert Sigil (Excluding Common Sigils)</div>
+        <div class="flex items-center justify-between tcap mt-1">
+          <span>1 Use</span>
+          <span class="mono">6,000</span>
+				</div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="tcap">Use</span>
+					<input id="d3_qExp1" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+        </div>
+        <div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span>
+					<span id="d3_pExp1" class="mono">0</span>
+				</div>
+      </section>
+
+      <!-- 학문의 책 -->
+      <section class="tile">
+       <div class="tlabel mb-2">Use Book of Knowledge.</div>
+				<div class="flex items-center justify-between tcap mt-1">
+          <span>1 Use</span>
+					<span class="mono">60</span>
+				</div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="tcap">Use</span>
+					<input id="d3_qExp2" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+        </div>
+        <div class="flex items-center justify-between mt-2">
+					<span class="tcap">Points</span>
+					<span id="d3_pExp2" class="mono">0</span>
+				</div>
+      </section>
+			
+			<!-- 영주보석 -->
+      <section class="tile">
+				<div class="tlabel">Upgrade Chief's Charms</div>
+        <div class="mt-2 grid grid-cols-2 gap-2 items-center">
+          <div class="tcap text-[13px]">Level</div>
+          <select id="d3_cLv" class="w-full h-[30px] text-sm px-2">
+            <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
+            <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
+            <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
+            <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
+            <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
+            <option value="16">Lv 16</option>
+          </select>
+          <div class="tcap text-[13px]">Rating</div>
+          <div id="d3_cBase" class="mono tcap text-right">625</div>
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="tcap">Use</span>
+          <input id="d3_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-28 h-[30px]">
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="tcap">Points</span><span id="d3_charmsPts" class="mono">0</span>
+        </div>
+      </section>			
+    </div>
+
+    <!-- 중앙 2열 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+      <!-- 영웅조각 -->
+      <section class="tile">
+				<div class="tlabel">Use Hero Shard</div>
+        <table class="mt-2 w-full border-collapse dense">
+          <thead>
+            <tr>
+              <th style="width:50%">Hero Shard</th>
+              <th style="width:25%">Use</th>
+              <th style="width:25%">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rare</td>
+              <td class="col-qty"><input id="d3_hsR" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+              <td class="mono" id="d3_hsRPts">0</td>
+            </tr>
+            <tr>
+              <td>Epic</td>
+              <td class="col-qty"><input id="d3_hsE" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+              <td class="mono" id="d3_hsEPts">0</td>
+            </tr>
+            <tr>
+              <td>Mythic </td>
+              <td class="col-qty"><input id="d3_hsM" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+              <td class="mono" id="d3_hsMPts">0</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="row-sub">
+              <td class="text-right" colspan="2">SubTotal</td>
+              <td class="mono" id="d3_hsTotal">0</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+			<!-- 펫 단련 -->
+      <section class="tile">
+        <div class="tlabel">Refine Pet</div>
+        <table class="mt-2 w-full border-collapse dense">
+          <thead>
+            <tr>
+              <th style="width:40%">Refine Kind</th>
+              <th style="width:20%">Score</th>
+              <th style="width:20%">Use</th>
+              <th style="width:20%">Points</th></tr>
+          </thead>
+        <tbody id="d3_petRefBody"></tbody>
+        <tfoot>
+          <tr class="row-sub">
+            <td colspan="3" class="text-right">SubTotal</td>
+            <td class="mono" id="d3_petRefPtsTop">0</td>
+          </tr>
+        </tfoot>
+        </table>
+      </section>
+		</div>
+
+    <!-- 하단 3열: 야수/펫돌파/펫단련 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+			<!-- 야수사냥 -->
+      <section class="tile">
+        <div class="tlabel">Defeat 1 beast</div>
+        <table class="mt-2 w-full border-collapse dense">
+          <thead>
+            <tr>
+              <th style="width:40%">Beast Lv</th>
+              <th style="width:20%">Score</th>
+              <th style="width:20%">RallyCount</th>
+              <th style="width:20%">Points</th>
+            </tr>
+          </thead>
+          <tbody id="d3_beastBody"></tbody>
+          <tfoot>
+            <tr class="row-sub">
+              <td colspan="3" class="text-right">SubTotal</td>
+              <td class="mono" id="d3_beastPtsTop">0</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <!-- 펫 돌파 (드롭다운 행 + 추가/삭제) -->
+			<section class="tile">
+				<div class="flex items-center justify-between">
+					<div class="tlabel">Pet Advancement</div>
+					<button id="d3_advAdd" class="btn text-sm">Add Row</button>
+				</div>
+				<table class="mt-2 w-full border-collapse dense">
+					<thead>
+						<tr>
+							<th style="width:40%">Advancement</th>
+							<th style="width:20%">Score</th>
+							<th style="width:20%">Use</th>
+							<th style="width:20%">Points</th>
+							<th style="width:0%"></th>
+						</tr>
+					</thead>
+					<tbody id="d3_petAdvBody"><!-- 동적 행 --></tbody>
+					<tfoot>
+						<tr class="row-sub">
+							<td colspan="3" class="text-right">SubTotal</td>
+							<td class="mono" id="d3_petAdvPtsTop">0</td>
+							<td></td>
+						</tr>
+					</tfoot>
+				</table>
+			</section>
+    </div>
+
+    <!-- 빙원괴수 (스태미너 + 전략선택) -->
+    <section class="tile">
+      <div class="tlabel mb-2">Hunt Down 1 Polar Terror</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <!-- 좌: EA & 설명 -->
+        <div>
+					<div class="flex items-center justify-between tcap">
+						<span class="text-lg">EA (Level 1–7)</span>
+						<span id="d3_polarEA" class="mono text-lg">30,000</span>
+					</div>				
+          <p class="tcap mt-2">※ The average stamina consumed per rally varies depending on the strategy..</p>
+          <div class="tlabel mt-4">Stamina Calc</div>
+          <div class="flex items-center justify-between mt-2">
+            <span class="tcap py-2">Start Stamina</span>
+            <input id="d3_stStart" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+          </div>
+          <div class="flex items-center justify-between mt-2">
+            <span class="tcap py-2">Chief Stamina Count</span>
+            <input id="d3_stChief" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+          </div>
+          <div class="flex items-center justify-between mt-2">
+            <span class="tcap">Total Stamina</span><span id="d3_stTotal" class="mono">0</span>
+          </div>					
+        </div>
+        <!-- 우: 전략 표 -->
+        <div>
+          <table class="w-full border-collapse dense">
+            <thead>
+              <tr>
+                <th style="width:30%">Gina o:x</th>
+                <th style="width:25%">Rally Count</th>
+                <th style="width:25%">Points</th>
+                <th style="width:10%">Check</th>
+              </tr>
+            </thead>
+            <tbody id="d3_polarBody"></tbody>
+            <tfoot>
+              <tr class="row-sub">
+                <td colspan="2" class="text-right">SubTotal</td>
+                <td colspan="2" class="mono" id="d3_polarPtsTop">0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /* ===== 상수 ===== */
+    const D3_UNIT = {
+      wheel:8000,
+      hero:{rare:350, epic:1220, myth:3040},
+      charmMul:70,
+      exp1:6000, exp2:60
+    };
+    const D3_CHAR_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
+    const D3_BEAST_BASE = {
+      "Level 1-10": 9000,"Level 11-15": 9750,"Level 16-20": 10500,
+      "Level 21-25": 11250,"Level 26-30": 12000
+    };
+    const D3_PET_ADV_BASE = {
+      "Level 10":500,"Level 20":1000,"Level 30":2000,"Level 40":3000,"Level 50":4500,
+      "Level 60":6750,"Level 70":10000,"Level 80":12000,"Level 90":14500,"Level 100":17500
+    };
+    const D3_PET_REF_BASE = { "common wild mark":1150, "advancement wild mark":15000 };
+    const D3_POLAR_EA = 30000;
+    const D3_POLAR_STRATS = [
+      {key:"1:0 (Only Gina)", a:1, b:0},
+      {key:"1:1", a:1, b:1},
+			{key:"1:2", a:1, b:2},
+			{key:"1:3", a:1, b:3},
+      {key:"1:4", a:1, b:4},
+			{key:"1:5", a:1, b:5},
+      {key:"0:6 (No Gina)", a:0, b:6},
+    ];
+
+    /* ===== 유틸 ===== */
+    const fmt = n => (isFinite(n)? n.toLocaleString() : "0");
+    const den = s => (+String(s).replace(/,/g,"")||0);
+    const on  = (el,evts,fn)=> evts.split(' ').forEach(e=> el && el.addEventListener(e,fn));
+    const E   = id  => document.getElementById(id);
+    const d2  = sel => document.querySelector(sel);
+
+    /* ===== 행운의 룰렛 ===== */
+    on(E('d3_wQty'),'input change keyup blur', ()=>{
+      const pts = (+E('d3_wQty').value||0) * D3_UNIT.wheel;
+      E('d3_wPts').textContent = fmt(pts);
+      sumAll();
+    });
+
+    /* ===== 전문가/책 ===== */
+    function calcExps(){
+      const p1=(+E('d3_qExp1').value||0)*D3_UNIT.exp1;
+      const p2=(+E('d3_qExp2').value||0)*D3_UNIT.exp2;
+      E('d3_pExp1').textContent = fmt(p1);
+      E('d3_pExp2').textContent = fmt(p2);
+      sumAll();
+    }
+    on(E('d3_qExp1'),'input change keyup blur', calcExps);
+    on(E('d3_qExp2'),'input change keyup blur', calcExps);
+    calcExps();
+
+    /* ===== 영웅조각 ===== */
+    function calcHero(){
+      const r=(+E('d3_hsR').value||0)*D3_UNIT.hero.rare;
+      const e=(+E('d3_hsE').value||0)*D3_UNIT.hero.epic;
+      const m=(+E('d3_hsM').value||0)*D3_UNIT.hero.myth;
+      E('d3_hsRPts').textContent=fmt(r);
+      E('d3_hsEPts').textContent=fmt(e);
+      E('d3_hsMPts').textContent=fmt(m);
+      E('d3_hsTotal').textContent=fmt(r+e+m);
+      sumAll();
+    }
+    ['d3_hsR','d3_hsE','d3_hsM'].forEach(id=> on(E(id),'input change keyup blur',calcHero));
+    calcHero();
+
+    /* ===== 보석 ===== */
+    function calcCharm(){
+      const base = D3_CHAR_BASE[+E('d3_cLv').value]||0;
+      E('d3_cBase').textContent = fmt(base);
+      let qty=+(E('d3_cQty').value||0); if(qty>18){ qty=18; E('d3_cQty').value=18; }
+      const pts = base * D3_UNIT.charmMul * qty;
+      E('d3_charmsPts').textContent = fmt(pts);
+      sumAll();
+    }
+    on(E('d3_cLv'),'input change',calcCharm);
+    on(E('d3_cQty'),'input change keyup blur',calcCharm);
+    calcCharm();
+
+    /* ===== 야수사냥 ===== */
+    (function buildBeasts(){
+      const tb=E('d3_beastBody'); tb.innerHTML='';
+      Object.entries(D3_BEAST_BASE).forEach(([name,base])=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`
+          <td>${name}</td>
+          <td class="mono">${fmt(base)}</td>
+          <td class="col-qty"><input class="tintb mono d3_beastQty" data-name="${name}" type="number" min="0" step="1" value="0"></td>
+          <td class="mono d3_beastPts">0</td>`;
+        tb.appendChild(tr);
+      });
+      tb.addEventListener('input', e=>{
+        if(!e.target.classList.contains('d3_beastQty')) return;
+        calcBeasts();
+      });
+    })();
+    function calcBeasts(){
+      let sub=0;
+      E('d3_beastBody').querySelectorAll('tr').forEach(tr=>{
+        const name = tr.querySelector('.d3_beastQty').dataset.name;
+        const base = D3_BEAST_BASE[name]||0;
+        const qty  = +(tr.querySelector('.d3_beastQty').value||0);
+        const pts  = base*qty;
+        tr.querySelector('.d3_beastPts').textContent = fmt(pts);
+        sub += pts;
+      });
+      E('d3_beastPtsTop').textContent = fmt(sub);
+      sumAll();
+    }
+    calcBeasts();
+
+    /* ===== 펫 돌파 ===== */
+		const ADV_LEVELS = [
+			"Level 10","Level 20","Level 30","Level 40","Level 50",
+			"Level 60","Level 70","Level 80","Level 90","Level 100"
+		];
+
+		const advBody = E('d3_petAdvBody');
+		const advAddBtn = E('d3_advAdd');
+
+		function advRowTemplate(level = "Level 10", qty = 0) {
+			const base = D3_PET_ADV_BASE[level] || 0;
+
+			const tr = document.createElement('tr');
+			tr.className = 'adv-row';
+			tr.innerHTML = `
+				<td>
+					<select class="adv-level w-full h-[30px] text-sm px-2">
+						${ADV_LEVELS.map(l => `<option value="${l}" ${l===level?'selected':''}>${l}</option>`).join('')}
+					</select>
+				</td>
+				<td class="mono adv-base">${fmt(base)}</td>
+				<td class="col-qty">
+					<input class="tintb mono adv-qty" type="number" min="0" step="1" value="${qty}">
+				</td>
+				<td class="mono adv-pts">0</td>
+				<td class="text-center"><button class="icon-x" title="삭제">×</button></td>
+			`;
+
+			const sel   = tr.querySelector('.adv-level');
+			const qtyEl = tr.querySelector('.adv-qty');
+			const del   = tr.querySelector('.icon-x');
+
+			// 이벤트: 레벨/개수 변경, 삭제
+			['input','change','keyup','blur'].forEach(ev=>{
+				sel.addEventListener(ev, () => {
+					// 레벨 바뀌면 개별 점수 셀 갱신
+					const b = D5_PET_ADV_BASE[sel.value] || 0;
+					tr.querySelector('.adv-base').textContent = fmt(b);
+					calcPetAdv();
+				});
+				qtyEl.addEventListener(ev, calcPetAdv);
+			});
+
+			del.addEventListener('click', () => {
+				tr.remove();
+				calcPetAdv();
+			});
+
+			return tr;
+		}
+
+		function addAdvRow(level = "Level 10", qty = 0) {
+			advBody.appendChild(advRowTemplate(level, qty));
+			calcPetAdv();
+		}
+
+		function calcPetAdv() {
+			let sub = 0;
+			advBody.querySelectorAll('.adv-row').forEach(row => {
+				const level = row.querySelector('.adv-level').value;
+				const base  = D3_PET_ADV_BASE[level] || 0;
+				const qty   = +(row.querySelector('.adv-qty').value || 0);
+				const pts   = base * qty;
+				row.querySelector('.adv-pts').textContent = fmt(pts);
+				sub += pts;
+			});
+			E('d3_petAdvPtsTop').textContent = fmt(sub);
+			sumAll(); // 기존 총합 함수 호출
+		}
+
+		// +행 추가 버튼
+		advAddBtn.addEventListener('click', () => addAdvRow());
+
+		// 기본 1행
+		addAdvRow("Level 10", 0);
+
+    /* ===== 펫 단련 ===== */
+    (function buildPetRef(){
+      const tb=E('d3_petRefBody'); tb.innerHTML='';
+      Object.entries(D3_PET_REF_BASE).forEach(([name,base],i)=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`
+          <td>${name}</td>
+          <td class="mono">${fmt(base)}</td>
+          <td class="col-qty"><input class="tintb mono d3_petRefQty" data-name="${name}" data-idx="${i}" type="number" min="0" step="1" value="0"></td>
+          <td class="mono d3_petRefPts">0</td>`;
+        tb.appendChild(tr);
+      });
+      tb.addEventListener('input', e=>{
+        if(!e.target.classList.contains('d3_petRefQty')) return;
+        calcPetRef();
+      });
+    })();
+    function calcPetRef(){
+      let sub=0;
+      E('d3_petRefBody').querySelectorAll('tr').forEach(tr=>{
+        const name = tr.querySelector('.d3_petRefQty').dataset.name;
+        const base = D3_PET_REF_BASE[name]||0;
+        const qty  = +(tr.querySelector('.d3_petRefQty').value||0);
+        const pts  = base*qty;
+        tr.querySelector('.d3_petRefPts').textContent = fmt(pts);
+        sub += pts;
+      });
+      E('d3_petRefPtsTop').textContent = fmt(sub);
+      sumAll();
+    }
+    calcPetRef();
+
+    /* ===== 빙원괴수 ===== */
+    function d3_safe(s){ return String(s).replace(/[^a-zA-Z0-9]/g,''); }
+    (function buildPolar(){
+      E('d3_polarEA').textContent = fmt(D3_POLAR_EA);
+      const tb=E('d3_polarBody'); tb.innerHTML='';
+      D3_POLAR_STRATS.forEach(({key})=>{
+        const id=d3_safe(key);
+        const tr=document.createElement('tr');
+        tr.innerHTML=`
+          <td>${key}</td>
+          <td class="mono" id="d3_polRallies-${id}">0</td>
+          <td class="mono" id="d3_polPts-${id}">0</td>
+          <td class="text-center"><input type="radio" name="polPick" class="d3_polPick" data-key="${key}"></td>`;
+        tb.appendChild(tr);
+      });
+      tb.addEventListener('change', e=>{
+        if(!e.target.classList.contains('d3_polPick')) return;
+        updatePolarPick();
+      });
+      on(E('d3_stStart'),'input change keyup blur', calcPolar);
+      on(E('d3_stChief'),'input change keyup blur', calcPolar);
+      calcPolar();
+    })();
+    function calcPolar(){
+      const start=+(E('d3_stStart').value||0);
+      const chief=+(E('d3_stChief').value||0);
+      const total = start + chief*10;
+      E('d3_stTotal').textContent = fmt(total);
+
+      D3_POLAR_STRATS.forEach(({key,a,b})=>{
+        const id=d3_safe(key);
+        let rallies=0, points=0;
+        if(total>0){
+          const avgCost = (a===0)? 25 : ((20 + 25*b)/(a+b));
+          const ralliesRaw = total/avgCost;
+          rallies = Math.round(ralliesRaw);
+          points  = Math.round(ralliesRaw * D3_POLAR_EA);
+        }
+        E('d3_polRallies-'+id).textContent = fmt(rallies);
+        E('d3_polPts-'+id).textContent     = fmt(points);
+      });
+      updatePolarPick();
+    }
+    function updatePolarPick(){
+      let selected=0;
+      E('d3_polarBody').querySelectorAll('.d3_polPick').forEach(r=>{
+        if(r.checked){
+          const id=d3_safe(r.dataset.key);
+          selected = den(E('d3_polPts-'+id).textContent);
+        }
+      });
+      E('d3_polarPtsTop').textContent = fmt(selected);
+      sumAll();
+    }
+
+    /* ===== 총합 ===== */
+    function sumAll(){
+      const total =
+        den(E('d3_wPts').textContent) +
+        den(E('d3_pExp1').textContent) +
+        den(E('d3_pExp2').textContent) +
+        den(E('d3_hsTotal').textContent) +
+        den(E('d3_charmsPts').textContent) +
+        den(E('d3_beastPtsTop').textContent) +
+        den(E('d3_petAdvPtsTop').textContent) +
+        den(E('d3_petRefPtsTop').textContent) +
+        den(E('d3_polarPtsTop').textContent);
+      E('d3_total').textContent = fmt(total);
+    }
+    // 초기 한 번 총합 호출
+    sumAll();
+  </script>
+
+	<script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 20;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+    
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+	
+	<script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+	</body>
+</html>
