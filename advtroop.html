@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>승급 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color:#f5f5f5; color:#111827; font-family: 'Noto Sans KR', sans-serif; }
+    .card { background:#fff; border:1px solid #ddd; border-radius:1rem; box-shadow:0 3px 6px rgba(0,0,0,0.08); }
+    input, .out { border:1px solid #ccc; border-radius:0.5rem; padding:.55rem .75rem; width:100%; font-size:14px; }
+    input:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.2); }
+    .label { font-size:13px; color:#555; margin-bottom:2px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+    .muted { color:#6b7280; font-size:12px; }
+    button.primary { background:#111827; color:#fff; border-radius:0.5rem; padding:.6rem 1rem; font-weight:600; transition:background .15s; }
+    button.primary:hover { background:#374151; }
+  </style>
+</head>
+<body class="p-4">
+	<div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md">
+		<h1 class="text-2xl font-bold text-gray-800 mb-3">👮‍♂️ 승급 계산기</h1>
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-3">		
+			<!-- 좌: 입력 -->
+			<section class="card p-4 space-y-3">
+				<h2 class="text-lg font-semibold mb-2">입력 항목</h2>
+				<!-- ▼ 새로 추가: 승급 대상/목표 드롭다운 (1줄) -->
+				<div class="grid grid-cols-2 gap-3">
+					<div>
+						<div class="label">승급대상 병사</div>
+						<select id="selFrom" class="text-sm border rounded w-full p-2">
+							<option value="T1">T1</option>
+							<option value="T2">T2</option>
+							<option value="T3">T3</option>
+							<option value="T4">T4</option>
+							<option value="T5">T5</option>
+							<option value="T6">T6</option>
+							<option value="T7">T7</option>
+							<option value="T8">T8</option>
+							<option value="T9">T9</option>
+							<option value="T10" selected>T10</option>
+							<option value="T11">T11</option>
+						</select>
+					</div>
+					<div>
+						<div class="label">승급목표 병사</div>
+						<select id="selTo" class="text-sm border rounded w-full p-2">
+							<option value="T1">T1</option>
+							<option value="T2">T2</option>
+							<option value="T3">T3</option>
+							<option value="T4">T4</option>
+							<option value="T5">T5</option>
+							<option value="T6">T6</option>
+							<option value="T7">T7</option>
+							<option value="T8">T8</option>
+							<option value="T9">T9</option>
+							<option value="T10">T10</option>
+							<option value="T11" selected>T11</option>
+						</select>
+					</div>
+				</div>
+				<div>
+					<div class="label">보유 병사수</div>
+					<input id="ownedUnits" type="text" class="mono p-2" placeholder="0" min="0"/>
+				</div>
+
+				<div class="grid grid-cols-3 gap-3">
+					<div>
+						<div class="label">1회 승급량</div>
+						<input id="perPromoQty" type="text" class="mono p-2" placeholder="0" min="0"/>
+					</div>
+					<div>
+						<div class="label">보유가속 (D:HH:MM)</div>
+						<input id="ownedSpeedup" type="text" class="mono p-2" placeholder="00:00:00" min="0"/>
+					</div>
+					<div>
+						<div class="label">1회 승급 소요시간 (HH:MM:SS)</div>
+						<input id="perPromoTime" type="text" class="mono p-2" placeholder="00:00:00" min="0"/>
+					</div>
+				</div>
+
+				<div>
+					<div class="label">보유가속 총합</div>
+					<div id="outOwnedSpeedupPretty" class="out mono">-</div>
+				</div>
+
+				<button id="calcBtn" class="primary w-full mt-2">계산하기</button>
+			</section>
+
+			<!-- 우: 결과 -->
+			<section class="card p-4 space-y-3">
+				<h2 class="text-lg font-semibold mb-2">결과</h2>
+
+				<div>
+					<div class="label">① 승급 소요시간 (보유병사 전체 기준)</div>
+					<div id="outPromoTime" class="out mono">-</div>
+				</div>
+
+				<div>
+					<div class="label">② 승급 가능한 병사 수</div>
+					<div id="outCoveredUnits" class="out mono">-</div>
+				</div>
+
+				<div>
+					<div class="label">③ 승급 가능한 횟수</div>
+					<div id="outCoveredBatches" class="out mono">-</div>
+				</div>
+
+				<div>
+					<div class="label">④ 잔여 승급 필요시간</div>
+					<div id="outRemainingPromoTime" class="out mono">-</div>
+				</div>
+				
+				<div>
+					<div class="label">⑤ SVS 점수</div>
+					<div id="svs_score" class="out mono">-</div>
+				</div>
+			</section>
+		</div>
+  </div>
+
+  <script>
+ 		/* ====== TROOP SCORE (내부용, 표시 안 함) ====== */
+    const TROOP_SCORE = { T1:3, T2:4, T3:5, T4:8, T5:12, T6:18, T7:25, T8:35, T9:45, T10:60, T11:75 };
+    const TIERS = Object.keys(TROOP_SCORE);
+
+    // 대상 변경 시 +1 자동 선택(끝이면 그대로)
+    selFrom.addEventListener('change', () => {
+      const idx = TIERS.indexOf(selFrom.value);
+      const nextIdx = Math.min(idx + 1, TIERS.length - 1);
+      selTo.value = TIERS[nextIdx];
+    });		
+		
+    // ========== 입력 제어 ==========
+    document.querySelectorAll('input[type="text"]').forEach(inp => {
+      inp.addEventListener('input', e => {
+        let v = e.target.value.replace(/[^\d:]/g, ''); // 숫자와 :만 허용
+        if (!v) { e.target.value = ''; return; }
+
+        // 천단위 자동 구분 (단, 콜론이 없는 입력만)
+        if (!v.includes(':')) {
+          const num = v.replace(/,/g, '');
+          if (!isNaN(num)) e.target.value = Number(num).toLocaleString('ko-KR');
+          else e.target.value = v;
+        } else {
+          e.target.value = v;
+        }
+      });
+    });
+
+    // ========== 시간 파싱 ==========
+    function parseOwnedSpeedup_NoSS(s) {
+      if (!s || typeof s !== 'string') return 0;
+      const parts = s.trim().split(':').map(x => x.trim());
+      const nums = parts.map(Number);
+      if (nums.some(n => !Number.isFinite(n) || n < 0)) return 0;
+      if (nums.length === 3) { const [d,h,m]=nums; return ((d*24+h)*60+m)*60; }
+      if (nums.length === 2) { const [h,m]=nums; return (h*3600+m*60); }
+      if (nums.length === 1) return nums[0]*60;
+      return 0;
+    }
+    function parseHMS(s) {
+      if (!s || typeof s !== 'string') return 0;
+      const p = s.trim().split(':').map(x => x.trim());
+      const n = p.map(Number);
+      if (n.some(v=>!Number.isFinite(v)||v<0)) return 0;
+      let h=0,m=0,s2=0;
+      if (n.length===3)[h,m,s2]=n; else if(n.length===2)[m,s2]=n; else if(n.length===1)[s2]=n;
+      return ((h*60+m)*60+s2);
+    }
+    function secondsToDHMS(sec){
+      sec=Math.max(0,Math.floor(sec));
+      const d=Math.floor(sec/86400);sec%=86400;
+      const h=Math.floor(sec/3600);sec%=3600;
+      const m=Math.floor(sec/60);const s=sec%60;
+      const pad=n=>String(n).padStart(2,'0');
+      return (d>0?`${d}일 `:'')+`${pad(h)}시간 ${pad(m)}분`;
+    }
+    function getInt(v){ return parseInt(String(v).replace(/[^\d]/g,''))||0; }
+    function prettyInt(n){ return isFinite(n)?n.toLocaleString('ko-KR'):'-'; }
+
+    // ========== 계산 ==========
+    function calc(){
+      const ownedUnits=getInt(document.getElementById('ownedUnits').value);
+      const perPromoQty=getInt(document.getElementById('perPromoQty').value);
+      const ownedSpeedupSec=parseOwnedSpeedup_NoSS(document.getElementById('ownedSpeedup').value||'');
+      const perPromoTimeSec=parseHMS(document.getElementById('perPromoTime').value||'');
+      const tPromoEff=perPromoTimeSec;
+      const promoBatches=perPromoQty>0?Math.ceil(ownedUnits/perPromoQty):0;
+      const totalPromoTime=promoBatches*tPromoEff;
+			const coveredBatches=tPromoEff>0?Math.floor(ownedSpeedupSec/tPromoEff):0;
+      const coveredUnitsRaw=coveredBatches*perPromoQty;
+      const coveredUnits=Math.min(ownedUnits,isFinite(coveredUnitsRaw)?coveredUnitsRaw:0);
+      const remainingPromoTime=Math.max(0,totalPromoTime-ownedSpeedupSec);
+			
+			const curTier = document.getElementById('selFrom').value;
+			const tarTier = document.getElementById('selTo').value;
+			// 단일 승급 점수: 목표 - 대상
+      const singleScore = (TROOP_SCORE[tarTier] ?? 0) - (TROOP_SCORE[curTier] ?? 0);
+			// 총 SVS 점수: 단일 점수 × 실제 승급 병사 수(가속으로 커버되는 수 기준)
+      const totalScore = Math.max(0, singleScore) * coveredUnits;
+
+      document.getElementById('outPromoTime').textContent=totalPromoTime>0?secondsToDHMS(totalPromoTime):'-';
+      document.getElementById('outCoveredUnits').textContent=coveredUnits>0?prettyInt(coveredUnits):'0';
+      document.getElementById('outCoveredBatches').textContent=prettyInt(Math.max(0,coveredBatches));
+      document.getElementById('outRemainingPromoTime').textContent=secondsToDHMS(remainingPromoTime);
+      document.getElementById('outOwnedSpeedupPretty').textContent=ownedSpeedupSec?secondsToDHMS(ownedSpeedupSec):'-';
+			document.getElementById('svs_score').textContent=prettyInt(totalScore)||'-';
+    }
+
+    document.getElementById('calcBtn').addEventListener('click', calc);
+    ['ownedUnits','perPromoQty','ownedSpeedup','perPromoTime'].forEach(id=>{
+      document.getElementById(id).addEventListener('input',()=>{ clearTimeout(window.__deb); window.__deb=setTimeout(calc,150); });
+    });
+  </script>
+  <!-- iframe 높이 조정 -->
+  <script>
+    function sendHeightToParent(){
+      const h=document.body.scrollHeight;
+      window.parent.postMessage({type:"FRAME_CHANGE",height:h},"*");
+    }
+    window.addEventListener("load",()=>setTimeout(sendHeightToParent,100));
+  </script>
+
+  <!-- 보호 -->
+  <script>
+    document.addEventListener("contextmenu", e=>e.preventDefault());
+    document.addEventListener("keydown", e=>{
+      if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="J"))||(e.ctrlKey&&(e.key==="U"||e.key==="S"))) e.preventDefault();
+    });
+  </script>
+</body>
+</html>
