@@ -393,8 +393,9 @@
                   <div class="row">
                     <div style="font-weight:600;">보유 영웅 조각 수</div>
                     <input id="pieceInput" type="number" min="0" value="0" max="1075" class="input">
-                    <div style="font-weight:600;">기대 결과</div>
+                    <div style="font-weight:600">기대 결과</div>
                     <div id="hero-shard-strip"></div>
+                    <p id="tierFallback" class="hidden text-gray-400"></p>
                   </div>
                 </div>
               </details>
@@ -1541,7 +1542,6 @@
       </div>
     </div>
   </div>
-	
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       // 필요 경로를 여기에 각기 다르게 설정하세요.
@@ -2028,24 +2028,53 @@
       // 누적 변환 (예: [1,1,2,2,2,12] → [1,2,4,6,8,20])
       const cum = (arr) => { const out=[]; let s=0; for (const v of arr){ s+=v; out.push(s); } return out; };
 
+      // ✅ 이미지/문구 토글 (티어 스트립 영역)
+      function toggleTierGallery(showImages, message = "") {
+        const box = document.querySelector(OUT_SEL);
+        const fb  = document.getElementById("tierFallback"); // 대체문구 요소 (필수)
+        if (!box) return;
+
+        if (showImages) {
+          // 이미지 영역 표시
+          box.classList.remove("hidden"); box.style.display = "";
+          if (fb) { fb.classList.add("hidden"); fb.style.display = "none"; fb.textContent = ""; }
+        } else {
+          // 이미지 전부 제거 + 영역 숨김, 문구 표시
+          box.innerHTML = "";
+          box.classList.add("hidden"); box.style.display = "none";
+          if (fb) { fb.classList.remove("hidden"); fb.style.display = ""; fb.textContent = message || "※ 최초모집시 10개의 조각이 필요합니다."; }
+        }
+      }
+
+      // ✓ 카드/유닛 이미지/안내문 토글 (있으면 사용, 없으면 무시)
+      function toggleRecruitUI({ showImage }) {
+        const img  = document.getElementById('unitImage');        // 카드/유닛 이미지 요소(옵션)
+        const hint = document.getElementById('firstRecruitHint'); // 안내문 요소(옵션)
+        if (!img && !hint) return;
+
+        if (showImage) {
+          if (img)  { img.classList.remove('hidden'); img.style.display = ''; }
+          if (hint) { hint.textContent = ''; }
+        } else {
+          if (img)  { img.classList.add('hidden'); img.style.display = 'none'; }
+          if (hint) { hint.textContent = '※ 최초모집시 10개의 조각이 필요합니다.'; }
+        }
+      }
+
       // 조각 수를 1성→5성 순으로 소모하여 각 행의 tier(0..6) 계산
-      // ▶ 최초모집이 '미실시' 가정: 먼저 RECRUIT_COST(=10) 차감
+      // ▶ 최초모집이 '미실시' 가정: have < RECRUIT_COST이면 모두 0
       function computeTiers(pieces) {
+        const have = Math.max(0, n(pieces));
+        const tiers = new Array(5).fill(0);
+        if (have < RECRUIT_COST) return tiers;
+
         const matrix = readMatrixFromTable(); // 5×6
-        const tiers  = new Array(5).fill(0);
-
-        let remain = Math.max(0, n(pieces));
-        // 최초모집 미실시 → 먼저 10 차감
-        remain -= RECRUIT_COST;
-
-        // 10 미만이면 어떤 행도 진행 불가
+        let remain = have - RECRUIT_COST;
         if (remain <= 0) return tiers;
 
         for (let r = 0; r < 5; r++) {
-          const cums = cum(matrix[r]); // [c1,c1+c2,...]
-          let t = 0;                   // 0..6
-
-          // 남은 조각으로 해당 행에서 몇 칸 달성했는지
+          const cums = cum(matrix[r]); // [c1, c1+c2, ...]
+          let t = 0; // 0..6
           for (let k = 0; k < 6; k++) {
             if (remain >= cums[k]) t = k + 1; else break;
           }
@@ -2055,8 +2084,7 @@
           if (remain >= rowTotal) {
             remain -= rowTotal; // 전부 채웠으면 다음 행으로 carry
           } else {
-            // 부분만 채웠으면 이후 행은 진행하지 않음
-            break;
+            break; // 부분만 채웠으면 이후 행은 진행하지 않음
           }
         }
         return tiers;
@@ -2078,7 +2106,20 @@
       // 공개 API: 조각 수를 넘기면 즉시 갱신
       window.updateHeroShardState = function(pieces) {
         try {
-          const tiers = computeTiers(pieces);
+          const have = Math.max(0, n(pieces));
+
+          // ⛳ 0~9면: 티어 이미지 6개(=띠 전체) 숨기고 문구만
+          if (have < RECRUIT_COST) {
+            toggleRecruitUI({ showImage: false });
+            toggleTierGallery(false, "※ 최초모집시 10개의 조각이 필요합니다.");
+            return;
+          }
+
+          // 10 이상: 이미지 영역 보이기 → 계산/렌더
+          toggleRecruitUI({ showImage: true });
+          toggleTierGallery(true);
+
+          const tiers = computeTiers(have);
           renderTiers(tiers);
         } catch (err) {
           const box = document.querySelector(OUT_SEL);
@@ -2102,10 +2143,9 @@
       });
       $input.addEventListener("keydown", e => { if (e.key === "Enter") updateHeroShardState($input.value); });
 
-      // 초기 표시(데모)
+      // 초기 표시(기본값 0 → 문구만 표시)
       updateHeroShardState($input.value);
     })();
-    </script>
-
+  </script>
 </body>
 </html>
