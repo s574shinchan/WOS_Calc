@@ -94,26 +94,31 @@
 				<div>
 					<div class="label">① 승급 소요시간 (보유병사 전체 기준)</div>
 					<div id="outPromoTime" class="out mono">-</div>
+          <div class="muted mt-1">공식 : ceil(보유병사 ÷ 1회승급량) × 1회승급시간</div>
 				</div>
 
 				<div>
 					<div class="label">② 승급 가능한 병사 수</div>
 					<div id="outCoveredUnits" class="out mono">-</div>
+          <div class="muted mt-1">공식 : floor(보유가속 ÷ 1회승급시간) × 1회승급량</div>
 				</div>
 
 				<div>
 					<div class="label">③ 승급 가능한 횟수</div>
 					<div id="outCoveredBatches" class="out mono">-</div>
+          <div class="muted mt-1">공식 : floor(보유가속 ÷ 1회승급시간)</div>
 				</div>
 
 				<div>
 					<div class="label">④ 잔여 승급 필요시간</div>
 					<div id="outRemainingPromoTime" class="out mono">-</div>
+          <div class="muted mt-1">공식 : 총 승급시간 − 보유가속</div>          
 				</div>
 				
 				<div>
 					<div class="label">⑤ SVS 점수</div>
 					<div id="svs_score" class="out mono">-</div>
+          <div class="muted mt-1">공식 : (목표티어 점수 − 대상티어 점수) × 실제 승급된 병사 수</div>
 				</div>
 			</section>
 		</div>
