@@ -399,7 +399,6 @@
                 </div>
               </details>
 
-
               <!-- 용광로 업그레이드 조건 -->
               <details id="detail3" class="bg-white border border-blue-300 rounded-md p-4" open>
                 <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 용광로 업그레이드 조건</summary>
@@ -467,73 +466,80 @@
               <!-- 🛫 이민 시스템 안내 -->
               <details id="detail4" class="bg-white border border-blue-300 rounded-md p-4" open>
                 <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
-                <!-- 서버분류 -->
-                <section>
-                  <h3 class="font-semibold text-blue-600 mb-1">🔹 서버분류</h3>
-                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li><span class="text-blue-500">일반서버</span><br>
-                      - 이민인원: <strong>55</strong> | 특별초대: <strong>최대 3</strong> | 일반초대: <strong>35</strong> | 자유이민: <strong>20 (선착순)</strong>
-                    </li>
-                    <li><span class="text-red-500">강성서버</span><br>
-                      - 이민인원: <strong>30</strong> | 특별초대: <strong>없음</strong> | 일반초대: <strong>20</strong> | 자유이민: <strong>10 (선착순)</strong>
-                    </li>
-                  </ul>
-                </section>
-                
-                <!-- 일정 -->
-                <section>
-                  <h3 class="font-semibold text-blue-600 mb-1">🔹 일정</h3>
-                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li><strong>일 ~ 화</strong>: 이민 전투력 제한 설정 및 이민모집 홍보</li>
-                    <li><strong>수 ~ 목</strong>: 초대권 받은 사람들 이동 가능 (특별초대 + 일반초대)</li>
-                    <li><strong>금 ~ 토</strong>: <u>UTC 00:00부터</u> 자유이민 시작 (선착순)</li>      
-                  </ul>
-                </section>
-                
-                <!-- 용어정리 -->
-                <section>
-                  <h3 class="font-semibold text-blue-600 mb-1">🔹 용어정리</h3>
-                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li>특별초대: <strong>전투력 제한 없음</strong>, <u>첫 이민 시 3장</u>, <u>월 1장 추가</u>, <strong>최대 3장 보유 가능</strong></li>
-                    <li>일반초대: <strong>전투력 제한 범위 내</strong></li>
-                  </ul>
-                </section>
-                
-                <!-- 그 외 -->
-                <section>
-                  <h3 class="font-semibold text-blue-600 mb-1">🔹 그 외</h3>
-                  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
-                    <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
-                    <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
-                    <li>모병소/의무실 병사도 전투력 포함</li>
-                    <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
-                    <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
-                  </ul>
-                </section>
-                
-                <!-- 이민권 패키지 구성 -->
-                <section>
-                  <h3 class="font-semibold text-green-600">✈️ 이민권 패키지</h3>
-                  <div class="overflow-x-auto">
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-green-100">
-                        <tr>
-                          <th class="border p-1">금액</th>
-                          <th class="border p-1">이민권</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr><td class="border p-1">7,500</td><td class="border p-1">1장</td></tr>
-                        <tr><td class="border p-1">15,000</td><td class="border p-1">2장</td></tr>
-                        <tr><td class="border p-1">30,000</td><td class="border p-1">3장</td></tr>
-                        <tr><td class="border p-1">79,000</td><td class="border p-1">4장</td></tr>
-                        <tr><td class="border p-1">149,000</td><td class="border p-1">5장</td></tr>
-                      </tbody>
-                    </table>
+
+                <!-- ✅ 좌우 2열 래퍼 -->
+                <div class="md:grid md:grid-cols-2 gap-4 items-start min-w-0">
+                  <!-- ◀ 왼쪽: 서술 영역 묶음 -->
+                  <div class="space-y-4 min-w-0">
+                    <!-- 서버분류 -->
+                    <section>
+                      <h3 class="font-semibold text-blue-600 mb-1">🔹 서버분류</h3>
+                      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li><span class="text-blue-500">일반서버</span><br>
+                          - 이민인원: <strong>55</strong> | 특별초대: <strong>최대 3</strong> | 일반초대: <strong>35</strong> | 자유이민: <strong>20 (선착순)</strong>
+                        </li>
+                        <li><span class="text-red-500">강성서버</span><br>
+                          - 이민인원: <strong>30</strong> | 특별초대: <strong>없음</strong> | 일반초대: <strong>20</strong> | 자유이민: <strong>10 (선착순)</strong>
+                        </li>
+                      </ul>
+                    </section>
+
+                    <!-- 일정 -->
+                    <section>
+                      <h3 class="font-semibold text-blue-600 mb-1">🔹 일정</h3>
+                      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li><strong>일 ~ 화</strong>: 이민 전투력 제한 설정 및 이민모집 홍보</li>
+                        <li><strong>수 ~ 목</strong>: 초대권 받은 사람들 이동 가능 (특별초대 + 일반초대)</li>
+                        <li><strong>금 ~ 토</strong>: <u>UTC 00:00부터</u> 자유이민 시작 (선착순)</li>
+                      </ul>
+                    </section>
+
+                    <!-- 용어정리 -->
+                    <section>
+                      <h3 class="font-semibold text-blue-600 mb-1">🔹 용어정리</h3>
+                      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li>특별초대: <strong>전투력 제한 없음</strong>, <u>첫 이민 시 3장</u>, <u>월 1장 추가</u>, <strong>최대 3장 보유 가능</strong></li>
+                        <li>일반초대: <strong>전투력 제한 범위 내</strong></li>
+                      </ul>
+                    </section>
+
+                    <!-- 그 외 -->
+                    <section>
+                      <h3 class="font-semibold text-blue-600 mb-1">🔹 그 외</h3>
+                      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
+                        <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
+                        <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
+                        <li>모병소/의무실 병사도 전투력 포함</li>
+                        <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
+                        <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
+                      </ul>
+                    </section>
                   </div>
-                  <p class="text-xs text-gray-600 mt-1">📌 참고 : 149,000 패키지는 <span class="font-semibold text-red-500">최대 15번</span>까지 구매 가능합니다.</p>
-                </section>
+
+                  <!-- ▶ 오른쪽: 표(패키지) -->
+                  <div class="space-y-2 min-w-0">
+                    <h3 class="font-semibold text-green-600">✈️ 이민권 패키지</h3>
+                    <div class="overflow-x-auto border rounded-md">
+                      <table class="table-auto w-full text-xs text-center">
+                        <thead class="bg-green-100">
+                          <tr>
+                            <th class="border p-1">금액</th>
+                            <th class="border p-1">이민권</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr><td class="border p-1">7,500</td><td class="border p-1">1장</td></tr>
+                          <tr><td class="border p-1">15,000</td><td class="border p-1">2장</td></tr>
+                          <tr><td class="border p-1">30,000</td><td class="border p-1">3장</td></tr>
+                          <tr><td class="border p-1">79,000</td><td class="border p-1">4장</td></tr>
+                          <tr><td class="border p-1">149,000</td><td class="border p-1">5장</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <p class="text-xs text-gray-600">📌 참고 : 149,000 패키지는 <span class="font-semibold text-red-500">최대 15번</span>까지 구매 가능합니다.</p>
+                  </div>
+                </div>
               </details>
               
               <!-- 단어번역 -->
@@ -544,6 +550,7 @@
                 </div>
               </details>
               
+              <!-- 요새 주차별 보상 -->
               <details class="border border-blue-300 rounded-md p-4 shadow">
                 <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">👑 요새 주차별 보상</summary>
                 <div class="overflow-x-auto w-full">
@@ -790,6 +797,7 @@
                 </div>
               </details>
               
+              <!-- 세대별 영웅 특성 -->
               <details class="border border-blue-300 rounded-md p-4 shadow">
                 <summary class="cursor-pointer text-lg font-semibold text-blue-700">🧬 세대별 영웅 특성</summary>
                 <div class="overflow-x-auto w-full">
@@ -1360,7 +1368,7 @@
                 </div>
               </details>
               
-              <!-- 깃발해금 -->
+              <!-- 드래곤 엠페러 -->
               <details class="bg-white border border-blue-300 rounded-md p-4">
                 <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🐉 프로스트 드래곤 엠페러</summary>
                 <section class="bg-white p-4 rounded shadow-md text-sm">
