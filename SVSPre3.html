@@ -596,7 +596,7 @@
 
 	<script>
     function sendHeightToParent() {
-      const height = document.body.scrollHeight + 20;
+      const height = document.body.scrollHeight + 60;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
     
