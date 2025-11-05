@@ -28,6 +28,7 @@
       box-shadow:var(--shadow); padding:1.05rem 1.1rem;
     }
     .tin{ background:var(--in); border:1px solid var(--border); border-radius:9999px; padding:.45rem .95rem; text-align:right; font-size:1rem }
+    .tin2{ background:var(--in); border:1px solid var(--border); border-radius:9999px; padding:.35rem .55rem; font-size:.95rem }
 		.tintb { background:var(--in); padding:.45rem .95rem; text-align:right; font-size:1rem }
     input[type="number"]{-moz-appearance:textfield; appearance:textfield}
     input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{ appearance:none; margin:0 }
@@ -106,18 +107,63 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
 			<!-- 영웅전용장비 -->
 			<section class="tile">
-          <div class="tlabel mb-2">영웅전용장비 1개 소모</div>
-          <div class="flex items-center justify-between tcap mt-2">
-            <span>개별 점수</span><span class="mono">8,000</span>
+        <div class="tlabel mb-2">영웅전용장비 1개 소모</div>
+        <div class="flex items-center justify-between tcap mt-2">
+          <span>개별 점수</span><span class="mono">8,000</span>
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="tcap">개수</span>
+          <input id="qWid" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="tcap">Points</span>
+          <span id="pWid" class="mono">0</span>
+        </div>
+        
+        <!-- ▼ 현재 / 목표 레벨 -->
+        <div class="tlabel mt-2 mb-2">영웅 전용장비 레벨계산</div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-[12px] text-gray-600">현재</span>
+            <select id="curLv" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
+              <option value="" selected disabled hidden></option>
+              <option value="0">Lv0</option>
+              <option value="1">Lv1</option>
+              <option value="2">Lv2</option>
+              <option value="3">Lv3</option>
+              <option value="4">Lv4</option>
+              <option value="5">Lv5</option>
+              <option value="6">Lv6</option>
+              <option value="7">Lv7</option>
+              <option value="8">Lv8</option>
+              <option value="9">Lv9</option>
+            </select>
           </div>
-          <div class="flex items-center justify-between mt-2">
-            <span class="tcap">개수</span>
-            <input id="qWid" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+          <div class="flex items-center gap-2">
+            <span class="text-[12px] text-gray-600">목표</span>
+            <select id="tgtLv" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
+              <option value="" selected disabled hidden></option>
+              <option value="1">Lv1</option>
+              <option value="2">Lv2</option>
+              <option value="3">Lv3</option>
+              <option value="4">Lv4</option>
+              <option value="5">Lv5</option>
+              <option value="6">Lv6</option>
+              <option value="7">Lv7</option>
+              <option value="8">Lv8</option>
+              <option value="9">Lv9</option>
+              <option value="10">Lv10</option>
+            </select>
           </div>
-          <div class="flex items-center justify-between mt-2">
-            <span class="tcap">Points</span><span id="pWid" class="mono">0</span>
+          <!-- ▼ 계산 결과 -->
+          <div class="flex items-center justify-between">
+            <span class="tcap">필요 개수</span>
+            <span id="nWid" class="mono px-2">0</span>
+            <span class="tcap px-2">Point</span>
+            <span id="nPWid" class="mono">0</span>            
           </div>
-        </section>
+        </div>
+      </section>
 			
 			<!-- 영주보석 업그레이드 -->			
 			<section class="tile">
@@ -186,6 +232,7 @@
     const UNIT = { widgets:8000, essence:4000, mithril:144000 };
     const CHARM_BASE = {1:625,2:1250,3:3125,4:8750,5:11250,6:12500,7:12500,8:13000,9:14000,10:15000,11:16000,12:17000,13:18000,14:19000,15:20000,16:21000};
     const CHARM_MUL = 70;
+    const WIDCNT = { 1:5,2:10,3:15,4:20,5:25,6:30,7:35,8:40,9:45,10:50 };
 
     // ===== 유틸 =====
     const fmt = n => (isFinite(n) ? n.toLocaleString() : "0");
@@ -195,7 +242,7 @@
       const el = document.getElementById(id);
       return el ? el.textContent : "0";
     };
-
+    
     // 좌측 카드 계산
     const qWid = document.getElementById('qWid');
     const qEss = document.getElementById('qEss');
@@ -203,6 +250,7 @@
     const pWid = document.getElementById('pWid');
     const pEss = document.getElementById('pEss');
     const pMit = document.getElementById('pMit');
+    
     function calcTop(){
       pWid.textContent = fmt((+qWid.value||0)*UNIT.widgets);
       pEss.textContent = fmt((+qEss.value||0)*UNIT.essence);
@@ -212,6 +260,27 @@
     [qWid,qEss,qMit].forEach(el=> on(el,'input change keyup blur',calcTop));
     calcTop();
 
+    function getWidNeed(cur, tgt) {
+      if (tgt <= cur) return 0;
+      let need = 0;
+      for (let i = cur + 1; i <= tgt; i++) need += WIDCNT[i];
+      return need;
+    }
+
+    function updateWid() {
+      const cur = parseInt(document.getElementById("curLv").value);
+      const tgt = parseInt(document.getElementById("tgtLv").value);
+      const need = getWidNeed(cur, tgt);
+      const point = need * 8000;
+
+      document.getElementById("nWid").textContent = need.toLocaleString();
+      document.getElementById("nPWid").textContent = point.toLocaleString();
+    }
+
+    document.getElementById("qWid").addEventListener("input", updateWid);
+    document.getElementById("curLv").addEventListener("change", updateWid);
+    document.getElementById("tgtLv").addEventListener("change", updateWid);    
+    
     // 보석 카드
     const cLv  = document.getElementById('cLv');
     const cBase= document.getElementById('cBase');
