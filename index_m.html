@@ -16,7 +16,7 @@
     <meta content="summary_large_image" name="twitter:card"/>
     <meta content="WOS 계산기 - 재료 및 자원 소모량 계산가능" name="twitter:title"/>
     <meta content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료모음" name="twitter:description"/>
-    <meta content="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/e66ed083ba7662f678ff42bcb3d0ee2b03ad3169/images/og-image.png" name="twitter:image">
+    <meta content="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/e66ed083ba7662f678ff42bcb3d0ee2b03ad3169/images/og-image.png" name="twitter:image"/>
     <link href="https://d1xsb5o91gjadf.cloudfront.net/" rel="canonical"/>
     <link href="/favicon.ico" rel="icon" type="image/x-icon"/>
     <title>WOS 계산기 &amp; 자료모음</title>
@@ -35,64 +35,91 @@
         margin: 0;
       }
       /* ✅ 다크모드 전용 */
-        body.dark-mode {
-          background-image: none;
-          background-color: #121212;
-          color: #f0f0f0;
-        }
-        
-        .dark-mode .bg-white,    
-        .dark-mode .blue-50 { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-        
-        .dark-mode .bg-blue-300,
-        .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-      
-        .dark-mode .text-gray-800,
-        .dark-mode .text-gray-700,
-        .dark-mode .text-gray-600 { color: #ffffff !important; }
-      
-        .dark-mode .text-blue-700 { color: #66b0ff !important; }
-        .dark-mode .text-blue-600 { color: #80caff !important; }
-        .dark-mode .text-orange-500 { color: #ffa94d !important; }
-        .dark-mode .text-green-600 { color: #79e68c !important; }
-        .dark-mode .text-red-500 { color: #ff8080 !important; }
-      
-        .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
-        .dark-mode th, .dark-mode td { border-color: #444 !important; }
-        .dark-mode thead th { color: #000 !important; }
-        
-        .dark-mode .bg-blue-100,
-        .dark-mode .bg-amber-100,    
-        .dark-mode .bg-green-100,
-        .dark-mode .bg-orange-50,
-        .dark-mode .bg-red-50,
-        .dark-mode .bg-blue-50,
-        .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
-      
-        .dark-mode .bg-amber-50,
-        .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
-      
-        .dark-mode summary { background-color: #333 !important; color: #fff !important; }
-        .dark-mode ul li { color: #ddd; }
-        .dark-mode .text-gray-500 { color: #9ca3af !important; }
-        
-        .dark-mode * { text-shadow: none !important; }
-        
-        .dark-mode #langSelectPC,
-        .dark-mode #langSelectPC option,
-        .dark-mode #langSelectPC:disabled {
-          color: #ffffff !important;
-          background-color: #2c2c2c !important;
-        }
-        /* 다크모드에서 팝업 테이블 헤더 글자색을 검정으로 */
-        body.dark-mode #popupContent th { color:#ffffff !important; }
-        
-        /* 다크모드에서 총합/보유량/과부족 행 글자색을 검정으로 */
-        body.dark-mode #popupContent tr.row-total  td,
-        body.dark-mode #popupContent tr.row-owned  td,
-        body.dark-mode #popupContent tr.row-deficit td { color:#ffffff !important; }
+      body.dark-mode {
+        background-image: none;
+        background-color: #121212;
+        color: #f0f0f0;
+      }
+
+      .dark-mode .bg-white,    
+      .dark-mode .blue-50 { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+
+      .dark-mode .bg-blue-300,
+      .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+
+      .dark-mode .text-gray-800,
+      .dark-mode .text-gray-700,
+      .dark-mode .text-gray-600 { color: #ffffff !important; }
+
+      .dark-mode .text-blue-700 { color: #66b0ff !important; }
+      .dark-mode .text-blue-600 { color: #80caff !important; }
+      .dark-mode .text-orange-500 { color: #ffa94d !important; }
+      .dark-mode .text-green-600 { color: #79e68c !important; }
+      .dark-mode .text-red-500 { color: #ff8080 !important; }
+
+      .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
+      .dark-mode th, .dark-mode td { border-color: #444 !important; }
+      .dark-mode thead th { color: #000 !important; }
+
+      .dark-mode .bg-blue-100,
+      .dark-mode .bg-amber-100,    
+      .dark-mode .bg-green-100,
+      .dark-mode .bg-orange-50,
+      .dark-mode .bg-red-50,
+      .dark-mode .bg-blue-50,
+      .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
+
+      .dark-mode .bg-amber-50,
+      .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
+
+      .dark-mode summary { background-color: #333 !important; color: #fff !important; }
+      .dark-mode ul li { color: #ddd; }
+      .dark-mode .text-gray-500 { color: #9ca3af !important; }
+
+      .dark-mode * { text-shadow: none !important; }
+
+      .dark-mode #langSelectPC,
+      .dark-mode #langSelectPC option,
+      .dark-mode #langSelectPC:disabled {
+        color: #ffffff !important;
+        background-color: #2c2c2c !important;
+      }
+      /* 다크모드에서 팝업 테이블 헤더 글자색을 검정으로 */
+      body.dark-mode #popupContent th { color:#ffffff !important; }
+
+      /* 다크모드에서 총합/보유량/과부족 행 글자색을 검정으로 */
+      body.dark-mode #popupContent tr.row-total  td,
+      body.dark-mode #popupContent tr.row-owned  td,
+      body.dark-mode #popupContent tr.row-deficit td { color:#ffffff !important; }
+      .card { 
+        border:1px solid rgba(0,0,0,.1); 
+        background:#fff; 
+        box-shadow:0 2px 8px rgba(0,0,0,.06); 
+        padding:10px 10px; 
+      }
+      /* ✅ 한 줄 유지 + 가로 스크롤 허용 */
+      .row{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        flex-wrap:nowrap;         /* 줄바꿈 금지 */
+        white-space:nowrap;       /* 텍스트도 줄바꿈 금지 */
+        overflow-x:auto;          /* 넘치면 가로 스크롤 */
+        -webkit-overflow-scrolling: touch;
+      }
+      #hero-shard-strip{
+        display:flex;
+        align-items:center;
+        flex-wrap:nowrap;         /* 줄바꿈 금지 */
+        flex:0 0 auto;            /* 줄서기 고정 */
+      }
+      #hero-shard-strip img{
+        width:32px; height:32px; object-fit:contain;
+        flex:0 0 auto;            /* 아이콘 자체도 줄바꿈 방지 */
+      }
+      .input { width:110px; height:34px; border:1px solid #d0d5dd; border-radius:8px; padding:0 10px; outline:none; }
+      .btn   { height:34px; padding:0 14px; border:0; border-radius:8px; background:#2563eb; color:#fff; cursor:pointer; flex:0 0 auto; }
     </style>
-  </meta>
   </head>
   <body class="bg-gray-100 min-h-screen p-4">
     <div class="max-w-[1500px] mx-auto w-full bg-blue-300 shadow rounded p-4 sm:p-3 relative">
@@ -466,8 +493,8 @@
                           <th class="border p-1">전용무기효과</th>
                           <th class="border p-1">공수구분</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                      </thead>
+                      <tbody>
                         <!-- 여기에 너가 기존에 입력한 <tr>들 복사해서 붙여넣기 -->
                         <tr>
                           <td class="border p-1" rowspan="4">1세대</td>
@@ -766,7 +793,55 @@
                           <td class="border p-1">파괴력 15%</td>
                           <td class="border p-1">수성</td>
                         </tr>
-                        </tbody>
+                        <tr>
+                          <td class="border p-1" rowspan="3">13세대</td>
+                          <td class="border p-1">가젤라</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1" rowspan="3">1621.29%</td>
+                          <td class="border p-1" rowspan="3">405.0%</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">플로라</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">HP 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">울카누</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1" rowspan="3">14세대</td>
+                          <td class="border p-1">엘리프</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1" rowspan="3">1791.43%</td>
+                          <td class="border p-1" rowspan="3">447.5%</td>
+                          <td class="border p-1">방어력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">도미니카</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">빙원의 왕</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">카라</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                 </details>
@@ -916,7 +991,7 @@
                   <div class="mt-3 space-y-4 text-sm text-gray-800" id="영웅성급">
                     <div class="overflow-x-auto">
                       <h2>최초 모집 시 영웅조각 10개 필요</h2>
-                      <table class="table-auto border w-full text-xs text-center">
+                      <table id="hero-upgrade-table"  class="table-auto border w-full text-xs text-center">
                         <thead class="bg-orange-100">
                           <th class="border p-1">등급</th>
                           <th class="border p-1">
@@ -998,6 +1073,16 @@
                           </tr>
                         </tfoot>
                       </table>
+                    </div>
+                  </div>
+                  <div class="card w-full">
+                    <!-- ✅ 전부 가로 한 줄 (넘치면 가로 스크롤) -->
+                    <div class="row">
+                      <div style="font-weight:600;">보유 영웅 조각 수</div>
+                      <input id="pieceInput" type="number" min="0" value="0" max="1075" class="input">
+                      <div style="font-weight:600">기대 결과</div>
+                      <div id="hero-shard-strip"></div>
+                      <p id="tierFallback" class="hidden text-gray-400"></p>
                     </div>
                   </div>
                 </details>
@@ -1499,5 +1584,159 @@
         }
       });
     </script>
+    <script>
+        (() => {
+          // ▼ 최초모집(미실시 가정) 비용
+          const RECRUIT_COST = 10;
+
+          // ▼ tier0~tier6 이미지 (7장) — 필요 시 경로 교체
+          const TIER_IMG = (n) => `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/tier${n}.png`;
+
+          const TABLE_SEL = "#hero-upgrade-table";
+          const OUT_SEL   = "#hero-shard-strip";
+          const n = (s) => { const v = parseInt(String(s).replace(/[^0-9-]/g,""), 10); return Number.isFinite(v) ? v : 0; };
+
+          // 표에서 5행×6칸 숫자 행렬 추출 (1성~5성, 각 6칸)
+          function readMatrixFromTable() {
+            const table = document.querySelector(TABLE_SEL);
+            if (!table) throw new Error("표를 찾지 못했습니다: " + TABLE_SEL);
+            const bodyRows = Array.from(table.querySelectorAll("tbody tr"));
+            if (bodyRows.length < 5) throw new Error("표 행 개수가 부족합니다(5행 필요).");
+
+            // 셀 인덱스: 0=등급, 1..6=칸, 마지막=SubTotal
+            const COL_START = 1, COL_END = 6;
+
+            return bodyRows.slice(0, 5).map(tr => {
+              const cells = tr.querySelectorAll("td");
+              const row = [];
+              for (let c = COL_START; c <= COL_END; c++) {
+                row.push(n(cells[c]?.textContent || "0"));
+              }
+              return row; // 길이 6
+            });
+          }
+
+          // 누적 변환 (예: [1,1,2,2,2,12] → [1,2,4,6,8,20])
+          const cum = (arr) => { const out=[]; let s=0; for (const v of arr){ s+=v; out.push(s); } return out; };
+
+          // ✅ 이미지/문구 토글 (티어 스트립 영역)
+          function toggleTierGallery(showImages, message = "") {
+            const box = document.querySelector(OUT_SEL);
+            const fb  = document.getElementById("tierFallback"); // 대체문구 요소 (필수)
+            if (!box) return;
+
+            if (showImages) {
+              // 이미지 영역 표시
+              box.classList.remove("hidden"); box.style.display = "";
+              if (fb) { fb.classList.add("hidden"); fb.style.display = "none"; fb.textContent = ""; }
+            } else {
+              // 이미지 전부 제거 + 영역 숨김, 문구 표시
+              box.innerHTML = "";
+              box.classList.add("hidden"); box.style.display = "none";
+              if (fb) { fb.classList.remove("hidden"); fb.style.display = ""; fb.textContent = message || "※ 최초모집시 10개의 조각이 필요합니다."; }
+            }
+          }
+
+          // ✓ 카드/유닛 이미지/안내문 토글 (있으면 사용, 없으면 무시)
+          function toggleRecruitUI({ showImage }) {
+            const img  = document.getElementById('unitImage');        // 카드/유닛 이미지 요소(옵션)
+            const hint = document.getElementById('firstRecruitHint'); // 안내문 요소(옵션)
+            if (!img && !hint) return;
+
+            if (showImage) {
+              if (img)  { img.classList.remove('hidden'); img.style.display = ''; }
+              if (hint) { hint.textContent = ''; }
+            } else {
+              if (img)  { img.classList.add('hidden'); img.style.display = 'none'; }
+              if (hint) { hint.textContent = '※ 최초모집시 10개의 조각이 필요합니다.'; }
+            }
+          }
+
+          // 조각 수를 1성→5성 순으로 소모하여 각 행의 tier(0..6) 계산
+          // ▶ 최초모집이 '미실시' 가정: have < RECRUIT_COST이면 모두 0
+          function computeTiers(pieces) {
+            const have = Math.max(0, n(pieces));
+            const tiers = new Array(5).fill(0);
+            if (have < RECRUIT_COST) return tiers;
+
+            const matrix = readMatrixFromTable(); // 5×6
+            let remain = have - RECRUIT_COST;
+            if (remain <= 0) return tiers;
+
+            for (let r = 0; r < 5; r++) {
+              const cums = cum(matrix[r]); // [c1, c1+c2, ...]
+              let t = 0; // 0..6
+              for (let k = 0; k < 6; k++) {
+                if (remain >= cums[k]) t = k + 1; else break;
+              }
+              tiers[r] = t;
+
+              const rowTotal = cums[5];
+              if (remain >= rowTotal) {
+                remain -= rowTotal; // 전부 채웠으면 다음 행으로 carry
+              } else {
+                break; // 부분만 채웠으면 이후 행은 진행하지 않음
+              }
+            }
+            return tiers;
+          }
+
+          // 이미지 5장 렌더
+          function renderTiers(tiers) {
+            const box = document.querySelector(OUT_SEL);
+            if (!box) return;
+            box.innerHTML = "";
+            tiers.forEach(t => {
+              const img = document.createElement("img");
+              img.src = TIER_IMG(t);
+              img.alt = `tier${t}`;
+              box.appendChild(img);
+            });
+          }
+
+          // 공개 API: 조각 수를 넘기면 즉시 갱신
+          window.updateHeroShardState = function(pieces) {
+            try {
+              const have = Math.max(0, n(pieces));
+
+              // ⛳ 0~9면: 티어 이미지 6개(=띠 전체) 숨기고 문구만
+              if (have < RECRUIT_COST) {
+                toggleRecruitUI({ showImage: false });
+                toggleTierGallery(false, "※ 최초모집시 10개의 조각이 필요합니다.");
+                return;
+              }
+
+              // 10 이상: 이미지 영역 보이기 → 계산/렌더
+              toggleRecruitUI({ showImage: true });
+              toggleTierGallery(true);
+
+              const tiers = computeTiers(have);
+              renderTiers(tiers);
+            } catch (err) {
+              const box = document.querySelector(OUT_SEL);
+              if (box) box.textContent = "오류: " + err.message;
+              console.error(err);
+            }
+          };
+
+          // 입력 이벤트
+          const $input = document.getElementById("pieceInput");
+          $input.addEventListener("input", e => {
+            let val = parseInt(e.target.value || "0", 10);
+            if (val > 1075) {
+              val = 1075;
+              e.target.value = val; // 입력란을 즉시 1075로 되돌림
+            } else if (val < 0 || isNaN(val)) {
+              val = 0;
+              e.target.value = val;
+            }
+            updateHeroShardState(val); // 계산 반영
+          });
+          $input.addEventListener("keydown", e => { if (e.key === "Enter") updateHeroShardState($input.value); });
+
+          // 초기 표시(기본값 0 → 문구만 표시)
+          updateHeroShardState($input.value);
+        })();
+      </script>    
   </body>
 </html>
