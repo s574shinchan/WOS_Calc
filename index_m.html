@@ -1324,7 +1324,9 @@
       </div>
       
       <!-- 카피라이트 -->
-      <footer class="text-center text-xs font-bold text-gray-500 mt-5">⛔ 무단 복제 금지 | © Made By S645 ShinChan(67331703)</footer>
+      <footer class="text-center text-xs font-bold text-gray-700 mt-5">⛔ 무단 복제 금지 | © Made By S645 ShinChan(67331703)
+        <span id="updateLink"  class="underline cursor-pointer hover:text-white-100 ml-2">업데이트내역</span>
+      </footer>
     </div>
 
     <!-- 콘텐츠 전체 폭 제한 -->
@@ -1496,6 +1498,33 @@
       function closePopup() {
         document.getElementById("popupModal").classList.add("hidden");
       }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // 필요 경로를 여기에 각기 다르게 설정하세요.
+        const UPDATE_URL  = "https://s574shinchan.github.io/WOS_Calc/data/update/history.html"; // 기존과 동일
+        const guide   = document.getElementById("guideDetails");
+        const wrapper = document.getElementById("frameWrapper");
+        const frame   = document.getElementById("mainFrame");
+      
+        // iframe 로더 (guide 숨기고 frame 표시)
+        function openInFrame(url) {
+          if (guide)   guide.style.display   = "none";
+          if (wrapper) wrapper.style.display = "block";
+          if (frame) {
+            frame.style.height = "900px"; // 초기값(필요시 조정)
+            frame.src = url;
+          }
+        }
+      
+        // 업데이트 내역 → iframe 로드 (기존 요구사항)
+        const updateLink = document.getElementById("updateLink");
+        if (updateLink) {
+          updateLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            openInFrame(UPDATE_URL);
+          });
+        }
     </script>
     <script>
       document.addEventListener("contextmenu", event => event.preventDefault());
