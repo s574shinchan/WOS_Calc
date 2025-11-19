@@ -9,6 +9,8 @@
     /* 이미지 확대 시 커서 변경 */
     #modalImage {
       cursor: grab;
+      user-select: none;
+      -webkit-user-drag: none;
     }
   </style>
 </head>
@@ -67,7 +69,7 @@
       </div>
     </details>
     
-    <!-- 연총미션 -->
+    <!-- 프로스트 드래곤 엠페러 -->
     <details class="bg-white border border-blue-300 rounded-md p-4">
       <summary class="text-lg font-bold text-blue-700 mb-3">🐉 프로스트 드래곤 엠페러</summary>
       <div class="overflow-hidden">
@@ -77,6 +79,54 @@
       </div>
     </details>
     
+  </div>
+
+  <!-- 🔍 이미지 뷰어 모달 -->
+  <div id="imageViewer"
+       class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-[95vw] max-w-[1100px] h-[85vh] flex flex-col">
+      <!-- 상단 툴바 -->
+      <div class="flex items-center justify-between px-3 py-2 border-b text-[11px] sm:text-xs md:text-sm">
+        <div id="viewerFilename" class="text-gray-700 truncate max-w-[60%]"></div>
+        <div class="flex gap-1">
+          <button type="button" id="btnZoomOut"
+            class="px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+            </svg>
+          </button>
+
+          <button type="button" id="btnZoomReset"
+            class="px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v6h6M20 20v-6h-6M20 4h-6m0 0V4m0 0l6 6M4 20h6m0 0H4m0 0l6-6" />
+            </svg>
+          </button>
+
+          <button type="button" id="btnZoomIn"
+            class="px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 4v16m8-8H4"/>
+            </svg>
+          </button>
+          <button type="button" id="btnDownload"
+                  class="px-2 py-1 border rounded text-xs bg-blue-500 text-white hover:bg-blue-600">
+            다운로드
+          </button>
+          <button type="button" id="btnClose"
+                  class="px-2 py-1 border rounded text-xs bg-gray-200 hover:bg-gray-300">
+            닫기
+          </button>
+        </div>
+      </div>
+      <!-- 이미지 프레임 -->
+      <div id="viewerFrame" class="flex-1 m-2 border rounded-lg bg-black overflow-hidden relative">
+        <img id="modalImage" src="" alt=""
+             class="max-w-full max-h-full absolute top-1/2 left-1/2 select-none" />
+      </div>
+    </div>
   </div>
 
   <!-- Scroll to Top Button -->
@@ -90,10 +140,169 @@
   </button>
 
   <script>
-    function openImage(imageUrl) {
-      window.parent.postMessage({ type: 'SHOW_IMAGE_MODAL', url: imageUrl }, '*');
+    // ============================
+    // 🔍 이미지 뷰어 관련 스크립트
+    // ============================
+    const viewerOverlay = document.getElementById("imageViewer");
+    const viewerImg = document.getElementById("modalImage");
+    const viewerFrame = document.getElementById("viewerFrame");
+    const viewerFilename = document.getElementById("viewerFilename");
+    const btnClose = document.getElementById("btnClose");
+    const btnZoomIn = document.getElementById("btnZoomIn");
+    const btnZoomOut = document.getElementById("btnZoomOut");
+    const btnZoomReset = document.getElementById("btnZoomReset");
+    const btnDownload = document.getElementById("btnDownload");
+
+    let currentScale = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragOriginX = 0;
+    let dragOriginY = 0;
+
+    function applyTransform() {
+      viewerImg.style.transform =
+        `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) scale(${currentScale})`;
     }
-    
+
+    function resetTransform() {
+      currentScale = 1;
+      offsetX = 0;
+      offsetY = 0;
+      applyTransform();
+    }
+
+    function openViewer(src) {
+      viewerImg.src = src;
+      resetTransform();
+
+      // 파일명 표시
+      try {
+        // 🔥 한글 파일명 복원
+        // 1) src 전체 인코딩 복원 (필요할 경우)
+        let cleanSrc = decodeURIComponent(src);
+
+        // 2) 경로 제거 → 파일명만 추출
+        let names = cleanSrc.split('/').pop();   // 마지막 "/" 뒤만 파일명
+
+        // 3) 혹시 '?' 파라미터가 붙어있을 때 대비
+        names = names.split('?')[0];  
+
+        viewerFilename.textContent = names;
+      } catch {
+        // 혹시 URL 파싱이 실패한 경우
+        viewerFilename.textContent = src.split('/').pop();
+      }
+
+      viewerOverlay.classList.remove("hidden");
+      viewerOverlay.classList.add("flex");
+    }
+
+    function closeViewer() {
+      viewerOverlay.classList.add("hidden");
+      viewerOverlay.classList.remove("flex");
+      viewerImg.src = "";
+    }
+
+    // 외부에서 호출하는 함수 (이미지 클릭시)
+    function openImage(imageUrl) {
+      openViewer(imageUrl);
+    }
+
+    // 버튼 이벤트
+    btnZoomIn.addEventListener("click", () => {
+      currentScale = Math.min(currentScale + 0.2, 5);
+      applyTransform();
+    });
+
+    btnZoomOut.addEventListener("click", () => {
+      currentScale = Math.max(currentScale - 0.2, 0.2);
+      applyTransform();
+    });
+
+    btnZoomReset.addEventListener("click", () => {
+      resetTransform();
+    });
+
+    btnClose.addEventListener("click", () => {
+      closeViewer();
+    });
+
+    // 배경 클릭 시 닫기
+    viewerOverlay.addEventListener("click", (e) => {
+      if (e.target === viewerOverlay) {
+        closeViewer();
+      }
+    });
+
+    // ESC 키로 닫기
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !viewerOverlay.classList.contains("hidden")) {
+        closeViewer();
+      }
+    });
+
+    // 다운로드
+    btnDownload.addEventListener("click", () => {
+      const src = viewerImg.src;
+      if (!src) return;
+
+      const a = document.createElement("a");
+      a.href = src;
+      try {
+        const url = new URL(src, window.location.href);
+        const path = url.pathname;
+        const name = path.substring(path.lastIndexOf("/") + 1) || "image";
+        a.download = name;
+      } catch {
+        a.download = "image";
+      }
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+
+    // 🖱 마우스 휠로 확대/축소
+    viewerFrame.addEventListener("wheel", (e) => {
+      e.preventDefault(); // 페이지 스크롤 방지
+      const delta = e.deltaY < 0 ? 0.1 : -0.1;
+      const newScale = Math.min(Math.max(currentScale + delta, 0.2), 5);
+      currentScale = newScale;
+      applyTransform();
+    }, { passive: false });
+
+    // ✋ 드래그로 이미지 이동
+    viewerFrame.addEventListener("mousedown", (e) => {
+      // 이미지 위에서만 드래그 시작 (프레임 여백 클릭 방지 원하면 조건 추가 가능)
+      isDragging = true;
+      viewerImg.style.cursor = "grabbing";
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      dragOriginX = offsetX;
+      dragOriginY = offsetY;
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      offsetX = dragOriginX + dx;
+      offsetY = dragOriginY + dy;
+      applyTransform();
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (!isDragging) return;
+      isDragging = false;
+      viewerImg.style.cursor = "grab";
+    });
+
+    // ============================
+    // 기존 iframe 높이/스크롤 관련 스크립트
+    // ============================
     function sendHeightToParent() {
       const height = document.body.scrollHeight;
       console.log(height);
@@ -115,7 +324,7 @@
     
     function loadPage(page) {
       const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
+      const height = isMobile ? "550px" : "345px";
       window.location.href = page;
       window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
@@ -129,9 +338,10 @@
         e.preventDefault();
       }
     });
-  </script>
-  
-  <script>
+
+    // ============================
+    // 맨 위로 버튼
+    // ============================
     const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
     window.addEventListener("scroll", () => {
