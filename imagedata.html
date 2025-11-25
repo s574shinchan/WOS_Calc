@@ -84,9 +84,10 @@
   <!-- 🔍 이미지 뷰어 모달 -->
   <div id="imageViewer"
        class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-xl shadow-lg w-[95vw] max-w-[1100px] h-[85vh] flex flex-col">
+    <div class="bg-white rounded-xl shadow-lg max-w-[95vw] max-h-[90vh] flex flex-col">
+    <!--<div class="bg-white rounded-xl shadow-lg w-[95vw] max-w-[1100px] h-[85vh] flex flex-col"> -- >
       <!-- 상단 툴바 -->
-      <div class="flex items-center justify-between px-3 py-2 border-b text-[11px] sm:text-xs md:text-sm">
+      <div id="viewerToolbar" class="flex items-center justify-between px-3 py-2 border-b text-[11px] sm:text-xs md:text-sm">
         <div id="viewerFilename" class="text-gray-700 truncate max-w-[60%]"></div>
         <div class="flex gap-1">
           <button type="button" id="btnZoomOut"
@@ -122,9 +123,11 @@
         </div>
       </div>
       <!-- 이미지 프레임 -->
-      <div id="viewerFrame" class="flex-1 m-2 border rounded-lg bg-black overflow-hidden relative">
+      <div id="viewerFrame"
+           class="m-2 border rounded-lg bg-black overflow-hidden flex items-center justify-center">
         <img id="modalImage" src="" alt=""
-             class="max-w-full max-h-full absolute top-1/2 left-1/2 select-none" />
+             class="select-none"
+             style="transform-origin:center center;" />
       </div>
     </div>
   </div>
@@ -165,7 +168,7 @@
 
     function applyTransform() {
       viewerImg.style.transform =
-        `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) scale(${currentScale})`;
+        `translate(${offsetX}px, ${offsetY}px) scale(${currentScale})`;
     }
 
     function resetTransform() {
@@ -176,18 +179,22 @@
     }
 
     function openViewer(src) {
-      viewerImg.src = src;
       resetTransform();
+      
+      // 이미지 로드 후 프레임/이미지 크기 맞추기
+      viewerImg.onload = () => {
+        fitViewerToImage();
+        resetTransform();   // 크기 맞춘 뒤 중심/스케일 초기화
+      };
+      
+      viewerImg.src = src;
 
       // 파일명 표시
       try {
-        // 🔥 한글 파일명 복원
         // 1) src 전체 인코딩 복원 (필요할 경우)
         let cleanSrc = decodeURIComponent(src);
-
         // 2) 경로 제거 → 파일명만 추출
         let names = cleanSrc.split('/').pop();   // 마지막 "/" 뒤만 파일명
-
         // 3) 혹시 '?' 파라미터가 붙어있을 때 대비
         names = names.split('?')[0];  
 
@@ -299,6 +306,37 @@
       isDragging = false;
       viewerImg.style.cursor = "grab";
     });
+    
+    function fitViewerToImage() {
+      if (!viewerImg.complete || !viewerImg.naturalWidth) return;
+
+      const iw = viewerImg.naturalWidth;
+      const ih = viewerImg.naturalHeight;
+
+      // 🔹 화면에서 빼줄 여백(px)
+      const margin = 80;
+
+      // 🔹 툴바 높이만큼은 빼고 계산
+      const toolbar = document.getElementById("viewerToolbar");
+      const toolbarH = toolbar ? toolbar.offsetHeight : 0;
+
+      const maxW = window.innerWidth  - margin * 2;
+      const maxH = window.innerHeight - toolbarH - margin * 2;
+
+      // 화면 안에 들어오도록 비율 계산
+      const ratio = Math.min(1, maxW / iw, maxH / ih);
+
+      const viewW = Math.round(iw * ratio);
+      const viewH = Math.round(ih * ratio);
+
+      // 🔸 프레임을 이미지 크기로 맞추기
+      viewerFrame.style.width  = viewW + "px";
+      viewerFrame.style.height = viewH + "px";
+
+      // 🔸 이미지를 프레임 안에 딱 맞게
+      viewerImg.style.width  = viewW + "px";
+      viewerImg.style.height = viewH + "px";
+    }
 
     // ============================
     // 기존 iframe 높이/스크롤 관련 스크립트
@@ -355,6 +393,13 @@
     scrollToTopBtn.addEventListener("click", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
+    
+    window.addEventListener("resize", () => {
+      if (!viewerOverlay.classList.contains("hidden") && viewerImg.src) {
+        fitViewerToImage();
+        resetTransform();
+      }
+    });    
   </script>
 </body>
 </html>
