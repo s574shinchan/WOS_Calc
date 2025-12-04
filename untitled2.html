@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> 일정표 </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-[1500px] mx-auto bg-white p-4 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-2">📅 주단위 메인 이벤트 일정표</h1>
+
+    <!-- 자동 계산된 주차 안내-->
+    <div id="currentWeekInfo" class="mb-4 text-xs text-gray-700 border rounded-lg p-3 bg-gray-50"></div>
+    
+    <!-- Week Blocks (심플 카드형) -->
+    <div class="space-y-3">
+
+      <!-- Week 1 -->
+      <div id="week-1" data-week="1"
+           class="week-block border border-gray-200 rounded-xl p-3 flex items-center justify-between gap-3 bg-white">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-semibold text-gray-900">1주차</span>
+          </div>
+          <p class="text-[11px] text-gray-500">
+            SVS 준비단계 (월~금), SVS 전쟁단계 (토)
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-1 justify-end text-[11px]">
+          <span class="px-2 py-1 rounded-full bg-red-50 text-red-700 border border-red-200">
+            SVS 준비단계
+          </span>
+          <span class="px-2 py-1 rounded-full bg-gray-50 text-gray-800 border border-gray-200">
+            SVS 전쟁단계
+          </span>
+        </div>
+      </div>
+      
+      <!-- Week 2 -->
+      <div id="week-2" data-week="2"
+           class="week-block border border-gray-200 rounded-xl p-3 flex items-center justify-between gap-3 bg-white">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-semibold text-gray-900">2주차</span>
+          </div>
+          <p class="text-[11px] text-gray-500">
+            연맹대작전 (월~토), 무기공장 (일)
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-1 justify-end text-[11px]">
+          <span class="px-2 py-1 rounded-full bg-red-50 text-red-700 border border-red-200">
+            연맹대작전
+          </span>
+          <span class="px-2 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+            무기공장
+          </span>
+        </div>
+      </div>
+
+      <!-- Week 3 -->
+      <div id="week-3" data-week="3"
+           class="week-block border border-gray-200 rounded-xl p-3 flex items-center justify-between gap-3 bg-white">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-semibold text-gray-900">3주차</span>
+          </div>
+          <p class="text-[11px] text-gray-500">
+            빙원의 왕 (월~금), 내부솔라 (토)
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-1 justify-end text-[11px]">
+          <span class="px-2 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-200">
+            빙원의 왕
+          </span>
+          <span class="px-2 py-1 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">
+            내부솔라
+          </span>
+        </div>
+      </div>
+
+      <!-- Week 4 -->
+      <div id="week-4" data-week="4"
+           class="week-block border border-gray-200 rounded-xl p-3 flex items-center justify-between gap-3 bg-white">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-semibold text-gray-900">4주차</span>
+          </div>
+          <p class="text-[11px] text-gray-500">
+            연맹총동원 (월~금), 협곡 (토), 무기공장 (일)
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-1 justify-end text-[11px]">
+          <span class="px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+            연맹총동원
+          </span>
+          <span class="px-2 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-200">
+            협곡
+          </span>
+          <span class="px-2 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+            무기공장
+          </span>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+    // ★ 시작일과 시작 주차를 네가 지정하는 부분
+    const START_DATE = new Date(2025, 12, 01);  // (연,월-1,일)
+    const START_WEEK = 1;                       // 1~4    
+    const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+
+    // 특정 주차의 시작/끝 날짜 계산 (weekIndex: 0~3)
+    function getWeekRange(weekIndex) {
+      const start = new Date(START_DATE);
+      start.setDate(start.getDate() + weekIndex * 7);
+      const end = new Date(start);
+      end.setDate(start.getDate() + 6);
+      return { start, end };
+    }
+
+    // 날짜 포맷 → "11/10 (월)"
+    function formatDate(d) {
+      const mm = (d.getMonth() + 1).toString().padStart(2, "0");
+      const dd = d.getDate().toString().padStart(2, "0");
+      const day = dayNames[d.getDay()];
+      return `${mm}/${dd} (${day})`;
+    }
+
+    // ===============================
+    //   현재 주차 자동 계산
+    // ===============================
+    function applyDynamicWeek() {
+
+      const today = new Date();
+      const msWeek = 7 * 24 * 60 * 60 * 1000;
+      const diffWeeks = Math.floor((today - START_DATE) / msWeek);
+      const currentWeek = ((START_WEEK - 1 + diffWeeks) % 4) + 1;
+
+      // 안내 박스 출력
+      document.getElementById("currentWeekInfo").innerHTML =
+        `오늘 날짜: <b>${today.toISOString().slice(0,10)}</b><br>
+         현재 자동 계산된 주차: <b style="color:#0074ff">${currentWeek}주차</b><br>
+         SVS서버전이 시작되는 월요일의 해당 주를 1주차로 계산합니다.`;
+
+      // 주차 강조 + "현재 주" 뱃지 추가
+      document.querySelectorAll(".week-block").forEach(el => {
+        const w = Number(el.dataset.week);
+        el.classList.remove("bg-sky-50", "ring-2", "ring-sky-400");
+        const existingBadge = el.querySelector(".current-week-badge");
+        if (existingBadge) existingBadge.remove();
+
+        if (w === currentWeek) {
+          el.classList.add("bg-sky-50", "ring-2", "ring-sky-400");
+          const badge = document.createElement("span");
+          badge.textContent = "현재 주";
+          badge.className =
+            "current-week-badge ml-2 px-2 py-0.5 rounded-full bg-sky-600 text-white text-[10px] font-semibold";
+          const titleRow = el.querySelector("div > div.flex.items-center.gap-2");
+          if (titleRow) titleRow.appendChild(badge);
+        }
+      });
+
+      // 각 주에 날짜 범위 넣기
+      insertWeekRanges();
+    }
+
+    // ===============================
+    //   각 주 제목 옆에 (시작일 ~ 종료일) 표시
+    // ===============================
+    function insertWeekRanges() {
+      for (let week = 1; week <= 4; week++) {
+        const span = document.querySelector(`[data-week-range="${week}"]`);
+        if (!span) continue;
+
+        const { start, end } = getWeekRange(week - 1);
+        span.textContent = `(${formatDate(start)} ~ ${formatDate(end)})`;
+      }
+    }
+
+    // ===============================
+    //   로드 시 실행
+    // ===============================
+    window.addEventListener("load", () => {
+      applyDynamicWeek();
+      setTimeout(() => {
+        if (window.parent) {
+          window.parent.postMessage({
+            type: "FRAME_CHANGE",
+            height: document.body.scrollHeight
+          }, "*");
+        }
+      }, 80);
+    });
+  </script>
+</body>
+</html>
