@@ -101,6 +101,7 @@
 
             const val = cell?.effectiveValue;
             let text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";          
+            text = text.replace("10불 14세대","FC10, Gen14");
             text = text.replace("10불 13세대","FC10, Gen13");
             text = text.replace("10불 12세대","FC10, Gen12");
             text = text.replace("10불 11세대","FC10, Gen11");

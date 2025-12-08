@@ -134,13 +134,13 @@
         <button class="bg-teal-600 text-white text-sm px-4 py-2 rounded hover:bg-gray-800 shadow" onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')">📬 자료요청</button>
       
         <!-- 언어 선택 콤보박스 -->
-        <select class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectMobile">
+        <select class="border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectMobile">
           <option value="index.html">🌐 Language</option>
           <option value="index_m.html">🇰🇷 한국어　</option>
           <option value="index_EN_m.html">🇺🇸 English</option>
           <option value="index_JP.html">🇯🇵 日本語</option>
         </select>
-      </div>
+      </div>      
       <!--
       <!-- 모바일 버튼: 중앙 가로 정렬
       <div class="flex flex-row justify-center items-center gap-2 sm:hidden flex-wrap mb-4">
@@ -1615,158 +1615,167 @@
       });
     </script>
     <script>
-        (() => {
-          // ▼ 최초모집(미실시 가정) 비용
-          const RECRUIT_COST = 10;
+      (() => {
+        // ▼ 최초모집(미실시 가정) 비용
+        const RECRUIT_COST = 10;
 
-          // ▼ tier0~tier6 이미지 (7장) — 필요 시 경로 교체
-          const TIER_IMG = (n) => `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/tier${n}.png`;
+        // ▼ tier0~tier6 이미지 (7장) — 필요 시 경로 교체
+        const TIER_IMG = (n) => `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/tier${n}.png`;
 
-          const TABLE_SEL = "#hero-upgrade-table";
-          const OUT_SEL   = "#hero-shard-strip";
-          const n = (s) => { const v = parseInt(String(s).replace(/[^0-9-]/g,""), 10); return Number.isFinite(v) ? v : 0; };
+        const TABLE_SEL = "#hero-upgrade-table";
+        const OUT_SEL   = "#hero-shard-strip";
+        const n = (s) => { const v = parseInt(String(s).replace(/[^0-9-]/g,""), 10); return Number.isFinite(v) ? v : 0; };
 
-          // 표에서 5행×6칸 숫자 행렬 추출 (1성~5성, 각 6칸)
-          function readMatrixFromTable() {
-            const table = document.querySelector(TABLE_SEL);
-            if (!table) throw new Error("표를 찾지 못했습니다: " + TABLE_SEL);
-            const bodyRows = Array.from(table.querySelectorAll("tbody tr"));
-            if (bodyRows.length < 5) throw new Error("표 행 개수가 부족합니다(5행 필요).");
+        // 표에서 5행×6칸 숫자 행렬 추출 (1성~5성, 각 6칸)
+        function readMatrixFromTable() {
+          const table = document.querySelector(TABLE_SEL);
+          if (!table) throw new Error("표를 찾지 못했습니다: " + TABLE_SEL);
+          const bodyRows = Array.from(table.querySelectorAll("tbody tr"));
+          if (bodyRows.length < 5) throw new Error("표 행 개수가 부족합니다(5행 필요).");
 
-            // 셀 인덱스: 0=등급, 1..6=칸, 마지막=SubTotal
-            const COL_START = 1, COL_END = 6;
+          // 셀 인덱스: 0=등급, 1..6=칸, 마지막=SubTotal
+          const COL_START = 1, COL_END = 6;
 
-            return bodyRows.slice(0, 5).map(tr => {
-              const cells = tr.querySelectorAll("td");
-              const row = [];
-              for (let c = COL_START; c <= COL_END; c++) {
-                row.push(n(cells[c]?.textContent || "0"));
-              }
-              return row; // 길이 6
-            });
-          }
-
-          // 누적 변환 (예: [1,1,2,2,2,12] → [1,2,4,6,8,20])
-          const cum = (arr) => { const out=[]; let s=0; for (const v of arr){ s+=v; out.push(s); } return out; };
-
-          // ✅ 이미지/문구 토글 (티어 스트립 영역)
-          function toggleTierGallery(showImages, message = "") {
-            const box = document.querySelector(OUT_SEL);
-            const fb  = document.getElementById("tierFallback"); // 대체문구 요소 (필수)
-            if (!box) return;
-
-            if (showImages) {
-              // 이미지 영역 표시
-              box.classList.remove("hidden"); box.style.display = "";
-              if (fb) { fb.classList.add("hidden"); fb.style.display = "none"; fb.textContent = ""; }
-            } else {
-              // 이미지 전부 제거 + 영역 숨김, 문구 표시
-              box.innerHTML = "";
-              box.classList.add("hidden"); box.style.display = "none";
-              if (fb) { fb.classList.remove("hidden"); fb.style.display = ""; fb.textContent = message || "※ 최초모집시 10개의 조각이 필요합니다."; }
+          return bodyRows.slice(0, 5).map(tr => {
+            const cells = tr.querySelectorAll("td");
+            const row = [];
+            for (let c = COL_START; c <= COL_END; c++) {
+              row.push(n(cells[c]?.textContent || "0"));
             }
-          }
-
-          // ✓ 카드/유닛 이미지/안내문 토글 (있으면 사용, 없으면 무시)
-          function toggleRecruitUI({ showImage }) {
-            const img  = document.getElementById('unitImage');        // 카드/유닛 이미지 요소(옵션)
-            const hint = document.getElementById('firstRecruitHint'); // 안내문 요소(옵션)
-            if (!img && !hint) return;
-
-            if (showImage) {
-              if (img)  { img.classList.remove('hidden'); img.style.display = ''; }
-              if (hint) { hint.textContent = ''; }
-            } else {
-              if (img)  { img.classList.add('hidden'); img.style.display = 'none'; }
-              if (hint) { hint.textContent = '※ 최초모집시 10개의 조각이 필요합니다.'; }
-            }
-          }
-
-          // 조각 수를 1성→5성 순으로 소모하여 각 행의 tier(0..6) 계산
-          // ▶ 최초모집이 '미실시' 가정: have < RECRUIT_COST이면 모두 0
-          function computeTiers(pieces) {
-            const have = Math.max(0, n(pieces));
-            const tiers = new Array(5).fill(0);
-            if (have < RECRUIT_COST) return tiers;
-
-            const matrix = readMatrixFromTable(); // 5×6
-            let remain = have - RECRUIT_COST;
-            if (remain <= 0) return tiers;
-
-            for (let r = 0; r < 5; r++) {
-              const cums = cum(matrix[r]); // [c1, c1+c2, ...]
-              let t = 0; // 0..6
-              for (let k = 0; k < 6; k++) {
-                if (remain >= cums[k]) t = k + 1; else break;
-              }
-              tiers[r] = t;
-
-              const rowTotal = cums[5];
-              if (remain >= rowTotal) {
-                remain -= rowTotal; // 전부 채웠으면 다음 행으로 carry
-              } else {
-                break; // 부분만 채웠으면 이후 행은 진행하지 않음
-              }
-            }
-            return tiers;
-          }
-
-          // 이미지 5장 렌더
-          function renderTiers(tiers) {
-            const box = document.querySelector(OUT_SEL);
-            if (!box) return;
-            box.innerHTML = "";
-            tiers.forEach(t => {
-              const img = document.createElement("img");
-              img.src = TIER_IMG(t);
-              img.alt = `tier${t}`;
-              box.appendChild(img);
-            });
-          }
-
-          // 공개 API: 조각 수를 넘기면 즉시 갱신
-          window.updateHeroShardState = function(pieces) {
-            try {
-              const have = Math.max(0, n(pieces));
-
-              // ⛳ 0~9면: 티어 이미지 6개(=띠 전체) 숨기고 문구만
-              if (have < RECRUIT_COST) {
-                toggleRecruitUI({ showImage: false });
-                toggleTierGallery(false, "※ 최초모집시 10개의 조각이 필요합니다.");
-                return;
-              }
-
-              // 10 이상: 이미지 영역 보이기 → 계산/렌더
-              toggleRecruitUI({ showImage: true });
-              toggleTierGallery(true);
-
-              const tiers = computeTiers(have);
-              renderTiers(tiers);
-            } catch (err) {
-              const box = document.querySelector(OUT_SEL);
-              if (box) box.textContent = "오류: " + err.message;
-              console.error(err);
-            }
-          };
-
-          // 입력 이벤트
-          const $input = document.getElementById("pieceInput");
-          $input.addEventListener("input", e => {
-            let val = parseInt(e.target.value || "0", 10);
-            if (val > 1075) {
-              val = 1075;
-              e.target.value = val; // 입력란을 즉시 1075로 되돌림
-            } else if (val < 0 || isNaN(val)) {
-              val = 0;
-              e.target.value = val;
-            }
-            updateHeroShardState(val); // 계산 반영
+            return row; // 길이 6
           });
-          $input.addEventListener("keydown", e => { if (e.key === "Enter") updateHeroShardState($input.value); });
+        }
 
-          // 초기 표시(기본값 0 → 문구만 표시)
-          updateHeroShardState($input.value);
-        })();
-      </script>    
+        // 누적 변환 (예: [1,1,2,2,2,12] → [1,2,4,6,8,20])
+        const cum = (arr) => { const out=[]; let s=0; for (const v of arr){ s+=v; out.push(s); } return out; };
+
+        // ✅ 이미지/문구 토글 (티어 스트립 영역)
+        function toggleTierGallery(showImages, message = "") {
+          const box = document.querySelector(OUT_SEL);
+          const fb  = document.getElementById("tierFallback"); // 대체문구 요소 (필수)
+          if (!box) return;
+
+          if (showImages) {
+            // 이미지 영역 표시
+            box.classList.remove("hidden"); box.style.display = "";
+            if (fb) { fb.classList.add("hidden"); fb.style.display = "none"; fb.textContent = ""; }
+          } else {
+            // 이미지 전부 제거 + 영역 숨김, 문구 표시
+            box.innerHTML = "";
+            box.classList.add("hidden"); box.style.display = "none";
+            if (fb) { fb.classList.remove("hidden"); fb.style.display = ""; fb.textContent = message || "※ 최초모집시 10개의 조각이 필요합니다."; }
+          }
+        }
+
+        // ✓ 카드/유닛 이미지/안내문 토글 (있으면 사용, 없으면 무시)
+        function toggleRecruitUI({ showImage }) {
+          const img  = document.getElementById('unitImage');        // 카드/유닛 이미지 요소(옵션)
+          const hint = document.getElementById('firstRecruitHint'); // 안내문 요소(옵션)
+          if (!img && !hint) return;
+
+          if (showImage) {
+            if (img)  { img.classList.remove('hidden'); img.style.display = ''; }
+            if (hint) { hint.textContent = ''; }
+          } else {
+            if (img)  { img.classList.add('hidden'); img.style.display = 'none'; }
+            if (hint) { hint.textContent = '※ 최초모집시 10개의 조각이 필요합니다.'; }
+          }
+        }
+
+        // 조각 수를 1성→5성 순으로 소모하여 각 행의 tier(0..6) 계산
+        // ▶ 최초모집이 '미실시' 가정: have < RECRUIT_COST이면 모두 0
+        function computeTiers(pieces) {
+          const have = Math.max(0, n(pieces));
+          const tiers = new Array(5).fill(0);
+          if (have < RECRUIT_COST) return tiers;
+
+          const matrix = readMatrixFromTable(); // 5×6
+          let remain = have - RECRUIT_COST;
+          if (remain <= 0) return tiers;
+
+          for (let r = 0; r < 5; r++) {
+            const cums = cum(matrix[r]); // [c1, c1+c2, ...]
+            let t = 0; // 0..6
+            for (let k = 0; k < 6; k++) {
+              if (remain >= cums[k]) t = k + 1; else break;
+            }
+            tiers[r] = t;
+
+            const rowTotal = cums[5];
+            if (remain >= rowTotal) {
+              remain -= rowTotal; // 전부 채웠으면 다음 행으로 carry
+            } else {
+              break; // 부분만 채웠으면 이후 행은 진행하지 않음
+            }
+          }
+          return tiers;
+        }
+
+        // 이미지 5장 렌더
+        function renderTiers(tiers) {
+          const box = document.querySelector(OUT_SEL);
+          if (!box) return;
+          box.innerHTML = "";
+          tiers.forEach(t => {
+            const img = document.createElement("img");
+            img.src = TIER_IMG(t);
+            img.alt = `tier${t}`;
+            box.appendChild(img);
+          });
+        }
+
+        // 공개 API: 조각 수를 넘기면 즉시 갱신
+        window.updateHeroShardState = function(pieces) {
+          try {
+            const have = Math.max(0, n(pieces));
+
+            // ⛳ 0~9면: 티어 이미지 6개(=띠 전체) 숨기고 문구만
+            if (have < RECRUIT_COST) {
+              toggleRecruitUI({ showImage: false });
+              toggleTierGallery(false, "※ 최초모집시 10개의 조각이 필요합니다.");
+              return;
+            }
+
+            // 10 이상: 이미지 영역 보이기 → 계산/렌더
+            toggleRecruitUI({ showImage: true });
+            toggleTierGallery(true);
+
+            const tiers = computeTiers(have);
+            renderTiers(tiers);
+          } catch (err) {
+            const box = document.querySelector(OUT_SEL);
+            if (box) box.textContent = "오류: " + err.message;
+            console.error(err);
+          }
+        };
+
+        // 입력 이벤트
+        const $input = document.getElementById("pieceInput");
+        $input.addEventListener("input", e => {
+          let val = parseInt(e.target.value || "0", 10);
+          if (val > 1075) {
+            val = 1075;
+            e.target.value = val; // 입력란을 즉시 1075로 되돌림
+          } else if (val < 0 || isNaN(val)) {
+            val = 0;
+            e.target.value = val;
+          }
+          updateHeroShardState(val); // 계산 반영
+        });
+        $input.addEventListener("keydown", e => { if (e.key === "Enter") updateHeroShardState($input.value); });
+
+        // 초기 표시(기본값 0 → 문구만 표시)
+        updateHeroShardState($input.value);
+      })();
+    </script>
+    <script data-name="BMC-Widget" data-cfasync="false" 
+        src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+        data-id="shin0825" 
+        data-description="Support me"         
+        data-color="#FFDD00" 
+        data-position="Right" 
+        data-x_margin="95" 
+        data-y_margin="18">
+    </script>
   </body>
 </html>
