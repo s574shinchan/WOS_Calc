@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta content="ca-pub-8205102847358210" name="google-adsense-account"/>
-    <meta content="index, follow" name="robots">
+    <meta content="index, follow" name="robots"/>
     <meta content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료들이 한곳에!" name="description"/>
     <title>Whiteout Survival Calculator &amp; Data Collection</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -79,7 +79,6 @@
     body.dark-mode #popupContent tr.row-owned  td,
     body.dark-mode #popupContent tr.row-deficit td { color:#ffffff !important; }
     </style>
-  </meta>
   </head>
   <body class="bg-gray-100 min-h-screen p-4">
     <div class="max-w-[1400px] mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3 relative">
@@ -90,27 +89,15 @@
           <option value="index.html">🌐 Language</option>
           <option value="index.html">🇰🇷 Korean　</option>
           <option selected="" value="index_en.html">🇺🇸 English</option>
-          <!--
           <option value="index_JP.html">🇯🇵 Japanese</option>
-          -->
         </select>
       </div>
-      <!-- PC 버튼: 우측 상단 세로 정렬 -->
-      <div class="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
-        <!-- 언어 선택 콤보박스 -->
-        <select class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1" id="langSelectPC">
-          <option value="index.html">🌐 Language</option>
-          <option value="index.html">🇰🇷 Korean　</option>
-          <option selected="" value="index_en.html">🇺🇸 English</option>
-          <!--
-          <option value="index_JP.html">🇯🇵 Japanese</option>
-          --> 
-        </select>
-      </div>
+      
       <!-- 로고 -->
       <div class="text-center mb-4 mt-6 sm:mt-4">
         <img alt="로고" class="mx-auto w-64 drop-shadow-lg cursor-pointer" onclick="ComeBackHome()" src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png"/>
       </div>
+      
       <!-- ✅ 모바일 버튼: 가로 스크롤 -->
       <div class="sm:hidden overflow-x-auto mb-4 mt-1">
         <div class="flex space-x-2 w-max min-w-full bg-gray-100 p-2 rounded shadow text-xs">
@@ -210,6 +197,7 @@
           </svg>
         </button>
       </div>
+      
       <!-- 카피라이트 -->
       <footer class="text-center text-xs text-gray-500 mt-5">⛔ Unauthorized copying prohibited | © Made By S580 ShinChan(uuid: 67331703)</footer>
     </div>
@@ -411,6 +399,15 @@
     
       setupLangSelect('langSelectMobile');
       setupLangSelect('langSelectPC');
+    </script>
+    <script data-name="BMC-Widget" data-cfasync="false"
+            src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+            data-id="shin0825" 
+            data-description="Support me"         
+            data-color="#FFDD00" 
+            data-position="Right" 
+            data-x_margin="95"
+            data-y_margin="18">
     </script>
   </body>
 </html>
