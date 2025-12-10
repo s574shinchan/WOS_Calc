@@ -25,7 +25,7 @@
          crossorigin="anonymous"></script>
     <style>
       body {
-        background-image: url('images/watermark.png');
+        background-image: url('images/watermark.webp');
         background-repeat: repeat;
         background-position: center;
         background-size: auto;
@@ -138,7 +138,7 @@
       </label>
       
       <!-- 모바일/태블릿 버튼: 중앙 가로 정렬 -->
-      <div id="mobileButtons" class="hidden flex-row justify-center items-center gap-2 flex-wrap mb-4 py-4 min-h-[80px]">
+      <div id="mobileButtons" class="flex-row justify-center items-center gap-2 flex-wrap mb-4 py-4 min-h-[80px]">
         <button class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 shadow" onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')">💬 컨설팅문의</button>
         <button class="bg-teal-600 text-white text-sm px-4 py-2 rounded hover:bg-gray-800 shadow" onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')">📬 자료요청</button>
       
@@ -158,11 +158,11 @@
       
       <!-- 로고 -->
       <div class="text-center mb-4 mt-6 sm:mt-4">
-        <img alt="로고" class="mx-auto w-64 drop-shadow-lg cursor-pointer" onclick="ComeBackHome()" src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/logo.png"/>
+        <img alt="로고" class="mx-auto w-64 drop-shadow-lg cursor-pointer" onclick="ComeBackHome()" src="images/logo.webp"/>
       </div>
 
       <!-- ✅ 모바일 메뉴 -->
-      <div id="mobileMenu" class="hidden overflow-x-auto mb-4 mt-1 py-3 min-h-[60px]">
+      <div id="mobileMenu" class="overflow-x-auto mb-4 mt-1 py-3 min-h-[60px]">
       <!--<div class="hidden overflow-x-auto mb-4 mt-1"> -->
         <div class="flex space-x-2 w-max min-w-full bg-gray-100 p-2 rounded shadow text-xs">
           <button class="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-2 rounded whitespace-nowrap" onclick="switchTab('guide')">자료모음</button>
@@ -995,22 +995,22 @@
                         <thead class="bg-orange-100">
                           <th class="border p-1">등급</th>
                           <th class="border p-1">
-                            <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier1.png" class="w-6 h-6 mx-auto" alt="1단계">
+                            <img src="images/tier1.webp" class="w-6 h-6 mx-auto" alt="1단계">
                           </th>
                           <th class="border p-1">
-                            <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier2.png" class="w-6 h-6 mx-auto" alt="2단계">
+                            <img src="images/tier2.webp" class="w-6 h-6 mx-auto" alt="2단계">
                           </th>
                           <th class="border p-1">
-                            <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier3.png" class="w-6 h-6 mx-auto" alt="3단계">
+                            <img src="images/tier3.webp" class="w-6 h-6 mx-auto" alt="3단계">
                           </th>
                           <th class="border p-1">
-                            <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier4.png" class="w-6 h-6 mx-auto" alt="4단계">
+                            <img src="images/tier4.webp" class="w-6 h-6 mx-auto" alt="4단계">
                           </th>
                           <th class="border p-1">
-                            <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier5.png" class="w-6 h-6 mx-auto" alt="5단계">
+                            <img src="images/tier5.webp" class="w-6 h-6 mx-auto" alt="5단계">
                           </th>
                           <th class="border p-1">
-                            <img src="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/images/tier6.png" class="w-6 h-6 mx-auto" alt="6단계">
+                            <img src="images/tier6.webp" class="w-6 h-6 mx-auto" alt="6단계">
                           </th>
                           <th class="border p-1">SubTotal</th>
                         </thead>
@@ -1087,7 +1087,7 @@
                   </div>
                 </details>
                 
-                <!-- 연맹대작전 -->
+                <!-- 용광로 업그레이드 조건 -->
                 <details class="bg-white border border-blue-300 rounded-md p-4">
                   <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 용광로 업그레이드 조건</summary>
                   <div class="mt-3 space-y-4 text-sm text-gray-800" id="용광로조건">
@@ -1463,6 +1463,14 @@
           wrapper.style.display = "none";
           // ✅ 추가
           document.body.style.overflowX = "hidden";
+        } else if (page === 'schedule') {
+          guide.style.display = "none";
+          wrapper.style.display = "block";
+          frame.src = `${page}_m.html`;
+          
+          // ✅ 추가: 탭 전환시 우측 여백 제거
+          document.body.style.overflowX = "hidden";
+          document.documentElement.style.overflowX = "hidden";
         } else {
           guide.style.display = "none";
           wrapper.style.display = "block";
@@ -1619,7 +1627,7 @@
         const RECRUIT_COST = 10;
 
         // ▼ tier0~tier6 이미지 (7장) — 필요 시 경로 교체
-        const TIER_IMG = (n) => `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/images/tier${n}.png`;
+        const TIER_IMG = (n) => `images/tier${n}.webp`;
 
         const TABLE_SEL = "#hero-upgrade-table";
         const OUT_SEL   = "#hero-shard-strip";
