@@ -120,6 +120,14 @@
       .input { width:110px; height:34px; border:1px solid #d0d5dd; border-radius:8px; padding:0 10px; outline:none; }
       .btn   { height:34px; padding:0 14px; border:0; border-radius:8px; background:#2563eb; color:#fff; cursor:pointer; flex:0 0 auto; }
     </style>
+    <script>
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
+
+      if (!isMobile && location.pathname.includes('index_m')) {
+        window.location.href = "index.html";
+      }
+    </script>
   </head>
   <body class="bg-gray-100 min-h-screen p-4">
     <div class="max-w-[1500px] mx-auto w-full bg-blue-300 shadow rounded p-4 sm:p-3 relative">
@@ -144,7 +152,7 @@
         <button 
           onclick="location.href='https://buymeacoffee.com/shin0825'"
           class="bg-blue-600 text-white text-sm px-5 py-2 rounded hover:bg-blue-700 shadow">
-          ☕ Support
+          ☕ 후원하기
         </button>
       </div>
       
