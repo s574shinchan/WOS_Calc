@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>영웅장비[마스터리]</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ========== 다크모드 ========== */
+    body.dark-mode { background-color:#121212; color:#f0f0f0; }
+    .dark-mode .border{ border-color:#444 !important; }
+    .dark-mode .bg-white{ background-color:#2c2c2c !important; color:#f0f0f0 !important; }
+    .dark-mode .bg-gray-100{ background-color:#1e1e1e !important; }
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#dddddd !important; }
+    .dark-mode select,.dark-mode input{ color:#000 !important; }
+    .dark-mode table{ background:#2c2c2c; color:#f0f0f0; }
+    .dark-mode th,.dark-mode td{ border-color:#444 !important; }
+
+    /* ========== experts 카드 스타일 ========== */
+    .exp-card{
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:16px;
+      background:#fff;
+      box-shadow:0 6px 18px rgba(15,23,42,.06);
+      transition: box-shadow .2s ease;
+    }
+    .exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
+    .muted{ font-size:12px; color:#6b7280; }
+
+    body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
+    body.dark-mode .muted{ color:#b7b7b7 !important; }
+    .tabular-nums{ font-variant-numeric: tabular-nums; }
+  </style>
+
+  <!-- 다크모드 상태 유지 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md space-y-6">
+    <h1 class="text-2xl font-bold text-gray-800">🧝 영웅 장비 계산기</h1>
+
+    <div class="text-gray-600 text-sm">
+      <p>현재레벨과 목표레벨을 선택하면, 업그레이드에 필요한 자원(미스릴/마스터리석/레전드 장비)을 계산합니다.</p>
+      <p>각 항목의 ‘필요 합계’는 레벨 선택 시 자동 갱신됩니다. </p>
+      <p>각 항목별로 체크를 하면 체크항목별 필요합계를 더하여 총합계에 표시됩니다.</p>
+    </div>
+
+    <!-- ===================== 📙 마스터리 ===================== -->
+    <div class="exp-card">
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-[16px] font-semibold text-yellow-700">📙 마스터리</h2>
+        </div>
+
+        <form id="masteryForm" class="space-y-3">
+          <div id="masteryGrid" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
+
+          <!-- 📙 마스터리 총합계 -->
+          <div id="masteryTotals" class="exp-card">
+            <div class="p-4">
+              <div class="font-semibold text-gray-800 mb-2">총합계 (마스터리)</div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="rounded-xl border border-black/10 p-3">
+                  <div class="font-semibold mb-2">필요 총합</div>
+                  <div class="flex justify-between text-[12px]">
+                    <span class="text-gray-600">마스터리석</span><span id="ms-tot-stone" class="tabular-nums">0</span>
+                  </div>
+									<div class="font-semibold mb-6"></div>
+                  <div class="flex justify-between text-[12px]">
+                    <span class="text-gray-600">레전드장비</span><span id="ms-tot-leg" class="tabular-nums">0</span>
+                  </div>
+                </div>
+                <div class="rounded-xl border border-black/10 p-3">
+                  <div class="font-semibold mb-2">보유량</div>
+									<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+										<div>
+											<label class="block text-[12px] text-gray-600 mb-1">마스터리석</label>
+											<input type="number" id="owned-마스터리석" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+										</div>
+										<div>
+											<label class="block text-[12px] text-gray-600 mb-1">레전드장비</label>
+											<input type="number" id="owned-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+										</div>
+									</div>
+                </div>
+                <div class="rounded-xl border border-black/10 p-3">
+                  <div class="font-semibold mb-2">과부족</div>
+									<div class="flex justify-between text-[12px]"><span class="text-gray-600">마스터리석</span><span id="ms-def-stone" class="tabular-nums">0</span></div>
+									<div class="font-semibold mb-6"></div>
+                  <div class="flex justify-between text-[12px]"><span class="text-gray-600">레전드장비</span><span id="ms-def-leg" class="tabular-nums">0</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 공통 유틸 & 프레임 통신 ========== -->
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
+  </script>
+
+  <!-- ========== 📙 마스터리 로직 ========== -->
+  <script>
+    const masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Hero/Mastery.csv";
+    const masterySlots = ["고글", "장갑", "벨트", "신발"];
+    let masteryLevels = [];
+    let masteryData = [];
+
+    async function loadMasteryCSV() {
+      try{
+        const res = await fetch(masteryUrl, {cache:"no-store"});
+        const text = await res.text();
+        const lines = text.trim().split("\n").map(row => row.split(","));
+        const headers = lines[0];
+        masteryData = lines.slice(1).map(row => {
+          const obj = {};
+          headers.forEach((h, i) => obj[h.trim()] = (row[i] ?? "").trim() || "0");
+          return obj;
+        });
+        masteryLevels = masteryData.map(r => r["레벨"]);
+      }catch(e){
+        // 간단한 폴백 (레벨 1~5)
+        masteryData = [
+          {레벨:"1", 마스터리석:"0", 레전드장비:"0"},
+          {레벨:"2", 마스터리석:"10", 레전드장비:"0"},
+          {레벨:"3", 마스터리석:"22", 레전드장비:"0"},
+          {레벨:"4", 마스터리석:"36", 레전드장비:"1"},
+          {레벨:"5", 마스터리석:"52", 레전드장비:"1"},
+        ];
+        masteryLevels = masteryData.map(r=>r["레벨"]);
+      }
+      renderMasteryUI();
+      sendHeightToParent();
+    }
+
+    function renderMasteryUI() {
+      const grid = document.getElementById("masteryGrid");
+      grid.innerHTML = "";
+
+      masterySlots.forEach((name, i) => {
+        const options = masteryLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+        const card = document.createElement("div");
+        card.className = "exp-card";
+        card.innerHTML = `
+          <div class="p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-[13px] text-gray-600">현재</span>
+                    <select id="m-start-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[100px]">${options}</select>
+                  </div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-[13px] text-gray-600">목표</span>
+                    <select id="m-end-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[100px]">${options}</select>
+                  </div>
+                </div>
+              </div>
+              <div class="md:pl-4">
+                <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
+                <div class="grid grid-cols-[1fr_auto] gap-x-1 text-[12px]">
+                  <div class="text-gray-600">마스터리석</div><div class="text-right tabular-nums" id="ms-sub-stone-${i}">0</div>
+                  <div class="text-gray-600">레전드장비</div><div class="text-right tabular-nums" id="ms-sub-legend-${i}">0</div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+
+        const curSelect = card.querySelector(`#m-start-${i}`);
+        const tgtSelect = card.querySelector(`#m-end-${i}`);
+
+        const onChange = () => { updateMasterySubtotals(i); updateMasteryTotals(); };
+        curSelect.addEventListener("change", () => { tgtSelect.value = curSelect.value; onChange(); });
+        tgtSelect.addEventListener("change", onChange);
+
+        updateMasterySubtotals(i);
+      });
+
+      ["owned-마스터리석","owned-레전드장비"].forEach(id=>{
+        document.getElementById(id)?.addEventListener("input", updateMasteryTotals);
+      });
+
+      updateMasteryTotals();
+    }
+
+    function updateMasterySubtotals(i) {
+      const cur = document.getElementById(`m-start-${i}`).value;
+      const tgt = document.getElementById(`m-end-${i}`).value;
+      const sIdx = masteryLevels.indexOf(cur);
+      const eIdx = masteryLevels.indexOf(tgt);
+
+      const sums = { stone:0, legend:0 };
+      if (sIdx >= 0 && eIdx > sIdx) {
+        for (let j = sIdx + 1; j <= eIdx; j++) {
+          const r = masteryData[j];
+          sums.stone  += parseFloat(r["마스터리석"] || "0");
+          sums.legend += parseFloat(r["레전드장비"] || "0");
+        }
+      }
+      document.getElementById(`ms-sub-stone-${i}`).textContent  = sums.stone.toLocaleString();
+      document.getElementById(`ms-sub-legend-${i}`).textContent = sums.legend.toLocaleString();
+    }
+
+    function updateMasteryTotals(){
+      let total = { stone:0, leg:0 };
+      masterySlots.forEach((_, i)=>{
+        const cur = document.getElementById(`m-start-${i}`).value;
+        const tgt = document.getElementById(`m-end-${i}`).value;
+        const sIdx = masteryLevels.indexOf(cur);
+        const eIdx = masteryLevels.indexOf(tgt);
+        if (sIdx < 0 || eIdx <= sIdx) return;
+
+        for(let j=sIdx+1;j<=eIdx;j++){
+          const r = masteryData[j];
+          total.stone += +(r["마스터리석"]||0);
+          total.leg   += +(r["레전드장비"]||0);
+        }
+      });
+
+      const own = {
+        stone: +(document.getElementById("owned-마스터리석")?.value || 0),
+        leg:   +(document.getElementById("owned-레전드장비")?.value || 0),
+      };
+
+      document.getElementById("ms-tot-stone").textContent = total.stone.toLocaleString();
+      document.getElementById("ms-tot-leg").textContent   = total.leg.toLocaleString();
+      
+			document.getElementById("owned-마스터리석").textContent = own.stone.toLocaleString();
+      document.getElementById("owned-레전드장비").textContent   = own.leg.toLocaleString();
+			
+			const defA = document.getElementById("ms-def-ston");
+      const defB = document.getElementById("ms-def-leg");
+			
+			document.getElementById("ms-def-stone").textContent = (own.stone-total.stone).toLocaleString();
+      document.getElementById("ms-def-leg").textContent   = (own.leg-total.leg).toLocaleString();
+
+			defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+    }
+
+    // 최초 로딩
+    loadMasteryCSV();
+  </script>
+
+  <!-- ========== (선택) 키 차단: 원 코드 유지 습관 ========== -->
+  <script>
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
