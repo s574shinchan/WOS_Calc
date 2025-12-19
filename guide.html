@@ -15,15 +15,679 @@
       <details class="bg-white border border-blue-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛕 요새 주차별 보상</summary>
         <div id="FortTable" class="mt-3 overflow-x-auto">
-          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+          <table id="fortress" class="min-w-full table-fixed border border-gray-400 text-center">
+            <thead class="bg-blue-100 font-semibold">
+              <tr>
+                <th class="border p-1 w-10">요새</th>
+                <th class="border p-1">1주차</th>
+                <th class="border p-1">2주차</th>
+                <th class="border p-1">3주차</th>
+                <th class="border p-1">4주차</th>
+                <th class="border p-1">5주차</th>
+                <th class="border p-1">6주차</th>
+                <th class="border p-1">7주차</th>
+                <th class="border p-1">8주차</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 요새 1 -->
+              <tr>
+                <td class="border p-1">1</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">HP 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">HP 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+              </tr>
+
+              <!-- 요새 2 -->
+              <tr>
+                <td class="border p-1">2</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">HP 증가</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">HP 증가</td>
+                <td class="border p-1">공용가속</td>
+              </tr>
+
+              <!-- 요새 3 -->
+              <tr>
+                <td class="border p-1">3</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">HP 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">HP 증가</td>
+              </tr>
+
+              <!-- 요새 4 -->
+              <tr>
+                <td class="border p-1">4</td>
+                <td class="border p-1">HP 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">스킬북</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+              </tr>
+
+              <!-- 요새 5 -->
+              <tr>
+                <td class="border p-1">5</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">피해 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">스킬북</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">피해 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+              </tr>
+
+              <!-- 요새 6 -->
+              <tr>
+                <td class="border p-1">6</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">피해 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">피해 증가</td>
+                <td class="border p-1">공용 가속</td>
+              </tr>
+
+              <!-- 요새 7 -->
+              <tr>
+                <td class="border p-1">7</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">피해 증가</td>
+              </tr>
+
+              <!-- 요새 8 -->
+              <tr>
+                <td class="border p-1">8</td>
+                <td class="border p-1">피해 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+              </tr>
+
+              <!-- 요새 9 -->
+              <tr>
+                <td class="border p-1">9</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">수용량 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">피해 증가</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">수용량 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+              </tr>
+
+              <!-- 요새 10 -->
+              <tr>
+                <td class="border p-1">10</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">수용량 증가</td>
+                <td class="border p-1">스킬북</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">수용량 증가</td>
+                <td class="border p-1">공용 가속</td>
+              </tr>
+
+              <!-- 요새 11 -->
+              <tr>
+                <td class="border p-1">11</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">스킬북</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+                <td class="border p-1">수용량 증가</td>
+              </tr>
+
+              <!-- 요새 12 -->
+              <tr>
+                <td class="border p-1">12</td>
+                <td class="border p-1">수용량 증가</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">텔레포트</td>
+                <td class="border p-1">공용 가속</td>
+                <td class="border p-1">경험치 강화</td>
+                <td class="border p-1">펫 돌파석</td>
+              </tr>
+
+              <!-- 빈 줄 삽입 -->
+              <tr><td colspan="9" class="border p-1 bg-white h-4"></td></tr>
+
+              <!-- ✅ 헤더처럼 보이는 행 추가 -->
+              <tr class="bg-blue-100 font-semibold">
+                <td class="border p-1 w-10">성채</td>
+                <td class="border p-1">1주차</td>
+                <td class="border p-1">2주차</td>
+                <td class="border p-1">3주차</td>
+                <td class="border p-1">4주차</td>
+                <td class="border p-1">5주차</td>
+                <td class="border p-1">6주차</td>
+                <td class="border p-1">7주차</td>
+                <td class="border p-1">8주차</td>
+              </tr>
+
+              <!-- 성채 1 -->
+              <tr>
+                <td class="border p-1">1</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">펫 돌파 재료 상자</td>
+                <td class="border p-1">장비 상자</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">펫 돌파 재료 상자</td>
+                <td class="border p-1">장비 상자</td>
+                <td class="border p-1">SSR 파편</td>
+              </tr>
+
+              <!-- 성채 2 -->
+              <tr>
+                <td class="border p-1">2</td>
+                <td class="border p-1">불의 수정</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">펫 돌파 재료 상자</td>
+                <td class="border p-1">불의 수정</td>
+                <td class="border p-1">불의 수정</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">펫 돌파 재료 상자</td>
+                <td class="border p-1">불의 수정</td>
+              </tr>
+
+              <!-- 성채 3 -->
+              <tr>
+                <td class="border p-1">3</td>
+                <td class="border p-1">장비 상자</td>
+                <td class="border p-1">불의 수정</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">펫 돌파 재료 상자</td>
+                <td class="border p-1">장비 상자</td>
+                <td class="border p-1">불의 수정</td>
+                <td class="border p-1">불의 수정</td>
+                <td class="border p-1">펫 돌파 재료 상자</td>
+              </tr>
+
+              <!-- 성채 4 -->
+              <tr>
+                <td class="border p-1">4</td>
+                <td class="border p-1">펫 돌파 재료 상자</td>
+                <td class="border p-1">장비 상자</td>
+                <td class="border p-1">불의 수정</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">펫 돌파 재료 상자</td>
+                <td class="border p-1">장비 상자</td>
+                <td class="border p-1">SSR 파편</td>
+                <td class="border p-1">SSR 파편</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </details>
 
+      <!-- 용광로 업그레이드 조건 -->
+      <details id="detail3" class="bg-white border border-blue-300 rounded-md p-4" open>
+        <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 용광로 업그레이드 조건</summary>
+        <div id="용광로조건" class="mt-3 space-y-4 text-sm text-gray-800">
+          <div class="mb-2 mt-2">
+            <div class="flex flex-col md:flex-row w-full">
+              <div class="w-full md:w-1/2 px-1">
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center">
+                    <thead class="bg-orange-100">
+                      <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1">FC1</td><td class="border p-1">대사관 Lv.30, 연구소 Lv.30</td>
+                      </tr>
+                      <tr class="bg-indigo-50">
+                        <td class="border p-1">FC2</td><td class="border p-1">대사관 FC1, 창병 병영 FC1</td>              
+                      </tr>
+                      <tr>
+                        <td class="border p-1">FC3</td><td class="border p-1">대사관 FC2, 방패 병영 FC2</td>              
+                      </tr>
+                      <tr class="bg-indigo-50">
+                        <td class="border p-1">FC4</td><td class="border p-1">대사관 FC3, 궁병 병영 FC3</td>              
+                      </tr>
+                      <tr>
+                        <td class="border p-1">FC5</td><td class="border p-1">대사관 FC4, 창병 병영 FC4</td>              
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="w-full md:w-1/2 px-1">
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center">
+                    <thead class="bg-orange-100">
+                      <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1">FC6</td><td class="border p-1">대사관 FC5, 방패 병영 FC5</td>
+                      </tr>
+                      <tr class="bg-indigo-50">
+                        <td class="border p-1">FC7</td><td class="border p-1">대사관 FC6, 궁병 병영 FC6</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">FC8</td><td class="border p-1">대사관 FC7, 창병 병영 FC7</td>
+                      </tr>
+                      <tr class="bg-indigo-50">
+                        <td class="border p-1">FC9</td><td class="border p-1">대사관 FC8, 방패 병영 FC8</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">FC10</td><td class="border p-1">대사관 FC9, 궁병 병영 FC9</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+      
       <!-- 🧬 세대별 영웅 특성 -->
-      <details class="bg-white border border-blue-300 rounded-md p-4">
-        <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🧬 세대별 영웅 특성</summary>
-        <div id="HeroTable" class="mt-3 overflow-x-auto">
-          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+      <details class="border border-blue-300 rounded-md p-4 shadow">
+        <summary class="cursor-pointer text-lg font-semibold text-blue-700">🧬 세대별 영웅 특성</summary>
+        <div class="overflow-x-auto w-full">
+          <table class="table-auto border w-full text-sm text-center">
+            <thead class="bg-orange-100">
+              <tr>
+                <th class="border p-1">세대</th>
+                <th class="border p-1">이름</th>
+                <th class="border p-1">구분</th>
+                <th class="border p-1">획득처</th>
+                <th class="border p-1">영웅 공격력/방어력</th>
+                <th class="border p-1">전용무기 파괴력/HP</th>
+                <th class="border p-1">전용무기효과</th>
+                <th class="border p-1">공수구분</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 여기에 너가 기존에 입력한 <tr>들 복사해서 붙여넣기 -->
+              <tr>
+                <td class="border p-1" rowspan="4">1세대</td>
+                <td class="border p-1">제로니모</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">VIP / 최강영주</td>
+                <td class="border p-1">260.2%</td>
+                <td class="border p-1">62.5%</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">나탈리아</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">VIP</td>
+                <td class="border p-1" rowspan="3">200.2%</td>
+                <td class="border p-1" rowspan="3">50.0%</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">몰리</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">영웅의 홀</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">진먼</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">공력력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1" rowspan="3">2세대</td>
+                <td class="border p-1">플린트</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1" rowspan="3">240.2%</td>
+                <td class="border p-1" rowspan="3">60.0%</td>
+                <td class="border p-1">공력력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">필리</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">최강영주</td>
+                <td class="border p-1">HP 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">알론소</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr>
+                <td class="border p-1" rowspan="3">3세대</td>
+                <td class="border p-1">로건</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1" rowspan="3">290.2%</td>
+                <td class="border p-1" rowspan="3">70.0%</td>
+                <td class="border p-1">방어력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">미야</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">그렉</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1">HP 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1" rowspan="3">4세대</td>
+                <td class="border p-1">아모세</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1" rowspan="3">370.3%</td>
+                <td class="border p-1" rowspan="3">92.5%</td>
+                <td class="border p-1">HP 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">레이나</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">린</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1" rowspan="3">5세대</td>
+                <td class="border p-1">헥터</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1" rowspan="3">444.4%</td>
+                <td class="border p-1" rowspan="3">111.0%</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">노라</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1">방어력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">그웬</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1" rowspan="3">6세대</td>
+                <td class="border p-1">무명</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1" rowspan="3">540.4%</td>
+                <td class="border p-1" rowspan="3">133.5%</td>
+                <td class="border p-1">방어력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">레니</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">웨인</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1" rowspan="3">7세대</td>
+                <td class="border p-1">에디스</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1" rowspan="3">650.5%</td>
+                <td class="border p-1" rowspan="3">160.5%</td>
+                <td class="border p-1">HP 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">고든</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">브레들리</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1" rowspan="3">8세대</td>
+                <td class="border p-1">가토</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1" rowspan="3">780.6%</td>
+                <td class="border p-1" rowspan="3">193.0%</td>
+                <td class="border p-1">방어력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">소냐</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">핸드릭</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr>
+                <td class="border p-1" rowspan="3">9세대</td>
+                <td class="border p-1">마그누스</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1" rowspan="3">940.8%</td>
+                <td class="border p-1" rowspan="3">232.0%</td>
+                <td class="border p-1">HP 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">프레드</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">쇠라</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1" rowspan="3">10세대</td>
+                <td class="border p-1">그레고리</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1" rowspan="3">1110.9%</td>
+                <td class="border p-1" rowspan="3">277.5%</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">프레야</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">방어력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">블랑쉬</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr>
+                <td class="border p-1" rowspan="3">11세대</td>
+                <td class="border p-1">엘레오노라</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1" rowspan="3">1281.0%</td>
+                <td class="border p-1" rowspan="3">320.0%</td>
+                <td class="border p-1">HP 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">로이드</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">빙원의 왕</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">루퍼스</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1" rowspan="3">12세대</td>
+                <td class="border p-1">헤르보르</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1" rowspan="3">1451.16%</td>
+                <td class="border p-1" rowspan="3">362.5%</td>
+                <td class="border p-1">방어력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">가로얼</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">리지아</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">빙원의 왕</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1" rowspan="3">13세대</td>
+                <td class="border p-1">가젤라</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">빙원의왕</td>
+                <td class="border p-1" rowspan="3">1621.29%</td>
+                <td class="border p-1" rowspan="3">405.0%</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">플로라</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">HP 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr>
+                <td class="border p-1">울카누</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1">공격력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1" rowspan="3">14세대</td>
+                <td class="border p-1">엘리프</td>
+                <td class="border p-1">방패</td>
+                <td class="border p-1">행운의 룰렛</td>
+                <td class="border p-1" rowspan="3">1791.43%</td>
+                <td class="border p-1" rowspan="3">447.5%</td>
+                <td class="border p-1">방어력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">도미니카</td>
+                <td class="border p-1">창병</td>
+                <td class="border p-1">빙원의 왕</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">공성</td>
+              </tr>
+              <tr class="bg-indigo-50">
+                <td class="border p-1">카라</td>
+                <td class="border p-1">궁병</td>
+                <td class="border p-1">영웅의 전당</td>
+                <td class="border p-1">파괴력 15%</td>
+                <td class="border p-1">수성</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </details>
 
@@ -31,7 +695,68 @@
       <details class="bg-white border border-blue-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS 준비단계</summary>
         <div id="SVSTable" class="mt-3 overflow-x-auto">
-          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+          <!-- event.html: 요일별 임무 테이블만 포함 -->
+          <div class="overflow-x-auto">
+            <table class="table-auto border w-full text-xs text-center">
+              <thead class="bg-orange-100">
+                <tr>
+                  <th class="border p-1">요일</th>
+                  <th class="border p-1">임무</th>
+                  <th class="border p-1">포인트</th>
+                </tr>
+              </thead>
+              <tbody id="missionTableBody">
+                <!-- 월요일 -->
+                <tr><td class="border p-1 font-semibold" rowspan="4">월요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+                <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+                <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+                <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+
+                <!-- 화요일 --> 
+                <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="9">화요일</td><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
+
+                <!-- 수요일 -->
+                <tr><td class="border p-1 font-semibold" rowspan="10">수요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+                <tr><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
+                <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
+                <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
+                <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
+                <tr><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
+                <tr><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
+                <tr><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
+                <tr><td class="border p-1">빙원괴수집결</td><td class="border p-1">1마리당 30,000pt</td></tr>
+                <tr><td class="border p-1">야수처치</td><td class="border p-1">1마리당 9,000 ~ 12,000pt</td></tr>
+
+                <!-- 목요일 -->
+                <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="5">목요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 144,000pt</td></tr>
+                <tr class="bg-amber-50"><td class="border p-1">병사 훈련</td><td class="border p-1">3 ~ 75pt</td></tr>
+
+                <!-- 금요일 -->
+                <tr><td class="border p-1 font-semibold" rowspan="11">금요일</td><td class="border p-1">영주 장비</td><td class="border p-1">1종 36pt</td></tr>
+                <tr><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
+                <tr><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
+                <tr><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 144,000pt</td></tr>
+                <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+                <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+                <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+                <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
+                <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
+                <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
+                <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </details>
       
@@ -39,7 +764,79 @@
       <details class="bg-white border border-blue-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
         <div id="Tranfer" class="mt-3 space-y-4 text-sm text-gray-800">
-          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+          <!-- ✅ 좌우 2열 래퍼 -->
+          <div class="md:grid md:grid-cols-2 gap-4 items-start min-w-0">
+            <!-- ◀ 왼쪽: 서술 영역 묶음 -->
+            <div class="space-y-4 min-w-0">
+              <!-- 서버분류 -->
+              <section>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 서버분류</h3>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li><span class="text-blue-500">일반서버</span><br>
+                    - 이민인원: <strong>55</strong> | 특별초대: <strong>최대 3</strong> | 일반초대: <strong>35</strong> | 자유이민: <strong>20 (선착순)</strong>
+                  </li>
+                  <li><span class="text-red-500">강성서버</span><br>
+                    - 이민인원: <strong>30</strong> | 특별초대: <strong>없음</strong> | 일반초대: <strong>20</strong> | 자유이민: <strong>10 (선착순)</strong>
+                  </li>
+                </ul>
+              </section>
+
+              <!-- 일정 -->
+              <section>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 일정</h3>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li><strong>일 ~ 화</strong>: 이민 전투력 제한 설정 및 이민모집 홍보</li>
+                  <li><strong>수 ~ 목</strong>: 초대권 받은 사람들 이동 가능 (특별초대 + 일반초대)</li>
+                  <li><strong>금 ~ 토</strong>: <u>UTC 00:00부터</u> 자유이민 시작 (선착순)</li>
+                </ul>
+              </section>
+
+              <!-- 용어정리 -->
+              <section>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 용어정리</h3>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li>특별초대: <strong>전투력 제한 없음</strong>, <u>첫 이민 시 3장</u>, <u>월 1장 추가</u>, <strong>최대 3장 보유 가능</strong></li>
+                  <li>일반초대: <strong>전투력 제한 범위 내</strong></li>
+                </ul>
+              </section>
+
+              <!-- 그 외 -->
+              <section>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 그 외</h3>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
+                  <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
+                  <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
+                  <li>모병소/의무실 병사도 전투력 포함</li>
+                  <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
+                  <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
+                </ul>
+              </section>
+            </div>
+
+            <!-- ▶ 오른쪽: 표(패키지) -->
+            <div class="space-y-2 min-w-0">
+              <h3 class="font-semibold text-green-600">✈️ 이민권 패키지</h3>
+              <div class="overflow-x-auto border rounded-md">
+                <table class="table-auto w-full text-xs text-center">
+                  <thead class="bg-green-100">
+                    <tr>
+                      <th class="border p-1">금액</th>
+                      <th class="border p-1">이민권</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td class="border p-1">7,500</td><td class="border p-1">1장</td></tr>
+                    <tr><td class="border p-1">15,000</td><td class="border p-1">2장</td></tr>
+                    <tr><td class="border p-1">30,000</td><td class="border p-1">3장</td></tr>
+                    <tr><td class="border p-1">79,000</td><td class="border p-1">4장</td></tr>
+                    <tr><td class="border p-1">149,000</td><td class="border p-1">5장</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-xs text-gray-600">📌 참고 : 149,000 패키지는 <span class="font-semibold text-red-500">최대 15번</span>까지 구매 가능합니다.</p>
+            </div>
+          </div>
         </div>
       </details>
 
@@ -55,24 +852,386 @@
       <details class="bg-white border border-blue-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">☀ 영웅성급업표</summary>
         <div id="tierUpTable" class="mt-3 space-y-4 text-sm text-gray-800">
-          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+          <div class="overflow-x-auto">
+            <h2>최초 모집 시 영웅조각 10개 필요</h2>
+            <table id="hero-upgrade-table" class="table-auto border w-full text-xs text-center">
+              <thead class="bg-orange-100">
+                <th class="border p-1">등급</th>
+                <th class="border p-1">
+                  <img src="images/tier1.webp" class="w-6 h-6 mx-auto" alt="1단계">
+                </th>
+                <th class="border p-1">
+                  <img src="images/tier2.webp" class="w-6 h-6 mx-auto" alt="2단계">
+                </th>
+                <th class="border p-1">
+                  <img src="images/tier3.webp" class="w-6 h-6 mx-auto" alt="3단계">
+                </th>
+                <th class="border p-1">
+                  <img src="images/tier4.webp" class="w-6 h-6 mx-auto" alt="4단계">
+                </th>
+                <th class="border p-1">
+                  <img src="images/tier5.webp" class="w-6 h-6 mx-auto" alt="5단계">
+                </th>
+                <th class="border p-1">
+                  <img src="images/tier6.webp" class="w-6 h-6 mx-auto" alt="6단계">
+                </th>
+                <th class="border p-1">SubTotal</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="border p-1">1성</td>
+                  <td class="border p-1">1</td>
+                  <td class="border p-1">1</td>
+                  <td class="border p-1">2</td>
+                  <td class="border p-1">2</td>
+                  <td class="border p-1">2</td>
+                  <td class="border p-1">2</td>
+                  <td class="border p-1">20</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">2성</td>
+                  <td class="border p-1">5</td>
+                  <td class="border p-1">5</td>
+                  <td class="border p-1">5</td>
+                  <td class="border p-1">5</td>
+                  <td class="border p-1">5</td>
+                  <td class="border p-1">15</td>
+                  <td class="border p-1">40</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">3성</td>
+                  <td class="border p-1">15</td>
+                  <td class="border p-1">15</td>
+                  <td class="border p-1">15</td>
+                  <td class="border p-1">15</td>
+                  <td class="border p-1">15</td>
+                  <td class="border p-1">40</td>
+                  <td class="border p-1">115</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">4성</td>
+                  <td class="border p-1">40</td>
+                  <td class="border p-1">40</td>
+                  <td class="border p-1">40</td>
+                  <td class="border p-1">40</td>
+                  <td class="border p-1">40</td>
+                  <td class="border p-1">100</td>
+                  <td class="border p-1">300</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">5성</td>
+                  <td class="border p-1">100</td>
+                  <td class="border p-1">100</td>
+                  <td class="border p-1">100</td>
+                  <td class="border p-1">100</td>
+                  <td class="border p-1">100</td>
+                  <td class="border p-1">100</td>
+                  <td class="border p-1">600</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr class="font-bold">
+                  <td colspan="7" class="border px-2 py-1 text-right">Total</td>
+                  <td class="border p-1">1075</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
       </details>
       
       <!-- 정제불수 기댓값 -->
       <details class="bg-white border border-blue-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 제련불수 기대값</summary>
-        <div id="refindTable" class="mt-3 space-y-4 text-sm text-gray-800">
-          <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-        </div>        
+        <div id="제련불수" class="mt-3 space-y-4 text-sm text-gray-800">
+          <div class="overflow-x-auto">
+            <table class="table-auto border w-full text-xs text-center">
+              <thead class="bg-orange-100">
+                <tr>
+                  <th class="border p-1">매일 한 번씩만 제련</th>
+                  <th class="border p-1">주당 불수 소모</th>
+                  <th class="border p-1">주당 획득 제련불수</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="border p-1">매일 한 번씩만 제련</td>
+                  <td class="border p-1">70</td>
+                  <td class="border p-1">10.15</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 14번, 이후 매일 한 번씩(주 20회)</td>
+                  <td class="border p-1">330</td>
+                  <td class="border p-1">29.00</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 20번, 이후 매일 한 번씩(주 26회)</td>
+                  <td class="border p-1">540</td>
+                  <td class="border p-1">41.90</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 34번, 이후 매일 한 번씩(주 40회)</td>
+                  <td class="border p-1">1,240</td>
+                  <td class="border p-1">72.00</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 40번, 이후 매일 한 번씩(주 46회)</td>
+                  <td class="border p-1">1,690</td>
+                  <td class="border p-1">91.08</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 54번, 이후 매일 한 번씩(주 60회)</td>
+                  <td class="border p-1">3,090</td>
+                  <td class="border p-1">135.60</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 60번, 이후 매일 한 번씩(주 66회)</td>
+                  <td class="border p-1">3,700</td>
+                  <td class="border p-1">156.60</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 74번, 이후 매일 한 번씩(주 80회)</td>
+                  <td class="border p-1">5,600</td>
+                  <td class="border p-1">204.60</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 80번, 이후 매일 한 번씩(주 86회)</td>
+                  <td class="border p-1">6,470</td>
+                  <td class="border p-1">226.56</td>
+                </tr>
+                <tr>
+                  <td class="border p-1">월요일 94번, 이후 매일 한 번씩(주 100회)</td>
+                  <td class="border p-1">8,710</td>
+                  <td class="border p-1">278.50</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <!-- 깃발해금 -->
+      <details class="bg-white border border-blue-300 rounded-md p-4">
+        <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🚩 합병 후 깃발해금</summary>
+        <div id="깃발해금" class="mt-3 space-y-4 text-sm text-gray-800">
+          <div class="overflow-x-auto">
+            <table class="table-auto border w-full text-xs text-center">
+            <thead class="bg-orange-100">
+              <tr>
+                <th class="border p-1">구간</th>
+                <th class="border p-1">개수</th>
+                <th class="border p-1">배너당 시간</th>
+                <th class="border p-1">총 소요 시간</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border p-1">기본 깃발</td>
+                <td class="border p-1">5개</td>
+                <td class="border p-1">0시간</td>
+                <td class="border p-1">0시간</td>
+              </tr>
+              <tr>
+                <td class="border p-1">6번째 ~ 10번째</td>
+                <td class="border p-1">5개</td>
+                <td class="border p-1">2시간</td>
+                <td class="border p-1">10시간</td>
+              </tr>
+              <tr>
+                <td class="border p-1">11번째 ~ 20번째</td>
+                <td class="border p-1">10개</td>
+                <td class="border p-1">1시간</td>
+                <td class="border p-1">10시간</td>
+              </tr>
+              <tr>
+                <td class="border p-1">21번째 ~ 60번째</td>
+                <td class="border p-1">40개</td>
+                <td class="border p-1">0.5시간 (30분)</td>
+                <td class="border p-1">20시간</td>
+              </tr>
+              <tr>
+                <td class="border p-1">61번째 ~ 285번째</td>
+                <td class="border p-1">225개</td>
+                <td class="border p-1">0.25시간 (15분)</td>
+                <td class="border p-1">56.25시간</td>
+              </tr>
+              <tr class="font-bold">
+                <td class="border p-1">총합</td>
+                <td class="border p-1">285개</td>
+                <td class="border p-1"></td>
+                <td class="border p-1">96시간 15분</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </details>
+
+      <!-- 드래곤 엠페러 -->
+      <details class="bg-white border border-blue-300 rounded-md p-4">
+        <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🐉 프로스트 드래곤 엠페러</summary>
+        <section class="bg-white p-4 rounded shadow-md text-sm">
+          <h2 class="text-lg font-bold mb-2">🔹 1단계 : 연맹신청 (월-화, 48h)</h2>
+          <ul class="list-disc list-inside mb-4">
+            <li>해당 서버가 속한 구역 내 연맹단위 참가신청</li>
+            <li>소속 구역별 상위 n위 연맹까지만 참전자격 획득</li>
+            <li>연맹 전투력 기준으로 순위 설정</li>
+            <li>1서버당 참가 연맹 수 제한 없음</li>
+            <li>수요일 리셋 전까지 같은 서버 내 다른 연맹들과 협력하여,<br>
+              참가할 연맹으로 멤버 이동 후 연맹 전투력을 n위 이내로 올린 뒤 대기</li>
+          </ul>
+
+          <h2 class="text-lg font-bold mb-2">🔹 2단계 : 참전 파견 (수-목, 48h)</h2>
+          <ul class="list-disc list-inside mb-4">
+            <li>1단계 때 해당 연맹에 소속한 멤버만 참전 등록 가능</li>
+            <li>1단계 때 해당 연맹에 없던 멤버는 수요일 가입해도 참전 불가</li>
+            <li>무기공장 참전 구조와 동일</li>
+            <li>목요일 UTC 23:59까지 해당 연맹에서 참전체크 완료되어야 일요일에 전장 입장 가능</li>
+          </ul>
+
+          <h2 class="text-lg font-bold mb-2">🔹 3단계 : 전장 오픈 (금-일, 59h)</h2>
+          <ul class="list-disc list-inside mb-4">
+            <li>무기공장 매칭 대기 방식과 동일</li>
+            <li>참전자로 확정된 경우, 연맹 이동은 자유</li>
+            <li>일요일에 엠페러 시작 전까지 다시 돌아와야 해당 연맹에서 전장 입장 가능</li>
+          </ul>
+
+          <h2 class="text-lg font-bold mb-2">🔹 4단계: 전장 오픈 (총 7시간 진행)</h2>
+          <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">⚔️ 1. 전장 입장 ＆ 캐슬 쟁탈전</h3>
+          <ul class="list-disc list-inside">
+            <li>전장 개방 후 1시간 뒤 프로스트 드래곤 캐슬 쟁탈전 시작 (총 5시간 진행)</li>
+            <li>첫 점령 성공한 연맹만 ‘첫 점령 보상’ 획득</li>
+            <li>‘수비대장’의 점령시간 계산되며, 해당 랠리의 집결원이라도 점령시간은 포함, 계산되지 않음</li>
+            <li>※ 전장개방(입장가능) : 20:00 KST ( 11:00 UTC )</li>
+          </ul>
+          <p class="text-gray-600 mt-1 ml-4">✅ 랭킹 산정은 수비대장의 점령시간 기준으로 계산됨</p>
+
+          <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">🏛️ 2. 석탑 쟁탈전 (4개)</h3>
+          <ul class="list-disc list-inside">
+            <li>캐슬 주변 4개 석탑에서 동시 쟁탈</li>
+            <li>각 라운드 별로30분 진행 → 30분 보호 상태 후 다음 라운드 반복</li>
+            <li>각 라운드마다 가장 오래 점령한 1개의 연맹에게 30분간 특수 버프 부여</li>
+          </ul>
+
+          <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">🧪 3. 정수 수집 시스템</h3>
+          <ul class="list-disc list-inside">
+            <li>전장 내 용의 정수 수집 몬스터와 프로스트 드래곤 호위병 등장</li>
+            <li>정수 수집 → 호위병 처치 및 채집 시 획득</li>
+          </ul>
+          <p class="text-gray-600 mt-1 ml-4">✅ 연맹원 간 효율적인 역할 분담이 필요</p>
+
+          <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">📘 4. 수집에 유리한 스킬</h3>
+          <ul class="list-disc list-inside">
+            <li>전장에서만 사용 가능한 수정 스킬 존재</li>
+            <li>전투력 강화 효과</li>
+          </ul>
+
+          <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">👑 5. 최종 점령 보상</h3>
+          <ul class="list-disc list-inside">
+            <li>캐슬 점령 시간이 가장 긴 영주에게 전용 엠블럼 + 30일 버프 지급</li>
+            <li>시간이 동일할 경우, 먼저 점령한 쪽이 승리</li>
+          </ul>
+          <p class="text-gray-600 mt-1 ml-4">✅ 1초라도 더 오래 점령한 쪽이 승리</p>
+        </section>
       </details>
       
-      <!-- 📦 각종 패키지 구성 섹션 -->
+      <!-- 연맹대작전 -->
+      <details class="bg-white border border-blue-300 rounded-md p-4">
+        <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🚛 연맹대작전</summary>
+        <div id="연맹대작전" class="mt-3 space-y-4 text-sm text-gray-800">
+          <div class="overflow-x-auto">
+            <table class="table-auto border w-full text-xs text-center">
+              <thead class="bg-orange-100">
+                <tr>
+                  <th class="border p-1">요일</th>
+                  <th class="border p-1">임무</th>
+                  <th class="border p-1">포인트</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="border p-1" rowspan="8">Day-1</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
+                <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
+                <tr><td class="border p-1">제련된 불의 수정 1개 소모</td><td class="border p-1">18,750pt</td></tr>
+                <tr><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
+                <tr><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
+                <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
+                <tr><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
+                <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
+
+                <tr class="bg-orange-50"><td class="border p-1" rowspan="10">Day-2</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 210pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 750pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 1,875pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">제련된 불의 수정 1개 소모</td><td class="border p-1">18,750pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
+
+                <tr><td class="border p-1" rowspan="11">Day-3</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
+                <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
+                <tr><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 45pt</td></tr>
+                <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 30pt</td></tr>
+                <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 9,370pt</td></tr>
+                <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 680pt</td></tr>
+                <tr><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
+                <tr><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
+                <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
+                <tr><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
+                <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
+
+                <tr class="bg-orange-50"><td class="border p-1" rowspan="8">Day-4</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 45pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">마스터리 에너지석 1개 소모</td><td class="border p-1">1,875pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">임의의 영웅 전용장비 부속품 1개 소모</td><td class="border p-1">3,750pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">미스릴 1개 소모</td><td class="border p-1">18,750pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">병사 훈련</td><td class="border p-1">1 ~ 30pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
+
+                <tr><td class="border p-1" rowspan="8">Day-5</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
+                <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
+                <tr><td class="border p-1">영주 장비 업그레이드</td><td class="border p-1">1종 22pt</td></tr>
+                <tr><td class="border p-1">제련된 불의 수정 1개 소모</td><td class="border p-1">18,750pt</td></tr>
+                <tr><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
+                <tr><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
+                <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
+                <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
+
+                <tr class="bg-orange-50"><td class="border p-1" rowspan="17">Day-6</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">영주 장비 업그레이드</td><td class="border p-1">1종 22pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 45pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">마스터리 에너지석 1개 소모</td><td class="border p-1">1,875pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">임의의 영웅 전용장비 부속품 1개 소모</td><td class="border p-1">3,750pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">미스릴 1개 소모</td><td class="border p-1">18,750pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 210pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 750pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 1,875pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">펫 돌파</td><td class="border p-1">1개 30pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 9,370pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 680pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
+                <tr class="bg-orange-50"><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+      
+      <!-- 여기에추가해야함 -->
+
+      <!--종점-->      
+      
+      <!-- 📦 각종 패키지 구성 섹션 
       <details class="bg-white border border-purple-300 rounded-md p-4">
         <summary class="cursor-pointer text-lg font-bold text-purple-700 mb-2">📦 각종 패키지 구성</summary>
         <div class="mt-3 space-y-4 text-sm text-gray-800">
           
-          <!-- 패키지 요일구성 -->
+          <!-- 패키지 요일구성 
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">📅 패키지등장 요일</summary>
             <div id="pakageYoil" class="space-y-4 text-sm text-gray-800 mt-2">
@@ -80,7 +1239,7 @@
             </div>
           </details>
           
-          <!-- 전용무기패키지 -->
+          <!-- 전용무기패키지 
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🗡 전용무기 패키지</summary>
             <div id="EnhanceGear" class="space-y-4 text-sm text-gray-800 mt-2">
@@ -88,7 +1247,7 @@
             </div>
           </details>
           
-          <!-- 미스릴패키지 -->
+          <!-- 미스릴패키지 
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">⛓ 미스릴 패키지</summary>
             <div id="Mithril" class="space-y-4 text-sm text-gray-800 mt-2">
@@ -96,7 +1255,7 @@
             </div>
           </details>
           
-          <!-- 커스텀상자 패키지-->
+          <!-- 커스텀상자 패키지
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">📦 커스텀상자 패키지</summary>
             <div id="customContainer" class="space-y-6 mt-2">
@@ -104,7 +1263,7 @@
             </div>
           </details>
           
-          <!-- 🛠️ 커스텀 무기상자 패키지 -->
+          <!-- 🛠️ 커스텀 무기상자 패키지 
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🛠️ 커스텀 무기상자 패키지</summary>
             <div id="customweapon" class="space-y-6 mt-2">
@@ -112,7 +1271,7 @@
             </div>
           </details>
                     
-          <!-- 💎 보석마스터 패키지 구성 -->
+          <!-- 💎 보석마스터 패키지 구성 
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">💎 보석마스터 패키지</summary>
             <div id="gemPakage" class="space-y-4 text-sm text-gray-800 mt-2">
@@ -120,7 +1279,7 @@
             </div>
           </details>
   
-          <!-- 💠 보석비전 패키지 -->
+          <!-- 💠 보석비전 패키지 
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">💠 보석비전 패키지</summary>
             <div id="visionPakage" class="mt-2">
@@ -128,7 +1287,7 @@
             </div>
           </details>
 
-          <!-- 🧰 장인의 보물창고(보석) -->
+          <!-- 🧰 장인의 보물창고(보석) 
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🧰 장인의 보물창고(보석)</summary>
             <div id="gemtreasure" class="mt-2">
@@ -136,17 +1295,16 @@
             </div>
           </details>
           
-          <!-- 🧰 장인의 보물창고(장비) -->
+          <!-- 🧰 장인의 보물창고(장비) 
           <details class="bg-white border border-orange-300 rounded-md p-4">
             <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🧰 장인의 보물창고(장비)</summary>
             <div id="geartreasure" class="mt-2">
               <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
             </div>
           </details>
-          
-          
         </div>
       </details>
+      -->
       
       <script>
         function sendHeightToParent() {
@@ -235,5 +1393,6 @@
         }
       });
     </script>
+    </div>
   </body>
 </html>
