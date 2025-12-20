@@ -2221,5 +2221,38 @@
       updateHeroShardState($input.value);
     })();
   </script>
+  <script>
+    (function () {
+      const MIN_INTERVAL = 3000; // 3초
+      const now = Date.now();
+      const last = Number(sessionStorage.getItem("lastLoad") || 0);
+
+      // 기본값: 광고 허용
+      window.DISABLE_ADS = false;
+
+      // 1️⃣ 새로고침 / 연속 접속 폭주 방지
+      if (last && now - last < MIN_INTERVAL) {
+        window.DISABLE_ADS = true;
+      }
+      sessionStorage.setItem("lastLoad", now);
+
+      // 2️⃣ iframe 안에서 열리면 광고 차단
+      if (window.top !== window.self) {
+        window.DISABLE_ADS = true;
+      }
+
+      // 3️⃣ 비정상 referrer (file://, 없음)
+      if (!document.referrer || document.referrer.startsWith("file://")) {
+        window.DISABLE_ADS = true;
+      }
+
+      // 4️⃣ 백그라운드 탭이면 광고 차단
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          window.DISABLE_ADS = true;
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
