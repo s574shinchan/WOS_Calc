@@ -24,8 +24,10 @@
       <summary class="text-lg font-bold text-blue-700 mb-2">🏤 FC1 ~ 10 재료</summary>
       <div id="불의수정" class="mt-3">
         <img src="images/FC1-10.webp" alt="FC1~10"
+             data-full="images/FC1-10.webp"
+             loading="lazy"
              class="w-full h-auto rounded shadow cursor-pointer"
-             onclick="openImage('images/FC1-10.webp')" />
+             onclick="openImage(this.data-full)" />
       </div>
     </details>
 
@@ -34,8 +36,10 @@
       <summary class="text-lg font-bold text-blue-700 mb-2">🛡 영주장비재료</summary>
       <div id="영주장비재료" class="mt-3">
         <img src="images/영주장비.webp" alt="영주장비재료"
+             data-full="images/영주장비.webp"
+             loading="lazy"
              class="w-full h-auto rounded shadow cursor-pointer"
-             onclick="openImage('images/영주장비.webp')" />
+             onclick="openImage(this.data-full)" />
       </div>
     </details>
 
@@ -44,8 +48,10 @@
       <summary class="text-lg font-bold text-blue-700 mb-3">💎 영주보석재료</summary>
       <div class="overflow-hidden">
         <img src="images/영주보석.webp" alt="영주보석재료"
+             data-full="images/영주보석.webp"
+             loading="lazy"
              class="w-full h-auto rounded shadow cursor-pointer"
-             onclick="openImage('images/영주보석.webp')" />
+             onclick="openImage(this.data-full)" />
       </div>
     </details>
 
@@ -54,8 +60,10 @@
       <summary class="text-lg font-bold text-blue-700 mb-3">🦸 영웅장비재료</summary>
       <div class="overflow-hidden">
         <img src="images/영웅장비단련_상세.webp" alt="영웅장비재료"
+             data-full="images/영웅장비재료.webp"
+             loading="lazy"
              class="w-full h-auto rounded shadow cursor-pointer"
-             onclick="openImage('images/영웅장비단련_상세.webp')" />
+             onclick="openImage(this.data-full)" />
       </div>
     </details>
 
@@ -64,8 +72,10 @@
       <summary class="text-lg font-bold text-blue-700 mb-3">🎯 연총미션목록</summary>
       <div class="overflow-hidden">
         <img src="images/연총미션.webp" alt="연총미션"
+             data-full="images/연총미션.webp"
+             loading="lazy"
              class="w-full h-auto rounded shadow cursor-pointer"
-             onclick="openImage('images/연총미션.webp')" />
+             onclick="openImage(this.data-full)" />
       </div>
     </details>
     
@@ -74,8 +84,10 @@
       <summary class="text-lg font-bold text-blue-700 mb-3">🐉 프로스트 드래곤 엠페러</summary>
       <div class="overflow-hidden">
         <img src="images/Tyrant.webp" alt="Tyrant"
+             data-full="images/Tyrant.webp"
+             loading="lazy"
              class="w-full h-auto rounded shadow cursor-pointer"
-             onclick="openImage('images/Tyrant.webp')" />
+             onclick="openImage(this.data-full)" />
       </div>
     </details>
     
@@ -125,7 +137,7 @@
       <!-- 이미지 프레임 -->
       <div id="viewerFrame"
            class="m-2 border rounded-lg bg-black overflow-hidden flex items-center justify-center">
-        <img id="modalImage" src="" alt=""
+        <img id="modalImage" src="none" alt=""
              class="select-none"
              style="transform-origin:center center;" />
       </div>
