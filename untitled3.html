@@ -88,9 +88,7 @@
     
     .dark-mode * { text-shadow: none !important; }
     /* 다크모드일 때 아이콘 */
-    .dark-mode #DarkMode {
-      color: #facc15; /* 노란색 (달 아이콘 강조) */
-    }
+    .dark-mode #DarkMode { color: #facc15; /* 노란색 (달 아이콘 강조) */ }
     
     .dark-mode #langSelectPC,
     .dark-mode #langSelectPC option,
@@ -136,7 +134,6 @@
       background: linear-gradient(135deg, #5fb3ff, #2a4fff);
       box-shadow: 0 10px 22px rgba(0,0,0,.35);
     }
-
     .navlist{
       display:flex;
       align-items:center;
@@ -145,9 +142,7 @@
       margin-left: auto;
       padding-right: 8px;
     }
-
     .dd{ position: relative; }
-
     .dd-btn{
       display:inline-flex;
       align-items:center;
@@ -217,14 +212,10 @@
       background: rgba(255,255,255,.07);
       outline: none;
     }
-    
-    /* ✅ Active는 '선택 강조' (스크린샷 느낌) */
     .dd-item.active{
       background: rgba(255,255,255,.10);
       color: #57a8ff; /* 파란 글자 */
     }
-
-    /* ✅ Active 왼쪽 라인 */
     .dd-item.active::before{
       content:"";
       position:absolute;
@@ -404,6 +395,12 @@
             </svg>            
           </button>
         </div>
+        <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm text-gray-800">
+          <option value="index.html">🌐 Language</option>
+          <option value="index.html">🇰🇷 한국어</option>
+          <option value="index_EN.html">🇺🇸 English</option>
+          <option value="index_JP.html">🇯🇵 日本語</option>
+        </select>
       </div>  
     </div>
   </div>
@@ -1634,6 +1631,31 @@
   <footer class="text-center text-xs font-bold text-white mt-5 mb-4">⛔ 무단 복제 금지 | © Made By S645 ShinChan(67331703)
     <span id="updateLink"  class="underline cursor-pointer hover:text-white-100 ml-2">업데이트내역</span>
   </footer>
+	
+  <!-- 콘텐츠 전체 폭 제한 -->
+  <div class="max-w-[1200px] mx-auto p-2">
+    <div class="grid grid-cols-2 lg:grid-cols-2 gap-2"> 
+      <!-- 광고1 -->
+      <div class="flex justify-center">
+        <ins class="adsbygoogle"
+          style="display:inline-block; width:100%; max-width:300px; height:250px"
+          data-ad-client="ca-pub-8205102847358210"
+          data-ad-slot="8804962791"></ins>
+      </div>
+  
+      <!-- 광고2 -->
+      <div class="flex justify-center">
+        <ins class="adsbygoogle"
+          style="display:inline-block; width:100%; max-width:300px; height:250px"
+          data-ad-client="ca-pub-8205102847358210"
+          data-ad-slot="9326856916"></ins>
+      </div>
+    </div>
+  </div>
+	<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
   
   <script>
     const dropdowns = [...document.querySelectorAll('[data-dd]')];
@@ -2123,6 +2145,22 @@
       });
     });
   </script>
+  <script>
+    function setupLangSelect(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', function () {
+          const langCode = this.value; // 예: index_en.html
+          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
+          localStorage.setItem('lang', lang);
+          window.location.href = langCode;
+        });
+      }
+    }
+  
+    setupLangSelect('langSelectMobile');
+    setupLangSelect('langSelectPC');
+  </script>  
   <script>
     // F12, Ctrl+Shift+I, Ctrl+U 등 방지
     document.onkeydown = function (e) {

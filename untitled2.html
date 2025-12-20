@@ -62,14 +62,7 @@
       </div>
     </section>
   </div>
-  <!-- iframe 높이 조정 -->
   <script>
-    function sendHeightToParent(){
-      const h=document.body.scrollHeight;
-      window.parent.postMessage({type:"FRAME_CHANGE",height:h},"*");
-    }
-    window.addEventListener("load",()=>setTimeout(sendHeightToParent,100));
-
     window.addEventListener('message', (e) => {
       if (e.data?.type === 'DARK_MODE') {
         document.body.classList.toggle('dark-mode', e.data.value);
@@ -91,10 +84,20 @@
 
     // (선택) a.html 자체 높이를 부모에 알려 메뉴 iframe 높이 조절하고 싶으면 사용
     function sendHeightToParent(){
-      const h = document.body.scrollHeight;
+      const h = document.body.scrollHeight + 50;
       window.parent.postMessage({type:"FRAME_CHANGE", height:h}, "*");
     }
     window.addEventListener("load", () => setTimeout(sendHeightToParent, 50));
-  </script>  
+  </script>
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+        e.preventDefault();
+      }
+    });
+  </script>
 </body>
 </html>
