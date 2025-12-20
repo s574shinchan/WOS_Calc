@@ -12,8 +12,8 @@
       --shadow:0 8px 22px rgba(0,0,0,.06);
     }
     body.dark-mode{
-      --bg:#0b1220; --text:#e5e7eb; --card:#0f172a; --head:#111827; --border:#374151;
-      --in:#0f3e36; --sum:#a57c00; --tab-bg:#1f2937; --muted:#9aa0a6;
+      --bg:#2c2c2c; --text:#f0f0f0; --card:#121212; --head:#1c1c1c; --border:#374151;
+      --in:#006d2c; --sum:#fd8d3c; --tab-bg:#1f2937; --muted:#9aa0a6;
       --shadow:0 10px 26px rgba(0,0,0,.35);
     }
     html{ font-size:15px; }
@@ -60,7 +60,15 @@
       height:40px; padding:.22rem .6rem; font-size:.9rem;
     }
     .table-dense .pts{ white-space:nowrap; }
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
   </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
 </head>
 <body class="p-3 md:p-6">
   <div class="max-w-[1500px]">
@@ -293,7 +301,13 @@
       window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
   </script>
-	
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });
+  </script>
 	<script>
     // F12, Ctrl+Shift+I, Ctrl+U 등 방지
     document.onkeydown = function (e) {

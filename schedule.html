@@ -5,13 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title> 일정표 </title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body.dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    
+    .dark-mode .border-gray-200 { border-color: #0f0f0f !important; }
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+    
+    .dark-mode .text-gray-800,
+    .dark-mode .text-gray-700,
+    .dark-mode .text-gray-600 { color: #f0f0f0 !important; }
+  </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
 </head>
 <body class="bg-gray-100 p-2 font-sans text-sm">
   <div class="max-w-[1500px] mx-auto bg-white p-4 rounded-xl shadow-md">
     <h1 class="text-2xl font-bold text-gray-800 mb-2">📅 주요 이벤트 일정</h1>
 
     <!-- 자동 계산된 주차 안내-->
-    <div id="currentWeekInfo" class="mb-4 text-xs text-gray-700 border rounded-lg p-3 bg-gray-50"></div>
+    <div id="currentWeekInfo" class="mb-4 text-xs text-gray-600 border rounded-lg p-3 bg-gray-100"></div>
     
     <!-- Week Blocks (카드 + 주간표) -->
     <div class="space-y-3">
@@ -21,20 +42,20 @@
            class="week-block border border-gray-200 rounded-xl p-3 bg-white">
         <div class="flex flex-col gap-2">
           <div class="flex items-center gap-2">
-            <span class="text-xl font-semibold text-gray-900">1주차</span>
+            <span class="text-xl font-semibold text-gray-800">1주차</span>
           </div>
-          <span class="text-[12px] text-gray-500" data-week-range="1"></span>          
-          <p class="text-[12px] text-gray-500">SVS 준비단계 (월~금)<br>SVS 전쟁단계 (토)</p>
+          <span class="text-[12px] text-gray-600" data-week-range="1"></span>          
+          <p class="text-[12px] text-gray-600">SVS 준비단계 (월~금)<br>SVS 전쟁단계 (토)</p>
 
           <!-- 주간 표 -->
           <div class="week-grid mt-1 grid grid-cols-7 text-[12px] border border-gray-200 rounded-md overflow-hidden">
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
 
             <div class="day-slot border-t border-gray-200 text-center py-1"></div>
             <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
@@ -53,22 +74,22 @@
         <div class="flex flex-col gap-2">
           <!-- 상단 제목/설명 -->
           <div class="flex items-center gap-2">
-            <span class="text-xl font-semibold text-gray-900">2주차</span>
+            <span class="text-xl font-semibold text-gray-800">2주차</span>
           </div>
           <!-- 여기 날짜 범위 자동 표기 -->
-          <span class="text-[12px] text-gray-500" data-week-range="2"></span>
-          <p class="text-[12px] text-gray-500">연맹대작전 (월~토)<br>무기공장 (일)</p>
+          <span class="text-[12px] text-gray-600" data-week-range="2"></span>
+          <p class="text-[12px] text-gray-600">연맹대작전 (월~토)<br>무기공장 (일)</p>
 
           <!-- 하단: 주간 표 -->
           <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
             <!-- 날짜(요일) 헤더 (JS로 채움) -->
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
 
             <!-- 이벤트 브릿지 (JS로 채움) -->
             <div class="day-slot border-t border-gray-200 text-center py-1"></div>
@@ -87,20 +108,20 @@
            class="week-block border border-gray-200 rounded-xl p-3 bg-white">
         <div class="flex flex-col gap-2">
           <div class="flex items-center gap-2">
-            <span class="text-xl font-semibold text-gray-900">3주차</span>            
+            <span class="text-xl font-semibold text-gray-800">3주차</span>            
           </div>
-          <span class="text-[12px] text-gray-500" data-week-range="3"></span>
-          <p class="text-[12px] text-gray-500">빙원의 왕 (월~금)<br>내부솔라 (토)</p>
+          <span class="text-[12px] text-gray-600" data-week-range="3"></span>
+          <p class="text-[12px] text-gray-600">빙원의 왕 (월~금)<br>내부솔라 (토)</p>
 
           <!-- 주간 표 -->
           <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
 
             <div class="day-slot border-t border-gray-200 text-center py-1"></div>
             <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
@@ -118,20 +139,20 @@
            class="week-block border border-gray-200 rounded-xl p-3 bg-white">
         <div class="flex flex-col gap-2">
           <div class="flex items-center gap-2">
-            <span class="text-xl font-semibold text-gray-900">4주차</span>            
+            <span class="text-xl font-semibold text-gray-800">4주차</span>            
           </div>
-          <span class="text-[12px] text-gray-500" data-week-range="4"></span>
-          <p class="text-[12px] text-gray-500">연맹총동원 (월~금)<br>협곡 (토)<br>무기공장 (일)</p>
+          <span class="text-[12px] text-gray-600" data-week-range="4"></span>
+          <p class="text-[12px] text-gray-600">연맹총동원 (월~금)<br>협곡 (토)<br>무기공장 (일)</p>
 
           <!-- 주간 표 -->
           <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
 
             <div class="day-slot border-t border-gray-200 text-center py-1"></div>
             <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
@@ -179,21 +200,21 @@
     function getEventClasses(type) {
       switch (type) {
         case "showdown":      // 연맹대작전
-          return { cell: "bg-red-50", badge: "bg-red-100 text-red-700 border border-red-200" };
+          return { cell: "bg-blue-50", badge: "bg-blue-100 text-blue-700 border border-blue-200" };
         case "weapon":    // 무기공장
-          return { cell: "bg-purple-50", badge: "bg-purple-100 text-purple-700 border border-purple-200" };
+          return { cell: "bg-neutral-50", badge: "bg-neutral-100 text-neutral-700 border border-neutral-200" };
         case "king":      // 빙원의 왕
           return { cell: "bg-orange-50", badge: "bg-orange-100 text-orange-700 border border-orange-200" };
         case "solar":     // 내부솔라
           return { cell: "bg-cyan-50", badge: "bg-cyan-100 text-cyan-700 border border-cyan-200" };
         case "alliance":  // 연맹총동원
-          return { cell: "bg-blue-50", badge: "bg-blue-100 text-blue-700 border border-blue-200" };
+          return { cell: "bg-purple-50", badge: "bg-purple-100 text-purple-700 border border-purple-200" };
         case "canyon":    // 협곡
           return { cell: "bg-orange-50", badge: "bg-orange-100 text-orange-700 border border-orange-200" };
         case "svs-pre":   // SVS 준비단계
           return { cell: "bg-red-50", badge: "bg-red-100 text-red-700 border border-red-200" };
         case "svs-war":   // SVS 전쟁단계
-          return { cell: "bg-gray-50", badge: "bg-gray-100 text-gray-800 border border-gray-200" };
+          return { cell: "bg-pink-50", badge: "bg-pink-100 text-pink-800 border border-pink-200" };
         default:
           return { cell: "bg-gray-50", badge: "bg-gray-100 text-gray-800 border border-gray-200" };
       }
@@ -351,6 +372,13 @@
           }, "*");
         }
       }, 80);
+    });
+  </script>
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
     });
   </script>
 </body>

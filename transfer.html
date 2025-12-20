@@ -2,19 +2,30 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>StatesTrans 배경색 포함</title>
+  <title>이민예측</title>
   <style>
     body {
       font-family: sans-serif;
       padding: 2px;
       background: #f4f4f4;
     }
+    
+    body.dark-mode { background-color:#121212; color:#f0f0f0; }
+
     .card {
       background: white;
       border-radius: 10px;
       padding: 12px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     }
+    
+    .dark-mode .card { 
+      background: #121212; 
+      border-radius: 10px; 
+      padding: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    
     table {
       border-collapse: collapse;
       width: 100%;
@@ -26,6 +37,13 @@
       text-align: center;
     }
   </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
 </head>
 <body>
   <div class="card">
@@ -151,6 +169,13 @@
           (e.ctrlKey && (e.key === "U" || e.key === "S")))
       {
         e.preventDefault();
+      }
+    });
+  </script>
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
       }
     });
   </script>
