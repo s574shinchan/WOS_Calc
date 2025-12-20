@@ -1735,9 +1735,9 @@
     });
   </script>
   <script>
-    const guideDetails = document.getElementById("guideDetails");
-    const frameWrapper = document.getElementById('frameWrapper');
-    const mainFrame = document.getElementById('mainFrame');
+    let guideDetails = document.getElementById("guideDetails");
+    let frameWrapper = document.getElementById('frameWrapper');
+    let mainFrame = document.getElementById('mainFrame');
     
     // 공통: 메뉴 닫기
     function closeAllMenus(){
@@ -1780,10 +1780,7 @@
     });
   </script>  
   <script>
-    function ReturnHome() {
-      const guideDetails = document.getElementById("guideDetails");
-      const frameWrapper = document.getElementById('frameWrapper');      
-      
+    function ReturnHome() {    
       // 공통: 메뉴 닫기
       document.querySelectorAll('.dd.open').forEach(dd => dd.classList.remove('open'));
       document.querySelectorAll('.dd-item.active').forEach(x => x.classList.remove('active'));
@@ -1796,10 +1793,10 @@
           document.querySelectorAll('.dd.open').forEach(dd => dd.classList.remove('open'));
           
           // 2) guideDetails 보이기
-          guideDetails?.classList.remove('hidden');
+          document.getElementById("guideDetails")?.classList.remove('hidden');
           
           // 3) frameWrapper 숨기기
-          frameWrapper?.classList.add('hidden');
+          document.getElementById('frameWrapper')?.classList.add('hidden');
         });
       });
     }
@@ -2060,10 +2057,7 @@
     function broadcastDarkMode(isDark) {
       document.querySelectorAll('iframe').forEach(frame => {
         try {
-          frame.contentWindow.postMessage(
-            { type: 'DARK_MODE', value: isDark },
-            '*'
-          );
+          frame.contentWindow.postMessage({ type: 'DARK_MODE', value: isDark },'*');
         } catch (e) {}
       });
     }
@@ -2147,10 +2141,6 @@
     document.addEventListener("contextmenu", (e) => e.preventDefault());
   </script>
   <script>
-      const guideDetails = document.getElementById('guideDetails');
-      const frameWrapper = document.getElementById('frameWrapper');
-      const mainFrame    = document.getElementById('mainFrame');
-
       // ✅ 공용 함수: iframe 로드 + 메뉴/프레임 표시 전환
       window.loadInMainFrame = function(url){
         // 메뉴 숨기고, 결과 프레임 표시
