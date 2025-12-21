@@ -1659,7 +1659,37 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
     (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
+  <!-- ✅ 업데이트 내역 팝업 (고정 안내 포함 버전) -->
+  <div id="update-modal-backdrop" class="fixed inset-0 z-[1000] hidden">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-lg rounded-2xl bg-white shadow-xl dark:bg-[#1f1f1f]">
+        <div class="px-6 pt-5 pb-4">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">업데이트 내역</h2>
   
+          <!-- 🔽 외부 HTML + 고정 안내문이 여기에 주입됨 -->
+          <div id="update-content" class="mt-3 text-sm text-gray-700 dark:text-gray-200 max-h-[50vh] overflow-auto">
+            <div class="text-gray-500 dark:text-gray-400">불러오는 중…</div>
+          </div>
+        </div>
+  
+        <div class="flex items-center justify-between border-t border-gray-200 px-6 py-3 dark:border-gray-700">
+          <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200 select-none">
+            <input id="update-hide-today" type="checkbox" class="h-4 w-4 rounded border-gray-300 dark:border-gray-500">
+            오늘 하루 그만보기
+          </label>
+          <div class="flex items-center gap-3">
+            <!-- ✅ 업데이트 히스토리 (라벨) -->
+            <label id="update-history" role="button" tabindex="0" class="cursor-pointer text-sm underline underline-offset-4 text-blue-400 hover:opacity-90">
+              업데이트 히스토리
+            </label>
+            
+            <button id="update-confirm" class="rounded-lg px-4 py-2 text-white bg-blue-600 hover:bg-blue-700">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     //메뉴동작
     const dropdowns = [...document.querySelectorAll('[data-dd]')];
@@ -2096,17 +2126,27 @@
       });
     }
     
+    function applySavedDarkMode() {
+      const isDark = localStorage.getItem('darkMode') === 'true';
+      document.body.classList.toggle('dark-mode', isDark);
+      broadcastDarkMode(isDark);
+    }
+    
     function ActiveDarkMode(){
       const isDark = document.body.classList.toggle('dark-mode');
       localStorage.setItem('darkMode', isDark ? 'true' : 'false');
       
       broadcastDarkMode(isDark);
-      
-      window.addEventListener('DOMContentLoaded', () => {
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        document.body.classList.toggle('dark-mode', isDark);
-      }); 
     }
+    
+    // ✅ 페이지 로드되면 바로 적용 (새로고침 포함)
+    document.addEventListener('DOMContentLoaded', applySavedDarkMode);
+    
+    //  window.addEventListener('DOMContentLoaded', () => {
+    //    const isDark = localStorage.getItem('darkMode') === 'true';
+    //    document.body.classList.toggle('dark-mode', isDark);
+    //  }); 
+    //}
 
     document.getElementById('mainFrame')?.addEventListener('load', () => {
       const isDark = localStorage.getItem('darkMode') === 'true';
