@@ -512,17 +512,13 @@
   
     // 우클릭 방지
     document.addEventListener("contextmenu", (e) => e.preventDefault());
-  </script>
+  </script>  
   <script>
-    setInterval(() => {
-      const start = performance.now();
-      debugger; // 개발자도구가 열리면 브라우저가 일시정지됨
-      const end = performance.now();
-      if (end - start > 100) {
-        alert("개발자 도구 접근이 감지되었습니다. 페이지를 새로고침합니다.");
-        location.reload();
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
       }
-    }, 1000);
+    });
   </script>  
 </body>
 </html>

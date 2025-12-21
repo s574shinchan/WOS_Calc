@@ -132,7 +132,7 @@
         </div>
         <div>
           <label class="block font-semibold mb-1">所持加速（分）</label>
-          <input type="number" id="accelMinute" class="border rounded w-full p-1" placeholder="0" min="0"" />
+          <input type="number" id="accelMinute" class="border rounded w-full p-1" placeholder="0" min="0" />
         </div>
       </div>
   
@@ -271,5 +271,12 @@
       }
     });
   </script>
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });
+  </script>                                                       
 </body>
 </html>
