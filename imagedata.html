@@ -27,7 +27,7 @@
              data.full="images/FC1-10.webp"
              loading="lazy"
              class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this.data.full)" />
+             onclick="openImage(this)" />
       </div>
     </details>
 
@@ -39,7 +39,7 @@
              data.full="images/영주장비.webp"
              loading="lazy"
              class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this.data.full)" />
+             onclick="openImage(this)" />
       </div>
     </details>
 
@@ -51,7 +51,7 @@
              data.full="images/영주보석.webp"
              loading="lazy"
              class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this.data.full)" />
+             onclick="openImage(this)" />
       </div>
     </details>
 
@@ -63,7 +63,7 @@
              data.full="images/영웅장비재료.webp"
              loading="lazy"
              class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this.data.full)" />
+             onclick="openImage(this)" />
       </div>
     </details>
 
@@ -75,7 +75,7 @@
              data.full="images/연총미션.webp"
              loading="lazy"
              class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this.data.full)" />
+             onclick="openImage(this)" />
       </div>
     </details>
     
@@ -87,7 +87,7 @@
              data.full="images/Tyrant.webp"
              loading="lazy"
              class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this.data.full)" />
+             onclick="openImage(this)" />
       </div>
     </details>
     
@@ -227,7 +227,13 @@
     }
 
     // 외부에서 호출하는 함수 (이미지 클릭시)
-    function openImage(imageUrl) {
+    function openImage(elOrUrl) {
+      // 문자열로 넘어오면 그대로, 요소로 넘어오면 data-full/src 추출
+      const imageUrl = (typeof elOrUrl === "string") ? elOrUrl : (elOrUrl?.getAttribute?.("data-full") || elOrUrl?.src);
+      if (!imageUrl) {
+          console.error("openImage: imageUrl이 비어있음", elOrUrl);
+          return;
+      }
       openViewer(imageUrl);
     }
 
