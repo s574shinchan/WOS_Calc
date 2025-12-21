@@ -2338,6 +2338,145 @@
         }
       });
     })();
+  </script>
+  <script>
+    (() => {
+      // =========[ 설정 ]=========
+      const BASE_PATH = "/data/update"; // 월별 HTML이 있는 경로
+      const LOOKBACK_MONTHS = 6;
+      const HIDE_MS = 24 * 60 * 60 * 1000; // 24시간
+    
+      // ✅ 월 상관없이 항상 표시할 고정 안내문 (HTML 가능)
+      const fixedNotice = `
+        <div class="border-t border-gray-300 mt-4 pt-2 text-[13px] text-gray-600 dark:text-gray-400">
+          ※ 계산기 작동 방식이 변경되었습니다.<br>
+          현재레벨과 목표레벨 선택 시 자동으로 개별소계가 계산되며,<br>
+          하단에는 자동으로 총합계가 계산됩니다.
+        </div>
+      `;
+    
+      const backdrop  = document.getElementById("update-modal-backdrop");
+      const contentEl = document.getElementById("update-content");
+      const confirmBtn = document.getElementById("update-confirm");
+      const checkbox = document.getElementById("update-hide-today");
+      const historyLabel = document.getElementById("update-history"); // ✅ 추가: '업데이트 히스토리' 라벨
+    
+      const lockScroll   = () => { document.documentElement.style.overflow = "hidden"; };
+      const unlockScroll = () => { document.documentElement.style.overflow = ""; };
+    
+      function ymStr(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        return `${y}-${m}`;
+      }
+    
+      function monthsAgo(date, n) {
+        const d = new Date(date);
+        d.setMonth(d.getMonth() - n);
+        return d;
+      }
+    
+      function storageKeyForYM(ym) {
+        return `ModalHideUntil`;
+      }
+    
+      function shouldShowForKey(key) {
+        try {
+          const until = localStorage.getItem(key);
+          if (!until) return true;
+          return Date.now() >= parseInt(until, 10);
+        } catch {
+          return true;
+        }
+      }
+    
+      function openModal() {
+        backdrop.classList.remove("hidden");
+        lockScroll();
+        confirmBtn?.focus();
+        document.addEventListener("keydown", onKeydown);
+      }
+    
+      function closeModal() {
+        backdrop.classList.add("hidden");
+        unlockScroll();
+        document.removeEventListener("keydown", onKeydown);
+      }
+    
+      function onKeydown(e) {
+        if (e.key === "Escape") closeModal();
+      }
+    
+      async function loadMonthlyHTML() {
+        const now = new Date();
+        for (let i = 0; i < LOOKBACK_MONTHS; i++) {
+          const ym = ymStr(monthsAgo(now, i));
+          const url = `${BASE_PATH}/${ym}.html`;
+          try {
+            const res = await fetch(url, { cache: "no-cache" });
+            if (!res.ok) continue;
+            const html = await res.text();
+            const trimmed = html.replace(/\s+/g, "");
+            if (!trimmed) continue;
+            return { html, ym };
+          } catch (e) { continue; }
+        }
+        return { html: null, ym: null };
+      }
+    
+      (async function init() {
+        const { html, ym } = await loadMonthlyHTML();
+    
+        if (!html) {
+          contentEl.innerHTML = `<div class="text-gray-500 dark:text-gray-400">표시할 업데이트 내역이 없습니다.</div>${fixedNotice}`;
+          return;
+        }
+    
+        // ✅ 월별 내용 + 고정 안내문 함께 표시
+        contentEl.innerHTML = html + fixedNotice;
+    
+        const STORAGE_KEY = storageKeyForYM(ym);
+        if (shouldShowForKey(STORAGE_KEY)) {
+          openModal();
+    
+          // 확인 버튼: (체크시) 24시간 숨김 저장 후 닫기
+          confirmBtn.addEventListener("click", () => {
+            if (checkbox?.checked) {
+              localStorage.setItem(STORAGE_KEY, String(Date.now() + HIDE_MS));
+            }
+            closeModal();
+          }, { once: true });
+    
+          // ✅ 업데이트 히스토리 라벨: (체크시) 24시간 숨김 저장 → 닫기 → index의 #updateLink 클릭
+          const triggerUpdateLink = () => {
+            const target = document.getElementById("updateLink");
+            if (!target) return;
+            try {
+              target.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+            } catch {
+              target.click();
+            }
+            target.scrollIntoView?.({ behavior: "smooth", block: "center" });
+            target.focus?.({ preventScroll: true });
+          };
+    
+          const handleHistoryAction = () => {
+            try {
+              if (checkbox?.checked) {
+                localStorage.setItem(STORAGE_KEY, String(Date.now() + HIDE_MS));
+              }
+            } catch {}
+            closeModal();
+            setTimeout(triggerUpdateLink, 30);
+          };
+    
+          historyLabel?.addEventListener("click", (e) => { e.preventDefault(); handleHistoryAction(); });
+          historyLabel?.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleHistoryAction(); }
+          });
+        }
+      })();
+    })();
   </script>  
   <script>
     //트래픽관리
