@@ -1661,6 +1661,7 @@
   </script>
   
   <script>
+    //메뉴동작
     const dropdowns = [...document.querySelectorAll('[data-dd]')];
 
     function setOpen(dd, open){
@@ -1712,6 +1713,7 @@
     });
   </script>
   <script>
+    //위로 스크롤 버튼
     const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
     window.addEventListener("scroll", () => {
@@ -1727,6 +1729,7 @@
     });
   </script>
   <script>
+    //메뉴변경
     const content = document.getElementById('content');
     
     document.querySelectorAll('.dd-item[data-load]').forEach(item => {
@@ -1760,6 +1763,7 @@
     });
   </script>
   <script>
+    //메뉴선택표시
     let guideDetails = document.getElementById("guideDetails");
     let frameWrapper = document.getElementById('frameWrapper');
     let mainFrame = document.getElementById('mainFrame');
@@ -1805,7 +1809,8 @@
     });
   </script>  
   <script>
-    function ReturnHome() {    
+    //Home 메뉴
+    function ReturnHome() {
       // 공통: 메뉴 닫기
       document.querySelectorAll('.dd.open').forEach(dd => dd.classList.remove('open'));
       document.querySelectorAll('.dd-item.active').forEach(x => x.classList.remove('active'));
@@ -1827,6 +1832,7 @@
     }
   </script>
   <script>
+    //업뎃히스토리
     document.addEventListener("DOMContentLoaded", () => {
       // 필요 경로를 여기에 각기 다르게 설정하세요.
       const UPDATE_URL  = "https://s574shinchan.github.io/WOS_Calc/data/update/history.html"; // 기존과 동일
@@ -1887,6 +1893,7 @@
     });
   </script>
   <script>
+    //성급업 계산
     (() => {
       // ▼ 최초모집(미실시 가정) 비용
       const RECRUIT_COST = 10;
@@ -2041,6 +2048,7 @@
     })();
   </script>
   <script>
+    //uuid 복사
     let copyTimer = null;
 
     function copySupportNumber() {
@@ -2079,6 +2087,7 @@
     }
   </script>
   <script>
+    //다크모드
     function broadcastDarkMode(isDark) {
       document.querySelectorAll('iframe').forEach(frame => {
         try {
@@ -2098,14 +2107,14 @@
         document.body.classList.toggle('dark-mode', isDark);
       }); 
     }
-  </script>
-  <script>
+
     document.getElementById('mainFrame')?.addEventListener('load', () => {
       const isDark = localStorage.getItem('darkMode') === 'true';
       broadcastDarkMode(isDark);
     });
   </script>
   <script>
+    //자료모음 detail
     const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/';
     
     // [ID] => [파일명] 매핑
@@ -2149,6 +2158,7 @@
     });
   </script>
   <script>
+    //언어선택
     function setupLangSelect(id) {
       const el = document.getElementById(id);
       if (el) {
@@ -2182,51 +2192,115 @@
     document.addEventListener("contextmenu", (e) => e.preventDefault());
   </script>
   <script>
-      // ✅ 공용 함수: iframe 로드 + 메뉴/프레임 표시 전환
-      window.loadInMainFrame = function(url){
-        // 메뉴 숨기고, 결과 프레임 표시
-        guideDetails?.classList.add('hidden');
-        frameWrapper?.classList.remove('hidden');
+    // ✅ 공용 함수: iframe 로드 + 메뉴/프레임 표시 전환
+    window.loadInMainFrame = function(url){
+      // 메뉴 숨기고, 결과 프레임 표시
+      guideDetails?.classList.add('hidden');
+      frameWrapper?.classList.remove('hidden');
 
-        // ✅ 상대/절대 어떤 게 와도 안전 처리
-        const resolved = new URL(url, window.location.href).href;
+      // ✅ 상대/절대 어떤 게 와도 안전 처리
+      const resolved = new URL(url, window.location.href).href;
 
-        console.log('[index] loadInMainFrame:', { url, resolved });
+      console.log('[index] loadInMainFrame:', { url, resolved });
 
-        // 같은 URL이면 리로드 강제
-        const cur = mainFrame.getAttribute('src') || '';
-        if (cur === resolved) {
-          mainFrame.src = 'about:blank';
-          setTimeout(() => (mainFrame.src = resolved), 30);
-        } else {
-          mainFrame.src = resolved;
-        }
-      };
-
-      window.goBackToMenu = function(){
+      // 같은 URL이면 리로드 강제
+      const cur = mainFrame.getAttribute('src') || '';
+      if (cur === resolved) {
         mainFrame.src = 'about:blank';
-        frameWrapper?.classList.add('hidden');
-        guideDetails?.classList.remove('hidden');
-      };
+        setTimeout(() => (mainFrame.src = resolved), 30);
+      } else {
+        mainFrame.src = resolved;
+      }
+    };
 
-      // ✅ a.html(자식)에서 보내는 메시지 수신
-      window.addEventListener('message', (e) => {
-        // 로컬 테스트에서는 origin이 같음
-        // 실서비스에서는 e.origin 검증 권장
-        console.log('[index] message received:', e.data, 'origin:', e.origin);
+    window.goBackToMenu = function(){
+      mainFrame.src = 'about:blank';
+      frameWrapper?.classList.add('hidden');
+      guideDetails?.classList.remove('hidden');
+    };
 
-        if (e.data?.type === 'NAVIGATE_FRAME') {
-          // e.data.url: 예) "research.html"
-          window.loadInMainFrame(e.data.url);
-        }
+    // ✅ a.html(자식)에서 보내는 메시지 수신
+    window.addEventListener('message', (e) => {
+      // 로컬 테스트에서는 origin이 같음
+      // 실서비스에서는 e.origin 검증 권장
+      console.log('[index] message received:', e.data, 'origin:', e.origin);
 
-        // ✅ 자식 페이지가 자신의 높이를 보내면 mainFrame 높이 자동 조절
-        if (e.data?.type === 'FRAME_CHANGE' && typeof e.data.height === 'number') {
-          mainFrame.style.height = `${e.data.height}px`;
+      if (e.data?.type === 'NAVIGATE_FRAME') {
+        // e.data.url: 예) "research.html"
+        window.loadInMainFrame(e.data.url);
+      }
+
+      // ✅ 자식 페이지가 자신의 높이를 보내면 mainFrame 높이 자동 조절
+      if (e.data?.type === 'FRAME_CHANGE' && typeof e.data.height === 'number') {
+        mainFrame.style.height = `${e.data.height}px`;
+      }
+    });
+  </script>
+  <script>
+    //이미지 모달
+    let currentScale = 1;
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+  
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'SHOW_IMAGE_MODAL') {
+        modalImg.src = event.data.url;
+        currentScale = 1;
+        modalImg.style.scale = currentScale;
+        modal.classList.remove('hidden');
+      }
+    });
+  
+    modalImg.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      currentScale += (e.deltaY < 0 ? 0.05 : -0.05);
+      currentScale = Math.max(0.1, Math.min(3, currentScale));
+      modalImg.style.scale = currentScale;
+    });
+  
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        modalImg.src = '';
+      }
+    });
+  </script>
+  <script>
+    //업데이트 내용 팝업
+    (function () {
+      const MIN_INTERVAL = 3000; // 3초
+      const now = Date.now();
+      const last = Number(sessionStorage.getItem("lastLoad") || 0);
+
+      // 기본값: 광고 허용
+      window.DISABLE_ADS = false;
+
+      // 1️⃣ 새로고침 / 연속 접속 폭주 방지
+      if (last && now - last < MIN_INTERVAL) {
+        window.DISABLE_ADS = true;
+      }
+      sessionStorage.setItem("lastLoad", now);
+
+      // 2️⃣ iframe 안에서 열리면 광고 차단
+      if (window.top !== window.self) {
+        window.DISABLE_ADS = true;
+      }
+
+      // 3️⃣ 비정상 referrer (file://, 없음)
+      if (!document.referrer || document.referrer.startsWith("file://")) {
+        window.DISABLE_ADS = true;
+      }
+
+      // 4️⃣ 백그라운드 탭이면 광고 차단
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          window.DISABLE_ADS = true;
         }
       });
-    </script>
+    })();
+  </script>  
   <script>
+    //트래픽관리
     (function () {
       const MIN_INTERVAL = 3000; // 3초
       const now = Date.now();
