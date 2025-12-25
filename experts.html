@@ -363,7 +363,11 @@
       const EXP = new Map(), MARK = new Map();
       const rawLevels = [];
       const toInt = s => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0], 10) : NaN; };
-      const toNum = s => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+      const toNum = (s) => {
+  const v = String(s ?? "").replace(/,/g, "").trim(); // 콤마 제거
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+};
 
       for (let i=start;i<lines.length;i++){
         const c  = lines[i].split(delim);
