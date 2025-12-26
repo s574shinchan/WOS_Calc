@@ -61,6 +61,13 @@
     }
     .table-dense .pts{ white-space:nowrap; }
   </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>  
 </head>
 <body class="p-3 md:p-6">
   <div class="max-w-[1500px]">

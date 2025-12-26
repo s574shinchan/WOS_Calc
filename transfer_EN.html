@@ -26,6 +26,13 @@
       text-align: center;
     }
   </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>  
 </head>
 <body>
   <div class="card">

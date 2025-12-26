@@ -51,6 +51,13 @@
     .btn{padding:.35rem .6rem;border:1px solid var(--border);border-radius:.55rem;background:var(--tab-bg)}
     .icon-x{display:inline-block;width:28px;height:28px;line-height:26px;border:1px solid var(--border);border-radius:.5rem}
   </style>
+    <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
 </head>
 <body class="p-3 md:p-6">
   <div class="max-w-[1500px]">
