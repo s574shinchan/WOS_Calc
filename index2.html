@@ -406,18 +406,13 @@
           </div>
         </div>
         <div class="dd" data-dd>
-          <button id="DarkMode"
-                  onclick="ActiveDarkMode()">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 class="w-7 h-7"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 >
-              <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
-            </svg>            
-          </button>
+          <button id="DarkMode" 
+                  onclick="ActiveDarkMode()"
+                  style=" display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; 
+                         background: rgba(255,255,255,.07); 
+                         border: 1px solid rgba(255,255,255,.07); border-radius: 0.75rem; 
+                         color: blue; font-size: 1.3rem; 
+                         cursor: pointer;">☀️</button>
         </div>
         <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm text-gray-800">
           <option value="index.html">🌐 Language</option>
@@ -2154,9 +2149,15 @@
     }
     
     function ActiveDarkMode(){
-      const isDark = document.body.classList.toggle('dark-mode');
-      localStorage.setItem('darkMode', isDark ? 'true' : 'false');
+      const isDark = document.body.classList.toggle('dark-mode');      
+      const btn = document.getElementById('DarkMode');
       
+      if(isDark) 
+        btn.textContent = '🌙';
+      else 
+        btn.textContent = '☀️';
+      
+      localStorage.setItem('darkMode', isDark ? 'true' : 'false');
       broadcastDarkMode(isDark);
     }
     
@@ -2169,8 +2170,15 @@
     //  }); 
     //}
 
-    document.getElementById('mainFrame')?.addEventListener('load', () => {
+    document.getElementById('mainFrame').addEventListener('load', () => {
       const isDark = localStorage.getItem('darkMode') === 'true';
+      const btn = document.getElementById('DarkMode');
+      
+      if(isDark) 
+        btn.textContent = '🌙';
+      else 
+        btn.textContent = '☀️';
+      
       broadcastDarkMode(isDark);
     });
   </script>

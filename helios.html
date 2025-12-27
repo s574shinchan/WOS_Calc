@@ -66,32 +66,65 @@
         <p>연구 항목을 선택하고 현재/목표 레벨을 지정하면 자동 합산됩니다. (소요시간은 참고용)</p>
       </div>
 
-      <!-- 병종 선택 -->
-      <div class="grid grid-cols-6 gap-x-4 px-0 text-center mb-2">
-        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
-          <input type="checkbox" id="chkInf" checked class="mr-1 w-4 h-4" /> 방패병
-        </label>
-        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
-          <input type="checkbox" id="chkLan" class="mr-1 w-4 h-4" /> 창병
-        </label>
-        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
-          <input type="checkbox" id="chkMask" class="mr-1 w-4 h-4" /> 궁병
-        </label>
-      </div>
-
-      <!-- 버프/속도 -->
-      <div class="grid grid-cols-2 md:flex md:flex-wrap md:items-center gap-4 mb-3">
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="chkVP10" class="mr-2 w-4 h-4">일반)부집행관 (10%)
-        </label>
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="chkVP15" class="mr-2 w-4 h-4">최집)부집행관 (15%)
-        </label>
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="chkServerBuff" class="mr-2 w-4 h-4">연구서버버프 (10%)
-        </label>
-        <div class="flex items-center gap-2">
-          <label for="speedPercent" class="font-semibold whitespace-nowrap">연구속도 (%)</label>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <!-- 병종 선택 (버튼 토글) -->
+        <div>
+          <div class="text-sm font-medium mb-1">병종선택</div>
+          <div class="grid grid-cols-3 gap-2 mb-2">
+            <button type="button"
+                    class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkInf" data-group="troop" data-mode="single">
+              방패병
+            </button>
+            <button type="button"
+                    class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkLan" data-group="troop" data-mode="single">
+              창병
+            </button>
+            <button type="button"
+                    class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkMask" data-group="troop" data-mode="single">
+              궁병
+            </button>
+            <!-- ✅ 기존 로직 그대로 쓰기 위한 체크박스(숨김) -->
+            <input type="checkbox" id="chkInf" checked hidden>
+            <input type="checkbox" id="chkLan" hidden>
+            <input type="checkbox" id="chkMask" hidden>
+          </div>
+        </div>        
+        <!-- 부집행관 -->
+        <div>
+          <div class="text-sm font-medium mb-1">부집행관 관직 버프</div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button"
+                    class="w-[105px] px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkVP10" data-group="vp" data-mode="single">
+              10%
+            </button>
+            <button type="button"
+                    class="w-[105px] px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkVP15" data-group="vp" data-mode="single">
+              15%
+            </button>
+          </div>
+          <input type="checkbox" id="chkVP10" hidden>
+          <input type="checkbox" id="chkVP15" hidden>
+        </div>
+        <!--서버버프-->
+        <div>
+          <div class="text-sm font-medium mb-1">서버버프 (10%)</div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button"
+                    class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkServerBuff" data-group="server" data-mode="single">
+              활성화
+            </button>
+          </div>
+          <input type="checkbox" id="chkServerBuff" hidden>
+        </div>        
+        <!-- 연구속도 -->
+        <div>
+          <label for="speedPercent" class="block text-sm mb-1">연구속도 (%)</label>
           <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
         </div>
       </div>
@@ -108,9 +141,9 @@
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">총합</div>
             <div class="flex justify-between text-[13px]"><span class="text-gray-600">가루</span><span id="sum-가루">0</span></div>
-			<div class="font-semibold mb-2"></div>
+            <div class="font-semibold mb-2"></div>
             <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="sum-철강재">0</span></div>           
-			<div class="font-semibold mb-2"></div>
+            <div class="font-semibold mb-2"></div>
             <div class="flex justify-between text-[13px]"><span class="text-gray-600">소요시간</span><span id="sum-시간">0분</span></div>
           </div>
     
@@ -418,7 +451,7 @@
     // 이벤트 바인딩
     document.addEventListener("change", (e) => {
       if (e.target.id === "chkVP10" || e.target.id === "chkVP15" || e.target.id === "chkServerBuff") scheduleCalc();
-      if (e.target.id === "speedPercent" || e.target.id === "own-가루" || e.target.id === "own-철강재") scheduleCalc();
+      if (e.target.id === "speedPercent" || e.target.id === "owned-가루" || e.target.id === "owned-철강재") scheduleCalc();
       if (e.target.id === "chkInf") handleCheck("chkInf");
       if (e.target.id === "chkLan") handleCheck("chkLan");
       if (e.target.id === "chkMask") handleCheck("chkMask");
@@ -530,7 +563,7 @@
     scheduleCalc();
 
     // 숫자 입력 즉시 계산
-    ["own-가루","own-철강재","speedPercent"].forEach(id=>{
+    ["owned-가루","owned-철강재","speedPercent"].forEach(id=>{
       const el = document.getElementById(id);
       if (el) el.addEventListener("input", scheduleCalc);
     });
@@ -565,5 +598,61 @@
       }
     });
   </script>  
+  <style>
+    .toggle-btn{ transition:.12s ease; user-select:none; }
+    .toggle-btn:active{ transform:scale(.98); }
+
+    /* OFF */
+    .toggle-btn{
+      background: transparent;
+      border-color: rgba(148,163,184,.65);
+      color: inherit;
+    }
+
+    /* ON (건물계산기 스타일: 파란 배경 + 흰 글자) */
+    .toggle-btn.is-on{
+      background: #2563eb;   /* blue-600 */
+      border-color: #1d4ed8; /* blue-700 */
+      color: #fff;
+    }
+
+    /* 다크모드 OFF 버튼 테두리 */
+    body.dark-mode .toggle-btn{ border-color:#444; }
+  </style>
+  <script>
+    /* ===== 핵심: 버튼 → 체크박스 → 기존 로직 ===== */
+    function setBtn(btn,on){
+      btn.classList.toggle('is-on',on);
+    }
+    document.querySelectorAll('.toggle-btn').forEach(btn=>{
+      const chk = document.getElementById(btn.dataset.toggle);
+      if (chk) btn.classList.toggle('is-on', chk.checked);
+
+      btn.addEventListener('click', () => {
+        const group=btn.dataset.group;
+        
+        if (group === 'troop') {
+          document.querySelectorAll('.toggle-btn[data-group="troop"]').forEach(b=>{
+            const c = document.getElementById(b.dataset.toggle);
+            c.checked = false;
+            b.classList.remove('is-on');
+          });
+          chk.checked = true;
+          btn.classList.add('is-on');
+        }
+        else {
+          chk.checked = !chk.checked;
+          btn.classList.toggle('is-on', chk.checked);
+        }
+        chk.dispatchEvent(new Event('change', { bubbles:true }));
+      });
+    });
+
+    /* ===== 기존 계산 로직은 그대로 ===== */
+    document.addEventListener('change',scheduleCalc);
+    ['owned-가루','owned-철강재','speedPercent'].forEach(id=>{
+      document.getElementById(id)?.addEventListener('input',scheduleCalc);
+    });
+  </script>
 </body>
 </html>

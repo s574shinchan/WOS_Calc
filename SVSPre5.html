@@ -136,10 +136,10 @@
 				</div>
 				<div class="flex items-center justify-between mt-2">
 					<span class="tcap">개수</span>
-					<input id="qWid" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+					<input id="d5_qWid" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
 				</div>
 				<div class="flex items-center justify-between mt-2">
-					<span class="tcap">Points</span><span id="pWid" class="mono">0</span>
+					<span class="tcap">Points</span><span id="d5_pWid" class="mono">0</span>
 				</div>
 			</section>
 
@@ -151,10 +151,10 @@
 				</div>
 				<div class="flex items-center justify-between mt-2">
 					<span class="tcap">개수</span>
-					<input id="qEss" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+					<input id="d5_qEss" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
 				</div>
 				<div class="flex items-center justify-between mt-2">
-					<span class="tcap">Points</span><span id="pEss" class="mono">0</span>
+					<span class="tcap">Points</span><span id="d5_pEss" class="mono">0</span>
 				</div>
 			</section>
 
@@ -166,10 +166,10 @@
 				</div>
 				<div class="flex items-center justify-between mt-2">
 					<span class="tcap">개수</span>
-					<input id="qMit" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+					<input id="d5_qMit" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
 				</div>
 				<div class="flex items-center justify-between mt-2">
-					<span class="tcap">Points</span><span id="pMit" class="mono">0</span>
+					<span class="tcap">Points</span><span id="d5_pMit" class="mono">0</span>
 				</div>
 			</section>
     </div>
@@ -276,7 +276,7 @@
 			<section class="tile">
 				<div class="flex items-center justify-between">
 					<div class="tlabel">영주장비</div>
-					<button id="eqAdd" class="btn text-sm">+ 행 추가</button>
+					<button id="d5_eqAdd" class="btn text-sm">+ 행 추가</button>
 				</div>
 				
 				<table class="mt-2 w-full border-collapse dense">
@@ -289,11 +289,11 @@
 							<th style="width:0%"></th>
 						</tr>
 					</thead>
-					<tbody id="eqBody"><!-- 동적 행 --></tbody>
+					<tbody id="d5_eqBody"><!-- 동적 행 --></tbody>
 					<tfoot>
 						<tr class="row-sub">
 							<td class="text-right" colspan="3">소계</td>
-							<td class="mono" id="eqTot">0</td>
+							<td class="mono" id="d5_eqTot">0</td>
 							<td></td>
 						</tr>
 					</tfoot>
@@ -335,9 +335,12 @@
     calcMats();
 		
     /* ===== 영주장비, 마석, 미스릴 ==== */
-    const pWid = document.getElementById('pWid');
-    const pEss = document.getElementById('pEss');
-    const pMit = document.getElementById('pMit');
+    const qWid = document.getElementById('d5_qWid');
+    const qEss = document.getElementById('d5_qEss');
+    const qMit = document.getElementById('d5_qMit');    
+    const pWid = document.getElementById('d5_pWid');
+    const pEss = document.getElementById('d5_pEss');
+    const pMit = document.getElementById('d5_pMit');
     function calcTop(){
       pWid.textContent = fmt((+qWid.value||0)*UNIT.widgets);
       pEss.textContent = fmt((+qEss.value||0)*UNIT.essence);
@@ -496,9 +499,9 @@
 			{k:'신화 (전체)', v:9560},
 		];
 		const EQUIP_PER = Object.fromEntries(EQUIP_LIST.map(o => [o.k, o.v]));
-		const EQ_BODY = document.getElementById('eqBody');
-		const EQ_TOT  = document.getElementById('eqTot');
-		const EQ_ADD  = document.getElementById('eqAdd');
+		const EQ_BODY = document.getElementById('d5_eqBody');
+		const EQ_TOT  = document.getElementById('d5_eqTot');
+		const EQ_ADD  = document.getElementById('d5_eqAdd');
 
 		function equipRowTemplate(name = '레어', qty = 0){
 			const per = EQUIP_PER[name] || 0;
@@ -566,10 +569,10 @@
 				den(E('d5_pFire').textContent) +
 				den(E('d5_pRef').textContent) +
 				den(E('d5_pShard').textContent) +
-				den(E('pWid').textContent) +
-				den(E('pEss').textContent) +
-				den(E('pMit').textContent) +
-        den(E('eqTot').textContent) +
+				den(E('d5_pWid').textContent) +
+				den(E('d5_pEss').textContent) +
+				den(E('d5_pMit').textContent) +
+        den(E('d5_eqTot').textContent) +
 				den(E('d5_spdTot').textContent) +
 				den(E('d5_petAdvPtsTop').textContent) +
 				den(E('d5_petRefPtsTop').textContent);
