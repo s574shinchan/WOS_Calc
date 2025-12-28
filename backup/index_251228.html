@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+  <meta name="description" content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료들이 한곳에!">
+  <meta name="google-adsense-account" content="ca-pub-8205102847358210">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="WOS 계산기 - 재료 및 자원 소모량 계산가능" />
+  <meta property="og:description" content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료모음" />
+  <meta property="og:url" content="https://d1xsb5o91gjadf.cloudfront.net/" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/e66ed083ba7662f678ff42bcb3d0ee2b03ad3169/images/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="WOS 계산기 - 재료 및 자원 소모량 계산가능" />
+  <meta name="twitter:description" content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료모음" />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/e66ed083ba7662f678ff42bcb3d0ee2b03ad3169/images/og-image.png" />
+  <link rel="canonical" href="https://d1xsb5o91gjadf.cloudfront.net/" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <title>WOS 계산기 ＆ 자료모음</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"
+     crossorigin="anonymous"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QTRS9JCPXG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-QTRS9JCPXG');
+  </script>
+  <style>
+    body {
+      background-image: url('../images/watermark.webp');
+      background-repeat: repeat;
+      background-position: center;
+      background-size: auto;
+      background-attachment: fixed;
+      background-color: #93c5fd;
+      overflow-x: hidden;
+      margin: 0;
+    }
+    /* ✅ 다크모드 전용 */
+    body.dark-mode {
+      background-image: none;
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    
+    .dark-mode .bg-white,    
+    .dark-mode .blue-50 { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    
+    .dark-mode .bg-blue-300,
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+  
+    .dark-mode .text-gray-800,
+    .dark-mode .text-gray-700,
+    .dark-mode .text-gray-600 { color: #ffffff !important; }
+  
+    .dark-mode .text-blue-700 { color: #66b0ff !important; }
+    .dark-mode .text-blue-600 { color: #80caff !important; }
+    .dark-mode .text-orange-500 { color: #ffa94d !important; }
+    .dark-mode .text-green-600 { color: #79e68c !important; }
+    .dark-mode .text-red-500 { color: #ff8080 !important; }
+  
+    .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
+    .dark-mode th, .dark-mode td { border-color: #444 !important; }
+    .dark-mode thead th { color: #000 !important; }
+    
+    .dark-mode .bg-blue-100,
+    .dark-mode .bg-amber-100,    
+    .dark-mode .bg-green-100,
+    .dark-mode .bg-orange-50,
+    .dark-mode .bg-red-50,
+    .dark-mode .bg-blue-50,
+    .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
+  
+    .dark-mode .bg-amber-50,
+    .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
+  
+    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
+    .dark-mode ul li { color: #ddd; }
+    .dark-mode .text-gray-500 { color: #9ca3af !important; }
+    
+    .dark-mode * { text-shadow: none !important; }
+    
+    .dark-mode #langSelectPC,
+    .dark-mode #langSelectPC option,
+    .dark-mode #langSelectPC:disabled {
+      color: #ffffff !important;
+      background-color: #2c2c2c !important;
+    }
+    /* 다크모드에서 팝업 테이블 헤더 글자색을 검정으로 */
+    body.dark-mode #popupContent th { color:#ffffff !important; }
+    
+    /* 다크모드에서 총합/보유량/과부족 행 글자색을 검정으로 */
+    body.dark-mode #popupContent tr.row-total  td,
+    body.dark-mode #popupContent tr.row-owned  td,
+    body.dark-mode #popupContent tr.row-deficit td { color:#ffffff !important; }
+    .card { 
+      border:1px solid rgba(0,0,0,.1); 
+      background:#fff; 
+      box-shadow:0 2px 8px rgba(0,0,0,.06); 
+      padding:10px 10px; 
+    }
+
+    /* ✅ 한 줄 유지 + 가로 스크롤 허용 */
+    .row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:nowrap;         /* 줄바꿈 금지 */
+      white-space:nowrap;       /* 텍스트도 줄바꿈 금지 */
+      overflow-x:auto;          /* 넘치면 가로 스크롤 */
+      -webkit-overflow-scrolling: touch;
+    }
+    #hero-shard-strip{
+      display:flex;
+      align-items:center;
+      flex-wrap:nowrap;         /* 줄바꿈 금지 */
+      flex:0 0 auto;            /* 줄서기 고정 */
+    }
+    #hero-shard-strip img{
+      width:32px; height:32px; object-fit:contain;
+      flex:0 0 auto;            /* 아이콘 자체도 줄바꿈 방지 */
+    }
+    .input { width:110px; height:34px; border:1px solid #d0d5dd; border-radius:8px; padding:0 10px; outline:none; }
+    .btn   { height:34px; padding:0 14px; border:0; border-radius:8px; background:#2563eb; color:#fff; cursor:pointer; flex:0 0 auto; }
+  </style>
+  <script>
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
+    
+    if (isMobile && !location.pathname.includes('index_m')) {
+      window.location.href = "index_m.html";
+    }
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4">
+  <div class="max-w-[1500px] mx-auto w-full bg-blue-300 shadow rounded p-4 sm:p-3 relative">    
+    <!-- Support Badge + Toast Wrapper -->
+    <div class="absolute top-3 left-4">
+      <div class="relative">
+        <!-- Support Badge -->
+        <div class="inline-flex items-center gap-2 bg-slate-900 text-white text-xs px-3 py-1.5 rounded-full shadow">
+          <!-- 사람 아이콘 -->
+          <svg xmlns="http://www.w3.org/2000/svg"
+               class="w-3.5 h-3.5 opacity-90"
+               fill="none" viewBox="0 0 24 24"
+               stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M5.121 17.804A8 8 0 1118.363 4.562a8 8 0 01-13.242 13.242z" />
+          </svg>
+
+          <span class="opacity-80">Support :</span>
+          <span id="supportNumber" class="font-bold tracking-wide">
+            67331703
+          </span>
+
+          <!-- 복사 버튼 -->
+          <button id="copyBtn"
+                  onclick="copySupportNumber()"
+                  class="ml-1 bg-slate-700 hover:bg-slate-600 text-white p-1.5 rounded-md transition flex items-center">
+
+            <!-- 책 아이콘 -->
+            <svg id="iconBook" xmlns="http://www.w3.org/2000/svg"
+                 class="w-3.5 h-3.5"
+                 fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 5a2 2 0 012-2h9a3 3 0 013 3v11a1 1 0 01-1 1H7a3 3 0 00-3 3V5z" />
+            </svg>
+
+            <!-- 체크 아이콘 -->
+            <svg id="iconCheck" xmlns="http://www.w3.org/2000/svg"
+                 class="w-3.5 h-3.5 hidden"
+                 fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- ★ Support 아래 표시되는 Toast -->
+        <div id="toast"
+             class="absolute left-1/2 top-[110%] transform -translate-x-1/2
+                    bg-emerald-500 text-white text-xs font-semibold
+                    px-3 py-2 rounded-lg shadow-lg
+                    opacity-0 pointer-events-none whitespace-nowrap
+                    transition-opacity duration-300">
+          사용자 ID가 복사되었습니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- PC 버튼: 우측 상단 고정 + 세로 정렬 -->
+    <div class="hidden sm:block">
+      <div class="absolute top-4 right-4 flex flex-col items-end space-y-2">
+        <!-- 🌙 다크모드 토글 -->
+        <label class="text-white text-sm flex items-center space-x-2">
+          <input type="checkbox" id="darkModeToggle" />
+          <span>Dark Mode</span>
+        </label>
+        <div class="absolute top-4 right-4 flex flex-col items-end space-y-2">
+          <button 
+            onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')" 
+            class="bg-blue-600 text-white text-sm px-3 py-2 rounded hover:bg-blue-700 shadow">
+            💬 컨설팅문의
+          </button>
+
+          <button 
+            onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
+            class="bg-teal-600 text-white text-sm px-3 py-2 rounded hover:bg-gray-800 shadow">
+            📬 자료요청　
+          </button>
+          <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm">
+            <option value="index.html">🌐 Language</option>
+            <option value="index.html">🇰🇷 한국어　</option>
+            <option value="index_EN.html">🇺🇸 English</option>
+            <option value="index_JP.html">🇯🇵 日本語</option>
+          </select>
+          <button 
+            onclick="location.href='https://buymeacoffee.com/shin0825'"
+            class="bg-blue-600 text-white text-sm px-5 py-2 rounded hover:bg-blue-700 shadow">
+            ☕ 후원하기
+          </button>
+        </div>
+      </div>
+      
+      <!-- 로고 -->
+      <div class="text-center mb-4 mt-6 sm:mt-4">
+      <img 
+        src="../images/logo.webp" 
+        alt="로고" 
+        class="mx-auto w-64 drop-shadow-lg cursor-pointer"
+        onclick="ComeBackHome()"
+      />
+    </div>
+      
+      <div class="text-gray-700 text-sm text-center mb-4">
+      <!-- ✅ 제목 태그 추가 -->
+      <h1 class="text-2xl font-bold mb-1">WOS 통합 계산기</h1>
+      <p>화이트아웃 서바이벌(Whiteout Survival) 유저를 위한 계산기 ＆ 자료 허브입니다.</p>
+      <p>건물·영주 장비·펫·연구 등의 자료를 실제 게임 데이터에 근거하여 제공합니다.</p>
+      <p>실제 데이터를 기반이기 때문에 과금계획 및 방향성에 도움이 됩니다.</p>
+      
+      <!-- <h2 class="text-base font-semibold mb-3 text-gray-600">화이트아웃 서바이벌 유저를 위한 종합 자료 제공</h2>
+      
+      <p>이 사이트는 화이트아웃 서바이벌(Whiteout Survival) 게임 유저들을 위한 통합 계산기 및 정보 자료 모음입니다.</p>
+      <p>건물, 영주 장비, 펫 돌파, 연구 등 다양한 주제를 좌측 메뉴에서 선택해 상세 계산기와 자료를 확인할 수 있습니다.</p>
+      
+      <!-- ✅ 보강 내용 (왼쪽 정렬 적용)
+      <p>각 계산기는 실제 게임 데이터와 정보를 바탕으로 제작되었으며, 
+        건물 계산기를 통해 특정 건물 레벨업에 필요한 자원과 시간을 미리 파악하고,<br>
+        연구 계산기를 통해 장기적으로 필요한 자원 계획을 세울 수 있습니다.</p>
+      <p>또한, 초보자부터 고수 유저까지 참고할 수 있는 팁과 전략을 제공합니다. 
+        예를 들어, VIP 레벨 구간 등 다양한 노하우를 함께 확인하실 수 있습니다.</p>
+      -->
+    </div>
+      
+      <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+        <!-- 좌측 버튼 그룹 -->
+        <div class="flex flex-col space-y-2 bg-gray-200 p-2 rounded shadow w-full sm:w-40 flex-shrink-0 min-w-[160px]">
+        <button onclick="switchTab('guide')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">자료모음</button>
+        <button onclick="switchTab('building')" class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded">건물계산</button>
+        <button onclick="switchTab('equip')" class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded">영주장비</button>
+        <button onclick="switchTab('gem')" class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded">영주보석</button>
+        <button onclick="switchTab('hero')" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">영웅장비</button>
+        <button onclick="switchTab('pet')" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded">펫돌파</button>
+        <button onclick="switchTab('research')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">일반연구</button>
+        <button onclick="switchTab('helios')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">헬리오스</button>
+        <button onclick="switchTab('experts')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">전문가</button>
+        <button onclick="switchTab('troop')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">병사생산&승급</button>
+				<!--<button onclick="switchTab('advtroop')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">병사승급</button>-->
+        <button onclick="switchTab('beartrap')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">부대계산</button>
+        <button onclick="switchTab('SVS_PreMission')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">SVS계산</button>
+        <button onclick="switchTab('imagedata')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">이미지자료</button>
+        <button onclick="switchTab('pakage')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">패키지</button>
+        <button onclick="switchTab('schedule')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">주요이벤트일정</button>
+        <button onclick="switchTab('transfer')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">이민예측</button>
+        <!--<button onclick="switchTab('merge')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">서버합병</button>-->
+        <!--<button onclick="switchTab('transferHistory2024')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">이민그룹(2024)</button>-->
+        <!--<button onclick="switchTab('transferHistory2025')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">이민그룹(2025)</button>-->
+      </div>
+        
+        <!-- guideDetails: 처음에만 표시됨 -->
+        <div id="guideDetails" class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+          <div class="bg-gray-100 p-2 font-sans text-sm">
+            <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
+              <h1 class="text-2xl font-bold text-gray-800 mb-4">📘 WOS 자료모음</h1>
+              <div class="space-y-4">
+                <details id="detail1" class="bg-white border border-blue-300 rounded-md p-4" open>
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔰 VIP 구간별 경험치</summary>
+                  <div class="mb-2 mt-2">
+                    <div class="flex flex-col md:flex-row w-full">
+                      <div class="w-full md:w-1/2 px-1 mb-2">
+                        <div class="overflow-x-auto">
+                          <h3 class="font-semibold text-orange-500">🔹 구간별 경험치</h3>
+                          <table class="table-auto border w-full text-xs text-center">
+                            <thead class="bg-orange-100 font-semibold">
+                              <tr><th class="border p-1">현재</th><th class="border p-1">목표</th><th class="border p-1">경험치</th></tr>
+                            </thead>
+                            <tbody>
+                              <tr><td class="border p-1">VIP1</td><td class="border p-1">VIP2</td><td class="border p-1">2,500</td></tr>
+                              <tr><td class="border p-1">VIP2</td><td class="border p-1">VIP3</td><td class="border p-1">5,000</td></tr>
+                              <tr><td class="border p-1">VIP3</td><td class="border p-1">VIP4</td><td class="border p-1">12,500</td></tr>
+                              <tr><td class="border p-1">VIP4</td><td class="border p-1">VIP5</td><td class="border p-1">30,000</td></tr>
+                              <tr><td class="border p-1">VIP5</td><td class="border p-1">VIP6</td><td class="border p-1">40,000</td></tr>
+                              <tr><td class="border p-1">VIP6</td><td class="border p-1">VIP7</td><td class="border p-1">60,000</td></tr>
+                              <tr><td class="border p-1">VIP7</td><td class="border p-1">VIP8</td><td class="border p-1">100,000</td></tr>
+                              <tr><td class="border p-1">VIP8</td><td class="border p-1">VIP9</td><td class="border p-1">350,000</td></tr>
+                              <tr><td class="border p-1">VIP9</td><td class="border p-1">VIP10</td><td class="border p-1">600,000</td></tr>
+                              <tr><td class="border p-1">VIP10</td><td class="border p-1">VIP11</td><td class="border p-1">1,200,000</td></tr>
+                              <tr><td class="border p-1">VIP11</td><td class="border p-1">VIP12</td><td class="border p-1">2,400,000</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="w-full md:w-1/2 px-1 mb-2">
+                        <div class="overflow-x-auto">
+                          <h3 class="font-semibold text-orange-500">🔹 패키지별 VIP 포인트 아이템 포함 수</h3>
+                          <table class="table-auto border w-full text-xs text-center">
+                            <thead class="bg-orange-100 font-semibold">
+                              <tr><th class="border p-1">가격</th><th class="border p-1">VIP점수</th><th class="border p-1">개수</th></tr>
+                            </thead>
+                            <tbody>
+                              <tr><td class="border p-1">1,500</td><td class="border p-1">100pt</td><td class="border p-1">5</td></tr>
+                              <tr><td class="border p-1">4,400</td><td class="border p-1">100pt</td><td class="border p-1">15</td></tr>
+                              <tr><td class="border p-1">7,500</td><td class="border p-1">100pt</td><td class="border p-1">25</td></tr>
+                              <tr><td class="border p-1">15,000</td><td class="border p-1">100pt</td><td class="border p-1">40</td></tr>
+                              <tr><td class="border p-1">30,000</td><td class="border p-1">100pt</td><td class="border p-1">60</td></tr>
+                              <tr><td class="border p-1">79,000</td><td class="border p-1">1000pt</td><td class="border p-1">12</td></tr>
+                              <tr><td class="border p-1">149,000</td><td class="border p-1">1000pt</td><td class="border p-1">20</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              
+                <!-- 영웅 성급업 -->
+                <details id="detail2" class="bg-white border border-blue-300 rounded-md p-4" open>
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 영웅성급업표</summary>
+                  <div id="영웅성급" class="mt-3 space-y-4 text-sm text-gray-800">
+                    <div class="overflow-x-auto">
+                      <h2>최초 모집 시 영웅조각 10개 필요</h2>
+                      <table id="hero-upgrade-table" class="table-auto border w-full text-xs text-center">
+                        <thead class="bg-orange-100">
+                          <th class="border p-1">등급</th>
+                          <th class="border p-1">
+                            <img src="../images/tier1.webp" class="w-6 h-6 mx-auto" alt="1단계">
+                          </th>
+                          <th class="border p-1">
+                            <img src="../images/tier2.webp" class="w-6 h-6 mx-auto" alt="2단계">
+                          </th>
+                          <th class="border p-1">
+                            <img src="../images/tier3.webp" class="w-6 h-6 mx-auto" alt="3단계">
+                          </th>
+                          <th class="border p-1">
+                            <img src="../images/tier4.webp" class="w-6 h-6 mx-auto" alt="4단계">
+                          </th>
+                          <th class="border p-1">
+                            <img src="../images/tier5.webp" class="w-6 h-6 mx-auto" alt="5단계">
+                          </th>
+                          <th class="border p-1">
+                            <img src="../images/tier6.webp" class="w-6 h-6 mx-auto" alt="6단계">
+                          </th>
+                          <th class="border p-1">SubTotal</th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="border p-1">1성</td>
+                            <td class="border p-1">1</td>
+                            <td class="border p-1">1</td>
+                            <td class="border p-1">2</td>
+                            <td class="border p-1">2</td>
+                            <td class="border p-1">2</td>
+                            <td class="border p-1">2</td>
+                            <td class="border p-1">20</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">2성</td>
+                            <td class="border p-1">5</td>
+                            <td class="border p-1">5</td>
+                            <td class="border p-1">5</td>
+                            <td class="border p-1">5</td>
+                            <td class="border p-1">5</td>
+                            <td class="border p-1">15</td>
+                            <td class="border p-1">40</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">3성</td>
+                            <td class="border p-1">15</td>
+                            <td class="border p-1">15</td>
+                            <td class="border p-1">15</td>
+                            <td class="border p-1">15</td>
+                            <td class="border p-1">15</td>
+                            <td class="border p-1">40</td>
+                            <td class="border p-1">115</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">4성</td>
+                            <td class="border p-1">40</td>
+                            <td class="border p-1">40</td>
+                            <td class="border p-1">40</td>
+                            <td class="border p-1">40</td>
+                            <td class="border p-1">40</td>
+                            <td class="border p-1">100</td>
+                            <td class="border p-1">300</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">5성</td>
+                            <td class="border p-1">100</td>
+                            <td class="border p-1">100</td>
+                            <td class="border p-1">100</td>
+                            <td class="border p-1">100</td>
+                            <td class="border p-1">100</td>
+                            <td class="border p-1">100</td>
+                            <td class="border p-1">600</td>
+                          </tr>
+                        </tbody>
+                        <tfoot>
+                          <tr class="font-bold">
+                            <td colspan="7" class="border px-2 py-1 text-right">Total</td>
+                            <td class="border p-1">1075</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="card w-full">
+                    <!-- ✅ 전부 가로 한 줄 (넘치면 가로 스크롤) -->
+                    <div class="row">
+                      <div style="font-weight:600;">보유 영웅 조각 수</div>
+                      <input id="pieceInput" type="number" min="0" value="0" max="1075" class="input">
+                      <div style="font-weight:600">기대 결과</div>
+                      <div id="hero-shard-strip"></div>
+                      <p id="tierFallback" class="hidden text-gray-400"></p>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- 용광로 업그레이드 조건 -->
+                <details id="detail3" class="bg-white border border-blue-300 rounded-md p-4" open>
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 용광로 업그레이드 조건</summary>
+                  <div id="용광로조건" class="mt-3 space-y-4 text-sm text-gray-800">
+                    <div class="mb-2 mt-2">
+                      <div class="flex flex-col md:flex-row w-full">
+                        <div class="w-full md:w-1/2 px-1">
+                          <div class="overflow-x-auto">
+                            <table class="table-auto border w-full text-xs text-center">
+                              <thead class="bg-orange-100">
+                                <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td class="border p-1">FC1</td><td class="border p-1">대사관 Lv.30, 연구소 Lv.30</td>
+                                </tr>
+                                <tr class="bg-indigo-50">
+                                  <td class="border p-1">FC2</td><td class="border p-1">대사관 FC1, 창병 병영 FC1</td>              
+                                </tr>
+                                <tr>
+                                  <td class="border p-1">FC3</td><td class="border p-1">대사관 FC2, 방패 병영 FC2</td>              
+                                </tr>
+                                <tr class="bg-indigo-50">
+                                  <td class="border p-1">FC4</td><td class="border p-1">대사관 FC3, 궁병 병영 FC3</td>              
+                                </tr>
+                                <tr>
+                                  <td class="border p-1">FC5</td><td class="border p-1">대사관 FC4, 창병 병영 FC4</td>              
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <div class="w-full md:w-1/2 px-1">
+                          <div class="overflow-x-auto">
+                            <table class="table-auto border w-full text-xs text-center">
+                              <thead class="bg-orange-100">
+                                <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td class="border p-1">FC6</td><td class="border p-1">대사관 FC5, 방패 병영 FC5</td>
+                                </tr>
+                                <tr class="bg-indigo-50">
+                                  <td class="border p-1">FC7</td><td class="border p-1">대사관 FC6, 궁병 병영 FC6</td>
+                                </tr>
+                                <tr>
+                                  <td class="border p-1">FC8</td><td class="border p-1">대사관 FC7, 창병 병영 FC7</td>
+                                </tr>
+                                <tr class="bg-indigo-50">
+                                  <td class="border p-1">FC9</td><td class="border p-1">대사관 FC8, 방패 병영 FC8</td>
+                                </tr>
+                                <tr>
+                                  <td class="border p-1">FC10</td><td class="border p-1">대사관 FC9, 궁병 병영 FC9</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- 🛫 이민 시스템 안내 -->
+                <details id="detail4" class="bg-white border border-blue-300 rounded-md p-4" open>
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 이민 시스템 안내</summary>
+
+                  <!-- ✅ 좌우 2열 래퍼 -->
+                  <div class="md:grid md:grid-cols-2 gap-4 items-start min-w-0">
+                    <!-- ◀ 왼쪽: 서술 영역 묶음 -->
+                    <div class="space-y-4 min-w-0">
+                      <!-- 서버분류 -->
+                      <section>
+                        <h3 class="font-semibold text-blue-600 mb-1">🔹 서버분류</h3>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                          <li><span class="text-blue-500">일반서버</span><br>
+                            - 이민인원: <strong>55</strong> | 특별초대: <strong>최대 3</strong> | 일반초대: <strong>35</strong> | 자유이민: <strong>20 (선착순)</strong>
+                          </li>
+                          <li><span class="text-red-500">강성서버</span><br>
+                            - 이민인원: <strong>30</strong> | 특별초대: <strong>없음</strong> | 일반초대: <strong>20</strong> | 자유이민: <strong>10 (선착순)</strong>
+                          </li>
+                        </ul>
+                      </section>
+
+                      <!-- 일정 -->
+                      <section>
+                        <h3 class="font-semibold text-blue-600 mb-1">🔹 일정</h3>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                          <li><strong>일 ~ 화</strong>: 이민 전투력 제한 설정 및 이민모집 홍보</li>
+                          <li><strong>수 ~ 목</strong>: 초대권 받은 사람들 이동 가능 (특별초대 + 일반초대)</li>
+                          <li><strong>금 ~ 토</strong>: <u>UTC 00:00부터</u> 자유이민 시작 (선착순)</li>
+                        </ul>
+                      </section>
+
+                      <!-- 용어정리 -->
+                      <section>
+                        <h3 class="font-semibold text-blue-600 mb-1">🔹 용어정리</h3>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                          <li>특별초대: <strong>전투력 제한 없음</strong>, <u>첫 이민 시 3장</u>, <u>월 1장 추가</u>, <strong>최대 3장 보유 가능</strong></li>
+                          <li>일반초대: <strong>전투력 제한 범위 내</strong></li>
+                        </ul>
+                      </section>
+
+                      <!-- 그 외 -->
+                      <section>
+                        <h3 class="font-semibold text-blue-600 mb-1">🔹 그 외</h3>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                          <li>모든 이민 유형(일반초대, 특별초대, 자유이민) <strong>이민권 필요</strong></li>
+                          <li>이민권: <u>연맹상점</u> 또는 <u>패키지 구매</u> 가능</li>
+                          <li><strong>병사 해산</strong>: 수요일부터 가능 (프로필 → 부대 → 병사 선택 → 해산)</li>
+                          <li>모병소/의무실 병사도 전투력 포함</li>
+                          <li>서버전 패배 후 최고집행관이 없다면 이전 집행관이 초대 가능</li>
+                          <li><u>특별초대</u>: 수~토 이동 가능 | <u>일반초대</u>: 수/목만 이동 가능</li>
+                        </ul>
+                      </section>
+                    </div>
+
+                    <!-- ▶ 오른쪽: 표(패키지) -->
+                    <div class="space-y-2 min-w-0">
+                      <h3 class="font-semibold text-green-600">✈️ 이민권 패키지</h3>
+                      <div class="overflow-x-auto border rounded-md">
+                        <table class="table-auto w-full text-xs text-center">
+                          <thead class="bg-green-100">
+                            <tr>
+                              <th class="border p-1">금액</th>
+                              <th class="border p-1">이민권</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td class="border p-1">7,500</td><td class="border p-1">1장</td></tr>
+                            <tr><td class="border p-1">15,000</td><td class="border p-1">2장</td></tr>
+                            <tr><td class="border p-1">30,000</td><td class="border p-1">3장</td></tr>
+                            <tr><td class="border p-1">79,000</td><td class="border p-1">4장</td></tr>
+                            <tr><td class="border p-1">149,000</td><td class="border p-1">5장</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <p class="text-xs text-gray-600">📌 참고 : 149,000 패키지는 <span class="font-semibold text-red-500">최대 15번</span>까지 구매 가능합니다.</p>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- 단어번역 -->
+                <details class="bg-white border border-blue-300 rounded-md p-4">
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 각종 용어 안내</summary>
+                  <div id="용어안내" class="mt-3 space-y-4 text-sm text-gray-800">
+                    <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+                  </div>
+                </details>
+
+                <!-- 요새 주차별 보상 -->
+                <details class="border border-blue-300 rounded-md p-4 shadow">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">👑 요새 주차별 보상</summary>
+                <div class="overflow-x-auto w-full">
+                  <table id="fortress" class="min-w-full table-fixed border border-gray-400 text-center">
+                    <thead class="bg-orange-100 font-semibold">
+                      <tr>
+                        <th class="border p-1 w-10">요새</th>
+                        <th class="border p-1">1주차</th>
+                        <th class="border p-1">2주차</th>
+                        <th class="border p-1">3주차</th>
+                        <th class="border p-1">4주차</th>
+                        <th class="border p-1">5주차</th>
+                        <th class="border p-1">6주차</th>
+                        <th class="border p-1">7주차</th>
+                        <th class="border p-1">8주차</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- 요새 1 -->
+                      <tr>
+                        <td class="border p-1">1</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">HP 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">HP 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                      </tr>
+                    
+                      <!-- 요새 2 -->
+                      <tr>
+                        <td class="border p-1">2</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">HP 증가</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">HP 증가</td>
+                        <td class="border p-1">공용가속</td>
+                      </tr>
+                    
+                      <!-- 요새 3 -->
+                      <tr>
+                        <td class="border p-1">3</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">HP 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">HP 증가</td>
+                      </tr>
+                    
+                      <!-- 요새 4 -->
+                      <tr>
+                        <td class="border p-1">4</td>
+                        <td class="border p-1">HP 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">스킬북</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                      </tr>
+                    
+                      <!-- 요새 5 -->
+                      <tr>
+                        <td class="border p-1">5</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">피해 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">스킬북</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">피해 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                      </tr>
+                    
+                      <!-- 요새 6 -->
+                      <tr>
+                        <td class="border p-1">6</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">피해 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">피해 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                      </tr>
+                    
+                      <!-- 요새 7 -->
+                      <tr>
+                        <td class="border p-1">7</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">피해 증가</td>
+                      </tr>
+                    
+                      <!-- 요새 8 -->
+                      <tr>
+                        <td class="border p-1">8</td>
+                        <td class="border p-1">피해 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                      </tr>
+                    
+                      <!-- 요새 9 -->
+                      <tr>
+                        <td class="border p-1">9</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">수용량 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">피해 증가</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">수용량 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                      </tr>
+                    
+                      <!-- 요새 10 -->
+                      <tr>
+                        <td class="border p-1">10</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">수용량 증가</td>
+                        <td class="border p-1">스킬북</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">수용량 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                      </tr>
+                    
+                      <!-- 요새 11 -->
+                      <tr>
+                        <td class="border p-1">11</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">스킬북</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                        <td class="border p-1">수용량 증가</td>
+                      </tr>
+                    
+                      <!-- 요새 12 -->
+                      <tr>
+                        <td class="border p-1">12</td>
+                        <td class="border p-1">수용량 증가</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">텔레포트</td>
+                        <td class="border p-1">공용 가속</td>
+                        <td class="border p-1">경험치 강화</td>
+                        <td class="border p-1">일반 야성의 표식</td>
+                      </tr>
+                      
+                      <!-- 빈 줄 삽입 -->
+                      <tr><td colspan="9" class="border p-1 bg-white h-4"></td></tr>
+                      
+                      <!-- ✅ 헤더처럼 보이는 행 추가 -->
+                      <tr class="bg-orange-100 font-semibold">
+                        <td class="border p-1 w-10">성채</td>
+                        <td class="border p-1">1주차</td>
+                        <td class="border p-1">2주차</td>
+                        <td class="border p-1">3주차</td>
+                        <td class="border p-1">4주차</td>
+                        <td class="border p-1">5주차</td>
+                        <td class="border p-1">6주차</td>
+                        <td class="border p-1">7주차</td>
+                        <td class="border p-1">8주차</td>
+                      </tr>
+                      
+                      <!-- 성채 1 -->
+                      <tr>
+                        <td class="border p-1">1</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">펫 돌파 재료 상자</td>
+                        <td class="border p-1">장비 상자</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">펫 돌파 재료 상자</td>
+                        <td class="border p-1">장비 상자</td>
+                        <td class="border p-1">SSR 파편</td>
+                      </tr>
+                  
+                      <!-- 성채 2 -->
+                      <tr>
+                        <td class="border p-1">2</td>
+                        <td class="border p-1">불의 수정</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">펫 돌파 재료 상자</td>
+                        <td class="border p-1">불의 수정</td>
+                        <td class="border p-1">불의 수정</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">펫 돌파 재료 상자</td>
+                        <td class="border p-1">불의 수정</td>
+                      </tr>
+                  
+                      <!-- 성채 3 -->
+                      <tr>
+                        <td class="border p-1">3</td>
+                        <td class="border p-1">장비 상자</td>
+                        <td class="border p-1">불의 수정</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">펫 돌파 재료 상자</td>
+                        <td class="border p-1">장비 상자</td>
+                        <td class="border p-1">불의 수정</td>
+                        <td class="border p-1">불의 수정</td>
+                        <td class="border p-1">펫 돌파 재료 상자</td>
+                      </tr>
+                  
+                      <!-- 성채 4 -->
+                      <tr>
+                        <td class="border p-1">4</td>
+                        <td class="border p-1">펫 돌파 재료 상자</td>
+                        <td class="border p-1">장비 상자</td>
+                        <td class="border p-1">불의 수정</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">펫 돌파 재료 상자</td>
+                        <td class="border p-1">장비 상자</td>
+                        <td class="border p-1">SSR 파편</td>
+                        <td class="border p-1">SSR 파편</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+
+                <!-- 세대별 영웅 특성 -->
+                <details class="border border-blue-300 rounded-md p-4 shadow">
+                  <summary class="cursor-pointer text-lg font-semibold text-blue-700">🧬 세대별 영웅 특성</summary>
+                  <div class="overflow-x-auto w-full">
+                    <table class="table-auto border w-full text-sm text-center">
+                      <thead class="bg-orange-100">
+                        <tr>
+                          <th class="border p-1">세대</th>
+                          <th class="border p-1">이름</th>
+                          <th class="border p-1">구분</th>
+                          <th class="border p-1">획득처</th>
+                          <th class="border p-1">영웅 공격력/방어력</th>
+                          <th class="border p-1">전용무기 파괴력/HP</th>
+                          <th class="border p-1">전용무기효과</th>
+                          <th class="border p-1">공수구분</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- 여기에 너가 기존에 입력한 <tr>들 복사해서 붙여넣기 -->
+                        <tr>
+                          <td class="border p-1" rowspan="4">1세대</td>
+                          <td class="border p-1">제로니모</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">VIP / 최강영주</td>
+                          <td class="border p-1">260.2%</td>
+                          <td class="border p-1">62.5%</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">나탈리아</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">VIP</td>
+                          <td class="border p-1" rowspan="3">200.2%</td>
+                          <td class="border p-1" rowspan="3">50.0%</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">몰리</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">영웅의 홀</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">진먼</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">공력력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1" rowspan="3">2세대</td>
+                          <td class="border p-1">플린트</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1" rowspan="3">240.2%</td>
+                          <td class="border p-1" rowspan="3">60.0%</td>
+                          <td class="border p-1">공력력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">필리</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">최강영주</td>
+                          <td class="border p-1">HP 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">알론소</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1" rowspan="3">3세대</td>
+                          <td class="border p-1">로건</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1" rowspan="3">290.2%</td>
+                          <td class="border p-1" rowspan="3">70.0%</td>
+                          <td class="border p-1">방어력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">미야</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">그렉</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1">HP 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1" rowspan="3">4세대</td>
+                          <td class="border p-1">아모세</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1" rowspan="3">370.3%</td>
+                          <td class="border p-1" rowspan="3">92.5%</td>
+                          <td class="border p-1">HP 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">레이나</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">린</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1" rowspan="3">5세대</td>
+                          <td class="border p-1">헥터</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1" rowspan="3">444.4%</td>
+                          <td class="border p-1" rowspan="3">111.0%</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">노라</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1">방어력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">그웬</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1" rowspan="3">6세대</td>
+                          <td class="border p-1">무명</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1" rowspan="3">540.4%</td>
+                          <td class="border p-1" rowspan="3">133.5%</td>
+                          <td class="border p-1">방어력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">레니</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">웨인</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1" rowspan="3">7세대</td>
+                          <td class="border p-1">에디스</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1" rowspan="3">650.5%</td>
+                          <td class="border p-1" rowspan="3">160.5%</td>
+                          <td class="border p-1">HP 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">고든</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">브레들리</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1" rowspan="3">8세대</td>
+                          <td class="border p-1">가토</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1" rowspan="3">780.6%</td>
+                          <td class="border p-1" rowspan="3">193.0%</td>
+                          <td class="border p-1">방어력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">소냐</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">핸드릭</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1" rowspan="3">9세대</td>
+                          <td class="border p-1">마그누스</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1" rowspan="3">940.8%</td>
+                          <td class="border p-1" rowspan="3">232.0%</td>
+                          <td class="border p-1">HP 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">프레드</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">쇠라</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1" rowspan="3">10세대</td>
+                          <td class="border p-1">그레고리</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1" rowspan="3">1110.9%</td>
+                          <td class="border p-1" rowspan="3">277.5%</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">프레야</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">방어력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">블랑쉬</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1" rowspan="3">11세대</td>
+                          <td class="border p-1">엘레오노라</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1" rowspan="3">1281.0%</td>
+                          <td class="border p-1" rowspan="3">320.0%</td>
+                          <td class="border p-1">HP 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">로이드</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">빙원의 왕</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">루퍼스</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1" rowspan="3">12세대</td>
+                          <td class="border p-1">헤르보르</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1" rowspan="3">1451.16%</td>
+                          <td class="border p-1" rowspan="3">362.5%</td>
+                          <td class="border p-1">방어력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">가로얼</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">리지아</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">빙원의 왕</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1" rowspan="3">13세대</td>
+                          <td class="border p-1">가젤라</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">빙원의왕</td>
+                          <td class="border p-1" rowspan="3">1621.29%</td>
+                          <td class="border p-1" rowspan="3">405.0%</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">플로라</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">HP 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">울카누</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1">공격력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1" rowspan="3">14세대</td>
+                          <td class="border p-1">엘리프</td>
+                          <td class="border p-1">방패</td>
+                          <td class="border p-1">행운의 룰렛</td>
+                          <td class="border p-1" rowspan="3">1791.43%</td>
+                          <td class="border p-1" rowspan="3">447.5%</td>
+                          <td class="border p-1">방어력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">도미니카</td>
+                          <td class="border p-1">창병</td>
+                          <td class="border p-1">빙원의 왕</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">공성</td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                          <td class="border p-1">카라</td>
+                          <td class="border p-1">궁병</td>
+                          <td class="border p-1">영웅의 전당</td>
+                          <td class="border p-1">파괴력 15%</td>
+                          <td class="border p-1">수성</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </details>
+
+                <!-- ⚔️ SVS_Event -->
+                <details class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS 준비단계</summary>
+                  <!-- event.html: 요일별 임무 테이블만 포함 -->
+                  <div class="overflow-x-auto">
+                    <table class="table-auto border w-full text-xs text-center">
+                      <thead class="bg-orange-100">
+                        <tr>
+                          <th class="border p-1">요일</th>
+                          <th class="border p-1">임무</th>
+                          <th class="border p-1">포인트</th>
+                        </tr>
+                      </thead>
+                      <tbody id="missionTableBody">
+                        <!-- 월요일 -->
+                        <tr><td class="border p-1 font-semibold" rowspan="4">월요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+                        <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+                        <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+                        <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+                        <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
+                        <tr><td class="border p-1">전문가 스킬학습 가속</td><td class="border p-1">1분 30pt</td></tr>
+                        
+                        <!-- 화요일 --> 
+                        <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="9">화요일</td><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">전문가 표식 사용</td><td class="border p-1">1개 6000pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">전문가 스킬 학습의 책사용</td><td class="border p-1">1개 60pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
+                  
+                        <!-- 수요일 -->
+                        <tr><td class="border p-1 font-semibold" rowspan="10">수요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+                        <tr><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
+                        <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
+                        <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
+                        <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
+                        <tr><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
+                        <tr><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
+                        <tr><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
+                        <tr><td class="border p-1">빙원괴수집결</td><td class="border p-1">1마리당 30,000pt</td></tr>
+                        <tr><td class="border p-1">야수처치</td><td class="border p-1">1마리당 9,000 ~ 12,000pt</td></tr>
+                        <tr><td class="border p-1">전문가 표식 사용</td><td class="border p-1">1개 6000pt</td></tr>
+                        <tr><td class="border p-1">전문가 스킬 학습의 책사용</td><td class="border p-1">1개 60pt</td></tr>                        
+                        
+                        <!-- 목요일 -->
+                        <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="5">목요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 144,000pt</td></tr>
+                        <tr class="bg-amber-50"><td class="border p-1">병사 훈련</td><td class="border p-1">3 ~ 75pt</td></tr>
+                        
+                        <!-- 금요일 -->
+                        <tr><td class="border p-1 font-semibold" rowspan="11">금요일</td><td class="border p-1">영주 장비</td><td class="border p-1">1종 36pt</td></tr>
+                        <tr><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
+                        <tr><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
+                        <tr><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 144,000pt</td></tr>
+                        <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
+                        <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
+                        <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
+                        <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
+                        <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
+                        <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
+                        <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
+                        <tr><td class="border p-1">전문가 스킬학습 가속</td><td class="border p-1">1분 30pt</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </details>
+
+                <!-- 연맹대작전 -->
+                <details class="bg-white border border-blue-300 rounded-md p-4">
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🚛 연맹대작전</summary>
+                  <div id="연맹대작전" class="mt-3 space-y-4 text-sm text-gray-800">
+                    <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+                  </div>
+                </details>
+                            
+                <!-- 정제불수 기댓값 -->
+                <details class="bg-white border border-blue-300 rounded-md p-4">
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 제련불수 기대값</summary>
+                  <div id="제련불수" class="mt-3 space-y-4 text-sm text-gray-800">
+                    <div class="overflow-x-auto">
+                      <table class="table-auto border w-full text-xs text-center">
+                        <thead class="bg-orange-100">
+                          <tr>
+                            <th class="border p-1">매일 한 번씩만 제련</th>
+                            <th class="border p-1">주당 불수 소모</th>
+                            <th class="border p-1">주당 획득 제련불수</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="border p-1">매일 한 번씩만 제련</td>
+                            <td class="border p-1">70</td>
+                            <td class="border p-1">10.15</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 14번, 이후 매일 한 번씩(주 20회)</td>
+                            <td class="border p-1">330</td>
+                            <td class="border p-1">29.00</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 20번, 이후 매일 한 번씩(주 26회)</td>
+                            <td class="border p-1">540</td>
+                            <td class="border p-1">41.90</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 34번, 이후 매일 한 번씩(주 40회)</td>
+                            <td class="border p-1">1,240</td>
+                            <td class="border p-1">72.00</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 40번, 이후 매일 한 번씩(주 46회)</td>
+                            <td class="border p-1">1,690</td>
+                            <td class="border p-1">91.08</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 54번, 이후 매일 한 번씩(주 60회)</td>
+                            <td class="border p-1">3,090</td>
+                            <td class="border p-1">135.60</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 60번, 이후 매일 한 번씩(주 66회)</td>
+                            <td class="border p-1">3,700</td>
+                            <td class="border p-1">156.60</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 74번, 이후 매일 한 번씩(주 80회)</td>
+                            <td class="border p-1">5,600</td>
+                            <td class="border p-1">204.60</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 80번, 이후 매일 한 번씩(주 86회)</td>
+                            <td class="border p-1">6,470</td>
+                            <td class="border p-1">226.56</td>
+                          </tr>
+                          <tr>
+                            <td class="border p-1">월요일 94번, 이후 매일 한 번씩(주 100회)</td>
+                            <td class="border p-1">8,710</td>
+                            <td class="border p-1">278.50</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- 깃발해금 -->
+                <details class="bg-white border border-blue-300 rounded-md p-4">
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🚩 합병 후 깃발해금</summary>
+                  <div id="깃발해금" class="mt-3 space-y-4 text-sm text-gray-800">
+                    <div class="overflow-x-auto">
+                      <table class="table-auto border w-full text-xs text-center">
+                      <thead class="bg-orange-100">
+                        <tr>
+                          <th class="border p-1">구간</th>
+                          <th class="border p-1">개수</th>
+                          <th class="border p-1">배너당 시간</th>
+                          <th class="border p-1">총 소요 시간</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="border p-1">기본 깃발</td>
+                          <td class="border p-1">5개</td>
+                          <td class="border p-1">0시간</td>
+                          <td class="border p-1">0시간</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">6번째 ~ 10번째</td>
+                          <td class="border p-1">5개</td>
+                          <td class="border p-1">2시간</td>
+                          <td class="border p-1">10시간</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">11번째 ~ 20번째</td>
+                          <td class="border p-1">10개</td>
+                          <td class="border p-1">1시간</td>
+                          <td class="border p-1">10시간</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">21번째 ~ 60번째</td>
+                          <td class="border p-1">40개</td>
+                          <td class="border p-1">0.5시간 (30분)</td>
+                          <td class="border p-1">20시간</td>
+                        </tr>
+                        <tr>
+                          <td class="border p-1">61번째 ~ 285번째</td>
+                          <td class="border p-1">225개</td>
+                          <td class="border p-1">0.25시간 (15분)</td>
+                          <td class="border p-1">56.25시간</td>
+                        </tr>
+                        <tr class="font-bold">
+                          <td class="border p-1">총합</td>
+                          <td class="border p-1">285개</td>
+                          <td class="border p-1"></td>
+                          <td class="border p-1">96시간 15분</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- 드래곤 엠페러 -->
+                <details class="bg-white border border-blue-300 rounded-md p-4">
+                  <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🐉 프로스트 드래곤 엠페러</summary>
+                  <section class="bg-white p-4 rounded shadow-md text-sm">
+                    <h2 class="text-lg font-bold mb-2">🔹 1단계 : 연맹신청 (월-화, 48h)</h2>
+                    <ul class="list-disc list-inside mb-4">
+                      <li>해당 서버가 속한 구역 내 연맹단위 참가신청</li>
+                      <li>소속 구역별 상위 n위 연맹까지만 참전자격 획득</li>
+                      <li>연맹 전투력 기준으로 순위 설정</li>
+                      <li>1서버당 참가 연맹 수 제한 없음</li>
+                      <li>수요일 리셋 전까지 같은 서버 내 다른 연맹들과 협력하여,<br>
+                        참가할 연맹으로 멤버 이동 후 연맹 전투력을 n위 이내로 올린 뒤 대기</li>
+                    </ul>
+
+                    <h2 class="text-lg font-bold mb-2">🔹 2단계 : 참전 파견 (수-목, 48h)</h2>
+                    <ul class="list-disc list-inside mb-4">
+                      <li>1단계 때 해당 연맹에 소속한 멤버만 참전 등록 가능</li>
+                      <li>1단계 때 해당 연맹에 없던 멤버는 수요일 가입해도 참전 불가</li>
+                      <li>무기공장 참전 구조와 동일</li>
+                      <li>목요일 UTC 23:59까지 해당 연맹에서 참전체크 완료되어야 일요일에 전장 입장 가능</li>
+                    </ul>
+
+                    <h2 class="text-lg font-bold mb-2">🔹 3단계 : 전장 오픈 (금-일, 59h)</h2>
+                    <ul class="list-disc list-inside mb-4">
+                      <li>무기공장 매칭 대기 방식과 동일</li>
+                      <li>참전자로 확정된 경우, 연맹 이동은 자유</li>
+                      <li>일요일에 엠페러 시작 전까지 다시 돌아와야 해당 연맹에서 전장 입장 가능</li>
+                    </ul>
+
+                    <h2 class="text-lg font-bold mb-2">🔹 4단계: 전장 오픈 (총 7시간 진행)</h2>
+                    <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">⚔️ 1. 전장 입장 ＆ 캐슬 쟁탈전</h3>
+                    <ul class="list-disc list-inside">
+                      <li>전장 개방 후 1시간 뒤 프로스트 드래곤 캐슬 쟁탈전 시작 (총 5시간 진행)</li>
+                      <li>첫 점령 성공한 연맹만 ‘첫 점령 보상’ 획득</li>
+                      <li>‘수비대장’의 점령시간 계산되며, 해당 랠리의 집결원이라도 점령시간은 포함, 계산되지 않음</li>
+                      <li>※ 전장개방(입장가능) : 20:00 KST ( 11:00 UTC )</li>
+                    </ul>
+                    <p class="text-gray-600 mt-1 ml-4">✅ 랭킹 산정은 수비대장의 점령시간 기준으로 계산됨</p>
+
+                    <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">🏛️ 2. 석탑 쟁탈전 (4개)</h3>
+                    <ul class="list-disc list-inside">
+                      <li>캐슬 주변 4개 석탑에서 동시 쟁탈</li>
+                      <li>각 라운드 별로30분 진행 → 30분 보호 상태 후 다음 라운드 반복</li>
+                      <li>각 라운드마다 가장 오래 점령한 1개의 연맹에게 30분간 특수 버프 부여</li>
+                    </ul>
+
+                    <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">🧪 3. 정수 수집 시스템</h3>
+                    <ul class="list-disc list-inside">
+                      <li>전장 내 용의 정수 수집 몬스터와 프로스트 드래곤 호위병 등장</li>
+                      <li>정수 수집 → 호위병 처치 및 채집 시 획득</li>
+                    </ul>
+                    <p class="text-gray-600 mt-1 ml-4">✅ 연맹원 간 효율적인 역할 분담이 필요</p>
+
+                    <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">📘 4. 수집에 유리한 스킬</h3>
+                    <ul class="list-disc list-inside">
+                      <li>전장에서만 사용 가능한 수정 스킬 존재</li>
+                      <li>전투력 강화 효과</li>
+                    </ul>
+
+                    <h3 class="text-lg font-semibold text-gray-800 mt-4 mb-1">👑 5. 최종 점령 보상</h3>
+                    <ul class="list-disc list-inside">
+                      <li>캐슬 점령 시간이 가장 긴 영주에게 전용 엠블럼 + 30일 버프 지급</li>
+                      <li>시간이 동일할 경우, 먼저 점령한 쪽이 승리</li>
+                    </ul>
+                    <p class="text-gray-600 mt-1 ml-4">✅ 1초라도 더 오래 점령한 쪽이 승리</p>
+                  </section>
+                </details>
+
+                <!-- 여기에추가해야함 -->
+
+                <!--종점-->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Scroll to Top Button -->
+        <button id="scrollToTopBtn"
+        class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
+        aria-label="Scroll to top">
+        
+        <!-- Up arrow SVG icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
+      
+        <!-- iframe 영역 -->
+        <div id="frameWrapper" class="max-w-[1500px] w-full hidden bg-white rounded shadow p-2">
+        <iframe id="mainFrame" class="w-full rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
+      </div>
+      
+        <!-- 같은 DOM에 로드할 영역 (추가) -->
+        <div id="contentWrapper" class="max-w-[1500px] w-full hidden bg-white rounded shadow p-2">
+          <div id="contentArea" class="w-full"></div>
+        </div>
+    
+        <!-- 부모에 위치한 모달 -->
+        <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+          <div class="max-w-4xl w-full flex items-center justify-center p-4">          
+            <img id="modalImage" alt="확대 이미지"
+              class="rounded shadow-lg border-4 border-white transform transition-transform duration-100"
+              style="max-height: 90vh; max-width: 100%; scale: 1;" />
+          </div>
+        </div>
+      </div>
+      
+      <!-- 카피라이트 -->  
+      <footer class="text-center text-xs font-bold text-gray-700 mt-5">⛔ 무단 복제 금지 | © Made By S645 ShinChan(67331703)
+        <span id="updateLink"  class="underline cursor-pointer hover:text-white-100 ml-2">업데이트내역</span>
+        <span id="faqLink"     class="underline cursor-pointer hover:text-white-100 ml-2">❓ FAQ</span>
+      </footer>
+    </div>
+  </div>
+     
+	<!-- 콘텐츠 전체 폭 제한 -->
+  <div class="max-w-[1200px] mx-auto p-2">
+    <div class="grid grid-cols-2 lg:grid-cols-2 gap-2"> 
+      <!-- 광고1 -->
+      <div class="flex justify-center">
+        <ins class="adsbygoogle"
+          style="display:inline-block; width:100%; max-width:300px; height:250px"
+          data-ad-client="ca-pub-8205102847358210"
+          data-ad-slot="8804962791"></ins>
+      </div>
+  
+      <!-- 광고2 -->
+      <div class="flex justify-center">
+        <ins class="adsbygoogle"
+          style="display:inline-block; width:100%; max-width:300px; height:250px"
+          data-ad-client="ca-pub-8205102847358210"
+          data-ad-slot="9326856916"></ins>
+      </div>
+    </div>
+  </div>
+	<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  <!-- ✅ 업데이트 내역 팝업 (고정 안내 포함 버전) -->
+  <div id="update-modal-backdrop" class="fixed inset-0 z-[1000] hidden">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-lg rounded-2xl bg-white shadow-xl dark:bg-[#1f1f1f]">
+        <div class="px-6 pt-5 pb-4">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">업데이트 내역</h2>
+  
+          <!-- 🔽 외부 HTML + 고정 안내문이 여기에 주입됨 -->
+          <div id="update-content" class="mt-3 text-sm text-gray-700 dark:text-gray-200 max-h-[50vh] overflow-auto">
+            <div class="text-gray-500 dark:text-gray-400">불러오는 중…</div>
+          </div>
+        </div>
+  
+        <div class="flex items-center justify-between border-t border-gray-200 px-6 py-3 dark:border-gray-700">
+          <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200 select-none">
+            <input id="update-hide-today" type="checkbox" class="h-4 w-4 rounded border-gray-300 dark:border-gray-500">
+            오늘 하루 그만보기
+          </label>
+          <div class="flex items-center gap-3">
+            <!-- ✅ 업데이트 히스토리 (라벨) -->
+            <label id="update-history" role="button" tabindex="0" class="cursor-pointer text-sm underline underline-offset-4 text-blue-400 hover:opacity-90">
+              업데이트 히스토리
+            </label>
+            
+            <button id="update-confirm" class="rounded-lg px-4 py-2 text-white bg-blue-600 hover:bg-blue-700">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let copyTimer = null;
+
+    function copySupportNumber() {
+      const text = document.getElementById("supportNumber").innerText;
+      const btn = document.getElementById("copyBtn");
+      const iconBook = document.getElementById("iconBook");
+      const iconCheck = document.getElementById("iconCheck");
+      const toast = document.getElementById("toast");
+      
+      navigator.clipboard.writeText(text).then(() => {
+        // 버튼: 책 → 체크
+        btn.classList.remove("bg-slate-700", "hover:bg-slate-600");
+        btn.classList.add("bg-emerald-500", "hover:bg-emerald-600");
+        iconBook.classList.add("hidden");
+        iconCheck.classList.remove("hidden");
+
+        // 토스트 표시
+        toast.classList.remove("opacity-0");
+        toast.classList.add("opacity-100");
+
+        // 기존 타이머 제거하고 새 타이머 시작
+        if (copyTimer) clearTimeout(copyTimer);
+
+        copyTimer = setTimeout(() => {
+          // 버튼 되돌리기
+          btn.classList.remove("bg-emerald-500", "hover:bg-emerald-600");
+          btn.classList.add("bg-slate-700", "hover:bg-slate-600");
+          iconCheck.classList.add("hidden");
+          iconBook.classList.remove("hidden");
+
+          // 토스트 숨기기
+          toast.classList.remove("opacity-100");
+          toast.classList.add("opacity-0");
+        }, 2500);
+      });
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 필요 경로를 여기에 각기 다르게 설정하세요.
+      const UPDATE_URL  = "https://s574shinchan.github.io/WOS_Calc/data/update/history.html"; // 기존과 동일
+      const FAQ_URL     = "/FAQ.html";       // 예: S3/CloudFront 루트의 faq.html
+      const PRIVACY_URL = "/privacy.html";   // 예: 루트의 privacy.html (새 탭)
+    
+      const guide   = document.getElementById("guideDetails");
+      const wrapper = document.getElementById("frameWrapper");
+      const frame   = document.getElementById("mainFrame");
+    
+      // iframe 로더 (guide 숨기고 frame 표시)
+      function openInFrame(url) {
+        if (guide)   guide.style.display   = "none";
+        if (wrapper) wrapper.style.display = "block";
+        if (frame) {
+          frame.style.height = "900px"; // 초기값(필요시 조정)
+          frame.src = url;
+        }
+      }
+    
+      // 업데이트 내역 → iframe 로드 (기존 요구사항)
+      const updateLink = document.getElementById("updateLink");
+      if (updateLink) {
+        updateLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          openInFrame(UPDATE_URL);
+        });
+      }
+    
+      // FAQ → iframe 로드 (업데이트와 동일 방식)
+      const faqLink = document.getElementById("faqLink");
+      if (faqLink) {
+        faqLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          openInFrame(FAQ_URL);
+        });
+      }
+    
+      // 개인정보 처리방침 → 새 탭
+      const privacyLink = document.getElementById("privacyLink");
+      if (privacyLink) {
+        privacyLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          const win = window.open(PRIVACY_URL, "_blank", "noopener");
+          if (win) { win.opener = null; } // 보안
+          else { window.location.href = PRIVACY_URL; } // 팝업 차단 대비
+        });
+      }
+    
+      // (선택) 자식 페이지가 높이를 알려오면 iframe 높이 자동 맞춤
+      if (!window.__childHeightListenerBound) {
+        window.addEventListener("message", (e) => {
+          if (!e.data || e.data.type !== "childHeight") return;
+          if (frame) frame.style.height = Math.max(700, e.data.height) + "px";
+        });
+        window.__childHeightListenerBound = true;
+      }
+    });
+  </script>
+  <script>
+    const toggle = document.getElementById('darkModeToggle');
+    toggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark-mode', toggle.checked);
+      localStorage.setItem('darkMode', toggle.checked);
+    });
+  
+    window.addEventListener('DOMContentLoaded', () => {
+      const isDark = localStorage.getItem('darkMode') === 'true';
+      toggle.checked = isDark;
+      document.body.classList.toggle('dark-mode', isDark);
+    });
+  </script>
+  <script>
+    const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/';
+    
+    // [ID] => [파일명] 매핑
+    const fileMap = {
+      용어안내: 'ward.html',
+      전용무기: '전용무기.html',
+      미스릴: '미스릴.html',
+      커스텀상자: 'custompakage.html',
+      커스텀무기: '커스텀무기.html',            
+      보석마스터: 'gempakage.html',
+      보석비전: 'visionpakage.html',
+      장인보물창고보석: '보물창고_보석.html',
+      장인보물창고장비: '보불창고_장비.html',
+      여행자팩 : '여행자팩.html',
+      만물잡화 : '만물잡화점.html',
+      연맹대작전 : '연맹대작전.html'
+    };
+    
+    // [ID] => 로딩 여부 저장
+    const loadState = {};
+    Object.keys(fileMap).forEach(id => loadState[id] = false);
+    
+    // 모든 <details> 요소에 toggle 이벤트 바인딩
+    document.querySelectorAll('details').forEach(detail => {
+      detail.addEventListener('toggle', async () => {
+        for (const id in fileMap) {
+          const target = detail.querySelector(`#${id}`);
+          if (target && !loadState[id] && detail.open) {
+            try {
+              const res = await fetch(`${baseUrl}${fileMap[id]}`);
+              if (!res.ok) throw new Error('파일 요청 실패');
+              const html = await res.text();
+              target.innerHTML = html;
+              loadState[id] = true;
+            } catch (e) {
+              target.innerHTML = `<p class="text-red-500">⚠️ 테이블 데이터를 불러오는 데 실패했습니다.</p>`;
+            }
+          }
+        }
+      });
+    });
+  </script>
+  <script>
+    function showGuide() {
+      document.getElementById("guideDetails").style.display = "block";
+      document.getElementById("frameWrapper").style.display = "none";
+    }
+        
+    function ComeBackHome() {
+      const frame = document.getElementById("mainFrame");
+      const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
+      
+      // 먼저 onload 이벤트 설정
+      frame.onload = function () {
+        try {
+          const guideDetails = frame.contentWindow.document.getElementById("guideDetails");
+          if (guideDetails) {
+            guideDetails.style.display = "none";
+          }
+        } catch (e) {
+          console.error("guideDetails를 숨기는 데 실패함:", e);
+        }
+      };
+      
+      showGuide();
+      frame.style.height = isMobile ? "550px" : "635px";
+    }
+    
+    function switchTab(page) {
+      const guide = document.getElementById("guideDetails");
+      const wrapper = document.getElementById("frameWrapper");
+      const frame = document.getElementById("mainFrame");
+      const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
+    
+      if (page === 'guide') {
+        guide.style.display = "block";
+        wrapper.style.display = "none";
+        document.body.style.overflowX = "hidden";
+       } else {
+        guide.style.display = "none";
+        wrapper.style.display = "block";
+        frame.src = `${page}.html`;
+        
+        const heights = {
+          pet: [1225, 846]
+        };
+    
+        if (heights[page]) {
+          frame.style.height = isMobile ? `${heights[page][0]}px` : `${heights[page][1]}px`;
+        }
+        
+        document.body.style.overflowX = "hidden";
+        document.documentElement.style.overflowX = "hidden";
+      }
+    }
+    
+    window.addEventListener("message", function (event) {
+      if (event.data.type === "SET_FRAME_SIZE") {
+        const frame = document.getElementById("mainFrame");
+        frame.style.height = event.data.height;
+      }
+
+      if (event.data.type === "FRAME_CHANGE") {
+        const frame = document.getElementById("mainFrame");
+        frame.style.height = `${event.data.height + 10}px`;
+      }
+    });
+    
+    function closePopup() {
+      document.getElementById("popupModal").classList.add("hidden");
+    }
+  </script>
+  <script>
+    async function loadIntoContentArea(url) {
+      const wrapper = document.getElementById('contentWrapper');
+      const area    = document.getElementById('contentArea');
+      const guide   = document.getElementById('guideDetails');
+    
+      try {
+        const res = await fetch(url, { cache: 'no-cache' });
+        const htmlText = await res.text();
+    
+        // body 안쪽만 잘라서 넣기 (상대 파일에 <html>이 있을 수도 있으니 대비)
+        const bodyMatch = htmlText.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        const inner = bodyMatch ? bodyMatch[1] : htmlText;
+    
+        // DOMParser로 파싱 → script 실행 처리
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(inner, 'text/html');
+    
+        // 내용 채우기
+        area.innerHTML = '';
+        area.append(...doc.body.childNodes);
+    
+        // script 태그 재주입해서 실행
+        doc.querySelectorAll('script').forEach(s => {
+          const ns = document.createElement('script');
+          if (s.src) ns.src = s.src;
+          if (s.type) ns.type = s.type;
+          if (s.noModule) ns.noModule = true;
+          if (s.defer) ns.defer = true;
+          if (!s.src) ns.textContent = s.textContent;
+          area.appendChild(ns);
+        });
+    
+        // 화면 전환
+        guide.style.display  = 'none';
+        wrapper.style.display = 'block';
+    
+        // 가로 스크롤 방지 (기존 유지)
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowX = 'hidden';
+    
+        // 탭 전환 시 상단으로
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {
+        area.innerHTML = '<p class="text-red-500 p-2">⚠️ 콘텐츠를 불러오지 못했습니다.</p>';
+        guide.style.display  = 'none';
+        wrapper.style.display = 'block';
+      }
+    }
+  </script>
+  <script>
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 200) {
+        scrollToTopBtn.classList.remove("hidden");
+      } else {
+        scrollToTopBtn.classList.add("hidden");
+      }
+    });
+
+    scrollToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+  <script>
+    let currentScale = 1;
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+  
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'SHOW_IMAGE_MODAL') {
+        modalImg.src = event.data.url;
+        currentScale = 1;
+        modalImg.style.scale = currentScale;
+        modal.classList.remove('hidden');
+      }
+    });
+  
+    modalImg.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      currentScale += (e.deltaY < 0 ? 0.05 : -0.05);
+      currentScale = Math.max(0.1, Math.min(3, currentScale));
+      modalImg.style.scale = currentScale;
+    });
+  
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        modalImg.src = '';
+      }
+    });
+  </script>
+  <script>
+    function setupLangSelect(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', function () {
+          const langCode = this.value; // 예: index_en.html
+          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
+          localStorage.setItem('lang', lang);
+          window.location.href = langCode;
+        });
+      }
+    }
+  
+    setupLangSelect('langSelectMobile');
+    setupLangSelect('langSelectPC');
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+  <script>
+    (() => {
+      // =========[ 설정 ]=========
+      const BASE_PATH = "/data/update"; // 월별 HTML이 있는 경로
+      const LOOKBACK_MONTHS = 6;
+      const HIDE_MS = 24 * 60 * 60 * 1000; // 24시간
+    
+      // ✅ 월 상관없이 항상 표시할 고정 안내문 (HTML 가능)
+      const fixedNotice = `
+        <div class="border-t border-gray-300 mt-4 pt-2 text-[13px] text-gray-600 dark:text-gray-400">
+          ※ 계산기 작동 방식이 변경되었습니다.<br>
+          현재레벨과 목표레벨 선택 시 자동으로 개별소계가 계산되며,<br>
+          하단에는 자동으로 총합계가 계산됩니다.
+        </div>
+      `;
+    
+      const backdrop  = document.getElementById("update-modal-backdrop");
+      const contentEl = document.getElementById("update-content");
+      const confirmBtn = document.getElementById("update-confirm");
+      const checkbox = document.getElementById("update-hide-today");
+      const historyLabel = document.getElementById("update-history"); // ✅ 추가: '업데이트 히스토리' 라벨
+    
+      const lockScroll   = () => { document.documentElement.style.overflow = "hidden"; };
+      const unlockScroll = () => { document.documentElement.style.overflow = ""; };
+    
+      function ymStr(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        return `${y}-${m}`;
+      }
+    
+      function monthsAgo(date, n) {
+        const d = new Date(date);
+        d.setMonth(d.getMonth() - n);
+        return d;
+      }
+    
+      function storageKeyForYM(ym) {
+        return `ModalHideUntil`;
+      }
+    
+      function shouldShowForKey(key) {
+        try {
+          const until = localStorage.getItem(key);
+          if (!until) return true;
+          return Date.now() >= parseInt(until, 10);
+        } catch {
+          return true;
+        }
+      }
+    
+      function openModal() {
+        backdrop.classList.remove("hidden");
+        lockScroll();
+        confirmBtn?.focus();
+        document.addEventListener("keydown", onKeydown);
+      }
+    
+      function closeModal() {
+        backdrop.classList.add("hidden");
+        unlockScroll();
+        document.removeEventListener("keydown", onKeydown);
+      }
+    
+      function onKeydown(e) {
+        if (e.key === "Escape") closeModal();
+      }
+    
+      async function loadMonthlyHTML() {
+        const now = new Date();
+        for (let i = 0; i < LOOKBACK_MONTHS; i++) {
+          const ym = ymStr(monthsAgo(now, i));
+          const url = `${BASE_PATH}/${ym}.html`;
+          try {
+            const res = await fetch(url, { cache: "no-cache" });
+            if (!res.ok) continue;
+            const html = await res.text();
+            const trimmed = html.replace(/\s+/g, "");
+            if (!trimmed) continue;
+            return { html, ym };
+          } catch (e) { continue; }
+        }
+        return { html: null, ym: null };
+      }
+    
+      (async function init() {
+        const { html, ym } = await loadMonthlyHTML();
+    
+        if (!html) {
+          contentEl.innerHTML = `<div class="text-gray-500 dark:text-gray-400">표시할 업데이트 내역이 없습니다.</div>${fixedNotice}`;
+          return;
+        }
+    
+        // ✅ 월별 내용 + 고정 안내문 함께 표시
+        contentEl.innerHTML = html + fixedNotice;
+    
+        const STORAGE_KEY = storageKeyForYM(ym);
+        if (shouldShowForKey(STORAGE_KEY)) {
+          openModal();
+    
+          // 확인 버튼: (체크시) 24시간 숨김 저장 후 닫기
+          confirmBtn.addEventListener("click", () => {
+            if (checkbox?.checked) {
+              localStorage.setItem(STORAGE_KEY, String(Date.now() + HIDE_MS));
+            }
+            closeModal();
+          }, { once: true });
+    
+          // ✅ 업데이트 히스토리 라벨: (체크시) 24시간 숨김 저장 → 닫기 → index의 #updateLink 클릭
+          const triggerUpdateLink = () => {
+            const target = document.getElementById("updateLink");
+            if (!target) return;
+            try {
+              target.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+            } catch {
+              target.click();
+            }
+            target.scrollIntoView?.({ behavior: "smooth", block: "center" });
+            target.focus?.({ preventScroll: true });
+          };
+    
+          const handleHistoryAction = () => {
+            try {
+              if (checkbox?.checked) {
+                localStorage.setItem(STORAGE_KEY, String(Date.now() + HIDE_MS));
+              }
+            } catch {}
+            closeModal();
+            setTimeout(triggerUpdateLink, 30);
+          };
+    
+          historyLabel?.addEventListener("click", (e) => { e.preventDefault(); handleHistoryAction(); });
+          historyLabel?.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleHistoryAction(); }
+          });
+        }
+      })();
+    })();
+  </script>
+  <script>
+    (() => {
+      // ▼ 최초모집(미실시 가정) 비용
+      const RECRUIT_COST = 10;
+
+      // ▼ tier0~tier6 이미지 (7장) — 필요 시 경로 교체
+      const TIER_IMG = (n) => `images/tier${n}.webp`;
+
+      const TABLE_SEL = "#hero-upgrade-table";
+      const OUT_SEL   = "#hero-shard-strip";
+      const n = (s) => { const v = parseInt(String(s).replace(/[^0-9-]/g,""), 10); return Number.isFinite(v) ? v : 0; };
+
+      // 표에서 5행×6칸 숫자 행렬 추출 (1성~5성, 각 6칸)
+      function readMatrixFromTable() {
+        const table = document.querySelector(TABLE_SEL);
+        if (!table) throw new Error("표를 찾지 못했습니다: " + TABLE_SEL);
+        const bodyRows = Array.from(table.querySelectorAll("tbody tr"));
+        if (bodyRows.length < 5) throw new Error("표 행 개수가 부족합니다(5행 필요).");
+
+        // 셀 인덱스: 0=등급, 1..6=칸, 마지막=SubTotal
+        const COL_START = 1, COL_END = 6;
+
+        return bodyRows.slice(0, 5).map(tr => {
+          const cells = tr.querySelectorAll("td");
+          const row = [];
+          for (let c = COL_START; c <= COL_END; c++) {
+            row.push(n(cells[c]?.textContent || "0"));
+          }
+          return row; // 길이 6
+        });
+      }
+
+      // 누적 변환 (예: [1,1,2,2,2,12] → [1,2,4,6,8,20])
+      const cum = (arr) => { const out=[]; let s=0; for (const v of arr){ s+=v; out.push(s); } return out; };
+
+      // ✅ 이미지/문구 토글 (티어 스트립 영역)
+      function toggleTierGallery(showImages, message = "") {
+        const box = document.querySelector(OUT_SEL);
+        const fb  = document.getElementById("tierFallback"); // 대체문구 요소 (필수)
+        if (!box) return;
+
+        if (showImages) {
+          // 이미지 영역 표시
+          box.classList.remove("hidden"); box.style.display = "";
+          if (fb) { fb.classList.add("hidden"); fb.style.display = "none"; fb.textContent = ""; }
+        } else {
+          // 이미지 전부 제거 + 영역 숨김, 문구 표시
+          box.innerHTML = "";
+          box.classList.add("hidden"); box.style.display = "none";
+          if (fb) { fb.classList.remove("hidden"); fb.style.display = ""; fb.textContent = message || "※ 최초모집시 10개의 조각이 필요합니다."; }
+        }
+      }
+
+      // ✓ 카드/유닛 이미지/안내문 토글 (있으면 사용, 없으면 무시)
+      function toggleRecruitUI({ showImage }) {
+        const img  = document.getElementById('unitImage');        // 카드/유닛 이미지 요소(옵션)
+        const hint = document.getElementById('firstRecruitHint'); // 안내문 요소(옵션)
+        if (!img && !hint) return;
+
+        if (showImage) {
+          if (img)  { img.classList.remove('hidden'); img.style.display = ''; }
+          if (hint) { hint.textContent = ''; }
+        } else {
+          if (img)  { img.classList.add('hidden'); img.style.display = 'none'; }
+          if (hint) { hint.textContent = '※ 최초모집시 10개의 조각이 필요합니다.'; }
+        }
+      }
+
+      // 조각 수를 1성→5성 순으로 소모하여 각 행의 tier(0..6) 계산
+      // ▶ 최초모집이 '미실시' 가정: have < RECRUIT_COST이면 모두 0
+      function computeTiers(pieces) {
+        const have = Math.max(0, n(pieces));
+        const tiers = new Array(5).fill(0);
+        if (have < RECRUIT_COST) return tiers;
+
+        const matrix = readMatrixFromTable(); // 5×6
+        let remain = have - RECRUIT_COST;
+        if (remain <= 0) return tiers;
+
+        for (let r = 0; r < 5; r++) {
+          const cums = cum(matrix[r]); // [c1, c1+c2, ...]
+          let t = 0; // 0..6
+          for (let k = 0; k < 6; k++) {
+            if (remain >= cums[k]) t = k + 1; else break;
+          }
+          tiers[r] = t;
+
+          const rowTotal = cums[5];
+          if (remain >= rowTotal) {
+            remain -= rowTotal; // 전부 채웠으면 다음 행으로 carry
+          } else {
+            break; // 부분만 채웠으면 이후 행은 진행하지 않음
+          }
+        }
+        return tiers;
+      }
+
+      // 이미지 5장 렌더
+      function renderTiers(tiers) {
+        const box = document.querySelector(OUT_SEL);
+        if (!box) return;
+        box.innerHTML = "";
+        tiers.forEach(t => {
+          const img = document.createElement("img");
+          img.src = TIER_IMG(t);
+          img.alt = `tier${t}`;
+          box.appendChild(img);
+        });
+      }
+
+      // 공개 API: 조각 수를 넘기면 즉시 갱신
+      window.updateHeroShardState = function(pieces) {
+        try {
+          const have = Math.max(0, n(pieces));
+
+          // ⛳ 0~9면: 티어 이미지 6개(=띠 전체) 숨기고 문구만
+          if (have < RECRUIT_COST) {
+            toggleRecruitUI({ showImage: false });
+            toggleTierGallery(false, "※ 최초모집시 10개의 조각이 필요합니다.");
+            return;
+          }
+
+          // 10 이상: 이미지 영역 보이기 → 계산/렌더
+          toggleRecruitUI({ showImage: true });
+          toggleTierGallery(true);
+
+          const tiers = computeTiers(have);
+          renderTiers(tiers);
+        } catch (err) {
+          const box = document.querySelector(OUT_SEL);
+          if (box) box.textContent = "오류: " + err.message;
+          console.error(err);
+        }
+      };
+
+      // 입력 이벤트
+      const $input = document.getElementById("pieceInput");
+      $input.addEventListener("input", e => {
+        let val = parseInt(e.target.value || "0", 10);
+        if (val > 1075) {
+          val = 1075;
+          e.target.value = val; // 입력란을 즉시 1075로 되돌림
+        } else if (val < 0 || isNaN(val)) {
+          val = 0;
+          e.target.value = val;
+        }
+        updateHeroShardState(val); // 계산 반영
+      });
+      $input.addEventListener("keydown", e => { if (e.key === "Enter") updateHeroShardState($input.value); });
+
+      // 초기 표시(기본값 0 → 문구만 표시)
+      updateHeroShardState($input.value);
+    })();
+  </script>
+  <script>
+    (function () {
+      const MIN_INTERVAL = 3000; // 3초
+      const now = Date.now();
+      const last = Number(sessionStorage.getItem("lastLoad") || 0);
+
+      // 기본값: 광고 허용
+      window.DISABLE_ADS = false;
+
+      // 1️⃣ 새로고침 / 연속 접속 폭주 방지
+      if (last && now - last < MIN_INTERVAL) {
+        window.DISABLE_ADS = true;
+      }
+      sessionStorage.setItem("lastLoad", now);
+
+      // 2️⃣ iframe 안에서 열리면 광고 차단
+      if (window.top !== window.self) {
+        window.DISABLE_ADS = true;
+      }
+
+      // 3️⃣ 비정상 referrer (file://, 없음)
+      if (!document.referrer || document.referrer.startsWith("file://")) {
+        window.DISABLE_ADS = true;
+      }
+
+      // 4️⃣ 백그라운드 탭이면 광고 차단
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          window.DISABLE_ADS = true;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

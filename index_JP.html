@@ -1,27 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-adsense-account" content="ca-pub-8205102847358210">
   <meta name="robots" content="index, follow" />
-  <meta name="description" content="ホワイトアウトサバイバル（WOS）専用電卓と各種資料集サイト">
-  
-  <title>WOS電卓＆資料集</title>
+  <meta name="description" content="Whiteout Survival Calculator＆Data Collection">
+  <meta name="google-adsense-account" content="ca-pub-8205102847358210">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Whiteout Survival Calculator＆Data Collection" />
+  <meta property="og:description" content="A list has been compiled to help you craft the materials you need while playing WOS." />
+  <meta property="og:url" content="https://d1xsb5o91gjadf.cloudfront.net/" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/e66ed083ba7662f678ff42bcb3d0ee2b03ad3169/images/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Whiteout Survival Calculator＆Data Collection" />
+  <meta name="twitter:description" content="A list has been compiled to help you craft the materials you need while playing WOS." />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/e66ed083ba7662f678ff42bcb3d0ee2b03ad3169/images/og-image.png" />
+  <link rel="canonical" href="https://d1xsb5o91gjadf.cloudfront.net/" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <title>Whiteout Survival Calculator＆Data Collection</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210"
      crossorigin="anonymous"></script>
   <style>
-    body {
-      background-image: url('images/watermark.webp');
-      background-repeat: repeat;
-      background-position: center;
-      background-size: auto;
-      background-attachment: fixed;
-      background-color: #f3f3f3;
-      overflow-x: hidden;
-      margin: 0;
+    :root{
+      --bg1:#003a88;
+      --bg2:#6c85bd;
+      --nav:#0a1634cc;
+      --muted:#b9c7ff;
+      --panel:#101c36f2;
+      --panel2:#0f1a33f2;
+      --shadow: 0 18px 40px rgba(0,0,0,.35);
+      --r:14px;
     }
+    *{box-sizing:border-box}
+    
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;      
+      background:
+        radial-gradient(900px 420px at 25% 0%, #1a2f6a 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
+      min-height:100vh;
+    }
+    
     /* ✅ 다크모드 전용 */
     body.dark-mode {
       background-image: none;
@@ -29,15 +53,14 @@
       color: #f0f0f0;
     }
     
-    .dark-mode .bg-white,    
-    .dark-mode .blue-50 { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
     
     .dark-mode .bg-blue-300,
     .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
   
     .dark-mode .text-gray-800,
     .dark-mode .text-gray-700,
-    .dark-mode .text-gray-600 { color: #ffffff !important; }
+    .dark-mode .text-gray-600 { color: #f0f0f0 !important; }
   
     .dark-mode .text-blue-700 { color: #66b0ff !important; }
     .dark-mode .text-blue-600 { color: #80caff !important; }
@@ -50,189 +73,403 @@
     .dark-mode thead th { color: #000 !important; }
     
     .dark-mode .bg-blue-100,
-    .dark-mode .bg-amber-100,    
-    .dark-mode .bg-green-100,
+    .dark-mode .bg-blue-50,
+    .dark-mode .bg-amber-100,
     .dark-mode .bg-orange-50,
     .dark-mode .bg-red-50,
-    .dark-mode .bg-blue-50,
     .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
-  
+    
     .dark-mode .bg-amber-50,
     .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
-  
-    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
+    .dark-mode summary { background-color: #333 !important; color: #f0f0f0 !important; }
     .dark-mode ul li { color: #ddd; }
     .dark-mode .text-gray-500 { color: #9ca3af !important; }
+    .dark-mode .card { background:#1f1f1f; border-color:#2a2a2a; }
     
     .dark-mode * { text-shadow: none !important; }
+    /* 다크모드일 때 아이콘 */
+    .dark-mode #DarkMode { color: #facc15; /* 노란색 (달 아이콘 강조) */ }
     
     .dark-mode #langSelectPC,
     .dark-mode #langSelectPC option,
     .dark-mode #langSelectPC:disabled {
-      color: #ffffff !important;
+      color: #f0f0f0 !important;
       background-color: #2c2c2c !important;
     }
     /* 다크모드에서 팝업 테이블 헤더 글자색을 검정으로 */
-    body.dark-mode #popupContent th { color:#ffffff !important; }
+    body.dark-mode #popupContent th { color:#f0f0f0 !important; }
     
     /* 다크모드에서 총합/보유량/과부족 행 글자색을 검정으로 */
     body.dark-mode #popupContent tr.row-total  td,
     body.dark-mode #popupContent tr.row-owned  td,
-    body.dark-mode #popupContent tr.row-deficit td { color:#ffffff !important; }
-  </style>
-  <script>
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
-
-    if (isMobile && !location.pathname.includes('index_JP_m')) {
-      window.location.href = "index_JP_m.html";
+    body.dark-mode #popupContent tr.row-deficit td { color:#f0f0f0 !important; }
+    
+    .topbar{
+      color: #e8efff;
+      position: sticky; top:0; z-index:50;
+      padding: 18px 8px;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, var(--nav), transparent);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
     }
-  </script>
+    .nav{
+      max-width: none;
+      margin-left: 0;
+      padding-left: 8px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: .2px;
+      margin-right: 8px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .logo{
+      width:34px; height:34px; border-radius: 12px;
+      background: linear-gradient(135deg, #5fb3ff, #2a4fff);
+      box-shadow: 0 10px 22px rgba(0,0,0,.35);
+    }
+    .navlist{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-left: auto;
+      padding-right: 8px;
+    }
+    .dd{ position: relative; }
+    .dd-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      color: #e8efff;
+      background: transparent;
+      cursor:pointer;
+      user-select:none;
+      font-weight: 800;
+      letter-spacing: .1px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      outline: none;
+      white-space:nowrap;
+    }
+    .dd-btn:hover{
+      background: rgba(255,255,255,.07);
+      transform: translateY(-1px);
+    }
+    .dd-btn:focus-visible{
+      border-color: rgba(120,170,255,.65);
+      box-shadow: 0 0 0 3px rgba(80,140,255,.25);
+    }
+    .dd.open .dd-btn{
+      background: rgba(255,255,255,.09);
+      border-color: rgba(120,170,255,.25);
+    }
+    .chev{
+      width: 10px; height: 10px;
+      border-right: 2px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
+      transform: rotate(45deg);
+      margin-top: -2px;
+      transition: transform .12s ease;
+    }
+    .dd.open .chev{
+      transform: rotate(225deg);
+      margin-top: 2px;
+    }
+    .dd-menu{
+      position:absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      min-width: 220px;
+      padding: 10px;
+      border-radius: var(--r);
+      display:none;
+      
+      /* ✅ 하위메뉴 배경/테두리/그림자 */
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+    }
+    .dd.open .dd-menu{ display:block; }
+    .dd-item{
+      display:block;
+      padding: 12px 12px;
+      border-radius: 12px;
+      color: #e8efff;
+      text-decoration:none;
+      font-weight: 800;
+      transition: background .12s ease;
+    }
+    .dd-item:hover, .dd-item:focus-visible{
+      background: rgba(255,255,255,.07);
+      outline: none;
+    }
+    
+    .dd-item.active{
+      background: rgba(255,255,255,.10);
+      color: #57a8ff; /* 파란 글자 */
+    }
+    .dd-item.active::before{
+      content:"";
+      position:absolute;
+      left: 6px;               /* 라인 위치 */
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      border-radius: 999px;
+      background: #57a8ff;     /* 파란 라인 */
+    }
+    
+    .content{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 18px;
+      color: rgba(232,239,255,.85);
+      line-height: 1.6;
+    }
+    .card { 
+      border:1px solid rgba(0,0,0,.1); 
+      background:#fff; 
+      box-shadow:0 2px 8px rgba(0,0,0,.06); 
+      padding:10px 10px; 
+    }
+
+    /* ✅ 한 줄 유지 + 가로 스크롤 허용 */
+    .row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:nowrap;         /* 줄바꿈 금지 */
+      white-space:nowrap;       /* 텍스트도 줄바꿈 금지 */
+      overflow-x:auto;          /* 넘치면 가로 스크롤 */
+      -webkit-overflow-scrolling: touch;
+    }
+    #hero-shard-strip{
+      display:flex;
+      align-items:center;
+      flex-wrap:nowrap;         /* 줄바꿈 금지 */
+      flex:0 0 auto;            /* 줄서기 고정 */
+    }
+    #hero-shard-strip img{
+      width:32px; height:32px; object-fit:contain;
+      flex:0 0 auto;            /* 아이콘 자체도 줄바꿈 방지 */
+    }
+    .dark-mode .input { width:110px; height:34px; border:1px solid #d0d5dd; border-radius:8px; padding:0 10px; outline:none; color: #121212; }
+    .input { width:110px; height:34px; border:1px solid #d0d5dd; border-radius:8px; padding:0 10px; outline:none; }
+    .btn   { height:34px; padding:0 14px; border:0; border-radius:8px; background:#2563eb; color:#fff; cursor:pointer; flex:0 0 auto; }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4">
-  <div class="max-w-[1400px] mx-auto w-full bg-blue-300 shadow rounded-xl p-4 sm:p-3 relative">
-    <!-- 모바일 버튼: 중앙 가로 정렬 -->
-    <div class="flex flex-col items-center gap-2 sm:hidden mb-4">
-      <!-- 언어 선택 콤보박스 -->
-      <select id="langSelectMobile" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1">
-        <option value="index.html">🌐 言語</option>
-        <option value="index.html">🇰🇷 韓国語　</option>
-        <option value="index_en.html">🇺🇸 English</option>
-        <option value="index_jp.html" selected>🇯🇵 日本語</option>
-      </select>
-    </div>
-    
-    <!-- PC 버튼: 우측 상단 세로 정렬 -->
-    <div class="absolute top-4 right-4 hidden sm:flex flex-col items-end gap-2">
-      <!-- 언어 선택 콤보박스 -->
-      <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm mt-1">
-        <option value="index.html">🌐 言語</option>
-        <option value="index.html">🇰🇷 韓国語　</option>
-        <option value="index_en.html">🇺🇸 English</option>
-        <option value="index_jp.html" selected>🇯🇵 日本語</option>
-      </select>
-    </div>
-    
-    <!-- 로고 -->
-    <div class="text-center mb-4 mt-6 sm:mt-4">
-      <img 
-        src="images/logo.webp" 
-        alt="로고" 
-        class="mx-auto w-64 drop-shadow-lg cursor-pointer"
-        onclick="ComeBackHome()"
-      />
-    </div>
 
-    <!-- 문구 -->
-    <h1 class="text-xl font-bold mb-2 text-center">WOS電卓＆資料集</h1>
-    
-    <div class="max-w-[1400px] mx-auto bg-white rounded shadow p-4 flex flex-col sm:flex-row gap-4">
-      <!-- 좌측 버튼 그룹 -->
-      <div class="flex flex-col space-y-2 bg-gray-200 p-2 rounded shadow w-full sm:w-40">
-        <button onclick="switchTab('guide')" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">🏠 データ</button>
-        <button onclick="switchTab('building')" class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded">🏗 建造</button>
-        <button onclick="switchTab('equip')" class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded">🛡️ 領主装備</button>
-        <button onclick="switchTab('gem')" class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded">💎 領主宝石</button>
-        <button onclick="switchTab('hero')" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">🦸 英雄装備</button>
-        <button onclick="switchTab('pet')" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded">🐾 ペット</button>
-        <button onclick="switchTab('helios')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">🔬 烈日兵士</button>
-        <button onclick="switchTab('experts')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">⛑ 専門家</button>
-        <button onclick="switchTab('troop')" class="bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded">👮‍ 兵士訓練</button>        
+<body>
+  <div class="topbar">
+    <div class="nav">
+      <div class="brand">
+        <div class="text-center mb-4 mt-6 sm:mt-4">
+          <img src="images/logo.webp" alt="logo"
+               class="mx-auto w-24 drop-shadow-lg cursor-pointer"/></div>
+        <span>ホワイトアウト生存計算機＆データ収集</span>
       </div>
-      
-      <!-- guideDetails: 처음에만 표시됨 -->
-      <div id="guideDetails" class="flex-1 bg-white rounded p-2 space-y-4 shadow">
-        <div class="bg-gray-100 p-2 font-sans text-sm">
-          <div class="max-w-6xl mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
-            <h1 class="text-2xl font-bold text-gray-800 mb-4">📘 資料集</h1>
-            <div class="space-y-4">              
-              <details class="border border-blue-300 rounded-md p-4 shadow">
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">👑 号砦 & 要塞 毎週の報酬</summary>
-                <div id="요새보상" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-                </div>
-              </details>
 
-              <!--
-              <details class="border border-blue-300 rounded-md p-4 shadow">
-                <summary class="cursor-pointer text-lg font-semibold text-blue-700">🧬 Generational Hero Traits</summary>
-                <div id="영웅특성" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-                </div>
-              </details>
-              -->
-        
-              <!-- ⚔️ SVS_Event -->
-              <details class="bg-white border border-blue-300 rounded-md p-4">
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ 最強王国（SVS）準備段階</summary>
-                <div id="준비단계" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-                </div>
-              </details>
-              
-              <!-- 🛫 이민 시스템 안내 -->
-              <details class="bg-white border border-blue-300 rounded-md p-4">
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 王国移民</summary>
-                <div id="서버이민" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-                </div>
-              </details>
-      
-              <!-- 단어번역 -->
-              <details class="bg-white border border-blue-300 rounded-md p-4">
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 Any Word</summary>
-                <div id="용어안내" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-                </div>
-              </details>
-  
-              <!-- 영웅 성급업 -->
-              <details class="bg-white border border-blue-300 rounded-md p-4">
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 ヒーローの彫刻</summary>
-                <div id="영웅성급" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-                </div>
-              </details>
-            </div>
-          </div>
+      <!-- Support Badge + Toast Wrapper -->
+      <div class="relative absolute">
+        <!-- Support Badge -->
+        <div class="inline-flex items-center gap-2 bg-slate-600 text-white text-xs px-3 py-1.5 rounded-full shadow">
+          <span class="opacity-80"> Support :</span>
+          <span id="supportNumber" class="font-bold tracking-wide">67331703</span>
+
+          <!-- 복사 버튼 -->
+          <button id="copyBtn"
+                  onclick="copySupportNumber()"
+                  class="ml-1 bg-slate-700 hover:bg-slate-600 text-white p-1.5 rounded-md transition flex items-center">
+
+            <!-- 책 아이콘 -->
+            <svg id="iconBook" xmlns="http://www.w3.org/2000/svg"
+                 class="w-3.5 h-3.5"
+                 fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+              <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+              <path d="M3 6l0 13" />
+              <path d="M12 6l0 13" />
+              <path d="M21 6l0 13" />
+            </svg>
+
+            <!-- 체크 아이콘 -->
+            <svg id="iconCheck" xmlns="http://www.w3.org/2000/svg"
+                 class="w-3.5 h-3.5 hidden"
+                 fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
         </div>
-      </div>
-    
-      <!-- iframe 영역: 기본은 숨김 -->
-      <div id="frameWrapper" class="max-w-[1400px] w-full hidden bg-white mt-4 rounded shadow p-2">
-        <iframe id="mainFrame" class="w-full rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
-      </div>
-          
-      <!-- 결과 팝업 -->
-      <div id="popupModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 text-sm">
-          <h3 class="text-xl font-bold mb-4 text-center">📊 リザルト</h3>
-          <div id="popupContent" class="overflow-auto max-h-[65vh] text-center"></div>
-          <div class="text-center mt-4">
-            <button onclick="closePopup()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"> OK
-            </button>
-          </div>
+
+        <!-- ★ Support 아래 표시되는 Toast -->
+        <div id="toast"
+             class="absolute left-1/2 top-[110%] transform -translate-x-1/2
+                    bg-emerald-500 text-white text-xs font-semibold
+                    px-3 py-2 rounded-lg shadow-lg
+                    opacity-0 pointer-events-none whitespace-nowrap
+                    transition-opacity duration-300">
+          User ID Copied.
         </div>
       </div>
       
-      <!-- Scroll to Top Button -->
-      <button id="scrollToTopBtn"
-        class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
-        aria-label="Scroll to top">
-        <!-- Up arrow SVG icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-        </svg>
-      </button>
+      <div class="navlist">
+        <div class="dd" data-dd>
+          <button onclick="ReturnHome()"
+                  class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">Home</button>
+        </div>
+        <div class="dd" data-dd>
+          <button class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">
+            領主 <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a class="dd-item" href="#" data-frame="equip_JP.html">領主装備</a>
+            <a class="dd-item" href="#" data-frame="gem_JP.html">領主宝石</a>
+          </div>
+        </div>        
+        <div class="dd" data-dd>
+          <button class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">
+            英雄 <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a class="dd-item" href="#" data-frame="hero_JP.html">英雄装備</a>
+            <a class="dd-item" href="#" data-frame="experts_JP.html">専門家</a>
+          </div>
+        </div>
+        <div class="dd" data-dd>
+          <button class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">
+            計算 <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a class="dd-item" href="#" data-frame="building_JP.html">データ</a>
+            <a class="dd-item" href="#" data-frame="helios_JP.html">烈日兵士</a>
+            <a class="dd-item" href="#" data-frame="pet_JP.html">ペット</a>
+            <a class="dd-item" href="#" data-frame="troop_JP.html">兵士訓練</a>            
+          </div>
+        </div>
+        <div class="dd" data-dd>
+          <button onclick="window.open('https://discord.gg/Qjk49tn75q', '_blank')" 
+                  class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">
+            Discord
+          </button>
+        </div>
+        <div class="dd" data-dd>
+          <button onclick="window.open('https://buymeacoffee.com/shin0825', '_blank')" 
+                  class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">
+            Support　
+          </button>
+        </div>
+        <div class="dd" data-dd>
+          <button id="DarkMode"
+                  onclick="ActiveDarkMode()">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-7 h-7"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 >
+              <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+            </svg>            
+          </button>
+        </div>
+        <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm text-gray-800">
+          <option value="index.html">🌐 言語</option>
+          <option value="index.html">🇰🇷 韓国語　</option>
+          <option value="index_en.html">🇺🇸 English</option>
+          <option value="index_jp.html" selected>🇯🇵 日本語</option>
+        </select>
+      </div>  
+    </div>
+  </div>
+
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <!-- guideDetails: 처음에만 표시됨 -->
+    <div id="guideDetails" class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
+          <h1 class="text-2xl font-bold text-gray-800 mb-4">📘 資料集</h1>
+          <div class="space-y-4">              
+            <details class="border border-blue-300 rounded-md p-4 shadow">
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">👑 号砦＆要塞 毎週の報酬</summary>
+              <div id="요새보상" class="mt-3 space-y-4 text-sm text-gray-800">
+                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+              </div>
+            </details>
+
+            <!-- ⚔️ SVS_Event -->
+            <details class="bg-white border border-blue-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ 最強王国（SVS）準備段階</summary>
+              <div id="준비단계" class="mt-3 space-y-4 text-sm text-gray-800">
+                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+              </div>
+            </details>
+
+            <!-- 🛫 이민 시스템 안내 -->
+            <details class="bg-white border border-blue-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 王国移民</summary>
+              <div id="서버이민" class="mt-3 space-y-4 text-sm text-gray-800">
+                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+              </div>
+            </details>
+
+            <!-- 단어번역 -->
+            <details class="bg-white border border-blue-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 Any Word</summary>
+              <div id="용어안내" class="mt-3 space-y-4 text-sm text-gray-800">
+                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+              </div>
+            </details>
+
+            <!-- 영웅 성급업 -->
+            <details class="bg-white border border-blue-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 ヒーローの彫刻</summary>
+              <div id="영웅성급" class="mt-3 space-y-4 text-sm text-gray-800">
+                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
     </div>
     
-    <!-- 카피라이트 -->  
-    <footer class="text-center text-xs text-gray-500 mt-5">⛔ 無断転載禁止 | © S645 ShinChan(67331703) 作成</footer>
+    <!-- iframe 영역 -->
+    <div id="frameWrapper" class="max-w-[1500px] w-full hidden bg-white rounded shadow gap-2">
+      <iframe id="mainFrame" class="w-full bg-white rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn"
+      class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
+      aria-label="Scroll to top">
+
+      <!-- Up arrow SVG icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
   </div>
   
+  <!-- 카피라이트 -->
+  <footer class="text-center text-xs font-bold text-white mt-5 mb-4">
+    ⛔ 無断転載禁止 | © S645 ShinChan(uuid: 67331703) 作成
+  </footer>
+	
   <!-- 콘텐츠 전체 폭 제한 -->
-  <div class="max-w-6xl mx-auto p-2">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2"> 
+  <div class="max-w-[1200px] mx-auto p-2">
+    <div class="grid grid-cols-2 lg:grid-cols-2 gap-2"> 
       <!-- 광고1 -->
       <div class="flex justify-center">
         <ins class="adsbygoogle"
@@ -248,39 +485,486 @@
           data-ad-client="ca-pub-8205102847358210"
           data-ad-slot="9326856916"></ins>
       </div>
-  
-      <!-- 광고3 -->
-      <div class="flex justify-center">
-        <ins class="adsbygoogle"
-          style="display:inline-block; width:100%; max-width:300px; height:250px"
-          data-ad-client="ca-pub-8205102847358210"
-          data-ad-slot="7499015055"></ins>
-      </div>
-  
-      <!-- 광고4 -->
-      <div class="flex justify-center">
-        <ins class="adsbygoogle"
-          style="display:inline-block; width:100%; max-width:300px; height:250px"
-          data-ad-client="ca-pub-8205102847358210"
-          data-ad-slot="5297084041"></ins>
-      </div>
     </div>
   </div>
+	<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>  
   <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
+    //메뉴동작
+    const dropdowns = [...document.querySelectorAll('[data-dd]')];
+
+    function setOpen(dd, open){
+      const btn = dd.querySelector('.dd-btn');
+      dd.classList.toggle('open', open);
+      btn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    function closeAll(except = null){
+      dropdowns.forEach(d => {
+        if (d === except) return;
+        setOpen(d, false);
+      });
+    }
+
+    dropdowns.forEach(dd => {
+      const btn = dd.querySelector('.dd-btn');
+
+      // 1) Hover 시 열기
+      dd.addEventListener('mouseenter', () => {
+        closeAll(dd);
+        setOpen(dd, true);
+      });
+
+      // 3) Click 토글
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dd.classList.contains('open');
+        if (isOpen) {
+          setOpen(dd, false);
+        } else {
+          closeAll(dd);
+          setOpen(dd, true);
+        }
+      });
+
+      // 메뉴 클릭은 바깥클릭으로 닫히지 않게
+      dd.querySelector('.dd-menu')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    // 바깥 클릭 -> 닫기
+    document.addEventListener('click', () => closeAll());
+
+    // ESC -> 닫기
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAll();
+    });
   </script>
-  
   <script>
-    const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/JP/';
+    //위로 스크롤 버튼
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 200) {
+        scrollToTopBtn.classList.remove("hidden");
+      } else {
+        scrollToTopBtn.classList.add("hidden");
+      }
+    });
+
+    scrollToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+  <script>
+    //메뉴변경
+    const content = document.getElementById('content');
+    
+    document.querySelectorAll('.dd-item[data-load]').forEach(item => {
+      item.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const url = item.dataset.load;
+        if (!url) return;
+
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Load failed');
+
+          const html = await res.text();
+          content.innerHTML = html;
+
+          // ✅ active 처리
+          document.querySelectorAll('.dd-item.active')
+            .forEach(x => x.classList.remove('active'));
+          item.classList.add('active');
+
+          // ✅ 메뉴 닫기
+          document.querySelectorAll('.dd.open')
+            .forEach(d => d.classList.remove('open'));
+
+        } catch (err) {
+          content.innerHTML = `<p style="color:red">불러오기 실패</p>`;
+          console.error(err);
+        }
+      });
+    });
+  </script>
+  <script>
+    //메뉴선택표시
+    let guideDetails = document.getElementById("guideDetails");
+    let frameWrapper = document.getElementById('frameWrapper');
+    let mainFrame = document.getElementById('mainFrame');
+    
+    // 공통: 메뉴 닫기
+    function closeAllMenus(){
+      document.querySelectorAll('.dd.open').forEach(dd => dd.classList.remove('open'));
+    }
+    
+    window.addEventListener("message", function (event) {
+      if (event.data.type === "SET_FRAME_SIZE") {
+        const frame = document.getElementById("mainFrame");
+        frame.style.height = event.data.height;
+      }
+
+      if (event.data.type === "FRAME_CHANGE") {
+        const frame = document.getElementById("mainFrame");
+        frame.style.height = `${event.data.height + 10}px`;
+      }
+    });
+    
+    document.querySelectorAll('.dd-item[data-frame]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const url = item.dataset.frame;
+        if (!url) return;
+                
+        // ✅ iframe 보이게
+        guideDetails.classList.add('hidden');
+        frameWrapper.classList.remove('hidden');
+
+        // ✅ iframe 로드
+        mainFrame.src = url;
+
+        // ✅ active 표시
+        document.querySelectorAll('.dd-item.active').forEach(x => x.classList.remove('active'));
+        item.classList.add('active');
+
+        // ✅ 메뉴 닫기
+        closeAllMenus();
+      });
+    });
+  </script>  
+  <script>
+    //Home 메뉴
+    function ReturnHome() {
+      // 공통: 메뉴 닫기
+      document.querySelectorAll('.dd.open').forEach(dd => dd.classList.remove('open'));
+      document.querySelectorAll('.dd-item.active').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.dd-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // 1) 열려있는 모든 메뉴 닫기
+          document.querySelectorAll('.dd.open').forEach(dd => dd.classList.remove('open'));
+          
+          // 2) guideDetails 보이기
+          document.getElementById("guideDetails")?.classList.remove('hidden');
+          
+          // 3) frameWrapper 숨기기
+          document.getElementById('frameWrapper')?.classList.add('hidden');
+        });
+      });
+    }
+  </script>
+  <script>
+    //업뎃히스토리
+    document.addEventListener("DOMContentLoaded", () => {
+      // 필요 경로를 여기에 각기 다르게 설정하세요.
+      const UPDATE_URL  = "https://s574shinchan.github.io/WOS_Calc/data/update/history.html"; // 기존과 동일
+      const FAQ_URL     = "/FAQ.html";       // 예: S3/CloudFront 루트의 faq.html
+      const PRIVACY_URL = "/privacy.html";   // 예: 루트의 privacy.html (새 탭)
+    
+      const guide   = document.getElementById("guideDetails");
+      const wrapper = document.getElementById("frameWrapper");
+      const frame   = document.getElementById("mainFrame");
+    
+      // iframe 로더 (guide 숨기고 frame 표시)
+      function openInFrame(url) {
+        if (guide)   guide.style.display   = "none";
+        if (wrapper) wrapper.style.display = "block";
+        if (frame) {
+          frame.style.height = "900px"; // 초기값(필요시 조정)
+          frame.src = url;
+        }
+      }
+    
+      // 업데이트 내역 → iframe 로드 (기존 요구사항)
+      const updateLink = document.getElementById("updateLink");
+      if (updateLink) {
+        updateLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          openInFrame(UPDATE_URL);
+        });
+      }
+    
+      // FAQ → iframe 로드 (업데이트와 동일 방식)
+      const faqLink = document.getElementById("faqLink");
+      if (faqLink) {
+        faqLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          openInFrame(FAQ_URL);
+        });
+      }
+    
+      // 개인정보 처리방침 → 새 탭
+      const privacyLink = document.getElementById("privacyLink");
+      if (privacyLink) {
+        privacyLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          const win = window.open(PRIVACY_URL, "_blank", "noopener");
+          if (win) { win.opener = null; } // 보안
+          else { window.location.href = PRIVACY_URL; } // 팝업 차단 대비
+        });
+      }
+    
+      // (선택) 자식 페이지가 높이를 알려오면 iframe 높이 자동 맞춤
+      if (!window.__childHeightListenerBound) {
+        window.addEventListener("message", (e) => {
+          if (!e.data || e.data.type !== "childHeight") return;
+          if (frame) frame.style.height = Math.max(700, e.data.height) + "px";
+        });
+        window.__childHeightListenerBound = true;
+      }
+    });
+  </script>
+  <script>
+    //성급업 계산
+    (() => {
+      // ▼ 최초모집(미실시 가정) 비용
+      const RECRUIT_COST = 10;
+
+      // ▼ tier0~tier6 이미지 (7장) — 필요 시 경로 교체
+      const TIER_IMG = (n) => `images/tier${n}.webp`;
+
+      const TABLE_SEL = "#hero-upgrade-table";
+      const OUT_SEL   = "#hero-shard-strip";
+      const n = (s) => { const v = parseInt(String(s).replace(/[^0-9-]/g,""), 10); return Number.isFinite(v) ? v : 0; };
+
+      // 표에서 5행×6칸 숫자 행렬 추출 (1성~5성, 각 6칸)
+      function readMatrixFromTable() {
+        const table = document.querySelector(TABLE_SEL);
+        if (!table) throw new Error("표를 찾지 못했습니다: " + TABLE_SEL);
+        const bodyRows = Array.from(table.querySelectorAll("tbody tr"));
+        if (bodyRows.length < 5) throw new Error("표 행 개수가 부족합니다(5행 필요).");
+
+        // 셀 인덱스: 0=등급, 1..6=칸, 마지막=SubTotal
+        const COL_START = 1, COL_END = 6;
+
+        return bodyRows.slice(0, 5).map(tr => {
+          const cells = tr.querySelectorAll("td");
+          const row = [];
+          for (let c = COL_START; c <= COL_END; c++) {
+            row.push(n(cells[c]?.textContent || "0"));
+          }
+          return row; // 길이 6
+        });
+      }
+
+      // 누적 변환 (예: [1,1,2,2,2,12] → [1,2,4,6,8,20])
+      const cum = (arr) => { const out=[]; let s=0; for (const v of arr){ s+=v; out.push(s); } return out; };
+
+      // ✅ 이미지/문구 토글 (티어 스트립 영역)
+      function toggleTierGallery(showImages, message = "") {
+        const box = document.querySelector(OUT_SEL);
+        const fb  = document.getElementById("tierFallback"); // 대체문구 요소 (필수)
+        if (!box) return;
+
+        if (showImages) {
+          // 이미지 영역 표시
+          box.classList.remove("hidden"); box.style.display = "";
+          if (fb) { fb.classList.add("hidden"); fb.style.display = "none"; fb.textContent = ""; }
+        } else {
+          // 이미지 전부 제거 + 영역 숨김, 문구 표시
+          box.innerHTML = "";
+          box.classList.add("hidden"); box.style.display = "none";
+          if (fb) { fb.classList.remove("hidden"); fb.style.display = ""; fb.textContent = message || "※ 최초모집시 10개의 조각이 필요합니다."; }
+        }
+      }
+
+      // ✓ 카드/유닛 이미지/안내문 토글 (있으면 사용, 없으면 무시)
+      function toggleRecruitUI({ showImage }) {
+        const img  = document.getElementById('unitImage');        // 카드/유닛 이미지 요소(옵션)
+        const hint = document.getElementById('firstRecruitHint'); // 안내문 요소(옵션)
+        if (!img && !hint) return;
+
+        if (showImage) {
+          if (img)  { img.classList.remove('hidden'); img.style.display = ''; }
+          if (hint) { hint.textContent = ''; }
+        } else {
+          if (img)  { img.classList.add('hidden'); img.style.display = 'none'; }
+          if (hint) { hint.textContent = '※ 최초모집시 10개의 조각이 필요합니다.'; }
+        }
+      }
+
+      // 조각 수를 1성→5성 순으로 소모하여 각 행의 tier(0..6) 계산
+      // ▶ 최초모집이 '미실시' 가정: have < RECRUIT_COST이면 모두 0
+      function computeTiers(pieces) {
+        const have = Math.max(0, n(pieces));
+        const tiers = new Array(5).fill(0);
+        if (have < RECRUIT_COST) return tiers;
+
+        const matrix = readMatrixFromTable(); // 5×6
+        let remain = have - RECRUIT_COST;
+        if (remain <= 0) return tiers;
+
+        for (let r = 0; r < 5; r++) {
+          const cums = cum(matrix[r]); // [c1, c1+c2, ...]
+          let t = 0; // 0..6
+          for (let k = 0; k < 6; k++) {
+            if (remain >= cums[k]) t = k + 1; else break;
+          }
+          tiers[r] = t;
+
+          const rowTotal = cums[5];
+          if (remain >= rowTotal) {
+            remain -= rowTotal; // 전부 채웠으면 다음 행으로 carry
+          } else {
+            break; // 부분만 채웠으면 이후 행은 진행하지 않음
+          }
+        }
+        return tiers;
+      }
+
+      // 이미지 5장 렌더
+      function renderTiers(tiers) {
+        const box = document.querySelector(OUT_SEL);
+        if (!box) return;
+        box.innerHTML = "";
+        tiers.forEach(t => {
+          const img = document.createElement("img");
+          img.src = TIER_IMG(t);
+          img.alt = `tier${t}`;
+          box.appendChild(img);
+        });
+      }
+
+      // 공개 API: 조각 수를 넘기면 즉시 갱신
+      window.updateHeroShardState = function(pieces) {
+        try {
+          const have = Math.max(0, n(pieces));
+
+          // ⛳ 0~9면: 티어 이미지 6개(=띠 전체) 숨기고 문구만
+          if (have < RECRUIT_COST) {
+            toggleRecruitUI({ showImage: false });
+            toggleTierGallery(false, "※ 최초모집시 10개의 조각이 필요합니다.");
+            return;
+          }
+
+          // 10 이상: 이미지 영역 보이기 → 계산/렌더
+          toggleRecruitUI({ showImage: true });
+          toggleTierGallery(true);
+
+          const tiers = computeTiers(have);
+          renderTiers(tiers);
+        } catch (err) {
+          const box = document.querySelector(OUT_SEL);
+          if (box) box.textContent = "오류: " + err.message;
+          console.error(err);
+        }
+      };
+
+      // 입력 이벤트
+      const $input = document.getElementById("pieceInput");
+      $input.addEventListener("input", e => {
+        let val = parseInt(e.target.value || "0", 10);
+        if (val > 1075) {
+          val = 1075;
+          e.target.value = val; // 입력란을 즉시 1075로 되돌림
+        } else if (val < 0 || isNaN(val)) {
+          val = 0;
+          e.target.value = val;
+        }
+        updateHeroShardState(val); // 계산 반영
+      });
+      $input.addEventListener("keydown", e => { if (e.key === "Enter") updateHeroShardState($input.value); });
+
+      // 초기 표시(기본값 0 → 문구만 표시)
+      updateHeroShardState($input.value);
+    })();
+  </script>
+  <script>
+    //uuid 복사
+    let copyTimer = null;
+
+    function copySupportNumber() {
+      const text = document.getElementById("supportNumber").innerText;
+      const btn = document.getElementById("copyBtn");
+      const iconBook = document.getElementById("iconBook");
+      const iconCheck = document.getElementById("iconCheck");
+      const toast = document.getElementById("toast");
+      
+      navigator.clipboard.writeText(text).then(() => {
+        // 버튼: 책 → 체크
+        btn.classList.remove("bg-slate-700", "hover:bg-slate-600");
+        btn.classList.add("bg-emerald-500", "hover:bg-emerald-600");
+        iconBook.classList.add("hidden");
+        iconCheck.classList.remove("hidden");
+
+        // 토스트 표시
+        toast.classList.remove("opacity-0");
+        toast.classList.add("opacity-100");
+
+        // 기존 타이머 제거하고 새 타이머 시작
+        if (copyTimer) clearTimeout(copyTimer);
+
+        copyTimer = setTimeout(() => {
+          // 버튼 되돌리기
+          btn.classList.remove("bg-emerald-500", "hover:bg-emerald-600");
+          btn.classList.add("bg-slate-700", "hover:bg-slate-600");
+          iconCheck.classList.add("hidden");
+          iconBook.classList.remove("hidden");
+
+          // 토스트 숨기기
+          toast.classList.remove("opacity-100");
+          toast.classList.add("opacity-0");
+        }, 2500);
+      });
+    }
+  </script>
+  <script>
+    //다크모드
+    function broadcastDarkMode(isDark) {
+      document.querySelectorAll('iframe').forEach(frame => {
+        try {
+          frame.contentWindow.postMessage({ type: 'DARK_MODE', value: isDark },'*');
+        } catch (e) {}
+      });
+    }
+    
+    function applySavedDarkMode() {
+      const isDark = localStorage.getItem('darkMode') === 'true';
+      document.body.classList.toggle('dark-mode', isDark);
+      broadcastDarkMode(isDark);
+    }
+    
+    function ActiveDarkMode(){
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', isDark ? 'true' : 'false');
+      
+      broadcastDarkMode(isDark);
+    }
+    
+    // ✅ 페이지 로드되면 바로 적용 (새로고침 포함)
+    document.addEventListener('DOMContentLoaded', applySavedDarkMode);
+    
+    //  window.addEventListener('DOMContentLoaded', () => {
+    //    const isDark = localStorage.getItem('darkMode') === 'true';
+    //    document.body.classList.toggle('dark-mode', isDark);
+    //  }); 
+    //}
+
+    document.getElementById('mainFrame')?.addEventListener('load', () => {
+      const isDark = localStorage.getItem('darkMode') === 'true';
+      broadcastDarkMode(isDark);
+    });
+  </script>
+  <script>
+    //자료모음 detail
+    const baseUrl = 'https://s574shinchan.github.io/WOS_Calc/data/';
+    
+    // [ID] => [파일명] 매핑
     const fileMap = {
       요새보상: '요새보상_JP.html',
       영웅특성: '영웅특성_JP.html',
       준비단계: 'SVS_Pre_JP.html',
       서버이민: '서버이민_JP.html',
-      용어안내: 'ward_JP.html',
+      용어안내: 'ward.html',
       영웅성급: '영웅성급업_JP.html'
     };
     
@@ -308,116 +992,114 @@
       });
     });
   </script>
-  
   <script>
-    function showGuide() {
-      document.getElementById("guideDetails").style.display = "block";
-      document.getElementById("frameWrapper").style.display = "none";
-    }
-        
-    function ComeBackHome() {
-      const frame = document.getElementById("mainFrame");
-      const isMobile = window.innerWidth <= 768;
-      
-      // 먼저 onload 이벤트 설정
-      frame.onload = function () {
-        try {
-          const guideDetails = frame.contentWindow.document.getElementById("guideDetails");
-          if (guideDetails) {
-            guideDetails.style.display = "none";
-          }
-        } catch (e) {
-          console.error("guideDetails를 숨기는 데 실패함:", e);
-        }
-      };
-      
-      showGuide();
-      frame.style.height = isMobile ? "550px" : "635px";
-    }
-    
-    function switchTab(page) {
-      const guide = document.getElementById("guideDetails");
-      const wrapper = document.getElementById("frameWrapper");
-      const frame = document.getElementById("mainFrame");
-      const isMobile = window.innerWidth <= 768;
-      const lang = localStorage.getItem('lang').toUpperCase();
-      
-      if (page === 'guide') {
-        guide.style.display = "block";
-        wrapper.style.display = "none";
-        document.body.style.overflowX = "hidden";
-      } else if (page === 'transfer' && lang === 'jp') {
-        guide.style.display = "none";
-        wrapper.style.display = "block";
-        frame.src =  `${page}_EN.html`;
-        
-        // ✅ 추가: 탭 전환시 우측 여백 제거
-        document.body.style.overflowX = "hidden";
-        document.documentElement.style.overflowX = "hidden";   
-      } else {
-        guide.style.display = "none";
-        wrapper.style.display = "block";
-        frame.src = (lang === 'ko') ? `${page}.html` : `${page}_${lang}.html`;
-
-        // ✅ 추가: 탭 전환시 우측 여백 제거
-        document.body.style.overflowX = "hidden";
-        document.documentElement.style.overflowX = "hidden";        
+    //언어선택
+    function setupLangSelect(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', function () {
+          const langCode = this.value; // 예: index_en.html
+          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
+          localStorage.setItem('lang', lang);
+          window.location.href = langCode;
+        });
       }
     }
-    
-    window.addEventListener("message", function (event) {
-      if (event.data.type === "RESULT_POPUP") {
-        const html = event.data.html;
-        document.getElementById("popupContent").innerHTML = html;
-        document.getElementById("popupModal").classList.remove("hidden");
-      }  //RESULT_POPUP
-    });
-
-    window.addEventListener("message", function (event) {
-      if (event.data.type === "SET_FRAME_SIZE") {
-        const frame = document.getElementById("mainFrame");
-        frame.style.height = event.data.height;
-      }
-
-      if (event.data.type === "FRAME_CHANGE") {
-        const frame = document.getElementById("mainFrame");
-        frame.style.height = `${event.data.height + 10}px`;
-      }
-    });
-    
-    function closePopup() {
-      document.getElementById("popupModal").classList.add("hidden");
-    }
-  </script>
   
+    setupLangSelect('langSelectMobile');
+    setupLangSelect('langSelectPC');
+  </script>  
   <script>
-    document.addEventListener("contextmenu", event => event.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" ||
-          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S"))) 
-      {
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
         e.preventDefault();
+        return false;
       }
-    });
-  </script>
+    };
   
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
   <script>
-    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+    // ✅ 공용 함수: iframe 로드 + 메뉴/프레임 표시 전환
+    window.loadInMainFrame = function(url){
+      // 메뉴 숨기고, 결과 프레임 표시
+      guideDetails?.classList.add('hidden');
+      frameWrapper?.classList.remove('hidden');
 
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 200) {
-        scrollToTopBtn.classList.remove("hidden");
+      // ✅ 상대/절대 어떤 게 와도 안전 처리
+      const resolved = new URL(url, window.location.href).href;
+
+      console.log('[index] loadInMainFrame:', { url, resolved });
+
+      // 같은 URL이면 리로드 강제
+      const cur = mainFrame.getAttribute('src') || '';
+      if (cur === resolved) {
+        mainFrame.src = 'about:blank';
+        setTimeout(() => (mainFrame.src = resolved), 30);
       } else {
-        scrollToTopBtn.classList.add("hidden");
+        mainFrame.src = resolved;
+      }
+    };
+
+    window.goBackToMenu = function(){
+      mainFrame.src = 'about:blank';
+      frameWrapper?.classList.add('hidden');
+      guideDetails?.classList.remove('hidden');
+    };
+
+    // ✅ a.html(자식)에서 보내는 메시지 수신
+    window.addEventListener('message', (e) => {
+      // 로컬 테스트에서는 origin이 같음
+      // 실서비스에서는 e.origin 검증 권장
+      console.log('[index] message received:', e.data, 'origin:', e.origin);
+
+      if (e.data?.type === 'NAVIGATE_FRAME') {
+        // e.data.url: 예) "research.html"
+        window.loadInMainFrame(e.data.url);
+      }
+
+      // ✅ 자식 페이지가 자신의 높이를 보내면 mainFrame 높이 자동 조절
+      if (e.data?.type === 'FRAME_CHANGE' && typeof e.data.height === 'number') {
+        mainFrame.style.height = `${e.data.height}px`;
       }
     });
-
-    scrollToTopBtn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+  </script>
+  <script>
+    //이미지 모달
+    let currentScale = 1;
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+  
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'SHOW_IMAGE_MODAL') {
+        modalImg.src = event.data.url;
+        currentScale = 1;
+        modalImg.style.scale = currentScale;
+        modal.classList.remove('hidden');
+      }
+    });
+  
+    modalImg.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      currentScale += (e.deltaY < 0 ? 0.05 : -0.05);
+      currentScale = Math.max(0.1, Math.min(3, currentScale));
+      modalImg.style.scale = currentScale;
+    });
+  
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        modalImg.src = '';
+      }
     });
   </script>
-  
   <script>
     (function () {
       // ✅ 언어코드 ↔ 파일명 매핑(대소문자 정확히)
@@ -426,38 +1108,39 @@
         en: "index_EN.html",
         jp: "index_JP.html",
       };
+
       const LANG_BY_FILE = {
         "index.html": "ko",
         "index_EN.html": "en",
         "index_JP.html": "jp",
       };
-    
+
       function detectLang() {
         // 1) ?lang= 우선
         const p = new URLSearchParams(location.search);
         const q = (p.get("lang") || "").toLowerCase();
         if (q && FILE_BY_LANG[q]) return q;
-    
+
         // 2) 파일명에서 추출
         const file = (location.pathname.split("/").pop() || "index.html");
         if (LANG_BY_FILE[file]) return LANG_BY_FILE[file];
-    
+
         // 3) localStorage
         const mem = (localStorage.getItem("lang") || "").toLowerCase();
         if (FILE_BY_LANG[mem]) return mem;
-    
+
         // 4) 기본
         return "ko";
       }
-    
+
       function setupLangSelect(id) {
         const el = document.getElementById(id);
         if (!el) return;
-    
+
         const lang = detectLang();
         const currentFile = (location.pathname.split("/").pop() || "index.html");
         const currentTarget = FILE_BY_LANG[lang];
-    
+
         // ✅ select 옵션 value가 "파일명"이든 "언어코드"든 둘 다 지원
         //    1) 우선 파일명으로 맞춰보기
         if ([...el.options].some(o => o.value === currentTarget)) {
@@ -467,12 +1150,12 @@
         else if ([...el.options].some(o => o.value === lang)) {
           el.value = lang;          // ex) en
         }
-    
+
         el.addEventListener("change", function () {
           let next;
           // 선택값이 언어코드인지 파일명인지 판별
           const v = this.value;
-    
+
           if (FILE_BY_LANG[v]) {          // value가 언어코드(ko/en/jp)
             next = FILE_BY_LANG[v];
             localStorage.setItem("lang", v); // 항상 소문자 저장
@@ -484,7 +1167,7 @@
             next = FILE_BY_LANG.ko;
             localStorage.setItem("lang", "ko");
           }
-    
+
           // 동일 파일 선택해도 강제 이동(캐시/쿼리 혼선 방지)
           if (currentFile === next) {
             location.href = next;
@@ -493,15 +1176,49 @@
           }
         });
       }
-    
+
       // ✅ 두 셀렉트 모두 적용
       setupLangSelect("langSelectMobile");
       setupLangSelect("langSelectPC");
-    
+
       // ✅ 전역에도 노출(다른 스크립트가 쓰도록)
       window.lang = detectLang();
       localStorage.setItem("lang", window.lang); // 소문자 고정
     })();
   </script>
-</body>
+  <script>
+    //트래픽관리
+    (function () {
+      const MIN_INTERVAL = 3000; // 3초
+      const now = Date.now();
+      const last = Number(sessionStorage.getItem("lastLoad") || 0);
+
+      // 기본값: 광고 허용
+      window.DISABLE_ADS = false;
+
+      // 1️⃣ 새로고침 / 연속 접속 폭주 방지
+      if (last && now - last < MIN_INTERVAL) {
+        window.DISABLE_ADS = true;
+      }
+      sessionStorage.setItem("lastLoad", now);
+
+      // 2️⃣ iframe 안에서 열리면 광고 차단
+      if (window.top !== window.self) {
+        window.DISABLE_ADS = true;
+      }
+
+      // 3️⃣ 비정상 referrer (file://, 없음)
+      if (!document.referrer || document.referrer.startsWith("file://")) {
+        window.DISABLE_ADS = true;
+      }
+
+      // 4️⃣ 백그라운드 탭이면 광고 차단
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          window.DISABLE_ADS = true;
+        }
+      });
+    })();
+  </script>
+  </body>
 </html>
