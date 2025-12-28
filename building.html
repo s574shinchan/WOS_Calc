@@ -22,14 +22,28 @@
     .dark-mode .border { border-color:#444 !important; }
     .dark-mode .bg-white { background:#2c2c2c !important; color:#f0f0f0 !important; }
     .dark-mode .bg-gray-100 { background:#1e1e1e !important; }
-    .dark-mode .text-gray-800, .dark-mode .text-gray-700, .dark-mode .text-gray-600 { color:#dddddd !important; }
+    .dark-mode .text-gray-800, 
+    .dark-mode .text-gray-700, 
+    .dark-mode .text-gray-600 { color:#dddddd !important; }
     .dark-mode table { background:#2c2c2c; color:#f0f0f0; }
-    .dark-mode th, .dark-mode td { border-color:#444 !important; }
-    .dark-mode select option, .dark-mode select, .dark-mode input { color:#000 !important; }
-    .dark-mode #buffSelect, .dark-mode #buffSelect option, .dark-mode #buffSelect:disabled {
+    .dark-mode th, 
+    .dark-mode td { border-color:#444 !important; }
+    .dark-mode select, 
+    .dark-mode select option,     
+    .dark-mode input,
+    .dark-mode #chkExpertA,
+    .dark-mode #chkExpertV,
+    .dark-mode #buffSelect,
+    .dark-mode #buffSelect option,
+    .dark-mode #buffSelect:disabled {
       color:#fff !important; background:#2c2c2c !important;
     }
-
+    
+    .dark-mode .svs-score-label,
+    .dark-mode .svs-score-value {
+      font-weight: 700;
+      color: #16AC7A !important;
+    }
     /* experts 스타일 카드 */
     .exp-card{
       border:1px solid rgba(0,0,0,.08);
@@ -121,9 +135,17 @@
 
         <div>
           <label class="block text-sm mb-1">아그네스</label>
-          <select id="chkExpert" class="w-full rounded-md border px-3 py-2">
+          <select id="chkExpertA" class="w-full rounded-md border px-3 py-2">
             <option>None</option>
             <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm mb-1">발레리아</label>
+          <select id="chkExpertV" class="w-full rounded-md border px-2 py-2">
+            <option>None</option>
+            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+            <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
           </select>
         </div>
 
@@ -132,11 +154,11 @@
           <div class="text-sm font-medium mb-1">부집행관 관직 버프</div>
           <div class="flex flex-wrap gap-2">
             <button type="button" data-group="vp" data-vp="10"
-                    class="w-[105px] vp-btn px-4 py-2 rounded-md border">
+                    class="w-[110px] vp-btn px-4 py-2 rounded-md border">
               10%
             </button>
             <button type="button" data-group="vp" data-vp="15"
-                    class="w-[105px] vp-btn px-4 py-2 rounded-md border">
+                    class="w-[110px] vp-btn px-4 py-2 rounded-md border">
               15%
             </button>
           </div>
@@ -147,7 +169,7 @@
           <div class="text-sm font-medium mb-1">서버버프 (10%)</div>
           <div class="flex flex-wrap gap-2">
             <button type="button" id="chkServerBuff"
-                    class="w-full toggle-btn px-4 py-2 rounded-md border"
+                    class="w-[110px] toggle-btn px-4 py-2 rounded-md border"
                     aria-pressed="false">
               활성화
             </button>
@@ -653,6 +675,15 @@
 
     const nf1 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
 
+    // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
+    function formatSVS(value){
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "0";
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+      if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+      return num.toLocaleString();
+    }
+    
     function formatValue(value){
       const num = Number(String(value ?? 0).replace(/,/g, ''));
       if (isNaN(num)) return value;
@@ -675,18 +706,6 @@
       const s=document.getElementById("chkSPVP");
       if(which==="chkVP" && v?.checked) s.checked=false;
       if(which==="chkSPVP" && s?.checked) v.checked=false;
-      scheduleCalc();
-    }
-    function togglePetBuffSelect(){
-      const cb=document.getElementById("chkPetBuff");
-      const sel=document.getElementById("buffSelect");
-      // UI 비활성/활성은 그대로 유지 (요청: 계산은 체크박스 무시)
-      if (sel) {
-        sel.disabled = !cb?.checked;
-        sel.classList.toggle("pointer-events-none",!cb?.checked);
-        sel.classList.toggle("bg-white",cb?.checked);
-        sel.classList.toggle("bg-gray-100",!cb?.checked);
-      }
       scheduleCalc();
     }
 
@@ -719,7 +738,7 @@
 
     // ✅ Expert(아그네스) 고정 차감 시간(시간/단계) 반환
     function getExpertFlatHours(){
-      const sel = document.getElementById('chkExpert');
+      const sel = document.getElementById('chkExpertA');
       if (!sel) return 0;
       const raw = (sel.value || sel.options[sel.selectedIndex]?.text || '').trim().toLowerCase();
       const asNum = Number(raw);
@@ -730,6 +749,43 @@
                : (raw.includes('lv.2')||raw.includes('lv2')) ? 2
                : (raw.includes('lv.1')||raw.includes('lv1')) ? 1 : 0;
       return lv === 1 ? 2 : lv === 2 ? 3 : lv === 3 ? 4 : lv === 4 ? 6 : lv === 5 ? 8 : 0;
+    }
+    // ✅ 발레리아(SVS 점수 보너스)
+    const EXPERT_BONUS = {
+      "None":0,
+      "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+      "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+    };
+    const EXPERT_DESC = {
+      "Lv.1":  "+2%",
+      "Lv.2":  "+4%",
+      "Lv.3":  "+6%",
+      "Lv.4":  "+8%",
+      "Lv.5":  "+10%",
+      "Lv.6":  "+12%",
+      "Lv.7":  "+14%",
+      "Lv.8":  "+16%",
+      "Lv.9":  "+18%",
+      "Lv.10": "+20%"
+    };
+
+    function getValeriaBonus(){
+      const sel = document.getElementById("chkExpertV");
+      if (!sel) return 0;
+      const key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+      return EXPERT_BONUS[key] ?? 0;
+    }
+
+    function getValeriaDesc(){
+      const expertSel = document.getElementById("chkExpertV");
+      const lv = expertSel.value;
+      const text = EXPERT_DESC[lv]
+        ? "SvS 점수 " + EXPERT_DESC[lv]
+        : "SvS 점수";
+
+      document.querySelectorAll(".svs-score-label").forEach(el => {
+        el.textContent = text;
+      });
     }
     // ===============================================
 
@@ -816,28 +872,46 @@
             <div class="rounded-md border p-3 text-[13px] space-y-1">
               <!-- 1행: 불수정 / 고기, 나무 -->
               <div class="grid grid-cols-6 gap-x-3 items-center">
-                <div class="text-gray-600">불수정</div>
+                <div class="flex items-center gap-1 text-gray-600">
+                  <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">
+                </div>
                 <div id="sub-불수정-${name}" class="tabular-nums">0</div>
-                <div class="text-gray-600">고기</div>
+                
+                <div class="flex items-center gap-1 text-gray-600">
+                  <img src="images/icon_Meet.webp" class="w-5 h-5" alt="고기">
+                </div>
                 <div id="sub-고기-${name}" class="tabular-nums">0</div>
-                <div class="text-gray-600">나무</div>
+
+                <div class="flex items-center gap-1 text-gray-600">
+                  <img src="images/icon_Wood.webp" class="w-5 h-5" alt="나무">
+                </div>  
                 <div id="sub-나무-${name}" class="tabular-nums">0</div>
               </div>
 
               <!-- 2행: 정제 / 석탄 / 철광 -->
               <div class="grid grid-cols-6 gap-x-3 items-center">                
-                <div class="text-gray-600">정제불수</div>
+                <div class="flex items-center gap-1 text-gray-600">
+                  <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+                </div>
                 <div id="sub-정제-${name}" class="tabular-nums">0</div>
-                <div class="text-gray-600">석탄</div>
+                
+                <div class="flex items-center gap-1 text-gray-600">
+                  <img src="images/icon_Coal.webp" class="w-5 h-5" alt="석탄">
+                </div>
                 <div id="sub-석탄-${name}" class="tabular-nums">0</div>
-                <div class="text-gray-600">철광</div>
+
+                <div class="flex items-center gap-1 text-gray-600">
+                  <img src="images/icon_Iron.webp" class="w-5 h-5" alt="철광">
+                </div>
                 <div id="sub-철광-${name}" class="tabular-nums">0</div>
               </div>
 
               <!-- 3행: 건설시간 -->
-              <div class="grid grid-cols-[auto_1fr] gap-x-3 items-center pt-1 border-t border-gray-200 mt-1">
+              <div class="grid grid-cols-4 gap-x-3 items-center pt-1 border-t border-gray-200 mt-1">
                 <div class="text-gray-600">건설시간</div>
-                <div id="sub-시간-${name}" class="text-right tabular-nums font-medium">0</div>
+                <div id="sub-시간-${name}" class="tabular-nums font-medium">0</div>
+                <div class="svs-score-label text-gray-600">SVS 점수</div>
+                <div id="sub-점수-${name}" class="svs-score-value tabular-nums font-medium">0</div>
               </div>
             </div>
           </div>
@@ -944,8 +1018,15 @@
           const el = document.getElementById(`sub-${res}-${name}`);
           if (el) el.textContent = "0";
         });
+        
         const tEl = document.getElementById(`sub-시간-${name}`);
         if (tEl) tEl.textContent = "0";
+        
+        const sEl = document.getElementById(`sub-점수-${name}`);
+        if (sEl) sEl.textContent = "0";
+        
+        const sAEl = document.getElementById(`sub-점수A-${name}`); 
+        if (sAEl) sAEl.textContent = "0";
       });
 
       const factor = getFactorForTime();
@@ -971,11 +1052,11 @@
 
         // 카드 우측 ‘필요 합계’ 갱신
         document.getElementById(`sub-불수정-${name}`).textContent = sub["불수정"].toLocaleString();
-        document.getElementById(`sub-정제-${name}`).textContent   = sub["정제"].toLocaleString();
-        document.getElementById(`sub-고기-${name}`).textContent    = formatValue(sub["고기"]);
-        document.getElementById(`sub-나무-${name}`).textContent    = formatValue(sub["나무"]);
-        document.getElementById(`sub-석탄-${name}`).textContent    = formatValue(sub["석탄"]);
-        document.getElementById(`sub-철광-${name}`).textContent    = formatValue(sub["철광"]);
+        document.getElementById(`sub-정제-${name}`).textContent = sub["정제"].toLocaleString();
+        document.getElementById(`sub-고기-${name}`).textContent = formatValue(sub["고기"]);
+        document.getElementById(`sub-나무-${name}`).textContent = formatValue(sub["나무"]);
+        document.getElementById(`sub-석탄-${name}`).textContent = formatValue(sub["석탄"]);
+        document.getElementById(`sub-철광-${name}`).textContent = formatValue(sub["철광"]);
 
         let adjHours = hours / factor;
         if (cityBuff) adjHours *= 0.8;
@@ -985,6 +1066,19 @@
         adjHours = Math.max(0, adjHours - expertFlat);
         
         document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
+        
+        // ✅ SVS 점수 = (불수정*2000) + (정제불수*30000) × (1 + 발레리아 보너스)
+        const FireCrystal = (sub["불수정"] * 2000);
+        const Refind = (sub["정제"] * 30000);
+        const vBonus = getValeriaBonus(); // 0 ~ 0.20
+        
+        const fScore = Math.floor(FireCrystal * (1 + vBonus));
+        const rScore = Math.floor(Refind * (1 + vBonus));
+        const tScore = Math.floor(((adjHours * 60) * 30) * (1 + vBonus));        
+        const finalScore = fScore+rScore+tScore;
+
+        const scoreEl = document.getElementById(`sub-점수-${name}`);
+        if (scoreEl) scoreEl.textContent = formatSVS(finalScore);
 
         // 체크된 카드만 총합 포함 (현재/목표 다르면 포함)
         if (start < end){
@@ -1001,12 +1095,12 @@
 
       // 하단 요약
       document.getElementById("sum-불수정").textContent = total["불수정"].toLocaleString();
-      document.getElementById("sum-정제").textContent   = total["정제"].toLocaleString();
-      document.getElementById("sum-고기").textContent    = formatValue(total["고기"]);
-      document.getElementById("sum-나무").textContent    = formatValue(total["나무"]);
-      document.getElementById("sum-석탄").textContent    = formatValue(total["석탄"]);
-      document.getElementById("sum-철광").textContent    = formatValue(total["철광"]);
-      document.getElementById("sum-시간").textContent    = formatHourToTime(totalHours);
+      document.getElementById("sum-정제").textContent = total["정제"].toLocaleString();
+      document.getElementById("sum-고기").textContent = formatValue(total["고기"]);
+      document.getElementById("sum-나무").textContent = formatValue(total["나무"]);
+      document.getElementById("sum-석탄").textContent = formatValue(total["석탄"]);
+      document.getElementById("sum-철광").textContent = formatValue(total["철광"]);
+      document.getElementById("sum-시간").textContent = formatHourToTime(totalHours);
 
       const defA = document.getElementById("def-불수정");
       const defB = document.getElementById("def-정제");
@@ -1028,11 +1122,36 @@
     // 상단 토글/입력 이벤트
     document.addEventListener("change",(e)=>{
       const id = e.target.id;
+      
+      switch(id){
+        case "chkVP":
+        case "chkSPVP":
+          handleVPCheck(id);
+          break;          
+        case "chkServerBuff":
+        case "chkCityBuff":
+        case "buffSelect":
+        case "chkExpertA":
+          scheduleCalc();
+          break;
+        case "chkExpertV":
+          getValeriaDesc();
+          scheduleCalc();
+          break;
+        case "buildSpeed":
+        case "owned-불수정":
+        case "owned-정제":
+          scheduleCalc();
+          break;
+        default:
+          break;
+      }
+      /*
       if (id==="chkVP") handleVPCheck("chkVP");
       else if (id==="chkSPVP") handleVPCheck("chkSPVP");
-      else if (id==="chkServerBuff" || id==="chkCityBuff" || id==="buffSelect"|| id==="chkExpert") scheduleCalc();
-      else if (id==="buildSpeed" || id==="owned-불수정" || id==="owned-정제") scheduleCalc();
-      else if (id==="chkPetBuff") togglePetBuffSelect();
+      else if (id==="chkServerBuff" || id==="chkCityBuff" || id==="buffSelect"|| id==="chkExpertA") scheduleCalc();
+      else if (id==="chkExpertV") { getValeriaDesc();  scheduleCalc(); }
+      else if (id==="buildSpeed" || id==="owned-불수정" || id==="owned-정제") scheduleCalc();*/
     });
     ["buildSpeed","owned-불수정","owned-정제"].forEach(id=>{
       const el=document.getElementById(id);
