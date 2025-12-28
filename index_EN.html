@@ -471,12 +471,40 @@
     ⛔ Unauthorized copying prohibited | © Made By S645 ShinChan(uuid: 67331703)
   </footer>
 	
+  <script>
+  (function () {
+    const MIN_INTERVAL = 3000;
+    const now = Date.now();
+    const last = Number(sessionStorage.getItem("lastLoad") || 0);
+
+    window.DISABLE_ADS = false;
+
+    if (last && now - last < MIN_INTERVAL) window.DISABLE_ADS = true;
+    sessionStorage.setItem("lastLoad", now);
+
+    // iframe 안이면 차단
+    if (window.top !== window.self) window.DISABLE_ADS = true;
+
+    // file://만 차단 (referrer 없음은 허용 권장)
+    if (document.referrer && document.referrer.startsWith("file://")) window.DISABLE_ADS = true;
+
+    if (location.search.length > 200) window.DISABLE_ADS = true;
+    if (location.hash.length > 200) window.DISABLE_ADS = true;
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && !window.__ADS_LOADED) {
+        window.DISABLE_ADS = true;
+      }
+    });
+  })();
+  </script>
+
   <!-- 콘텐츠 전체 폭 제한 -->
   <div class="max-w-[1200px] mx-auto p-2">
     <div class="grid grid-cols-2 lg:grid-cols-2 gap-2"> 
       <!-- 광고1 -->
       <div class="flex justify-center">
-        <ins class="adsbygoogle"
+        <ins id="ad1" class="adsbygoogle"
           style="display:inline-block; width:100%; max-width:300px; height:250px"
           data-ad-client="ca-pub-8205102847358210"
           data-ad-slot="8804962791"></ins>
@@ -484,7 +512,7 @@
   
       <!-- 광고2 -->
       <div class="flex justify-center">
-        <ins class="adsbygoogle"
+        <ins id="ad2" class="adsbygoogle"
           style="display:inline-block; width:100%; max-width:300px; height:250px"
           data-ad-client="ca-pub-8205102847358210"
           data-ad-slot="9326856916"></ins>
@@ -492,9 +520,78 @@
     </div>
   </div>
 	<script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>  
+  (function(){
+    if (window.DISABLE_ADS) return;
+
+    let active = false;
+    const activate = () => { active = true; };
+    ["scroll","click","touchstart","keydown"].forEach(ev =>
+      window.addEventListener(ev, activate, { once:true, passive:true })
+    );
+
+    function ensureAdsenseLoaded(){
+      if (window.__ADS_LOADED) return;
+      window.__ADS_LOADED = true;
+
+      const s = document.createElement("script");
+      s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210";
+      s.async = true;
+      s.crossOrigin = "anonymous";
+      document.head.appendChild(s);
+    }
+
+    setTimeout(() => {
+      if (!active) return;
+      ensureAdsenseLoaded();
+    }, 5000);
+  })();
+  </script>
+  <script>
+  (function(){
+    if (window.DISABLE_ADS) return;
+
+    const ids = ["ad1","ad2"];
+    const filled = new Set();
+
+    function safePush(){
+      try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch {}
+    }
+
+    function pushWhenReady(){
+      // adsense.js(adsbygoogle)가 아직 준비 안 됐으면, 준비될 때까지 짧게 폴링
+      if (!window.adsbygoogle) {
+        const t = setInterval(() => {
+          if (window.adsbygoogle) {
+            clearInterval(t);
+            safePush();
+          }
+        }, 200);
+
+        // 혹시 영원히 안 뜨는 상황 대비(네트워크/차단 등) 안전장치
+        setTimeout(() => clearInterval(t), 8000);
+        return;
+      }
+      safePush();
+    }
+
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        if (filled.has(el)) return;
+        filled.add(el);
+
+        pushWhenReady();
+        obs.unobserve(el);
+      });
+    }, { threshold: 0.25 });
+
+    ids.forEach(id=>{
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+  })();
+  </script>
   <script>
     //메뉴동작
     const dropdowns = [...document.querySelectorAll('[data-dd]')];
@@ -1224,15 +1321,6 @@
       });
     })();
   </script>
-  <script data-name="BMC-Widget" data-cfasync="false"
-          src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
-          data-id="shin0825" 
-          data-description="Support me"         
-          data-color="#FFDD00" 
-          data-position="Right" 
-          data-x_margin="95"
-          data-y_margin="18">
-  </script>  
   <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
     //디스코드 아이콘
     new Crate({
