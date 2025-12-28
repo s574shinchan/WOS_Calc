@@ -98,7 +98,7 @@
                  oninput="UI.formatNumberInput(this); Calc.updateCapacityAndTable()"/>
         </div>
         <div>
-          <label class="field-label">집결부대 수용량</label>
+          <label class="field-label">집결부대 수용량(기본)</label>
           <input id="baseRally" type="text"
                  class="w-full border rounded-md p-2"
                  oninput="UI.formatNumberInput(this); Calc.updateCapacityAndTable()"/>
@@ -194,54 +194,81 @@
                 출정 수용량 증가 12h (+20%)
               </label>
             </div>
-          </div>
-          <!-- 프로스타 고릴라 -->
-          <div>
-            <div class="space-y-2"> 
-              <div class="font-semibold text-slate-800">펫 버프</div> 
-              <label class="flex items-center gap-2">
-                <input id="chkGorilla" type="checkbox" 
-                       onchange="UI.toggle('gorillaWrap', this.checked); Calc.updateCapacityAndTable()"/> 
-                프로스타 고릴라 버프</label> 
-              <div id="gorillaWrap" 
-                   class="grid grid-cols-2 gap-2 hidden"> 
-                <select id="gorillaLv" 
-                        class="border rounded-md p-2" 
-                        onchange="Calc.updateCapacityAndTable()"> 
-                  <option value="0">Lv.0</option> 
-                  <option value="1">Lv.1</option>
-                  <option value="2">Lv.2</option>
-                  <option value="3">Lv.3</option>
-                  <option value="4">Lv.4</option>
-                  <option value="5">Lv.5</option>
-                  <option value="6">Lv.6</option>
-                  <option value="7">Lv.7</option>
-                  <option value="8">Lv.8</option>
-                  <option value="9">Lv.9</option>
-                  <option value="10" selected>Lv.10</option>
-                </select>
-              </div>
+          </div>          
+          <div class="space-y-3">
+            <div class="font-semibold text-slate-800">펫 버프</div>
+
+            <!-- 고릴라 -->
+            <div class="flex items-center gap-3">
+              <label class="flex items-center gap-2 whitespace-nowrap">
+                <input id="chkGorilla" type="checkbox"
+                       onchange="UI.togglePetSelect('gorillaLv', this.checked); Calc.updateCapacityAndTable()"/>
+                프로스타 고릴라
+              </label>
+
+              <select id="gorillaLv"
+                      class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
+                      disabled
+                      onchange="Calc.updateCapacityAndTable()">
+                <option value="0">Lv.0</option>
+                <option value="1">Lv.1</option>
+                <option value="2">Lv.2</option>
+                <option value="3">Lv.3</option>
+                <option value="4">Lv.4</option>
+                <option value="5">Lv.5</option>
+                <option value="6">Lv.6</option>
+                <option value="7">Lv.7</option>
+                <option value="8">Lv.8</option>
+                <option value="9">Lv.9</option>
+                <option value="10" selected>Lv.10</option>
+              </select>
+            </div>
+
+            <!-- 코뿔소 -->
+            <div class="flex items-center gap-3">
+              <label class="flex items-center gap-2 whitespace-nowrap">
+                <input id="chkRhino" type="checkbox"
+                       onchange="UI.togglePetSelect('rhinoLv', this.checked); Calc.updateCapacityAndTable()"/>
+                초거대 코뿔소
+              </label>
+
+              <select id="rhinoLv"
+                      class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
+                      disabled
+                      onchange="Calc.updateCapacityAndTable()">
+                <option value="0">Lv.0</option>
+                <option value="1">Lv.1</option>
+                <option value="2">Lv.2</option>
+                <option value="3">Lv.3</option>
+                <option value="4">Lv.4</option>
+                <option value="5">Lv.5</option>
+                <option value="6">Lv.6</option>
+                <option value="7">Lv.7</option>
+                <option value="8">Lv.8</option>
+                <option value="9">Lv.9</option>
+                <option value="10" selected>Lv.10</option>
+              </select>
             </div>
           </div>
         </div>
 
-        <!-- 3) 전문가 버프 (표시만 스샷처럼: 체크박스 1줄 + 스킬/드랍다운 1줄) -->
+        <!-- 3) 전문가 버프 (로물루스 제거: 키릴/파비안/발레리아) -->
         <div class="space-y-2">
           <div class="font-semibold text-slate-800">전문가 버프</div>
+
           <!-- PC: 2열 / 모바일: 1열 -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
             <!-- ===================== 키릴 (스킬 2개) ===================== -->
             <div class="space-y-2">
-              <!-- 1줄: 체크박스 -->
               <label class="flex items-center gap-2 whitespace-nowrap">
                 <input id="chkExpert" type="checkbox"
-                       onchange="UI.toggleSelect('expertWrap1', this.checked); Calc.updateCapacityAndTable()"/>
+                       onchange="UI.toggleSelect('expertWrapC', this.checked); Calc.updateCapacityAndTable()"/>
                 전문가(키릴)
               </label>
 
-              <!-- 2줄: 스킬1 + 드랍다운 / 스킬2 + 드랍다운 (체크 시 표시) -->
-              <div id="expertWrap1" class="space-y-2 opacity-0 pointer-events-none">
-                <div class="flex items-center gap-2">
+              <div id="expertWrapC" class="opacity-0 pointer-events-none">
+                <div class="flex items-center gap-3">
                   <div class="w-12 text-[12px] text-slate-500 whitespace-nowrap">사방포획</div>
                   <select id="nemLvA"
                           class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
@@ -279,56 +306,16 @@
               </div>
             </div>
 
-            <!-- ===================== 로물루스 (스킬 1개) ===================== -->
-            <div class="space-y-2">
-              <label class="flex items-center gap-2 whitespace-nowrap">
-                <input id="chkExpert2" type="checkbox"
-                       onchange="UI.toggleSelect('expertWrap2', this.checked); Calc.updateCapacityAndTable()"/>
-                전문가(로물루스)
-              </label>
-
-              <div id="expertWrap2" class="opacity-0 pointer-events-none">
-                <div class="flex items-center gap-2">
-                  <div class="w-16 text-[12px] text-slate-500 whitespace-nowrap">한마음 한뜻</div>
-                  <select id="nemLv2"
-                          class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
-                          onchange="Calc.updateCapacityAndTable()">
-                    <option value="0" selected>Lv.0</option>
-                    <option value="1">Lv.1</option>
-                    <option value="2">Lv.2</option>
-                    <option value="3">Lv.3</option>
-                    <option value="4">Lv.4</option>
-                    <option value="5">Lv.5</option>
-                    <option value="6">Lv.6</option>
-                    <option value="7">Lv.7</option>
-                    <option value="8">Lv.8</option>
-                    <option value="9">Lv.9</option>
-                    <option value="10">Lv.10</option>
-                    <option value="11">Lv.11</option>
-                    <option value="12">Lv.12</option>
-                    <option value="13">Lv.13</option>
-                    <option value="14">Lv.14</option>
-                    <option value="15">Lv.15</option>
-                    <option value="16">Lv.16</option>
-                    <option value="17">Lv.17</option>
-                    <option value="18">Lv.18</option>
-                    <option value="19">Lv.19</option>
-                    <option value="20">Lv.20</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
             <!-- ===================== 파비안 (스킬 1개) ===================== -->
             <div class="space-y-2">
               <label class="flex items-center gap-2 whitespace-nowrap">
                 <input id="chkExpert3" type="checkbox"
-                       onchange="UI.toggleSelect('expertWrap3', this.checked); Calc.updateCapacityAndTable()"/>
+                       onchange="UI.toggleSelect('expertWrapF', this.checked); Calc.updateCapacityAndTable()"/>
                 전문가(파비안)
               </label>
 
-              <div id="expertWrap3" class="opacity-0 pointer-events-none">
-                <div class="flex items-center gap-2">
+              <div id="expertWrapF" class="opacity-0 pointer-events-none">
+                <div class="flex items-center gap-3">
                   <div class="w-12 text-[12px] text-slate-500 whitespace-nowrap">군수거목</div>
                   <select id="nemLv3"
                           class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
@@ -363,13 +350,13 @@
             <div class="space-y-2">
               <label class="flex items-center gap-2 whitespace-nowrap">
                 <input id="chkExpert4" type="checkbox"
-                       onchange="UI.toggleSelect('expertWrap4', this.checked); Calc.updateCapacityAndTable()"/>
+                       onchange="UI.toggleSelect('expertWrapV', this.checked); Calc.updateCapacityAndTable()"/>
                 전문가(발레리아)
               </label>
 
-              <div id="expertWrap4" class="opacity-0 pointer-events-none">
-                <div class="flex items-center gap-2">
-                  <div class="w-18 text-[12px] text-slate-500 whitespace-nowrap">압도적인 기세</div>
+              <div id="expertWrapV" class="opacity-0 pointer-events-none">
+                <div class="flex items-center gap-3">
+                  <div class="w-20 text-[12px] text-slate-500 whitespace-nowrap">압도적인 기세</div>
                   <select id="nemLv4"
                           class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
                           onchange="Calc.updateCapacityAndTable()">
@@ -398,8 +385,10 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
+
       </div>
     </section>
 
@@ -414,7 +403,7 @@
                  class="w-full border rounded-md p-2 bg-gray-100 num text-gray-800"/>
         </div>
         <div>
-          <label class="field-label">출정 수용량 보너스 [전문가 - 키릴]</label>
+          <label class="field-label">출정 수용량 보너스</label>
           <input id="MarchBonus" type="text" readonly
                  class="w-full border rounded-md p-2 bg-gray-100 num text-gray-800" />
         </div>
@@ -424,7 +413,7 @@
                  class="w-full border rounded-md p-2 bg-gray-100 num text-gray-800"/>
         </div>        
         <div>
-          <label class="field-label">집결 수용량 보너스 [전문가 - 로물루스, 파비안, 발레리아]</label>
+          <label class="field-label">집결 수용량 보너스</label>
           <input id="RallyBonus" type="text" readonly
                  class="w-full border rounded-md p-2 bg-gray-100 num text-gray-800" />
         </div>        
@@ -452,6 +441,7 @@
   <script>
     /* ------------------------- 상수/테이블 ------------------------- */
     const GorillaPerLevel = 1500; // 설명 텍스트용(임의 표시)
+    const Rhino = { 0:0, 1:60000, 2:70000, 3:80000, 4:90000, 5:100000, 6:110000, 7:120000, 8:130000, 9:140000, 10:150000 };
     const Cyrille = { // 곰의천적(출정 수용량 +)
       0:0, 1:3000, 2:6000, 3:9000, 4:12000, 5:15000,6:18000, 7:21000, 8:24000, 9:27000, 10:30000
     };
@@ -518,47 +508,40 @@
         const pct = sel ? Number(sel.value) : 0;
         return 1 + (pct/100);
       },
-
-      gorillaFlat(){
-        const on = document.getElementById('chkGorilla').checked;
-        const lv = Number(document.getElementById('gorillaLv').value||0);
-        return on ? lv * GorillaPerLevel : 0;
-      },
       
       finalRallyCapacity(){
-        const base = Number((document.getElementById('baseRally').value||'').replace(/,/g,''))||0;
+        const baseMarch  = Number((document.getElementById('baseMarch').value||'').replace(/,/g,''))||0;
+        const baseRally  = Number((document.getElementById('baseRally').value||'').replace(/,/g,''))||0;
 
-        // 고릴라(집결에도 적용할지: 적용하려면 유지, 아니면 0으로)
-        const gorillaOn = document.getElementById('chkGorilla').checked;
-        const gorillaLv = Number(document.getElementById('gorillaLv').value||0);        
+        // finalMarch는 input에서 읽지 말고 계산 함수로 가져오는게 안전
+        const finalMarch = Calc.finalMarchCapacity();
 
-        //키릴 곰부대 집결량 증가
-        const expertOn = document.getElementById('chkExpert').checked;
-        const nemLv = Number(document.getElementById('nemLvA').value||0);
-        const cyrilleBonus = expertOn ? Cyrille2[nemLv] : 0;
-        
-        // 전문가(집결: 로물루스/파비안/발레리아)
-        const expertOn2 = document.getElementById('chkExpert2').checked;
-        const nemLv2 = Number(document.getElementById('nemLv2').value||0);
-        const romulusBonus = expertOn2 ? (Romulus[nemLv2] || 0) : 0;
+        // ✅ 코뿔소
+        const rhinoOn  = document.getElementById('chkRhino')?.checked;
+        const rhinoLv  = Number(document.getElementById('rhinoLv')?.value || 0);
+        const rhinoFlat = rhinoOn ? (Rhino[rhinoLv] || 0) : 0;
 
-        const expertOn3 = document.getElementById('chkExpert3').checked;
-        const nemLv3 = Number(document.getElementById('nemLv3').value||0);
-        const fabianBonus = expertOn3 ? (Fabian[nemLv3] || 0) : 0;
+        // ✅ 키릴(사방포획 = nemLvA)
+        const kyrilOn = document.getElementById('chkExpert')?.checked;
+        const lvA = Number(document.getElementById('nemLvA')?.value || 0);
+        const cyrilleBonus = kyrilOn ? (Cyrille2[lvA] || 0) : 0;
 
-        const expertOn4 = document.getElementById('chkExpert4').checked;
-        const nemLv4 = Number(document.getElementById('nemLv4').value||0);
-        const valeriaBonus = expertOn4 ? (Valeria[nemLv4] || 0) : 0;
+        // ✅ 파비안(nemLv3)
+        const fabianOn = document.getElementById('chkExpert3')?.checked;
+        const lvF = Number(document.getElementById('nemLv3')?.value || 0);
+        const fabianBonus = fabianOn ? (Fabian[lvF] || 0) : 0;
 
-        const rallyBonus = cyrilleBonus + romulusBonus + fabianBonus + valeriaBonus;
-        
-        const gorillaFlat = gorillaOn ? gorillaLv * GorillaPerLevel : 0;
+        // ✅ 발레리아(nemLv4)
+        const valeriaOn = document.getElementById('chkExpert4')?.checked;
+        const lvV = Number(document.getElementById('nemLv4')?.value || 0);
+        const valeriaBonus = valeriaOn ? (Valeria[lvV] || 0) : 0;
 
-        // 도시 버프 배수
-        const mult = Calc.cityMultiplier();
+        const rallyBonus = cyrilleBonus + fabianBonus + valeriaBonus;
 
-        // 최종 집결 수용량
-        return Math.floor((base + gorillaFlat + rallyBonus) * mult);
+        // 
+        const finalBase = (baseRally - baseMarch) + finalMarch;
+
+        return Math.floor(finalBase + rhinoFlat + rallyBonus);
       },
       
       // 최종 '출정부대 수용량' 계산
@@ -649,16 +632,16 @@
         document.getElementById('finalRally').value = capRally.toLocaleString();
 
         // 집결 보너스 표시(로물루스/파비안/발레리아 합)
-        const rA = document.getElementById('chkExpert').checked
+        const cB = document.getElementById('chkExpert').checked
           ? (Cyrille2[ Number(document.getElementById('nemLvA').value||0) ] || 0) : 0;
-        const rB = document.getElementById('chkExpert2').checked
-          ? (Romulus[ Number(document.getElementById('nemLv2').value||0) ] || 0) : 0;
+        
         const fB = document.getElementById('chkExpert3').checked
           ? (Fabian[ Number(document.getElementById('nemLv3').value||0) ] || 0) : 0;
+        
         const vB = document.getElementById('chkExpert4').checked
           ? (Valeria[ Number(document.getElementById('nemLv4').value||0) ] || 0) : 0;
-
-        document.getElementById('RallyBonus').value = (rA+rB+fB+vB).toLocaleString();
+        
+        document.getElementById('RallyBonus').value = (cB+fB+vB).toLocaleString();
         
         Calc.renderTable(cpaRally);
       },
@@ -683,8 +666,8 @@
       // 입력/선택 변화 시 자동 반영
       [
         'baseMarch','marchCount','ownInf','ownLan','ownMar',
-        'ratioInf','ratioLan','ratioMar','gorillaLv',
-        'nemLvA','nemLvB','nemLv2','nemLv3','nemLv4'
+        'ratioInf','ratioLan','ratioMar','gorillaLv', 'rhinoLv',
+        'nemLvA','nemLvB','nemLv3','nemLv4'
       ].forEach(id=>{
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', ()=>Calc.updateCapacityAndTable());
@@ -697,15 +680,25 @@
     window.UI = window.UI || {};
     
     UI.toggleSelect = function(id, on){
-      const el = document.getElementById(id);
-      if(!el) return;
-
-      el.classList.toggle("opacity-0", !on);
-      el.classList.toggle("pointer-events-none", !on);
-      el.classList.toggle("opacity-100", on);
+      const sel = document.getElementById(id);
+      if(!sel) return;
+      
+      sel.classList.toggle("opacity-0", !on);
+      sel.classList.toggle("pointer-events-none", !on);
+      sel.classList.toggle("opacity-100", on);
 
       // 선택: 부드럽게 보이게 (원하면)
-      el.classList.add("transition-opacity", "duration-150");
+      sel.classList.add("transition-opacity", "duration-150");
+    };
+    
+    UI.togglePetSelect = function(selectId, on){
+      const sel = document.getElementById(selectId);
+      if(!sel) return;
+      
+      sel.disabled = !on;
+      
+      // Tailwind 클래스 생성 문제 피하려고 style로 처리(확실함)
+      sel.style.opacity = on ? "1" : "0.5";
     };
   </script>  
   <script>
