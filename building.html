@@ -814,20 +814,20 @@
 
             <!-- 필요자원 표 -->
             <div class="rounded-md border p-3 text-[13px] space-y-1">
-              <!-- 1행: 불수정 / 정제 -->
-              <div class="grid grid-cols-4 gap-x-3 items-center">
+              <!-- 1행: 불수정 / 고기, 나무 -->
+              <div class="grid grid-cols-6 gap-x-3 items-center">
                 <div class="text-gray-600">불수정</div>
                 <div id="sub-불수정-${name}" class="tabular-nums">0</div>
-                <div class="text-gray-600">정제불수</div>
-                <div id="sub-정제-${name}" class="tabular-nums">0</div>
-              </div>
-
-              <!-- 2행: 고기 / 나무 / 석탄 / 철광 -->
-              <div class="grid grid-cols-8 gap-x-3 items-center">
                 <div class="text-gray-600">고기</div>
                 <div id="sub-고기-${name}" class="tabular-nums">0</div>
                 <div class="text-gray-600">나무</div>
                 <div id="sub-나무-${name}" class="tabular-nums">0</div>
+              </div>
+
+              <!-- 2행: 정제 / 석탄 / 철광 -->
+              <div class="grid grid-cols-6 gap-x-3 items-center">                
+                <div class="text-gray-600">정제불수</div>
+                <div id="sub-정제-${name}" class="tabular-nums">0</div>
                 <div class="text-gray-600">석탄</div>
                 <div id="sub-석탄-${name}" class="tabular-nums">0</div>
                 <div class="text-gray-600">철광</div>
