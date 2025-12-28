@@ -154,11 +154,11 @@
           <div class="text-sm font-medium mb-1">부집행관 관직 버프</div>
           <div class="flex flex-wrap gap-2">
             <button type="button" data-group="vp" data-vp="10"
-                    class="w-[110px] vp-btn px-4 py-2 rounded-md border">
+                    class="w-[105px] vp-btn px-4 py-2 rounded-md border">
               10%
             </button>
             <button type="button" data-group="vp" data-vp="15"
-                    class="w-[110px] vp-btn px-4 py-2 rounded-md border">
+                    class="w-[105px] vp-btn px-4 py-2 rounded-md border">
               15%
             </button>
           </div>
@@ -169,7 +169,7 @@
           <div class="text-sm font-medium mb-1">서버버프 (10%)</div>
           <div class="flex flex-wrap gap-2">
             <button type="button" id="chkServerBuff"
-                    class="w-[110px] toggle-btn px-4 py-2 rounded-md border"
+                    class="w-[105px] toggle-btn px-4 py-2 rounded-md border"
                     aria-pressed="false">
               활성화
             </button>
@@ -1024,9 +1024,6 @@
         
         const sEl = document.getElementById(`sub-점수-${name}`);
         if (sEl) sEl.textContent = "0";
-        
-        const sAEl = document.getElementById(`sub-점수A-${name}`); 
-        if (sAEl) sAEl.textContent = "0";
       });
 
       const factor = getFactorForTime();
