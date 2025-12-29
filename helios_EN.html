@@ -525,8 +525,8 @@
               <div class="grid grid-cols-[auto_1fr] items-center justify-center">
                 <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
                 <div>
-                  <div class="font-medium">FC Shard</div>
-                  <div class="tabular-nums font-semibold">${total.가루.toLocaleString()}</div>
+                  <div class="font-semibold">FC Shard</div>
+                  <div>${total.가루.toLocaleString()}</div>
                 </div>
               </div>
 
@@ -534,16 +534,16 @@
               <div class="grid grid-cols-[auto_1fr] items-center justify-center">
                 <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
                 <div>
-                  <div class="font-medium">Steel</div>
-                  <div class="tabular-nums font-semibold">${total.철강재.toLocaleString()}</div>
+                  <div class="font-semibold">Steel</div>
+                  <div>${total.철강재.toLocaleString()}</div>
                 </div>
               </div>
 
               <!-- Time Required -->
               <div class="grid grid-cols-[auto_1fr] items-center justify-center text-right">
                 <div>
-                  <div class="font-medium">Time Required</div>
-                  <div class="tabular-nums font-semibold">${formatTime(totalTime)}</div>
+                  <div class="font-semibold">Time Required</div>
+                  <div>${formatTime(totalTime)}</div>
                 </div>
               </div>
             </div>
@@ -555,7 +555,7 @@
               <div class="grid grid-cols-[auto_1fr] items-center justify-center">
                 <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
                 <div>
-                  <div class="font-medium">FC Shard</div>
+                  <div class="font-semibold">FC Shard</div>
                   <span>${owned.가루.toLocaleString()}</span>
                 </div>
               </div>
@@ -564,7 +564,7 @@
               <div class="grid grid-cols-[auto_1fr] items-center justify-center">
                 <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
                 <div>
-                  <div class="font-medium">Steel</div>
+                  <div class="font-semibold">Steel</div>
                   <span>${owned.철강재.toLocaleString()}</span>
                 </div>
               </div>
@@ -577,7 +577,7 @@
               <div class="grid grid-cols-[auto_1fr] items-center justify-center">
                 <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
                 <div>
-                  <div class="font-medium">FC Shard</div>
+                  <div class="font-semibold">FC Shard</div>
                   <span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span>
                 </div>
               </div>
@@ -586,7 +586,7 @@
               <div class="grid grid-cols-[auto_1fr] items-center justify-center">
                 <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
                 <div>
-                  <div class="font-medium">Steel</div>
+                  <div class="font-semibold">Steel</div>
                   <span class="text-right ${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span>
                 </div>
               </div>

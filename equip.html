@@ -51,64 +51,137 @@
     </div>
 
     <!-- 장비 카드 그리드 -->
-    <div id="gearGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    <div id="gearGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
     <!-- 하단 총합 패널 -->
-    <div id="summaryPanel" class="exp-card mt-4">
-      <div class="p-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">총합</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="sum-합금">0</span></div>
-            <div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="sum-설계도면">0</span></div>
-            <div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="sum-광택제">0</span></div>
-            <div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="sum-달빛앰버">0</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="flex items-center justify-between mb-3">
-          <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
-          <span class="muted">입력 시 자동 반영</span>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <div>
-              <label class="block text-[15px] text-gray-600 mb-1">보유 합금</label>
-              <input type="number" id="owned-합금" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+    <div id="summaryPanel" class="mt-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">        
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">총합</div>
+          
+          <div class="grid grid-cols-2 text-[13px] text-gray-600">
+            <div>            
+              <!-- 단단한 합금 -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Hardened Alloy.webp" class="w-12 h-12" alt="Hardened Alloy">
+                <div>
+                  <div class="font-semibold">단단한 합금</div>
+                  <span id="sum-합금">0</span>
+                </div>
+              </div>
+              
+              <div class="mb-4"></div>
+              
+              <!-- 설계도면 -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Design Plans.webp" class="w-12 h-12 mx-auto" alt="Design Plans">
+                <div>
+                  <div class="font-semibold">설계도면</div>
+                  <span id="sum-설계도면">0</span>
+                </div>
+              </div>
             </div>
             <div>
-              <label class="block text-[15px] text-gray-600 mb-1">보유 설계도면</label>
-              <input type="number" id="owned-설계도면" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              <!-- 광택제 -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Polishing Solution.webp" class="w-12 h-12 mx-auto" alt="Polishing Solution">
+                <div>
+                  <div class="font-semibold">광택제</div>
+                  <span id="sum-광택제">0</span>
+                </div>
+              </div>
+              
+              <div class="mb-4"></div>
+              
+              <!-- 달빛앰버 -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Lunar Amber.webp" class="w-12 h-12 mx-auto" alt="Lunar Amber">
+                <div>
+                  <div class="font-semibold">달빛앰버</div>
+                  <span id="sum-달빛앰버">0</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <div>
-            <div>
-              <label class="block text-[15px] text-gray-600 mb-1">보유 광택제</label>
-              <input type="number" id="owned-광택제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-            </div>
-            <div>
-              <label class="block text-[15px] text-gray-600 mb-1">보유 달빛앰버</label>
-              <input type="number" id="owned-앰버" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-            </div>
-          </div>
-        </div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">과부족</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="def-합금">0</span></div>
-            <div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="def-설계도면">0</span></div>
-            <div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="def-광택제">0</span></div>
-            <div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="def-달빛앰버">0</span></div>
           </div>
         </div>
+
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
+            <span class="muted">입력 시 자동 반영</span>              
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <div>
+                <label class="block text-[15px] text-gray-600 mb-1">보유 합금</label>
+                <input type="number" id="owned-합금" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              </div>
+              <div>
+                <label class="block text-[15px] text-gray-600 mb-1">보유 설계도면</label>
+                <input type="number" id="owned-설계도면" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              </div>
+            </div>
+            <div>
+              <div>
+                <label class="block text-[15px] text-gray-600 mb-1">보유 광택제</label>
+                <input type="number" id="owned-광택제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              </div>
+              <div>
+                <label class="block text-[15px] text-gray-600 mb-1">보유 달빛앰버</label>
+                <input type="number" id="owned-앰버" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">과부족</div>
+          <div class="grid grid-cols-2 text-[13px] text-gray-600">
+            <div>            
+              <!-- FC Shard -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Hardened Alloy.webp" class="w-12 h-12" alt="Hardened Alloy">
+                <div>
+                  <div>단단한 합금</div>
+                  <span id="def-합금">0</span>
+                </div>
+              </div>
+              <div class="mb-4"></div>
+              <!-- Steel -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Design Plans.webp" class="w-12 h-12 mx-auto" alt="Design Plans">
+                <div>
+                  <div>설계도면</div>
+                  <span id="def-설계도면">0</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <!-- Time Required -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Polishing Solution.webp" class="w-12 h-12 mx-auto" alt="Polishing Solution">
+                <div>
+                  <div>광택제</div>
+                  <span id="def-광택제">0</span>
+                </div>
+              </div>
+              <div class="mb-4"></div>
+              <!-- Steel -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Lunar Amber.webp" class="w-12 h-12 mx-auto" alt="Lunar Amber">
+                <div>
+                  <div>달빛앰버</div>
+                  <span id="def-달빛앰버">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
       </div>
     </div>
-
     
   </div>
 
@@ -165,10 +238,29 @@
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
                 <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
-                  <div class="text-gray-600">합금</div><div class="text-right tabular-nums" id="sub-alloy-${i}">0</div>
-                  <div class="text-gray-600">설계도면</div><div class="text-right tabular-nums" id="sub-blue-${i}">0</div>
-                  <div class="text-gray-600">광택제</div><div class="text-right tabular-nums" id="sub-polish-${i}">0</div>
-                  <div class="text-gray-600">달빛앰버</div><div class="text-right tabular-nums" id="sub-amber-${i}">0</div>
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Hardened Alloy.webp" class="w-6 h-6" alt="Hardened Alloy">
+                    <span>단단한 합금</span>
+                  </div>
+                  <div class="text-right tabular-nums" id="sub-alloy-${i}">0</div>
+
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Design Plans.webp" class="w-6 h-6" alt="Design Plans">
+                    <span>설계도면</span>
+                  </div>
+                  <div class="text-right tabular-nums" id="sub-blue-${i}">0</div>
+                  
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Polishing Solution.webp" class="w-6 h-6" alt="Polishing Solution">
+                    <span>광택제</span>
+                  </div>
+                  <div class="text-right tabular-nums" id="sub-polish-${i}">0</div>
+
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Lunar Amber.webp" class="w-6 h-6" alt="Lunar Amber">
+                    <span>달빛앰버</span>
+                  </div>
+                  <div class="text-right tabular-nums" id="sub-amber-${i}">0</div>
                 </div>
               </div>
             </div>

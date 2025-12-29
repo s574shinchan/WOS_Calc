@@ -51,7 +51,7 @@
     </div>
 
     <!-- 장비 카드 그리드 -->
-    <div id="gearGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    <div id="gearGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
     <!-- 보유 자원 카드 -->
     <div class="exp-card">
@@ -81,11 +81,9 @@
     </div>
 
     <!-- 하단 총합 패널 -->
-    <div id="summaryPanel" class="exp-card">
-      <div class="p-4">
-        <div id="summaryBody"></div>
-      </div>
-    </div>
+    <div id="summaryPanel" class="mb-4">
+      <div id="summaryBody"></div>
+    </div>  
   </div>
 
   <!-- ========== 데이터 & 로직 ========== -->
@@ -151,10 +149,29 @@
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">SubTotal</div>
                 <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
-                  <div class="text-gray-600">Hardened Alloy</div><div class="text-right tabular-nums" id="sub-alloy-${i}">0</div>
-                  <div class="text-gray-600">Design Plans</div><div class="text-right tabular-nums" id="sub-blue-${i}">0</div>
-                  <div class="text-gray-600">Polishing Solution</div><div class="text-right tabular-nums" id="sub-polish-${i}">0</div>
-                  <div class="text-gray-600">Lunar Amber</div><div class="text-right tabular-nums" id="sub-amber-${i}">0</div>
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Hardened Alloy.webp" class="w-6 h-6" alt="Hardened Alloy">
+                    <span>Hardened Alloy</span>
+                  </div>
+                  <div class="text-right tabular-nums" id="sub-alloy-${i}">0</div>
+
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Design Plans.webp" class="w-6 h-6" alt="Design Plans">
+                    <span>Design Plans</span>
+                  </div>
+                  <div class="text-right tabular-nums" id="sub-blue-${i}">0</div>
+                  
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Polishing Solution.webp" class="w-6 h-6" alt="Polishing Solution">
+                    <span>Polishing Solution</span>
+                  </div>
+                  <div class="text-right tabular-nums" id="sub-polish-${i}">0</div>
+
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Lunar Amber.webp" class="w-6 h-6" alt="Lunar Amber">
+                    <span>Lunar Amber</span>
+                  </div>
+                  <div class="text-right tabular-nums" id="sub-amber-${i}">0</div>
                 </div>
               </div>
             </div>
@@ -241,27 +258,131 @@
       const summaryBody = `
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Total</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Hardened Alloy</span><span>${total.합금.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Design Plans</span><span>${total.설계도면.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Polishing Solution</span><span>${total.광택제.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Lunar Amber</span><span>${total.달빛앰버.toLocaleString()}</span></div>
+            <div class="font-semibold mb-2">Total</div>                        
+            <div class="grid grid-cols-2 text-[13px] text-gray-600">
+
+              <!-- Hardened Allo -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Hardened Alloy.webp" class="w-12 h-12" alt="Hardened Alloy">
+                <div>
+                  <div class="font-medium">Hardened Alloy</div>
+                  <div class="tabular-nums font-semibold">${total.합금.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Design Plan -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Design Plans.webp" class="w-12 h-12 mx-auto" alt="Design Plans">
+                <div>
+                  <div class="font-medium">Design Plans</div>
+                  <div class="tabular-nums font-semibold">${total.설계도면.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Polishing Solution -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Polishing Solution.webp" class="w-12 h-12" alt="Polishing Solution">
+                <div>
+                  <div class="font-medium">Polishing Solution</div>
+                  <div class="tabular-nums font-semibold">${total.광택제.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Polishing Solution -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+	              <img src="images/icon_Lunar Amber.webp" class="w-12 h-12" alt="Lunar Amber">
+                <div>
+                  <div class="font-medium">Lunar Amber</div>
+                  <div class="tabular-nums font-semibold">${total.달빛앰버.toLocaleString()}</div>
+                </div>
+              </div>
+            </div>
+                        
           </div>
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">Stock</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Hardened Alloy</span><span>${owned.합금.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Design Plans</span><span>${owned.설계도면.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Polishing Solution</span><span>${owned.광택제.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Lunar Amber</span><span>${owned.달빛앰버.toLocaleString()}</span></div>
+            <div class="grid grid-cols-2 text-[13px] text-gray-600">
+
+              <!-- Hardened Allo -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Hardened Alloy.webp" class="w-12 h-12" alt="Hardened Alloy">
+                <div>
+                  <div class="font-medium">Hardened Alloy</div>
+                  <div class="tabular-nums font-semibold">${owned.합금.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Design Plan -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Design Plans.webp" class="w-12 h-12 mx-auto" alt="Design Plans">
+                <div>
+                  <div class="font-medium">Design Plans</div>
+                  <div class="tabular-nums font-semibold">${owned.설계도면.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Polishing Solution -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Polishing Solution.webp" class="w-12 h-12" alt="Polishing Solution">
+                <div>
+                  <div class="font-medium">Polishing Solution</div>
+                  <div class="tabular-nums font-semibold">${owned.광택제.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Polishing Solution -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+	              <img src="images/icon_Lunar Amber.webp" class="w-12 h-12" alt="Lunar Amber">
+                <div>
+                  <div class="font-medium">Lunar Amber</div>
+                  <div class="tabular-nums font-semibold">${owned.달빛앰버.toLocaleString()}</div>
+                </div>
+              </div>
+            </div>                        
           </div>
           <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Quantity required</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Hardened Alloy</span><span class="${deficit.합금<0?'text-red-600':''}">${deficit.합금.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Design Plans</span><span class="${deficit.설계도면<0?'text-red-600':''}">${deficit.설계도면.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Polishing Solution</span><span class="${deficit.광택제<0?'text-red-600':''}">${deficit.광택제.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Lunar Amber</span><span class="${deficit.달빛앰버<0?'text-red-600':''}">${deficit.달빛앰버.toLocaleString()}</span></div>
+            <div class="font-semibold mb-2">Surplus</div>
+            <div class="grid grid-cols-2 text-[13px] text-gray-600">
+
+              <!-- Hardened Allo -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Hardened Alloy.webp" class="w-12 h-12" alt="Hardened Alloy">
+                <div>
+                  <div class="font-medium">Hardened Alloy</div>
+                  <div class="${deficit.합금<0?'text-red-600':''}">${deficit.합금.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Design Plan -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Design Plans.webp" class="w-12 h-12 mx-auto" alt="Design Plans">
+                <div>
+                  <div class="font-medium">Design Plans</div>
+                  <div class="${deficit.합금<0?'text-red-600':''}">${deficit.설계도면.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Polishing Solution -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Polishing Solution.webp" class="w-12 h-12" alt="Polishing Solution">
+                <div>
+                  <div class="font-medium">Polishing Solution</div>
+                  <div class="${deficit.합금<0?'text-red-600':''}">${deficit.광택제.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <!-- Polishing Solution -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+	              <img src="images/icon_Lunar Amber.webp" class="w-12 h-12" alt="Lunar Amber">
+                <div>
+                  <div class="font-medium">Lunar Amber</div>
+                  <div class="${deficit.합금<0?'text-red-600':''}">${deficit.달빛앰버.toLocaleString()}</div>
+                </div>
+              </div>
+            </div>    
           </div>
-        </div>`;
+        </div>
+        `;
       const el = document.getElementById("summaryBody");
       if (el) el.innerHTML = summaryBody;
 
@@ -281,51 +402,51 @@
     function replaceDisplayName(label) {
       const baseMap = {
         "고급": "Uncommon",
-        "고급1성": "Uncommon (1-Star)",
+        "고급 (★1)": "Uncommon (1-Star)",
         "레어": "Rare",
-        "레어1성": "Rare (1-Star)",
-        "레어2성": "Rare (2-Star)",
-        "레어3성": "Rare (3-Star)",
+        "레어 (★1)": "Rare (1-Star)",
+        "레어 (★2)": "Rare (2-Star)",
+        "레어 (★3)": "Rare (3-Star)",
         "에픽": "Epic",
-        "에픽1성": "Epic (1-Star)",
-        "에픽2성": "Epic (2-Star)",
-        "에픽3성": "Epic (3-Star)",
+        "에픽 (★1)": "Epic (1-Star)",
+        "에픽 (★2)": "Epic (2-Star)",
+        "에픽 (★3)": "Epic (3-Star)",
         "에픽T1": "Epic T1",
-        "에픽T1-1": "Epic T1 (1-Star)",
-        "에픽T1-2": "Epic T1 (2-Star)",
-        "에픽T1-3": "Epic T1 (3-Star)",
+        "에픽T1 (★1)": "Epic T1 (1-Star)",
+        "에픽T1 (★2)": "Epic T1 (2-Star)",
+        "에픽T1 (★3)": "Epic T1 (3-Star)",
         "레전드": "Mythic",
-        "레전드1성": "Mythic (1-Star)",
-        "레전드2성": "Mythic (2-Star)",
-        "레전드3성": "Mythic (3-Star)",
+        "레전드 (★1)": "Mythic (1-Star)",
+        "레전드 (★2)": "Mythic (2-Star)",
+        "레전드 (★3)": "Mythic (3-Star)",
         "레전드T1": "Mythic T1",
-        "레전드T1-1": "Mythic T1 (1-Star)",
-        "레전드T1-2": "Mythic T1 (2-Star)",
-        "레전드T1-3": "Mythic T1 (3-Star)",
+        "레전드T1 (★1)": "Mythic T1 (1-Star)",
+        "레전드T1 (★2)": "Mythic T1 (2-Star)",
+        "레전드T1 (★3)": "Mythic T1 (3-Star)",
         "레전드T2": "Mythic T2",
-        "레전드T2-1": "Mythic T2 (1-Star)",
-        "레전드T2-2": "Mythic T2 (2-Star)",
-        "레전드T2-3": "Mythic T2 (3-Star)",
+        "레전드T2 (★1)": "Mythic T2 (1-Star)",
+        "레전드T2 (★2)": "Mythic T2 (2-Star)",
+        "레전드T2 (★3)": "Mythic T2 (3-Star)",
         "신화": "Legendary",
-        "신화1성": "Legendary (1-Star)",
-        "신화2성": "Legendary (2-Star)",
-        "신화3성": "Legendary (3-Star)",
+        "신화 (★1)": "Legendary (1-Star)",
+        "신화 (★2)": "Legendary (2-Star)",
+        "신화 (★3)": "Legendary (3-Star)",
         "신화T1": "Legendary T1",
-        "신화T1-1": "Legendary T1 (1-Star)",
-        "신화T1-2": "Legendary T1 (2-Star)",
-        "신화T1-3": "Legendary T1 (3-Star)",
+        "신화T1 (★1)": "Legendary T1 (1-Star)",
+        "신화T1 (★2)": "Legendary T1 (2-Star)",
+        "신화T1 (★3)": "Legendary T1 (3-Star)",
         "신화T2": "Legendary T2",
-        "신화T2-1": "Legendary T2 (1-Star)",
-        "신화T2-2": "Legendary T2 (2-Star)",
-        "신화T2-3": "Legendary T2 (3-Star)",
+        "신화T2 (★1)": "Legendary T2 (1-Star)",
+        "신화T2 (★2)": "Legendary T2 (2-Star)",
+        "신화T2 (★3)": "Legendary T2 (3-Star)",
         "신화T3": "Legendary T3",
-        "신화T3-1": "Legendary T3 (1-Star)",
-        "신화T3-2": "Legendary T3 (2-Star)",
-        "신화T3-3": "Legendary T3 (3-Star)",
+        "신화T3 (★1)": "Legendary T3 (1-Star)",
+        "신화T3 (★2)": "Legendary T3 (2-Star)",
+        "신화T3 (★3)": "Legendary T3 (3-Star)",
         "신화T4": "Legendary T4",
-        "신화T4-1": "Legendary T4 (1-Star)",                
-        "신화T4-2": "Legendary T4 (2-Star)",
-        "신화T4-3": "Legendary T4 (3-Star)",
+        "신화T4 (★1)": "Legendary T4 (1-Star)",                
+        "신화T4 (★2)": "Legendary T4 (2-Star)",
+        "신화T4 (★3)": "Legendary T4 (3-Star)",
       };
     
       return baseMap[label] || label;
