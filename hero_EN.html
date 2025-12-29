@@ -78,10 +78,8 @@
           </div>
 
           <!-- 📕 미스릴 총합계 -->
-          <div id="mithrilTotals" class="exp-card">
-            <div class="p-4">
-              <div class="font-semibold text-gray-800 mb-2">Empowerment Total</div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div id="mithrilTotals" class="mt-2">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-2">Sub Total</div>
                   <div class="flex justify-between text-[13px]">
@@ -104,14 +102,13 @@
                   <div class="flex justify-between text-[13px]"><span class="text-gray-600">Mythic Gear</span><span id="own-leg" class="tabular-nums">0</span></div>
                 </div>
                 <div class="rounded-xl border border-black/10 p-3">
-                  <div class="font-semibold mb-2">Quantity required</div>
+                  <div class="font-semibold mb-2">Surplus</div>
                   <div class="flex justify-between text-[13px]"><span class="text-gray-600">Exp</span><span id="def-exp" class="tabular-nums">0</span></div>
                   <div class="flex justify-between text-[13px]"><span class="text-gray-600">100 Enhancement XP Component</span><span id="def-nut" class="tabular-nums">0</span></div>
                   <div class="flex justify-between text-[13px]"><span class="text-gray-600">Mithril</span><span id="def-mith" class="tabular-nums">0</span></div>
                   <div class="flex justify-between text-[13px]"><span class="text-gray-600">Mythic Gear</span><span id="def-leg" class="tabular-nums">0</span></div>
                 </div>
               </div>
-            </div>
           </div>
         </form>
       </div>
@@ -147,10 +144,8 @@
           </div>
 
           <!-- 📙 마스터리 총합계 -->
-          <div id="masteryTotals" class="exp-card">
-            <div class="p-4">
-              <div class="font-semibold text-gray-800 mb-2">Mastery Forging Total</div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div id="masteryTotals" class="mt-2">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div class="rounded-xl border border-black/10 p-3">
                   <div class="font-semibold mb-2">Sub Total</div>
                   <div class="flex justify-between text-[13px]">
@@ -170,7 +165,7 @@
                   </div>
                 </div>
                 <div class="rounded-xl border border-black/10 p-3">
-                  <div class="font-semibold mb-2">Quantity required</div>
+                  <div class="font-semibold mb-2">Surplus</div>
                   <div class="flex justify-between text-[13px]">
                     <span class="text-gray-600">Essence Stone</span><span id="ms-def-stone" class="tabular-nums">0</span>
                   </div>
@@ -179,9 +174,7 @@
                   </div>
                 </div>
               </div>
-            </div>
           </div>
-
         </form>
       </div>
     </div>
@@ -433,8 +426,10 @@
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">Sub Total</div>
                 <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
-                  <div class="text-gray-600">Essence Stone</div><div class="text-right tabular-nums" id="ms-sub-stone-${i}">0</div>
-                  <div class="text-gray-600">Mythic Gear</div><div class="text-right tabular-nums" id="ms-sub-legend-${i}">0</div>
+                  <div class="text-gray-600">Essence Stone</div>
+                  <div class="text-right tabular-nums" id="ms-sub-stone-${i}">0</div>
+                  <div class="text-gray-600">Mythic Gear</div>
+                  <div class="text-right tabular-nums" id="ms-sub-legend-${i}">0</div>
                 </div>
               </div>
             </div>
