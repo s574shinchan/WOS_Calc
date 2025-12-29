@@ -17,8 +17,9 @@
     .dark-mode .border{border-color:#444!important}
     .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
     .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#dddddd!important}
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#f0f0f0!important}
     .dark-mode .bg-purple-50,.dark-mode .bg-orange-50,.dark-mode .bg-red-50{background-color:#2e2e2e!important}
+    .dark-mode .muted{ color:#f0f0f0 !important; }
     .dark-mode select option{color:#000!important}
     .dark-mode select{color:#000!important}
     .dark-mode input{color:#000!important}
@@ -77,6 +78,9 @@
     <!-- 합계 패널 (helios 느낌) -->
     <section id="summaryPanel" class="mt-4 grid md:grid-cols-3 gap-4">
       <!-- JS에서 채움 -->
+      
+      
+      
     </section>
   </div>
 
@@ -210,24 +214,40 @@
 
           <div class="grid md:grid-cols-2 gap-3">
             <div>
-              <div class="text-sm font-semibold mb-2">Level Range<span id="cap-${i}" class="muted"></span></div>
+              <div class="text-sm font-semibold mb-2">Level Range<span id="cap-${i}"></span></div>
               <div class="space-y-2">
                 <label class="inline-label w-full justify-between">
-                  <span class="muted w-14">Current</span>
+                  <span class="w-14">Current</span>
                   <select id="cur-${i}" class="pill w-28"></select>
                 </label>
                 <label class="inline-label w-full justify-between">
-                  <span class="muted w-14">Target</span>
+                  <span class="w-14">Target</span>
                   <select id="tgt-${i}" class="pill w-28"></select>
                 </label>
               </div>
             </div>
             <div class="md:pl-2">
               <div class="font-semibold text-gray-800 mb-2">Sub Total</div>
-              <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
-                <div class="text-gray-600">Guide</div><div class="text-right tabular-nums" id="m-${i}">0</div>
-                <div class="text-gray-600">Design</div><div class="text-right tabular-nums" id="b-${i}">0</div>
-                <div class="text-gray-600">Secrets</div><div class="text-right tabular-nums" id="v-${i}">0</div>
+
+              <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px] text-gray-600">
+
+                <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center mb-2">
+                  <img src="images/icon_Charm Guide.webp" class="w-5 h-5 mx-auto" alt="Guide">
+                    <div>Charm Guide</div>
+                </div>
+                <div class="text-right tabular-nums" id="m-${i}">0</div>
+
+                <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center mb-2">
+                  <img src="images/icon_Charm Design.webp" class="w-5 h-5 mx-auto" alt="Design">
+                    <div>Charm Design</div>
+                </div>
+                <div class="text-right tabular-nums" id="b-${i}">0</div>
+
+                <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center">
+                  <img src="images/icon_Charm Secrets.webp" class="w-5 h-5 mx-auto" alt="Secrets">
+                    <div>Charm Secrets</div>
+                </div>
+                <div class="text-right tabular-nums" id="v-${i}">0</div>
               </div>
             </div>
           </div>
@@ -256,16 +276,32 @@
 
     function renderSummaryCards(total, owned, deficit){
       const card = (title, data) => `
-        <div class="sum-card bg-white p-4 rounded-xl">
-          <div class="flex items-center justify-between mb-2">
-            <div class="sum-title">${title}</div>
-          </div>
-          <div class="space-y-2 text-sm">
-            <div class="sum-item"><span class="muted">Guide</span><span class="tabular-nums">${fmt(data.m)}</span></div>
-            <div class="sum-item"><span class="muted">Design</span><span class="tabular-nums">${fmt(data.b)}</span></div>
-            <div class="sum-item"><span class="muted">Secrets</span><span class="tabular-nums">${fmt(data.v)}</span></div>
-          </div>
+        <div class="sum-card bg-white rounded-xl border border-black/10 p-3">
+        <div class="flex items-center justify-between mb-2">
+          <div class="sum-title">${title}</div>
         </div>
+        <div class="space-y-2 text-sm grid grid-cols-2">
+          <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center">
+            <img src="images/icon_Charm Guide.webp" class="w-10 h-10 mx-auto" alt="Guide">
+              <div>Charm Guide</div>
+          </div>
+          <div class="tabular-nums items-center justify-center text-right">${fmt(data.m)}</div>
+        </div>
+        <div class="space-y-2 text-sm grid grid-cols-2">
+          <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center">
+            <img src="images/icon_Charm Design.webp" class="w-10 h-10 mx-auto" alt="Design">
+              <div>Charm Design</div>
+          </div>
+          <div class="tabular-nums items-center justify-center text-right">${fmt(data.b)}</div>
+        </div>
+        <div class="space-y-2 text-sm grid grid-cols-2">
+          <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center">
+            <img src="images/icon_Charm Secrets.webp" class="w-10 h-10 mx-auto" alt="Secrets">
+              <div>Charm Secrets</div>
+          </div>
+          <div class="tabular-nums items-center justify-center text-right">${fmt(data.v)}</div>
+        </div>
+      </div>
       `;
       document.getElementById("summaryPanel").innerHTML = [
         card("Total",  total),

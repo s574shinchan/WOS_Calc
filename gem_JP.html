@@ -6,7 +6,6 @@
   <title>領主宝石 計算</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .muted{color:#6b7280}
     .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
     .inline-label{display:flex;align-items:center;gap:.5rem}
     .tabular-nums{font-variant-numeric: tabular-nums}
@@ -17,7 +16,7 @@
     .dark-mode .border{border-color:#444!important}
     .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
     .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#dddddd!important}
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#f0f0f0!important}
     .dark-mode .bg-purple-50,.dark-mode .bg-orange-50,.dark-mode .bg-red-50{background-color:#2e2e2e!important}
     .dark-mode select option{color:#000!important}
     .dark-mode select{color:#000!important}
@@ -208,24 +207,38 @@
 
           <div class="grid md:grid-cols-2 gap-3">
             <div>
-              <div class="text-sm font-semibold mb-2">レベル範囲 <span id="cap-${i}" class="muted"></span></div>
+              <div class="text-sm font-semibold mb-2">レベル範囲 <span id="cap-${i}"></span></div>
               <div class="space-y-2">
                 <label class="inline-label w-full justify-between">
-                  <span class="muted w-14">現在</span>
+                  <span class="w-14">現在</span>
                   <select id="cur-${i}" class="pill w-28"></select>
                 </label>
                 <label class="inline-label w-full justify-between">
-                  <span class="muted w-14">目標</span>
+                  <span class="w-14">目標</span>
                   <select id="tgt-${i}" class="pill w-28"></select>
                 </label>
               </div>
             </div>
             <div class="md:pl-2">
               <div class="font-semibold text-gray-800 mb-2">小計</div>
-              <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
-                <div class="text-gray-600">宝石ハンドブック</div><div class="text-right tabular-nums" id="m-${i}">0</div>
-                <div class="text-gray-600">宝石図面</div><div class="text-right tabular-nums" id="b-${i}">0</div>
-                <div class="text-gray-600">宝石秘典</div><div class="text-right tabular-nums" id="v-${i}">0</div>
+              <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px] text-gray-600">
+                <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center mb-2">
+                  <img src="images/icon_Charm Guide.webp" class="w-5 h-5 mx-auto" alt="Guide">
+                    <div>宝石ハンドブック</div>
+                </div>
+                <div class="text-right tabular-nums" id="m-${i}">0</div>
+
+                <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center mb-2">
+                  <img src="images/icon_Charm Design.webp" class="w-5 h-5 mx-auto" alt="Design">
+                    <div>宝石図面</div>
+                </div>
+                <div class="text-right tabular-nums" id="b-${i}">0</div>
+
+                <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center">
+                  <img src="images/icon_Charm Secrets.webp" class="w-5 h-5 mx-auto" alt="Secrets">
+                    <div>宝石秘典</div>
+                </div>
+                <div class="text-right tabular-nums" id="v-${i}">0</div>
               </div>
             </div>
           </div>
@@ -254,16 +267,32 @@
 
     function renderSummaryCards(total, owned, deficit){
       const card = (title, data) => `
-        <div class="sum-card bg-white p-4 rounded-xl">
-          <div class="flex items-center justify-between mb-2">
-            <div class="sum-title">${title}</div>
-          </div>
-          <div class="space-y-2 text-sm">
-            <div class="sum-item"><span class="muted">宝石ハンドブック</span><span class="tabular-nums">${fmt(data.m)}</span></div>
-            <div class="sum-item"><span class="muted">宝石図面</span><span class="tabular-nums">${fmt(data.b)}</span></div>
-            <div class="sum-item"><span class="muted">宝石秘典</span><span class="tabular-nums">${fmt(data.v)}</span></div>
-          </div>
+        <div class="sum-card bg-white rounded-xl border border-black/10 p-3">
+        <div class="flex items-center justify-between mb-2">
+          <div class="sum-title">${title}</div>
         </div>
+        <div class="space-y-2 text-sm grid grid-cols-2">
+          <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center">
+            <img src="images/icon_Charm Guide.webp" class="w-10 h-10 mx-auto" alt="Guide">
+              <div>宝石ハンドブック</div>
+          </div>
+          <div class="tabular-nums items-center justify-center text-right">${fmt(data.m)}</div>
+        </div>
+        <div class="space-y-2 text-sm grid grid-cols-2">
+          <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center">
+            <img src="images/icon_Charm Design.webp" class="w-10 h-10 mx-auto" alt="Design">
+              <div>宝石図面</div>
+          </div>
+          <div class="tabular-nums items-center justify-center text-right">${fmt(data.b)}</div>
+        </div>
+        <div class="space-y-2 text-sm grid grid-cols-2">
+          <div class="sum-item grid grid-cols-[auto_1fr] items-center justify-center">
+            <img src="images/icon_Charm Secrets.webp" class="w-10 h-10 mx-auto" alt="Secrets">
+              <div>宝石秘典</div>
+          </div>
+          <div class="tabular-nums items-center justify-center text-right">${fmt(data.v)}</div>
+        </div>
+      </div>
       `;
       document.getElementById("summaryPanel").innerHTML = [
         card("合計",  total),
