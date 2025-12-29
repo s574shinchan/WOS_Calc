@@ -45,6 +45,11 @@
     body.dark-mode .exp-card{ background-color:#2c2c2c !important; border-color:#444 !important; }
     body.dark-mode .exp-divider{ border-color:#444 !important; }
     body.dark-mode .muted{ color:#b7b7b7 !important; }
+    body.dark-mode .svs-score-label,
+    body.dark-mode .svs-score-value {
+      font-weight: 700;
+      color: #16AC7A !important;
+    }
   </style>
 
   <!-- ✅ 다크모드 상태 유지 -->
@@ -62,11 +67,12 @@
 
     <div class="text-gray-600 mb-4 text-sm">
       <div class="mb-4">
-        <p>헬리오스 병사연구에 필요한 자원(가루, 철강재)을 계산합니다.</p>
-        <p>연구 항목을 선택하고 현재/목표 레벨을 지정하면 자동 합산됩니다. (소요시간은 참고용)</p>
+        <p>헬리오스 병사연구에 필요한 자원(불수조각, 철강재)을 계산합니다.</p>
+        <p>연구 항목을 선택하고 현재/목표 레벨을 지정하면 자동 합산됩니다.</p>
+        <p>SVS 점수는 <span class="font-semibold text-blue-300">[조각 소모점수 + 소요시간만큼 가속아이템을 사용할 경우]</span> 계산된 점수 입니다.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4">
         <!-- 병종 선택 (버튼 토글) -->
         <div>
           <div class="text-sm font-medium mb-1">병종선택</div>
@@ -109,6 +115,14 @@
           </div>
           <input type="checkbox" id="chkVP10" hidden>
           <input type="checkbox" id="chkVP15" hidden>
+        </div>
+        <div>
+          <label class="block text-sm mb-1">발레리아</label>
+          <select id="chkExpertV" class="w-full rounded-md border px-2 py-2">
+            <option>None</option>
+            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+            <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+          </select>
         </div>
         <!--서버버프-->
         <div>
@@ -289,7 +303,44 @@
         { level: 10, 가루: 765, 철강재: 220000, 시간: "15d 15:00:00" },
       ]
     };
+    
+    // ✅ 발레리아(SVS 점수 보너스)
+    const EXPERT_BONUS = {
+      "None":0,
+      "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+      "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+    };
+    const EXPERT_DESC = {
+      "Lv.1":  "+2%",
+      "Lv.2":  "+4%",
+      "Lv.3":  "+6%",
+      "Lv.4":  "+8%",
+      "Lv.5":  "+10%",
+      "Lv.6":  "+12%",
+      "Lv.7":  "+14%",
+      "Lv.8":  "+16%",
+      "Lv.9":  "+18%",
+      "Lv.10": "+20%"
+    };
 
+    function getValeriaBonus(){
+      const sel = document.getElementById("chkExpertV");
+      if (!sel) return 0;
+      const key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+      return EXPERT_BONUS[key] ?? 0;
+    }
+
+    function getValeriaDesc(){
+      const expertSel = document.getElementById("chkExpertV");
+      const lv = expertSel.value;
+      const text = EXPERT_DESC[lv]
+        ? "SvS 점수 " + EXPERT_DESC[lv]
+        : "SvS 점수";
+
+      document.querySelectorAll(".svs-score-label").forEach(el => {
+        el.textContent = text;
+      });
+    }
     /* ========== 상태 & 유틸 ========== */
     let researchList = [];
 
@@ -371,7 +422,7 @@
 
         wrap.innerHTML = `
           <div class="p-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div>
                 <div class="flex items-center gap-2 mb-2">
                   <h3 class="text-[15px] font-semibold text-gray-800">${item.label}</h3>
@@ -402,6 +453,10 @@
                   <div class="text-right tabular-nums" id="subtotal-steel-${item.key}">0</div>
                   <div class="text-gray-600">소요시간</div>
                   <div class="text-right tabular-nums" id="subtotal-time-${item.key}">0</div>
+                  <div class="col-span-2 border-t border-gray-200 mt-1"></div>
+                  <div class="svs-score-label text-gray-600">SVS 점수</div>
+                  <div id="sub-점수-${item.label}" class="svs-score-value text-right tabular-nums font-medium">0</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -447,7 +502,14 @@
       else if (toggleId === "chkVP15" && chkVP15.checked) chkVP10.checked = false;
       scheduleCalc();
     }
-
+    // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
+    function formatSVS(value){
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "0";
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+      if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+      return num.toLocaleString();
+    }
     // 이벤트 바인딩
     document.addEventListener("change", (e) => {
       if (e.target.id === "chkVP10" || e.target.id === "chkVP15" || e.target.id === "chkServerBuff") scheduleCalc();
@@ -505,7 +567,17 @@
         if (dEl) dEl.textContent = subtotal.가루.toLocaleString();
         if (sEl) sEl.textContent = subtotal.철강재.toLocaleString();
         if (tEl) tEl.textContent = formatTime(Math.round(subtotal.시간 / factor));
+        
+        // ✅ SVS 점수 = (가루*1000) × (1 + 발레리아 보너스)
+        const shard = (subtotal.가루 * 1000);
+        const vBonus = getValeriaBonus(); // 0 ~ 0.20      
+        const sScore = Math.floor(shard * (1 + vBonus));        
+        const tScore = Math.floor((subtotal.시간/60) * (1 + vBonus));        
+        const finalScore = sScore+tScore;
 
+        const scoreEl = document.getElementById(`sub-점수-${item.label}`);
+        if (scoreEl) scoreEl.textContent = formatSVS(finalScore);
+        
         if (cur < tgt) {
           total.가루 += subtotal.가루;
           total.철강재 += subtotal.철강재;
@@ -535,8 +607,8 @@
       };
       
       const totalTime = Math.round(total.시간 / factor);
-		
-	  document.getElementById("sum-가루").textContent = total["가루"].toLocaleString();
+      
+      document.getElementById("sum-가루").textContent = total["가루"].toLocaleString();
       document.getElementById("sum-철강재").textContent = total["철강재"].toLocaleString();     
       document.getElementById("sum-시간").textContent = formatTime(totalTime);
       
