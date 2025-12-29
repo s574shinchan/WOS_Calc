@@ -135,14 +135,12 @@
     </div>
 
     <!-- ✅ 최하단 총합계 패널 -->
-    <div id="summaryPanel" class="exp-card mt-4">
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-2">
-          <span class="muted"></span>
-        </div>
-        <div id="summaryBody"></div>
+    <div id="summaryPanel" class="mt-4">      
+      <div class="flex items-center justify-between mb-2">
+        <span class="muted"></span>
       </div>
-    </div>
+      <div id="summaryBody"></div>
+    </div>    
   </div>
 
   <script>
@@ -366,10 +364,16 @@
 
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">Sub Total</div>
-                <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
-                  <div class="text-gray-600">Fire Crystal Shard</div>
+                <div class="grid grid-cols-2 gap-x-3 text-[13px]">
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_FCShard.webp" class="w-6 h-6" alt="불수조각">
+                    <span>FC Shard</span>
+                  </div>
                   <div class="text-right tabular-nums" id="subtotal-dust-${item.key}">0</div>
-                  <div class="text-gray-600">Steel</div>
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Steel.webp" class="w-6 h-6" alt="철강재">
+                    <span>Steel</span>
+                  </div>
                   <div class="text-right tabular-nums" id="subtotal-steel-${item.key}">0</div>
                   <div class="text-gray-600">Time Required</div>
                   <div class="text-right tabular-nums" id="subtotal-time-${item.key}">0</div>
@@ -513,21 +517,51 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">Total</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Fire Crystal Shard</span><span>${total.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Steel</span><span>${total.철강재.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Time Required</span><span>${formatTime(totalTime)}</span></div>
+            <div class="grid grid-cols-3 gap-x-3 text-[13px]">
+              <div class="flex items-center gap-2 text-gray-600">
+                <img src="images/icon_FCShard.webp" class="w-12 h-12" alt="불수조각">
+                <span>FC Shard</span>
+                <span>${total.가루.toLocaleString()}</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-600">
+                <img src="images/icon_Steel.webp" class="w-12 h-12" alt="불수조각">
+                <span class="text-gray-600">Steel</span>
+                <span>${total.철강재.toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between text-[13px]">
+                <span class="text-gray-600">Time Required</span>
+                <span>${formatTime(totalTime)}</span>
+              </div>
+            </div>              
           </div>
+
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">Stock</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Fire Crystal Shard</span><span>${owned.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Steel</span><span>${owned.철강재.toLocaleString()}</span></div>
+            <div class="flex justify-between text-[13px]">
+              <span class="text-gray-600">Fire Crystal Shard</span>
+              <span>${owned.가루.toLocaleString()}</span>
+            </div>
+            <div class="flex justify-between text-[13px]">
+              <span class="text-gray-600">Steel</span>
+              <span>${owned.철강재.toLocaleString()}</span>
+            </div>
           </div>
+
           <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Quantity required</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Fire Crystal Shard</span><span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Steel</span><span class="${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span></div>
+            <div class="font-semibold mb-2">Surplus</div>
+              <div class="grid grid-cols-2 gap-x-3 text-[13px]">
+              <div class="flex items-center gap-2 text-gray-600">
+                <img src="images/icon_FCShard.webp" class="w-12 h-12" alt="불수조각">
+                <span>FC Shard</span>
+                <span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-600">
+                <img src="images/icon_Steel.webp" class="w-12 h-12" alt="불수조각">
+                <span class="text-gray-600">Steel</span>
+                <span class="text-right ${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span>
+              </div>
+            </div>
           </div>
-        </div>
       `;
       const summaryEl = document.getElementById("summaryBody");
       if (summaryEl) summaryEl.innerHTML = summaryBody;
@@ -568,16 +602,5 @@
       }
     });
   </script>
-  <script>
-    setInterval(() => {
-      const start = performance.now();
-      debugger; // 개발자도구가 열리면 브라우저가 일시정지됨
-      const end = performance.now();
-      if (end - start > 100) {
-        alert("개발자 도구 접근이 감지되었습니다. 페이지를 새로고침합니다.");
-        location.reload();
-      }
-    }, 1000);
-  </script>
-</body>
+  </body>
 </html>
