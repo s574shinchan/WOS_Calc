@@ -15,7 +15,9 @@
     .dark-mode select,.dark-mode input{ color:#000 !important; }
     .dark-mode table{ background:#2c2c2c; color:#f0f0f0; }
     .dark-mode th,.dark-mode td{ border-color:#444 !important; }
-
+    .dark-mode .text-red-600 {
+      color: #f87171 !important; /* Tailwind의 red-600 색상 */
+    }
     /* ========== experts 카드 스타일 ========== */
     .exp-card{
       border:1px solid rgba(0,0,0,.08);
@@ -31,6 +33,22 @@
     body.dark-mode .muted{ color:#b7b7b7 !important; }
     .tabular-nums{ font-variant-numeric: tabular-nums; }
   </style>
+  <style>
+      /* 카드 전체 */
+      .exp-card {
+        @apply rounded-2xl border shadow;
+        @apply bg-white border-gray-200;
+      }
+      .dark-mode .exp-card {
+        @apply bg-[#1f1f1f] border-gray-700;
+      }
+
+      body.dark-mode .svs-score-label,
+      body.dark-mode .svs-score-value {
+        font-weight: 700;
+        color: #16AC7A !important;
+      }
+    </style>
 
   <!-- 다크모드 상태 유지 -->
   <script>
@@ -52,64 +70,98 @@
     </div>
 
     <!-- ===================== 📕 미스릴 ===================== -->
-    <div class="exp-card">
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="text-[16px] font-semibold text-yellow-700">📕 미스릴</h2>
+    <div class="p-4">
+      <form id="heroEquipForm" class="space-y-3">        
+        <div class="mb-4 flex items-center justify-start gap-2 w-full">
+          <label class="text-sm font-medium whitespace-nowrap">발레리아</label>
+          <select id="chkExpertV" class="w-[120px] border rounded-md px-2 py-1.5">
+            <option>None</option>
+            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+            <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+          </select>
+          <!-- ✅ 레벨 설명 표시 영역 -->
+          <span id="expertDesc" class="svs-score-value text-sm font-semibold hidden px-4"></span>
         </div>
+        <div id="heroEquipGridBody" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
 
-        <form id="heroEquipForm" class="space-y-3">
-          <div id="heroEquipGridBody" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
+        <!-- 📕 미스릴 총합계 -->
+        <div id="mithrilTotals">
+          <!-- 3등분 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 
-          <!-- 📕 미스릴 총합계 -->
-          <div id="mithrilTotals" class="exp-card">
-            <div class="p-4">
-              <div class="font-semibold text-gray-800 mb-2">총합계 (미스릴)</div>
+            <!-- 🧮 필요 총합 -->
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold text-gray-800 mb-2">필요 총합</div>
+              <div class="grid items-center text-[12px]
+                          gap-x-3 gap-y-1
+                          grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+                <div class="text-gray-600">경험치</div>
+                <div id="tot-exp" class="text-right tabular-nums">0</div>
+                <div class="text-gray-600">미스릴</div>
+                <div id="tot-mith" class="text-right tabular-nums">0</div>
+
+                <div class="text-gray-600">너트</div>
+                <div id="tot-nut" class="text-right tabular-nums">0</div>
+                <div class="text-gray-600">레전드장비</div>
+                <div id="tot-leg" class="text-right tabular-nums">0</div>
+
+                <div class="col-span-4 border-t border-gray-200 mt-1"></div>
+
+                <div class="svs-score-label pt-1">SVS 점수</div>
+                <span id="svs-long"  class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>                
+                <div></div>
+                <span id="svs-short" class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>
+              </div>
+            </div>
+
+            <!-- 🧺 보유량 (기존 유지) -->
+            <div class="rounded-xl border border-black/10 dark:border-gray-700 p-3">
+              <div class="font-semibold text-gray-800 mb-2">보유량</div>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div class="rounded-xl border border-black/10 p-3">
-                  <div class="font-semibold mb-2">필요 총합</div>
-                  <div class="flex justify-between text-[12px]">
-                    <span class="text-gray-600">경험치</span><span id="tot-exp" class="tabular-nums">0</span>
-                  </div>
-                  <div class="flex justify-between text-[12px]">
-                    <span class="text-gray-600">너트</span><span id="tot-nut" class="tabular-nums">0</span>
-                  </div>
-                  <div class="flex justify-between text-[12px]">
-                    <span class="text-gray-600">미스릴</span><span id="tot-mith" class="tabular-nums">0</span>
-                  </div>
-                  <div class="flex justify-between text-[12px]">
-                    <span class="text-gray-600">레전드장비</span><span id="tot-leg" class="tabular-nums">0</span>
-                  </div>
+                <div>
+                  <label class="block text-[12px] text-gray-600 mb-1">보라너트</label>
+                  <input type="number" id="own-너트" class="w-full border rounded-lg px-3 py-2 text-sm
+                      bg-white dark:bg-[#2b2b2b] dark:border-gray-600"
+                      placeholder="0" min="0" inputmode="numeric"/>
                 </div>
-                <div class="rounded-xl border border-black/10 p-3">
-                  <div class="font-semibold mb-2">보유량</div>
-									<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-										<div>
-											<label class="block text-[12px] text-gray-600 mb-1">보라너트</label>
-											<input type="number" id="own-너트" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-										</div>
-										<div>
-											<label class="block text-[12px] text-gray-600 mb-1">미스릴</label>
-											<input type="number" id="own-미스릴" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-										</div>
-										<div>
-											<label class="block text-[12px] text-gray-600 mb-1">레전드장비</label>
-											<input type="number" id="own-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-										</div>
-									</div>
+                <div>
+                  <label class="block text-[12px] text-gray-600 mb-1">미스릴</label>
+                  <input type="number" id="own-미스릴" class="w-full border rounded-lg px-3 py-2 text-sm
+                      bg-white dark:bg-[#2b2b2b] dark:border-gray-600"
+                      placeholder="0" min="0" inputmode="numeric"/>
                 </div>
-                <div class="rounded-xl border border-black/10 p-3">
-                  <div class="font-semibold mb-3">과부족</div>
-                  <div class="flex justify-between text-[12px]"><span class="text-gray-600">경험치</span><span id="def-exp" class="tabular-nums">0</span></div>
-                  <div class="flex justify-between text-[12px]"><span class="text-gray-600">너트</span><span id="def-nut" class="tabular-nums">0</span></div>
-									<div class="flex justify-between text-[12px]"><span class="text-gray-600">미스릴</span><span id="def-mith" class="tabular-nums">0</span></div>
-									<div class="flex justify-between text-[12px]"><span class="text-gray-600">레전드장비</span><span id="def-leg" class="tabular-nums">0</span></div>
+                <div>
+                  <label class="block text-[12px] text-gray-600 mb-1">레전드장비</label>
+                  <input type="number" id="own-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm
+                      bg-white dark:bg-[#2b2b2b] dark:border-gray-600"
+                      placeholder="0" min="0" inputmode="numeric"/>
                 </div>
               </div>
             </div>
+
+            <!-- ⚖️ 과부족 -->
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold text-gray-800 mb-2">과부족</div>
+              <div class="grid items-center text-[12px]
+                          gap-x-3 gap-y-1
+                          grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+                <div class="text-gray-600">경험치</div>
+                <div id="def-exp" class="text-right tabular-nums">0</div>
+                <div class="text-gray-600">미스릴</div>
+                <div id="def-mith" class="text-right tabular-nums">0</div>
+
+                <div class="text-gray-600">너트</div>
+                <div id="def-nut" class="text-right tabular-nums">0</div>
+                <div class="text-gray-600">레전드장비</div>
+                <div id="def-leg" class="text-right tabular-nums">0</div>
+              </div>
+            </div>
+
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -129,7 +181,58 @@
 
     let stageList = [];
     let csvData = [];
+    
+    // ✅ 발레리아(SVS 점수 보너스)
+    const EXPERT_BONUS = {
+      "None":0,
+      "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+      "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+    };
+    const EXPERT_DESC = {
+      "Lv.1":"+2%",
+      "Lv.2":"+4%",
+      "Lv.3":"+6%",
+      "Lv.4":"+8%",
+      "Lv.5":"+10%",
+      "Lv.6":"+12%",
+      "Lv.7":"+14%",
+      "Lv.8":"+16%",
+      "Lv.9":"+18%",
+      "Lv.10":"+20%"
+    };
 
+    function getValeriaBonus(){
+      const sel = document.getElementById("chkExpertV");
+      if (!sel) return 0;
+      const key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+      return EXPERT_BONUS[key] ?? 0;
+    }
+    
+    const expertSel  = document.getElementById('chkExpertV');
+    const expertDesc = document.getElementById('expertDesc');                   
+
+    function getValeriaDesc(){
+      const lv = expertSel?.value ?? "None";
+      const bonusText = EXPERT_DESC[lv] ? ` ${EXPERT_DESC[lv]}` : "";
+
+      // 상단 설명 배지
+      if (EXPERT_DESC[lv]) {
+        expertDesc.textContent = `SVS 점수 ${EXPERT_DESC[lv]}`;
+        expertDesc.classList.remove('hidden');
+      } else {
+        expertDesc.textContent = "";
+        expertDesc.classList.add('hidden');
+      }
+    }
+    // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
+    function formatSVS(value){
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "0";
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+      if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+      return num.toLocaleString();
+    }
+    
     async function loadMithrilCSV() {
       try{
         const res = await fetch(mithrilCsvUrl, {cache:"no-store"});
@@ -156,7 +259,7 @@
       renderHeroEquipUI();
       sendHeightToParent();
     }
-
+                 
     function renderHeroEquipUI() {
       const grid = document.getElementById("heroEquipGridBody");
       grid.innerHTML = "";
@@ -166,38 +269,69 @@
         const card = document.createElement("div");
         card.className = "exp-card";
         card.innerHTML = `
-          <div class="p-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 space-y-4">
+            <!-- 상단: 제목 + 현재/목표 -->
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
+            </div>
+            <!-- 현재 / 목표 : 한 줄(2컬럼). 각 칸은 라벨 위 + 셀렉트 아래 -->
+            <div class="grid grid-cols-2 gap-3 max-w-[360px]">
               <div>
-                <div class="flex items-center gap-2 mb-2">
-                  <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
-                </div>
-                <!-- 현재/목표 세로 배치 -->
-                <div class="grid grid-cols-1 gap-2">
-                  <div class="flex items-center justify-between gap-2">
-                    <span class="text-[13px] text-gray-600">현재</span>
-                    <select id="start-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[100px]">${options}</select>
-                  </div>
-                  <div class="flex items-center justify-between gap-2">
-                    <span class="text-[13px] text-gray-600">목표</span>
-                    <select id="end-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[100px]">${options}</select>
-                  </div>
-                </div>
+                <div class="text-[12px] text-gray-600 mb-1">현재</div>
+                <select id="start-${i}"
+                        class="w-full border rounded-lg px-2 py-1 text-sm
+                               bg-white dark:bg-[#2b2b2b] dark:border-gray-600">
+                  ${options}
+                </select>
               </div>
-              <div class="md:pl-4">
+              <div>
+                <div class="text-[12px] text-gray-600 mb-1">목표</div>
+                <select id="end-${i}"
+                        class="w-full border rounded-lg px-2 py-1 text-sm
+                               bg-white dark:bg-[#2b2b2b] dark:border-gray-600">
+                  ${options}
+                </select>
+              </div>
+            </div>
+
+            <!-- 하단: 필요 합계 -->
+            <div>
+              <div class="rounded-xl border border-black/10 p-3">
                 <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
-                <div class="grid grid-cols-[1fr_auto] gap-x-1 text-[12px]">
-                  <div class="text-gray-600">경험치</div><div class="text-right tabular-nums" id="m-sub-exp-${i}">0</div>
-                  <div class="text-gray-600">너트</div><div class="text-right tabular-nums" id="m-sub-nut-${i}">0</div>
-                  <div class="text-gray-600">미스릴</div><div class="text-right tabular-nums" id="m-sub-mith-${i}">0</div>
-                  <div class="text-gray-600">레전드장비</div><div class="text-right tabular-nums" id="m-sub-legend-${i}">0</div>
+
+                <!-- 라벨/값 × 2 세트 (4컬럼) -->
+                <div class="grid items-center text-[12px]
+                            gap-x-3 gap-y-1
+                            grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+                  <!-- 1행 -->
+                  <div class="text-gray-600">경험치</div>
+                  <div class="text-right tabular-nums" id="m-sub-exp-${i}">0</div>
+                  <div class="text-gray-600">미스릴</div>
+                  <div class="text-right tabular-nums" id="m-sub-mith-${i}">0</div>
+
+                  <!-- 2행 -->
+                  <div class="text-gray-600">너트</div>
+                  <div class="text-right tabular-nums" id="m-sub-nut-${i}">0</div>
+                  <div class="text-gray-600">레전드장비</div>
+                  <div class="text-right tabular-nums" id="m-sub-legend-${i}">0</div>
+
+                  <!-- 구분선 -->
+                  <div class="col-span-4 border-t border-gray-200 dark:border-gray-200 mt-1"></div>
+
+                  <!-- SVS 점수: 왼쪽은 3칸(라벨 폭), 값은 마지막 칸에 우측정렬 -->
+                  <div class="svs-score-label pt-1">SVS 점수</div>
+                  <div id="sub-점수A-${slotNames[i]}" class="svs-score-value text-right tabular-nums font-medium pt-1">0</div>
+                  <div></div>
+                  <div id="sub-점수-${slotNames[i]}" class="svs-score-value text-right tabular-nums font-medium pt-1">0</div>
                 </div>
               </div>
             </div>
           </div>
         `;
-        grid.appendChild(card);
 
+        grid.appendChild(card);
+        
         const curSelect = card.querySelector(`#start-${i}`);
         const tgtSelect = card.querySelector(`#end-${i}`);
 
@@ -209,6 +343,12 @@
         updateMithrilSubtotals(i);
       });
 
+      document.getElementById("chkExpertV")?.addEventListener("change", () => {
+        slotNames.forEach((_, i) => updateMithrilSubtotals(i)); // 각 카드 SVS 갱신
+        getValeriaDesc(); 
+        updateMithrilTotals();                                   // 총합 패널 갱신
+      });
+      
       // 보유 입력 변화 시 총합계 갱신
       ["own-너트","own-미스릴","own-레전드장비"].forEach(id=>{
         document.getElementById(id)?.addEventListener("input", updateMithrilTotals);
@@ -233,10 +373,24 @@
           sums.legend += parseFloat(r["레전드장비"] || "0");
         }
       }
+
       document.getElementById(`m-sub-exp-${i}`).textContent    = sums.exp.toLocaleString();
       document.getElementById(`m-sub-nut-${i}`).textContent    = sums.nut.toLocaleString();
       document.getElementById(`m-sub-mith-${i}`).textContent   = sums.mith.toLocaleString();
       document.getElementById(`m-sub-legend-${i}`).textContent = sums.legend.toLocaleString();
+      
+      // ✅ 이 슬롯만의 SVS 계산/표시
+      const valeriaBonus = getValeriaBonus();
+      // 가중치는 네가 쓰는 규칙으로 맞춰줘 (예시는 미스릴*4000 + 레전드*144000)
+      const baseSlot = sums.mith * 144000;
+      const svsSlot  = Math.round(baseSlot * (1 + valeriaBonus));
+
+      const id  = `sub-점수-${slotNames[i]}`;
+      const idA = `sub-점수A-${slotNames[i]}`; // 있으면 같이 표기
+      const el  = document.getElementById(id);
+      const elA = document.getElementById(idA);
+      if (el)  el.textContent  = formatSVS(svsSlot);
+      if (elA) elA.textContent = svsSlot.toLocaleString();
     }
 
     function updateMithrilTotals(){
@@ -256,7 +410,7 @@
           total.leg += +(r["레전드장비"]||0);
         }
       });
-
+  
       const own = {
         nut: +(document.getElementById("own-너트")?.value || 0),
         mith:+(document.getElementById("own-미스릴")?.value || 0),
@@ -268,23 +422,26 @@
       document.getElementById("tot-nut").textContent  = total.nut.toLocaleString();
       document.getElementById("tot-mith").textContent = total.mith.toLocaleString();
       document.getElementById("tot-leg").textContent  = total.leg.toLocaleString();
-
-      document.getElementById("own-너트").textContent  = own.nut.toLocaleString();
-      document.getElementById("own-미스릴").textContent = own.mith.toLocaleString();
-      document.getElementById("own-레전드장비").textContent  = own.leg.toLocaleString();
-
-			const defA = document.getElementById("def-exp");
-      const defB = document.getElementById("def-mith");
-      const defC = document.getElementById("def-leg");
 			
       document.getElementById("def-exp").textContent  = total.exp.toLocaleString(); // 경험치는 보유치 개념 없음
       document.getElementById("def-nut").textContent  = (own.nut-total.nut).toLocaleString();
       document.getElementById("def-mith").textContent = (own.mith-total.mith).toLocaleString();
       document.getElementById("def-leg").textContent  = (own.leg-total.leg).toLocaleString();
 
-			defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
-      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
-      defC.classList.toggle("text-red-600", parseFloat(defC.textContent.replace(/,/g,'')) < 0);
+      ["def-nut","def-mith","def-leg"].forEach(id=>{
+        const el = document.getElementById(id);
+        const n  = parseFloat(el.textContent.replace(/,/g,''));
+        el.classList.toggle("text-red-600", n < 0);
+      });
+
+      // ✅ 총합 패널 SVS (총합 기준으로 한 번만)
+      const valeriaBonus = getValeriaBonus();
+      const baseTotal = total.mith * 144000; // 규칙에 맞게
+      const svsTotal  = Math.round(baseTotal * (1 + valeriaBonus));
+
+      // 총합 패널 안의 svs-score-value만 업데이트 (카드의 것은 건들지 않음)
+      document.getElementById("svs-long").textContent  = svsTotal.toLocaleString();
+      document.getElementById("svs-short").textContent = formatSVS(svsTotal);
     }
 
     // 최초 로딩

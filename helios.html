@@ -573,10 +573,10 @@
         const vBonus = getValeriaBonus(); // 0 ~ 0.20      
         const sScore = Math.floor(shard * (1 + vBonus));        
         const tScore = Math.floor((subtotal.시간/60) * (1 + vBonus));        
-        const finalScore = sScore+tScore;
+        let finalScore = sScore+tScore;
 
         const scoreEl = document.getElementById(`sub-점수-${item.label}`);
-        if (scoreEl) scoreEl.textContent = formatSVS(finalScore);
+        if (scoreEl) scoreEl.textContent = finalScore.toLocaleString();
         
         if (cur < tgt) {
           total.가루 += subtotal.가루;
@@ -721,7 +721,12 @@
     });
 
     /* ===== 기존 계산 로직은 그대로 ===== */
-    document.addEventListener('change',scheduleCalc);
+    document.addEventListener('change',(e)=>{
+      const id = e.target.id;
+      if(id === "chkExpertV")  getValeriaDesc();
+      scheduleCalc();
+    });
+    
     ['owned-가루','owned-철강재','speedPercent'].forEach(id=>{
       document.getElementById(id)?.addEventListener('input',scheduleCalc);
     });

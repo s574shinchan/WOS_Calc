@@ -100,11 +100,11 @@
         <div class="text-sm font-medium mb-1">VP Construction</div>
         <div class="flex flex-wrap gap-2">
           <button type="button" data-group="vp" data-vp="10"
-                  class="w-[110px] vp-btn px-4 py-2 rounded-md border">
+                  class="w-[100px] vp-btn px-4 py-2 rounded-md border">
             10%
           </button>
           <button type="button" data-group="vp" data-vp="15"
-                  class="w-[110px] vp-btn px-4 py-2 rounded-md border">
+                  class="w-[100px] vp-btn px-4 py-2 rounded-md border">
             15%
           </button>
         </div>
@@ -115,7 +115,7 @@
         <div class="text-sm font-medium mb-1">Mercantilism (10%)</div>
         <div class="flex flex-wrap gap-2">
           <button type="button" id="chkServerBuff"
-                  class="w-[110px] toggle-btn px-4 py-2 rounded-md border"
+                  class="w-[100px] toggle-btn px-4 py-2 rounded-md border"
                   aria-pressed="false">
             Active
           </button>
@@ -160,10 +160,71 @@
     </div>
 
     <!-- 총합계 패널 (제목 문구 제거) -->
-    <div id="summaryPanel" class="exp-card mt-4">
-      <div class="p-4">
-        <!-- 제목 제거 -->
-        <div id="summaryBody"></div>
+    <div id="summaryPanel" class="mt-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <!-- 총합 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">Total</div>
+
+          <!-- 🔹 1줄: 불수정 | 정제불수 -->
+          <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+            <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
+              <span id="sum-불수정" class="tabular-nums">0</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+              <span id="sum-정제" class="tabular-nums">0</span>
+            </div>
+          </div>
+
+          <!-- 🔹 2줄: 고기 | 나무 | 석탄 | 철광 -->
+          <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_Meet.webp" class="w-5 h-5" alt="불수정">
+              <span id="sum-고기" class="tabular-nums">0</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_Wood.webp" class="w-5 h-5" alt="불수정">
+              <span id="sum-나무" class="tabular-nums">0</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_Coal.webp" class="w-5 h-5" alt="불수정">
+              <span id="sum-석탄" class="tabular-nums">0</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600 mb-2">
+            <img src="images/icon_Iron.webp" class="w-5 h-5" alt="불수정">
+              <span id="sum-철광" class="tabular-nums">0</span>
+            </div>
+          </div>
+
+          <!-- 🔹 구분선 -->
+          <div class="border-t border-gray-200 my-1"></div>
+          <div class="flex justify-between text-[13px] pt-1">
+            <span class="text-gray-600">Estimated Time</span>
+            <span id="sum-시간">0</span>
+          </div>
+          <!-- 🔹 SVS 점수 -->
+          <div class="flex justify-between text-[13px] pt-1">
+            <span class="svs-score-label font-semibold">SVS Point</span>
+            <span id="sum-svs" class="svs-score-value tabular-nums font-medium">0</span>
+          </div>
+        </div>
+
+        <!-- 과부족 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">Surplus</div>
+          <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+            <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
+              <span id="def-불수정" class="tabular-nums">0</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+              <span id="def-정제" class="tabular-nums">0</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -197,11 +258,14 @@
       return num.toLocaleString();
     }
     
+    const nf1 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+    
     function formatValue(value){
-      const num = parseFloat((value??0).toString().replace(/,/g,''));
+      const num = Number(String(value ?? 0).replace(/,/g, ''));
       if (isNaN(num)) return value;
-      // 원 코드 기준 포맷 유지
-      return num >= 1000 ? (num/1000).toFixed(1) + "B" : num + "M";
+      const r1 = Math.round((num + Number.EPSILON) * 10) / 10;
+      if (r1 >= 1000) return nf1.format(r1 / 1000) + "B";
+      return nf1.format(r1) + "M";
     }
     function formatHourToTime(hours){
       if (!hours || isNaN(hours)) return "0min";

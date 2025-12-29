@@ -230,14 +230,52 @@
           <!-- 총합 -->
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">총합</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수정</span><span id="sum-불수정">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">정제</span><span id="sum-정제">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">고기</span><span id="sum-고기">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">나무</span><span id="sum-나무">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">석탄</span><span id="sum-석탄">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철광</span><span id="sum-철광">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">건설시간</span><span id="sum-시간">0분</span></div>
+
+            <!-- 🔹 1줄: 불수정 | 정제불수 -->
+            <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+              <div class="flex items-center gap-2 text-gray-600">
+                <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
+                <span id="sum-불수정" class="tabular-nums">0</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+                <span id="sum-정제" class="tabular-nums">0</span>
+              </div>
+            </div>
+
+            <!-- 🔹 2줄: 고기 | 나무 | 석탄 | 철광 -->
+            <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+              <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_Meet.webp" class="w-5 h-5" alt="불수정">
+                <span id="sum-고기" class="tabular-nums">0</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_Wood.webp" class="w-5 h-5" alt="불수정">
+                <span id="sum-나무" class="tabular-nums">0</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_Coal.webp" class="w-5 h-5" alt="불수정">
+                <span id="sum-석탄" class="tabular-nums">0</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-600 mb-2">
+              <img src="images/icon_Iron.webp" class="w-5 h-5" alt="불수정">
+                <span id="sum-철광" class="tabular-nums">0</span>
+              </div>
+            </div>
+
+            <!-- 🔹 구분선 -->
+            <div class="border-t border-gray-200 my-1"></div>
+            <div class="flex justify-between text-[13px] pt-1">
+              <span class="text-gray-600">건설시간</span>
+              <span id="sum-시간">0분</span>
+            </div>
+            <!-- 🔹 SVS 점수 -->
+            <div class="flex justify-between text-[13px] pt-1">
+              <span class="svs-score-label font-semibold">SVS 점수</span>
+              <span id="sum-svs" class="svs-score-value tabular-nums font-medium">0</span>
+            </div>
           </div>
+
     
           <!-- 보유량 -->
           <div class="rounded-xl border border-black/10 p-3">
@@ -260,8 +298,16 @@
           <!-- 과부족 -->
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">과부족</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수정</span><span id="def-불수정">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">정제</span><span id="def-정제">0</span></div>
+            <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+              <div class="flex items-center gap-2 text-gray-600">
+                <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
+                <span id="def-불수정" class="tabular-nums">0</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+                <span id="def-정제" class="tabular-nums">0</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -694,7 +740,7 @@
     }
 
     function formatHourToTime(hours){
-      if (!hours || isNaN(hours)) return "0분";
+      if (!hours || isNaN(hours)) return "0 분";
       const totalMinutes = Math.round(hours*60);
       const d = Math.floor(totalMinutes/1440);
       const h = Math.floor((totalMinutes%1440)/60);
@@ -901,18 +947,19 @@
                 </div>
                 <div id="sub-석탄-${name}" class="tabular-nums">0</div>
 
-                <div class="flex items-center gap-1 text-gray-600">
+                <div class="flex items-center gap-1 text-gray-600 mb-2">
                   <img src="images/icon_Iron.webp" class="w-5 h-5" alt="철광">
                 </div>
                 <div id="sub-철광-${name}" class="tabular-nums">0</div>
               </div>
 
               <!-- 3행: 건설시간 -->
-              <div class="grid grid-cols-4 gap-x-3 items-center pt-1 border-t border-gray-200 mt-1">
+              <div class="grid grid-cols-6 gap-x-3 items-center pt-1 border-t border-gray-200">
                 <div class="text-gray-600">건설시간</div>
                 <div id="sub-시간-${name}" class="tabular-nums font-medium">0</div>
                 <div class="svs-score-label text-gray-600">SVS 점수</div>
                 <div id="sub-점수-${name}" class="svs-score-value tabular-nums font-medium">0</div>
+                <div id="sub-점수A-${name}" class="svs-score-value tabular-nums font-medium">0</div>
               </div>
             </div>
           </div>
@@ -1073,10 +1120,13 @@
         const fScore = Math.floor(FireCrystal * (1 + vBonus));
         const rScore = Math.floor(Refind * (1 + vBonus));
         const tScore = Math.floor(((adjHours * 60) * 30) * (1 + vBonus));        
-        const finalScore = fScore+rScore+tScore;
+        let finalScore = fScore+rScore+tScore;
 
         const scoreEl = document.getElementById(`sub-점수-${name}`);
-        if (scoreEl) scoreEl.textContent = formatSVS(finalScore);
+        if (scoreEl) scoreEl.textContent = finalScore.toLocaleString();
+        
+        const scoreAEl = document.getElementById(`sub-점수A-${name}`);
+        if (scoreAEl) scoreAEl.textContent = formatSVS(finalScore);
 
         // 체크된 카드만 총합 포함 (현재/목표 다르면 포함)
         if (start < end){
