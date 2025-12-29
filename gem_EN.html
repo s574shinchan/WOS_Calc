@@ -78,9 +78,6 @@
     <!-- 합계 패널 (helios 느낌) -->
     <section id="summaryPanel" class="mt-4 grid md:grid-cols-3 gap-4">
       <!-- JS에서 채움 -->
-      
-      
-      
     </section>
   </div>
 
@@ -306,7 +303,7 @@
       document.getElementById("summaryPanel").innerHTML = [
         card("Total",  total),
         card("Stock", owned),
-        card("Quantity required", deficit),
+        card("Surplus", deficit),
       ].join("");
     }
 
