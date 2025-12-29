@@ -364,12 +364,18 @@
 
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">小計</div>
-                <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
-                  <div class="text-gray-600">火晶微粒子</div>
+                <div class="grid grid-cols-2 gap-x-3 text-[13px]">
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_FCShard.webp" class="w-6 h-6" alt="불수조각">
+                    <span>火晶微粒子</span>
+                  </div>
                   <div class="text-right tabular-nums" id="subtotal-dust-${item.key}">0</div>
-                  <div class="text-gray-600">鋼材</div>
+                  <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Steel.webp" class="w-6 h-6" alt="철강재">
+                    <span>鋼材</span>
+                  </div>
                   <div class="text-right tabular-nums" id="subtotal-steel-${item.key}">0</div>
-                  <div class="text-gray-600">所要時間</div>
+                  <div class="text-gray-600">がかかる時間</div>
                   <div class="text-right tabular-nums" id="subtotal-time-${item.key}">0</div>
                 </div>
               </div>
@@ -510,23 +516,57 @@
       const summaryBody = `
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">合計</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶微粒子</span><span>${total.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">鋼材</span><span>${total.철강재.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">所要時間</span><span>${formatTime(totalTime)}</span></div>
+            <div class="font-semibold mb-2">Total</div>
+            <div class="flex grid grid-cols-3 gap-x-3 text-[12px]">
+              <div class="flex items-center gap-2">
+                <img src="images/icon_FCShard.webp" class="w-12 h-12" alt="불수조각">
+                <span>火晶微粒子</span>
+                <span>${total.가루.toLocaleString()}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <img src="images/icon_Steel.webp" class="w-12 h-12" alt="철강재">
+                <span>鋼材</span>
+                <span>${total.철강재.toLocaleString()}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span>がかかる時間</span>
+                <span>${formatTime(totalTime)}</span>
+              </div>
+            </div>              
           </div>
+
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">所有数</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶微粒子</span><span>${owned.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">鋼材</span><span>${owned.철강재.toLocaleString()}</span></div>
+            <div class="flex grid grid-cols-2 gap-x-3 text-[12px]">
+              <div class="flex items-center gap-2">
+                <img src="images/icon_FCShard.webp" class="w-12 h-12" alt="불수조각">
+                <span>火晶微粒子</span>
+                <span>${owned.가루.toLocaleString()}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <img src="images/icon_Steel.webp" class="w-12 h-12" alt="철강재">
+                <span>鋼材</span>
+                <span>${owned.철강재.toLocaleString()}</span>
+              </div>
+            </div>
           </div>
+
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">過不足</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">火晶微粒子</span><span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">鋼材</span><span class="${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span></div>
+              <div class="grid grid-cols-2 gap-x-3 text-[12px]">
+              <div class="flex items-center gap-2 text-gray-600">
+                <img src="images/icon_FCShard.webp" class="w-12 h-12" alt="불수조각">
+                <span>火晶微粒子</span>
+                <span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-600">
+                <img src="images/icon_Steel.webp" class="w-12 h-12" alt="불수조각">
+                <span>鋼材</span>
+                <span class="text-right ${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span>
+              </div>
+            </div>
           </div>
-        </div>
-      `;
+          `;
       const summaryEl = document.getElementById("summaryBody");
       if (summaryEl) summaryEl.innerHTML = summaryBody;
 
