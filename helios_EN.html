@@ -517,56 +517,82 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">Total</div>
-            <div class="flex grid grid-cols-3 gap-x-3 text-[12px]">
-              <div class="flex items-center gap-2">
-                <img src="images/icon_FCShard.webp" class="w-12 h-12" alt="불수조각">
-                <span>FC Shard</span>
-                <span>${total.가루.toLocaleString()}</span>
+
+            <!-- 전체 3칸 (FC, Steel, Time) -->
+            <div class="grid grid-cols-3 text-[13px] text-gray-600">
+
+              <!-- FC Shard -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
+                <div>
+                  <div class="font-medium">FC Shard</div>
+                  <div class="tabular-nums font-semibold">${total.가루.toLocaleString()}</div>
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <img src="images/icon_Steel.webp" class="w-12 h-12" alt="철강재">
-                <span class="text-gray-600">Steel</span>
-                <span>${total.철강재.toLocaleString()}</span>
+
+              <!-- Steel -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
+                <div>
+                  <div class="font-medium">Steel</div>
+                  <div class="tabular-nums font-semibold">${total.철강재.toLocaleString()}</div>
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-gray-600">Time Required</span>
-                <span>${formatTime(totalTime)}</span>
+
+              <!-- Time Required -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center text-right">
+                <div>
+                  <div class="font-medium">Time Required</div>
+                  <div class="tabular-nums font-semibold">${formatTime(totalTime)}</div>
+                </div>
               </div>
-            </div>              
+            </div>
           </div>
 
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">Stock</div>
-            <div class="flex grid grid-cols-2 gap-x-3 text-[12px]">
-              <div class="flex items-center gap-2">
-                <img src="images/icon_FCShard.webp" class="w-12 h-12" alt="불수조각">
-                <span>FC Shard</span>
-                <span>${owned.가루.toLocaleString()}</span>
+            <div class="grid grid-cols-2 text-[13px] text-gray-600">
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
+                <div>
+                  <div class="font-medium">FC Shard</div>
+                  <span>${owned.가루.toLocaleString()}</span>
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <img src="images/icon_Steel.webp" class="w-12 h-12" alt="철강재">
-                <span class="text-gray-600">Steel</span>
-                <span>${owned.철강재.toLocaleString()}</span>
+
+              <!-- Steel -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
+                <div>
+                  <div class="font-medium">Steel</div>
+                  <span>${owned.철강재.toLocaleString()}</span>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="rounded-xl border border-black/10 p-3">
             <div class="font-semibold mb-2">Surplus</div>
-              <div class="grid grid-cols-2 gap-x-3 text-[12px]">
-              <div class="flex items-center gap-2 text-gray-600">
-                <img src="images/icon_FCShard.webp" class="w-12 h-12" alt="불수조각">
-                <span>FC Shard</span>
-                <span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span>
+              <div class="grid grid-cols-2 text-[13px] text-gray-600">
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
+                <div>
+                  <div class="font-medium">FC Shard</div>
+                  <span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span>
+                </div>
               </div>
-              <div class="flex items-center gap-2 text-gray-600">
-                <img src="images/icon_Steel.webp" class="w-12 h-12" alt="불수조각">
-                <span class="text-gray-600">Steel</span>
-                <span class="text-right ${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span>
+
+              <!-- Steel -->
+              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
+                <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
+                <div>
+                  <div class="font-medium">Steel</div>
+                  <span class="text-right ${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span>
+                </div>
               </div>
             </div>
           </div>
-      `;
+          `;
       const summaryEl = document.getElementById("summaryBody");
       if (summaryEl) summaryEl.innerHTML = summaryBody;
 
