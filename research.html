@@ -11,13 +11,13 @@
     .dark-mode .border{ border-color:#444 !important; }
     .dark-mode .bg-white{ background-color:#2c2c2c !important; color:#f0f0f0 !important; }
     .dark-mode .bg-gray-100{ background-color:#1e1e1e !important; }
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#dddddd !important; }
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#f0f0f0 !important; }
     .dark-mode .text-blue-700{ color:#66b0ff !important; }
     .dark-mode .text-green-700{ color:#79e68c !important; }
     .dark-mode .text-purple-700{ color:#bfa6ff !important; }
     .dark-mode table{ background-color:#2c2c2c; color:#f0f0f0; }
     .dark-mode th,.dark-mode td{ border-color:#444 !important; }
-    .dark-mode thead th{ color:#000 !important; }
+    .dark-mode thead th{ color:#f0f0f0 !important; }
     .dark-mode .bg-blue-100,.dark-mode .bg-gray-50{ background-color:#2e2e2e !important; }
     .dark-mode select option,.dark-mode select,.dark-mode input{ color:#000 !important; }
   </style>
@@ -95,7 +95,7 @@
             <select class="border rounded p-2 text-sm w-full" id="targetLevel"></select>
           </div>
           <button type="button"
-            class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300"
+            class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black"
             data-section="battle">추가</button>
         </div>
 
@@ -113,7 +113,7 @@
             <select class="border rounded p-2 text-sm w-full" id="economyTarget"></select>
           </div>
           <button type="button"
-            class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300"
+            class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black"
             data-section="economy">추가</button>
         </div>
 
@@ -131,7 +131,7 @@
             <select class="border rounded p-2 text-sm w-full" id="growthTarget"></select>
           </div>
           <button type="button"
-            class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300"
+            class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black"
             data-section="growth">추가</button>
         </div>
       </div>
@@ -154,7 +154,7 @@
             <h2 class="text-base font-bold text-gray-700">📈 계산 결과</h2>
           </div>
           <div id="resultContainer" class="mt-2 overflow-auto">
-            <div class="text-sm text-gray-500">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>
+            <div class="text-sm text-gray-600">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>
           </div>
         </div>
       </div>
