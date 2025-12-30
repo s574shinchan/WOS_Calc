@@ -475,9 +475,9 @@
       let levels;
       if (levelsFromFile.length){
         const uniq = [...new Set(levelsFromFile)].sort((a,b)=>a-b);
-        levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L+1}, (_,i)=>i);
+        levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L}, (_,i)=>i+1);
       }else{
-        levels = Array.from({length:L+1}, (_,i)=>i); // 0..L
+        levels = Array.from({length:L}, (_,i)=>i+1); // 0..L
       }
       return { levels, expSteps:exp, itemSteps:item };
     }
