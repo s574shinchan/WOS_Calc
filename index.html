@@ -1926,6 +1926,7 @@
     }
     
     window.addEventListener("message", function (event) {
+      
       if (event.data.type === "SET_FRAME_SIZE") {
         const frame = document.getElementById("mainFrame");
         frame.style.height = event.data.height;
@@ -2000,7 +2001,7 @@
         if (guide)   guide.style.display   = "none";
         if (wrapper) wrapper.style.display = "block";
         if (frame) {
-          frame.style.height = "900px"; // 초기값(필요시 조정)
+          frame.style.height = "300px"; // 초기값(필요시 조정)
           frame.src = url;
         }
       }
@@ -2010,7 +2011,7 @@
       if (updateLink) {
         updateLink.addEventListener("click", (e) => {
           e.preventDefault();
-          openInFrame(UPDATE_URL);
+          openInFrame(UPDATE_URL + "?v=" + Date.now());
         });
       }
     
@@ -2037,9 +2038,17 @@
       // (선택) 자식 페이지가 높이를 알려오면 iframe 높이 자동 맞춤
       if (!window.__childHeightListenerBound) {
         window.addEventListener("message", (e) => {
-          if (!e.data || e.data.type !== "childHeight") return;
-          if (frame) frame.style.height = Math.max(700, e.data.height) + "px";
+          if (!e.data) return;
+          
+          if (e.data.type === "childHeight") {
+            if (frame) frame.style.height = Math.max(700, e.data.height) + "px";
+          }
+          
+          if (e.data.type === "FRAME_CHANGE") {
+            if (frame) frame.style.height = Math.max(700, Number(e.data.height) || 0) + "px";
+          }
         });
+        
         window.__childHeightListenerBound = true;
       }
     });
@@ -2613,6 +2622,17 @@
         }
       })();
     })();
-  </script>  
+  </script>
+  <script>
+    window.addEventListener("message", function (event) {
+      console.log("받음:", event.data);
+
+      if (event.data.type === "History") {        
+        const frame = document.getElementById("mainFrame");
+        console.log("frame", frame);
+        frame.style.height = `${event.data.height + 10}px`;
+      }
+    });
+  </script>
   </body>
 </html>
