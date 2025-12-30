@@ -1,84 +1,129 @@
 <!DOCTYPE html>
 <html lang="ko">
+  <script src="https://cdn.tailwindcss.com"></script>
 <head>
   <meta charset="UTF-8">
   <title>업데이트 내역</title>
   <style>
+    body.dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
     body {
       font-family: sans-serif;
       font-size: 14px;
       background-color: #f9f9f9;
       padding: 20px;
-      line-height: 1.6;
-    }
-    section {
-      margin-bottom: 24px;
-    }
-    h3 {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 6px;
     }
     ul {
       list-style-type: disc;
-      padding-left: 20px;
       margin: 0;
     }
     li {
+      font-size: 20px;
       margin-bottom: 4px;
     }
+    
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }    
+    .dark-mode li { color: #f0f0f0 !important; }
   </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
 </head>
 <body>
-  <h2>📌 업데이트 기록</h2>
-  <h3>2025-05-21 : 일반연구 계산 기능 추가</h3>
-  <h3>2025-05-21 : 건물업그레이드 시간 추가</h3>
-  <h3>2025-05-31 : 버튼 나열방식 변경</h3>
-  <h3>2025-05-31 : 병사 생산시 SVS 점수 계산기능 추가</h3>  
-  <h3>2025-06-01 : 주단위 이벤트 및 패키지일정 추가 (비중 높지 않은 패키지의 경우 제외)</h3>
-  <h3>2025-06-01 : 헬리오스 연구 병종별로 연구 명칭 분리</h3>
-  <h3>2025-06-02 : 헬리오스 연구 영문버전 추가</h3>
-  <h3>2025-06-05 : VIP 구간별 경험치 소모량 추가</h3>
-  <h3>2025-06-14 : 헬리오스연구시간계산 추가</h3>
-  <h3>2025-06-14 : 용광로 업그레이드 조건 추가</h3>
-  <h3>2025-06-23 : 헬리오스 연구시간 계산 삭제</h3>
-  <h3>2025-07-12 : 이민예측 범위 추가</h3>
-  <h3>2025-07-12 : 모바일 환경 최적화</h3>
-  <h3>2025-07-23 : 서버 합병 히스토리 추가</h3>
-  <h3>2025-07-23 : 일반연구 0 레벨 추가</h3>
-  <h3>2025-07-24 : 헬리오스 연구시간 복구</h3>
-  <h3>2025-07-24 : 서버합병 데이터 안맞는 부분 보완</h3>
-  <h3>2025-07-25 : 과거 이민그룹 24, 25년 분리 추가</h3>
-  <h3>2025-07-29 : 다크모드추가</h3>
-  <h3>2025-07-29 : 프로스트 드래곤 엠페러 요약 추가</h3>
-  <h3>2025-07-31 : 부대계산 시 입력값과 계산합계 값 비교 추가</h3>
-  <h3>2025-08-26 : 전문가 희망지혜 패키지 정보 추가</h3>
-  <h3>2025-09-04 : 전문가 레벨 계산 추가</h3>
-  <h3>2025-09-04 : 전문가 스킬 계산 추가</h3>
-  <h3>2025-10-01 : 일본어 번역 추가</h3>
-  <h3>2025-10-14 : 곰사냥 부대지정에 키릴 효과 추가</h3>
-  <h3>2025-10-17 : 모바일 버전에 전문가 추가</h3>
-  <h3>2025-10-18 : 보유 아이템 입력란 위치 변경</h3>
-  <h3>2025-10-21 : 보석 오류 수정</h3>
-  <h3>2025-10-21 : 영주장비 T4 구간 추가</h3>
-  <h3>2025-10-31 : 발데, 파비안 일부 추가</h3>
-  <h3>2025-11-01 : SVS 점수계산 UI 변경</h3>
-  <h3>2025-11-02 : 일반연구 UI변경 및 오류수정</h3>
-  <h3>2025-11-04 : 자료모음-영웅성급업, 조각수에 따른 성급 계산 추가</h3>
-  <h3>2025-11-04 : 병사 승급 계산기 추가</h3>
-  <h3>2025-11-05 : SVS 4일차 - 전용무기 필요 개수 계산 추가</h3>
-  <h3>2025-11-19 : 이미지자료표시방식변경</h3>
-  <h3>2025-12-03 : 병사생산 및 승급 메뉴 병합</h3>	
-  <h3>2025-12-08 : 후원메뉴 버튼 추가</h3>
-  <h3>2025-12-15 : 일부 서비스 일시중단</h3>
-  <h3>2025-12-21 : 일부 서비스 일시복구</h3>
-  <h3>2025-12-26 : 신규 전문가 "발레리아" 추가</h3>
-  <h3>2025-12-27 : 건물 및 연구 버프방식 변경</h3>
-  <h3>2025-12-28 : 건물계산시 아그네스 버프 선택 추가</h3>
-  <h3>2025-12-28 : SVS 점수 계산시 발레리아 버프 선택 추가</h3>
-  <h3>2025-12-28 : 메인화면 구성변경</h3>
-  <h3>2025-12-28 : 부대계산시 집결 계산추가</h3>
+  <h1  class="text-2xl font-bold mb-4">📌 업데이트 기록</h1>
+  <details class="bg-white border rounded-md p-4 mb-4">
+    <summary class="text-lg font-bold">2025-05 History</summary>
+    <ul class="p-2">
+        <li>2025-05-21 : 일반연구 계산 기능 추가</li>
+        <li>2025-05-21 : 건물업그레이드 시간 추가</li>
+        <li>2025-05-31 : 버튼 나열방식 변경</li>
+        <li>2025-05-31 : 병사 생산시 SVS 점수 계산기능 추가</li>          
+      </ul>
+  </details>
+  <details class="bg-white border rounded-md p-4 mb-4">
+    <summary class="text-lg font-bold">2025-06 History</summary>
+    <ul class="p-2">
+      <li>2025-06-01 : 주단위 이벤트 및 패키지일정 추가 (비중 높지 않은 패키지의 경우 제외)</li>
+      <li>2025-06-01 : 헬리오스 연구 병종별로 연구 명칭 분리</li>
+      <li>2025-06-02 : 헬리오스 연구 영문버전 추가</li>
+      <li>2025-06-05 : VIP 구간별 경험치 소모량 추가</li>
+      <li>2025-06-14 : 헬리오스연구시간계산 추가</li>
+      <li>2025-06-14 : 용광로 업그레이드 조건 추가</li>
+      <li>2025-06-23 : 헬리오스 연구시간 계산 삭제</li>   
+    </ul>
+  </details>
+  <details class="bg-white border rounded-md p-4 mb-4">
+    <summary class="text-lg font-bold">2025-07 History</summary>
+    <ul class="p-2">
+      <li>2025-07-12 : 이민예측 범위 추가</li>
+      <li>2025-07-12 : 모바일 환경 최적화</li>
+      <li>2025-07-23 : 서버 합병 히스토리 추가</li>
+      <li>2025-07-23 : 일반연구 0 레벨 추가</li>
+      <li>2025-07-24 : 헬리오스 연구시간 복구</li>
+      <li>2025-07-24 : 서버합병 데이터 안맞는 부분 보완</li>
+      <li>2025-07-25 : 과거 이민그룹 24, 25년 분리 추가</li>
+      <li>2025-07-29 : 다크모드추가</li>
+      <li>2025-07-29 : 프로스트 드래곤 엠페러 요약 추가</li>
+      <li>2025-07-31 : 부대계산 시 입력값과 계산합계 값 비교 추가</li>
+    </ul>
+  </details>
+  <details class="bg-white border rounded-md p-4 mb-4">
+    <summary class="text-lg font-bold">2025-08 History</summary>
+    <ul class="p-2">
+      <li>2025-08-26 : 전문가 희망지혜 패키지 정보 추가</li>
+    </ul>
+  </details>
+  <details class="bg-white border rounded-md p-4 mb-4">
+    <summary class="text-lg font-bold">2025-09 History</summary>
+    <ul class="p-2">
+      <li>2025-09-04 : 전문가 레벨 계산 추가</li>
+      <li>2025-09-04 : 전문가 스킬 계산 추가</li>
+    </ul>
+  </details>
+  <details class="bg-white border rounded-md p-4 mb-4">
+    <summary class="text-lg font-bold">2025-10 History</summary>
+    <ul class="p-2">
+      <li>2025-10-01 : 일본어 번역 추가</li>
+      <li>2025-10-14 : 곰사냥 부대지정에 키릴 효과 추가</li>
+      <li>2025-10-17 : 모바일 버전에 전문가 추가</li>
+      <li>2025-10-18 : 보유 아이템 입력란 위치 변경</li>
+      <li>2025-10-21 : 보석 오류 수정</li>
+      <li>2025-10-21 : 영주장비 T4 구간 추가</li>
+      <li>2025-10-31 : 발데, 파비안 일부 추가</li>
+    </ul>
+  </details>
+  <details class="bg-white border rounded-md p-4 mb-4">
+    <summary class="text-lg font-bold">2025-11 History</summary>
+    <ul class="p-2">
+      <li>2025-11-01 : SVS 점수계산 UI 변경</li>
+      <li>2025-11-02 : 일반연구 UI변경 및 오류수정</li>
+      <li>2025-11-04 : 자료모음-영웅성급업, 조각수에 따른 성급 계산 추가</li>
+      <li>2025-11-04 : 병사 승급 계산기 추가</li>
+      <li>2025-11-05 : SVS 4일차 - 전용무기 필요 개수 계산 추가</li>
+      <li>2025-11-19 : 이미지자료표시방식변경</li>
+    </ul>
+  </details>
+  <details class="bg-white border rounded-md p-4 mb-4">
+    <summary class="text-lg font-bold">2025-12 History</summary>
+    <ul class="p-2">
+      <li>2025-12-03 : 병사생산 및 승급 메뉴 병합</li>	
+      <li>2025-12-08 : 후원메뉴 버튼 추가</li>
+      <li>2025-12-15 : 일부 서비스 일시중단</li>
+      <li>2025-12-21 : 일부 서비스 일시복구</li>
+      <li>2025-12-26 : 신규 전문가 "발레리아" 추가</li>
+      <li>2025-12-27 : 건물 및 연구 버프방식 변경</li>
+      <li>2025-12-28 : 건물계산시 아그네스 버프 선택 추가</li>
+      <li>2025-12-28 : SVS 점수 계산시 발레리아 버프 선택 추가</li>
+      <li>2025-12-28 : 메인화면 구성변경</li>
+      <li>2025-12-28 : 부대계산시 집결 계산추가</li>
+    </ul>
+  </details>
   <script>
     function sendHeightToParent() {
       const height = document.body.scrollHeight + 10;
@@ -96,6 +141,12 @@
         window.location.href = page;
       window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
     }
+
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });    
   </script>
 </body>
 </html>
