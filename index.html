@@ -288,7 +288,7 @@
       <!-- Support Badge + Toast Wrapper -->
       <div class="relative absolute">
         <!-- Support Badge -->
-        <div class="inline-flex items-center gap-2 bg-slate-600 text-white text-xs px-3 py-1.5 rounded-full shadow">
+        <div class="inline-flex items-center gap-2 bg-slate-600 text-white text-xs px-3 py-1 rounded-md shadow">
           <span class="opacity-80"> Support :</span>
           <span id="supportNumber" class="font-bold tracking-wide">67331703</span>
 
@@ -330,6 +330,11 @@
                     transition-opacity duration-300">
           사용자 ID가 복사되었습니다.
         </div>
+        <button onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')"
+                class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center 
+                       gap-2 bg-slate-600 text-white justify-center w-full">
+          컨설팅문의
+        </button>
       </div>
       
       <div class="navlist">
@@ -387,22 +392,27 @@
             <a class="dd-item" href="#" data-frame="imagedata.html">이미지자료</a>
           </div>
         </div>
+        <button onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
+                    class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
+              자료요청</button>
+        <!--
         <div class="dd" data-dd>
           <button class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">
             피드백<span class="chev" aria-hidden="true"></span>
           </button>
-          <div class="dd-menu" role="menu">
+          <div class="dd-menu" role="menu">            
             <button onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')" 
                     class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
               컨설팅문의</button>
             <button onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
                     class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
               자료요청</button>
-            <!--<button onclick="window.open('buymeacoffee.com/shin0825', '_blank')" 
+            <<button onclick="window.open('buymeacoffee.com/shin0825', '_blank')" 
                     class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
-              후원하기</button>-->
+              후원하기</button>
           </div>
-        </div>
+        </div>-->
+        
         <div class="dd" data-dd>
           <button id="DarkMode" 
                   onclick="ActiveDarkMode()"
