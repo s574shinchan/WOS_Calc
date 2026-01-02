@@ -2262,19 +2262,26 @@
     }
     
     function applySavedDarkMode() {
-      const isDark = localStorage.getItem('darkMode') === 'true';
-      document.body.classList.toggle('dark-mode', isDark);
-      broadcastDarkMode(isDark);
-    }
+			// ✅ 기본값을 다크모드로 (처음 방문/저장값 없을 때)
+			const saved = localStorage.getItem('darkMode');
+			const isDark = (saved === null) ? true : (saved === 'true');
+
+			document.body.classList.toggle('dark-mode', isDark);
+			
+			// ✅ 버튼 아이콘도 즉시 맞춰주기 (페이지 처음 로드 때)
+			const btn = document.getElementById('DarkMode');
+			if (btn) btn.textContent = isDark ? '🌙' : '☀️';
+			
+			// ✅ 최초 접속이면 저장도 해둬서 다음에도 유지
+			if (saved === null) localStorage.setItem('darkMode', 'true');
+			broadcastDarkMode(isDark);
+		}
     
     function ActiveDarkMode(){
       const isDark = document.body.classList.toggle('dark-mode');      
       const btn = document.getElementById('DarkMode');
       
-      if(isDark) 
-        btn.textContent = '🌙';
-      else 
-        btn.textContent = '☀️';
+      if (btn) btn.textContent = isDark ? '🌙' : '☀️';
       
       localStorage.setItem('darkMode', isDark ? 'true' : 'false');
       broadcastDarkMode(isDark);
@@ -2282,21 +2289,12 @@
     
     // ✅ 페이지 로드되면 바로 적용 (새로고침 포함)
     document.addEventListener('DOMContentLoaded', applySavedDarkMode);
-    
-    //  window.addEventListener('DOMContentLoaded', () => {
-    //    const isDark = localStorage.getItem('darkMode') === 'true';
-    //    document.body.classList.toggle('dark-mode', isDark);
-    //  }); 
-    //}
-
-    document.getElementById('mainFrame').addEventListener('load', () => {
+		
+		document.getElementById('mainFrame').addEventListener('load', () => {
       const isDark = localStorage.getItem('darkMode') === 'true';
       const btn = document.getElementById('DarkMode');
       
-      if(isDark) 
-        btn.textContent = '🌙';
-      else 
-        btn.textContent = '☀️';
+      if (btn) btn.textContent = isDark ? '🌙' : '☀️';
       
       broadcastDarkMode(isDark);
     });
