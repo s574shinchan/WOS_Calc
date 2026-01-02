@@ -654,12 +654,18 @@
     sRef.forEach((ref, i) => {
       ref.cur.addEventListener("change", () => {
         const cur = +ref.cur.value;
-        if (!isFilled(cur)) { ref.tgt.innerHTML = '<option value=""></option>'; ref.warn.textContent=""; calc(); return; }
+        if (!isFilled(cur)) { 
+          ref.tgt.innerHTML = '<option value=""></option>'; 
+          ref.warn.textContent=""; 
+          calc(); 
+          updateSkillEffects();
+          updateSkillConditions();
+          return; 
+        }
         renderTargetOptions(ref.tgt, skillLevels[i], cur, true);
         if (ref.tgt.options.length > 1) ref.tgt.selectedIndex = 1;
         ref.warn.textContent = "";
         calc();
-        updateSkillTitles();
         updateSkillEffects();
         updateSkillConditions();
       });
