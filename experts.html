@@ -661,6 +661,7 @@
         calc();
         updateSkillTitles();
         updateSkillEffects();
+        updateSkillConditions();
       });
     });
 
@@ -681,6 +682,7 @@
       buildFullExpertEffects(selType.value, expertLevels);
       updateSkillTitles();
       updateSkillEffects();
+      updateSkillConditions();
       updateExpertEffect();
     });
     btnReset.addEventListener("click", clearAll);
