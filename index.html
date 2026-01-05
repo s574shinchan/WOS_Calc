@@ -422,12 +422,20 @@
                          color: blue; font-size: 1.3rem; 
                          cursor: pointer;">☀️</button>
         </div>
-        <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm text-gray-800">
-          <option value="index.html">🌐 Language</option>
-          <option value="index.html" selected>🇰🇷 한국어</option>
-          <option value="index_EN.html">🇺🇸 English</option>
-          <option value="index_JP.html">🇯🇵 日本語</option>
-        </select>
+        <div>
+          <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm text-gray-800">
+            <option value="index.html">🌐 Language</option>
+            <option value="index.html" selected>🇰🇷 한국어</option>
+            <option value="index_EN.html">🇺🇸 English</option>
+            <option value="index_JP.html">🇯🇵 日本語</option>
+          </select>
+          
+          <button onclick="window.open('buymeacoffee.com/shin0825', '_blank')" 
+                   class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center 
+                          gap-2 dd-btn text-white justify-center w-full"
+                  type="button" aria-haspopup="menu" aria-expanded="false">
+              후원하기</button>
+        </div>
       </div>  
     </div>
   </div>
@@ -1362,74 +1370,194 @@
 
             <!-- ⚔️ SVS_Event -->
             <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS 준비단계</summary>
-                <!-- event.html: 요일별 임무 테이블만 포함 -->
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS 미션</summary>
+              <!-- ✅ 3열 그리드: 월/화/수, 목/ 금/(빈칸) -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- 월요일 -->
                 <div class="overflow-x-auto">
                   <table class="table-auto border w-full text-xs text-center">
                     <thead class="bg-orange-100">
                       <tr>
-                        <th class="border p-1">요일</th>
+                        <th class="border p-1 w-[80px]">요일</th>
                         <th class="border p-1">임무</th>
-                        <th class="border p-1">포인트</th>
+                        <th class="border p-1 w-[140px]">포인트</th>
                       </tr>
                     </thead>
-                    <tbody id="missionTableBody">
-                      <!-- 월요일 -->
-                      <tr><td class="border p-1 font-semibold" rowspan="4">월요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
-                      <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
-                      <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
-                      <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
-
-                      <!-- 화요일 --> 
-                      <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="11">화요일</td><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">전문가 표식 소모</td><td class="border p-1">1개 6,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">학문의 책 소모</td><td class="border p-1">1개 60pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
-
-                      <!-- 수요일 -->
-                      <tr><td class="border p-1 font-semibold" rowspan="12">수요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
-                      <tr><td class="border p-1">행운룰렛</td><td class="border p-1">1회 8,000pt</td></tr>
-                      <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
-                      <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
-                      <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
-                      <tr><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 350pt</td></tr>
-                      <tr><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 1,220pt</td></tr>
-                      <tr><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 3,040pt</td></tr>
-                      <tr><td class="border p-1">전문가 표식 소모</td><td class="border p-1">1개 6,000pt</td></tr>
-                      <tr><td class="border p-1">학문의 책 소모</td><td class="border p-1">1개 60pt</td></tr>
-                      <tr><td class="border p-1">빙원괴수집결</td><td class="border p-1">1마리당 30,000pt</td></tr>
-                      <tr><td class="border p-1">야수처치</td><td class="border p-1">1마리당 9,000 ~ 12,000pt</td></tr>
-
-                      <!-- 목요일 -->
-                      <tr class="bg-amber-50"><td class="border p-1 font-semibold" rowspan="5">목요일</td><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 70pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 144,000pt</td></tr>
-                      <tr class="bg-amber-50"><td class="border p-1">병사 훈련</td><td class="border p-1">3 ~ 75pt</td></tr>
-
-                      <!-- 금요일 -->
-                      <tr><td class="border p-1 font-semibold" rowspan="11">금요일</td><td class="border p-1">영주 장비</td><td class="border p-1">1종 36pt</td></tr>
-                      <tr><td class="border p-1">마스터리석 소모</td><td class="border p-1">1개 4,000pt</td></tr>
-                      <tr><td class="border p-1">영웅전용무기 소모</td><td class="border p-1">1개 8,000pt</td></tr>
-                      <tr><td class="border p-1">미스릴 소모</td><td class="border p-1">1개 144,000pt</td></tr>
-                      <tr><td class="border p-1">불수정 건물 업그레이드</td><td class="border p-1">1개 2,000pt</td></tr>
-                      <tr><td class="border p-1">불수정 가루 연구</td><td class="border p-1">1개 1,000pt</td></tr>
-                      <tr><td class="border p-1">제련으로 건물 업그레이드</td><td class="border p-1">1개 30,000pt</td></tr>
-                      <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 50pt</td></tr>
-                      <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 15,000pt</td></tr>
-                      <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 1,150pt</td></tr>
-                      <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 30pt</td></tr>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1 font-semibold" rowspan="4">월요일</td>
+                        <td class="border p-1 text-left">영주 보석</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1pt당 70pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">불수정 건물 업그레이드</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 2,000pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">불수정 가루 연구</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 1,000pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">제련으로 건물 업그레이드</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 30,000pt</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
+
+                <!-- 화요일 -->
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center">
+                    <thead class="bg-orange-100">
+                      <tr>
+                        <th class="border p-1 w-[80px]">요일</th>
+                        <th class="border p-1">임무</th>
+                        <th class="border p-1 w-[140px]">포인트</th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-amber-50">
+                      <tr>
+                        <td class="border p-1 font-semibold" rowspan="11">화요일</td>
+                        <td class="border p-1 text-left">행운룰렛</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1회 8,000pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">불수정 건물 업그레이드</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 2,000pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">불수정 가루 연구</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 1,000pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">제련으로 건물 업그레이드</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 30,000pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">건설/연구/훈련 가속</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1분 30pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">레어 영웅 성급업</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 350pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">에픽 영웅 성급업</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 1,220pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">레전드 영웅 성급업</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 3,040pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">전문가 표식 소모</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 6,000pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">학문의 책 소모</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1개 60pt</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1 text-left">채집</td>
+                        <td class="border p-1 text-right whitespace-nowrap">2pt</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- 수요일 -->
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center">
+                    <thead class="bg-orange-100">
+                      <tr>
+                        <th class="border p-1 w-[80px]">요일</th>
+                        <th class="border p-1">임무</th>
+                        <th class="border p-1 w-[140px]">포인트</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1 font-semibold" rowspan="12">수요일</td>
+                        <td class="border p-1 text-left">영주 보석</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1pt당 70pt</td>
+                      </tr>
+                      <tr><td class="border p-1 text-left">행운룰렛</td><td class="border p-1 text-right whitespace-nowrap">1회 8,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">펫 돌파</td><td class="border p-1 text-right whitespace-nowrap">1개 50pt</td></tr>
+                      <tr><td class="border p-1 text-left">고급 펫 단련</td><td class="border p-1 text-right whitespace-nowrap">1개 15,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">일반 펫 단련</td><td class="border p-1 text-right whitespace-nowrap">1개 1,150pt</td></tr>
+                      <tr><td class="border p-1 text-left">레어 영웅 성급업</td><td class="border p-1 text-right whitespace-nowrap">1개 350pt</td></tr>
+                      <tr><td class="border p-1 text-left">에픽 영웅 성급업</td><td class="border p-1 text-right whitespace-nowrap">1개 1,220pt</td></tr>
+                      <tr><td class="border p-1 text-left">레전드 영웅 성급업</td><td class="border p-1 text-right whitespace-nowrap">1개 3,040pt</td></tr>
+                      <tr><td class="border p-1 text-left">전문가 표식 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 6,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">학문의 책 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 60pt</td></tr>
+                      <tr><td class="border p-1 text-left">빙원괴수집결</td><td class="border p-1 text-right whitespace-nowrap">1마리당 30,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">야수처치</td><td class="border p-1 text-right whitespace-nowrap">1마리당 9,000 ~ 12,000pt</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- 목요일 -->
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center">
+                    <thead class="bg-orange-100">
+                      <tr>
+                        <th class="border p-1 w-[80px]">요일</th>
+                        <th class="border p-1">임무</th>
+                        <th class="border p-1 w-[140px]">포인트</th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-amber-50">
+                      <tr>
+                        <td class="border p-1 font-semibold" rowspan="5">목요일</td>
+                        <td class="border p-1 text-left">영주 보석</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1pt당 70pt</td>
+                      </tr>
+                      <tr><td class="border p-1 text-left">마스터리석 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 4,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">영웅전용무기 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 8,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">미스릴 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 144,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">병사 훈련</td><td class="border p-1 text-right whitespace-nowrap">3 ~ 75pt</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- 금요일 (왼쪽만 표시) -->
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center">
+                    <thead class="bg-orange-100">
+                      <tr>
+                        <th class="border p-1 w-[80px]">요일</th>
+                        <th class="border p-1">임무</th>
+                        <th class="border p-1 w-[140px]">포인트</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1 font-semibold" rowspan="11">금요일</td>
+                        <td class="border p-1 text-left">영주 장비</td>
+                        <td class="border p-1 text-right whitespace-nowrap">1종 36pt</td>
+                      </tr>
+                      <tr><td class="border p-1 text-left">마스터리석 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 4,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">영웅전용무기 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 8,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">미스릴 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 144,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">불수정 건물 업그레이드</td><td class="border p-1 text-right whitespace-nowrap">1개 2,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">불수정 가루 연구</td><td class="border p-1 text-right whitespace-nowrap">1개 1,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">제련으로 건물 업그레이드</td><td class="border p-1 text-right whitespace-nowrap">1개 30,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">펫 돌파</td><td class="border p-1 text-right whitespace-nowrap">1개 50pt</td></tr>
+                      <tr><td class="border p-1 text-left">고급 펫 단련</td><td class="border p-1 text-right whitespace-nowrap">1개 15,000pt</td></tr>
+                      <tr><td class="border p-1 text-left">일반 펫 단련</td><td class="border p-1 text-right whitespace-nowrap">1개 1,150pt</td></tr>
+                      <tr><td class="border p-1 text-left">건설/연구/훈련 가속</td><td class="border p-1 text-right whitespace-nowrap">1분 30pt</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- ✅ 금요일 오른쪽 빈칸(PC에서만 자리 맞추기) -->
+                <div class="hidden md:block"></div>
+
+              </div>
             </details>
+
+
+
 
             <!-- 연맹대작전 -->
             <details class="bg-white border border-blue-300 rounded-md p-4">
