@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Regular Building Calculator</title>
+  <title>建物計算機</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* 다크모드 */
@@ -31,7 +31,6 @@
     .muted{ font-size:12px; color:#6b7280; }
     body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
     body.dark-mode .muted{ color:#b7b7b7 !important; }
-    
     .dark-mode .svs-score-label,
     .dark-mode .svs-score-value {
       font-weight: 700;
@@ -49,34 +48,34 @@
 </head>
 <body class="bg-gray-100 p-2 font-sans text-sm">
   <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ Regular Building Calculator</h1>
-    
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ 建物計算機</h1>
     <!-- 상단 그리드 -->
     <div class="text-gray-600 mb-4 text-sm">
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-4">
       <div>
-        <label class="block text-sm mb-1">Construction Speed (%)</label>
+        <label class="block text-sm mb-1">建造速度(%)</label>
         <input type="number" id="buildSpeed" min="0"
                class="border rounded p-2 text-sm w-full text-right"
                placeholder="0" />
       </div>
 
       <div>
-        <label class="block text-sm mb-1">Hyena Buff</label>
+        <label class="block text-sm mb-1">洞窟ハイエナのバフ</label>
         <select id="buffSelect" class="w-full border rounded p-1 px-3 py-2">
           <option>None</option>
           <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
         </select>
       </div>
+
       <div>
-        <label class="block text-sm mb-1">Agenes</label>
+        <label class="block text-sm mb-1">アグネス</label>
         <select id="chkExpertA" class="w-full rounded-md border px-3 py-2">
           <option>None</option>
           <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
         </select>
       </div>
       <div>
-        <label class="block text-sm mb-1">Valeria</label>
+        <label class="block text-sm mb-1">ヴァレリア</label>
         <select id="chkExpertV" class="w-full rounded-md border px-2 py-2">
           <option>None</option>
           <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
@@ -86,7 +85,7 @@
 
       <!-- 부집행관 -->
       <div>
-        <div class="text-sm font-medium mb-1">VP Construction</div>
+        <div class="text-sm font-medium mb-1">副執政官</div>
         <div class="flex flex-wrap gap-2">
           <button type="button" data-group="vp" data-vp="10"
                   class="w-[85px] vp-btn px-4 py-2 rounded-md border">
@@ -101,24 +100,24 @@
 
       <!-- 서버버프 -->
       <div>
-        <div class="text-sm font-medium mb-1">Mercantilism (10%)</div>
+        <div class="text-sm font-medium mb-1">商業主義 (10%)</div>
         <div class="flex flex-wrap gap-2">
           <button type="button" id="chkServerBuff"
                   class="w-full toggle-btn px-4 py-2 rounded-md border"
                   aria-pressed="false">
-            Active
+            アクティブ
           </button>
         </div>
       </div>
 
       <!-- 시청버프 -->
       <div>
-        <div class="inline-flex items-center font-semibold mb-1">Chief Order</div>
+        <div class="inline-flex items-center font-semibold mb-1">建造加速</div>
         <div class="flex flex-wrap gap-2">
           <button type="button" id="chkCityBuff"
                   class="w-full toggle-btn px-4 py-2 rounded-md border"
                   aria-pressed="false">
-            Double Time +20%
+            建設時間20％短縮
           </button>
         </div>
       </div>       
@@ -126,42 +125,43 @@
     </div>
 
     <!-- 건물 카드 그리드 -->
-    <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4"></div>
-    
-    <!-- 보유 자원 카드
-    <div class="exp-card mt-4">
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-[15px] font-semibold text-gray-800">Owned Items</h3>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="owned-불수정" class="block text-[15px] text-gray-600 mb-1">Owned Fire Crystal</label>
-            <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
-          </div>
-          <div>
-            <label for="owned-정제" class="block text-[15px] text-gray-600 mb-1">Owned Refind Fire Crystals</label>
-            <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
-          </div>
-        </div>
-      </div>
-    </div> -->
+    <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4"></div>
 
     <!-- 총합계 패널 (제목 문구 제거) -->
     <div id="summaryPanel" class="mt-4">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
         <!-- 총합 -->
         <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">Total</div>
+          <div class="font-semibold mb-2">合計</div>
+
+          <!-- 🔹 1줄: 불수정 | 정제불수 -->
           <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
-            <div class="flex items-center gap-14 text-gray-600">
-            <img src="images/icon_Meet.webp" class="w-5 h-5" alt="고기">
+            <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
+              <span id="sum-불수정" class="tabular-nums">0</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+              <span id="sum-정제" class="tabular-nums">0</span>
+            </div>
+          </div>
+
+          <!-- 🔹 2줄: 고기 | 나무 | 석탄 | 철광 -->
+          <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_Meet.webp" class="w-5 h-5" alt="불수정">
               <span id="sum-고기" class="tabular-nums">0</span>
-            <img src="images/icon_Wood.webp" class="w-5 h-5" alt="나무">
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_Wood.webp" class="w-5 h-5" alt="불수정">
               <span id="sum-나무" class="tabular-nums">0</span>
-            <img src="images/icon_Coal.webp" class="w-5 h-5" alt="석탄">
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+            <img src="images/icon_Coal.webp" class="w-5 h-5" alt="불수정">
               <span id="sum-석탄" class="tabular-nums">0</span>
-            <img src="images/icon_Iron.webp" class="w-5 h-5" alt="철광">
+            </div>
+            <div class="flex items-center gap-2 text-gray-600 mb-2">
+            <img src="images/icon_Iron.webp" class="w-5 h-5" alt="불수정">
               <span id="sum-철광" class="tabular-nums">0</span>
             </div>
           </div>
@@ -169,17 +169,34 @@
           <!-- 🔹 구분선 -->
           <div class="border-t border-gray-200 my-1"></div>
           <div class="flex justify-between text-[13px] pt-1">
-            <span class="text-gray-600">Estimated Time</span>
+            <span class="text-gray-600">がかかる時間</span>
             <span id="sum-시간">0</span>
+          </div>
           <!-- 🔹 SVS 점수 -->
+          <div class="flex justify-between text-[13px] pt-1">
             <span class="svs-score-label font-semibold">SVS Point</span>
             <span id="sum-svs" class="svs-score-value tabular-nums font-medium">0</span>
           </div>
         </div>
-
-        <!-- 과부족
+        <!-- 보유량 -->
         <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">Surplus</div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-semibold">保有資源</div>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label for="owned-불수정" class="block text-[13px] text-gray-600 mb-1">火晶（所持数）</label>
+              <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+            </div>
+            <div>
+              <label for="owned-정제" class="block text-[13px] text-gray-600 mb-1">精錬火晶（所持数）</label>
+              <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+            </div>
+          </div>
+        </div>
+        <!-- 과부족 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">余剰</div>
           <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
             <div class="flex items-center gap-2 text-gray-600">
               <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
@@ -190,7 +207,7 @@
               <span id="def-정제" class="tabular-nums">0</span>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -202,28 +219,19 @@
 
     const buildingList = ["용광로","대사관","지휘부","방패병","창병","궁병","의무실","아카데미"];
     const resources = ["불수정","정제","고기","나무","석탄","철광","변환시간"];
-    const buildingData = {};
     const nameAliasMap = {
-      "용광로": "Furnace",
-      "대사관": "Embassy",
-      "지휘부": "Command Center",
-      "의무실": "Infirmary",
-      "방패병": "Infantry Camp",
-      "창병": "Lancer Camp",
-      "궁병": "Marksman Camp",
-      "아카데미": "War Academy"
+      "용광로": "大溶鉱炉",
+      "대사관": "大使館",
+      "지휘부": "司令部",
+      "의무실": "軍医所",
+      "방패병": "盾兵の兵舎",
+      "창병": "槍兵の兵舎",
+      "궁병": "弓兵の兵舎",
+      "아카데미": "戦争学園"
     };
+    const buildingData = {};
     let buildingCards = []; // {name, maxIndex}
 
-    // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
-    function formatSVS(value){
-      const num = Number(value);
-      if (!Number.isFinite(num)) return "0";
-      if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
-      if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
-      return num.toLocaleString();
-    }
-    
     const nf1 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
     
     function formatValue(value){
@@ -234,12 +242,12 @@
       return nf1.format(r1) + "M";
     }
     function formatHourToTime(hours){
-      if (!hours || isNaN(hours)) return "0min";
+      if (!hours || isNaN(hours)) return "0";
       const totalMinutes = Math.round(hours*60);
       const d = Math.floor(totalMinutes/1440);
       const h = Math.floor((totalMinutes%1440)/60);
       const m = totalMinutes%60;
-      return `${d?d+'d ':''}${h?h+'h ':''}${(m||(!d&&!h))?m+'min':''}`.trim();
+      return `${d?d+'日 ':''}${h?h+'時間 ':''}${(m||(!d&&!h))?m+'分':''}`.trim();
     }
 
     function handleVPCheck(which){
@@ -337,7 +345,6 @@
       });
     }
     // ===============================================
-
     async function fetchBuildingData(){
       for (const name of buildingList){
         const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
@@ -379,7 +386,7 @@
       buildingList.forEach(name=>{
         const displayName = nameAliasMap[name] || name;
         const levelsFull = buildingData[name].map(d=> d["레벨"]); // 원본 모든 라벨
-        const filtered = filterLevelsWithIndex(levelsFull); // [{idx,label}] (외부 정의 가정)
+        const filtered = filterLevelsWithIndex(levelsFull, useFireCrystal); // [{idx,label}] (외부 정의 가정)
 
         // ✅ 옵션은 "화면 라벨은 filtered.label" / "value는 원본 idx"
         const options = filtered
@@ -419,7 +426,12 @@
             <!-- 필요자원 표 -->
             <div class="rounded-md border p-3 text-[13px] space-y-1">
               <!-- 1행: 불수정 / 고기, 나무 -->
-              <div class="grid grid-cols-8 gap-x-3 items-center">
+              <div class="grid grid-cols-6 gap-x-3 items-center">
+                <div class="flex items-center gap-1 text-gray-600">
+                  <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">
+                </div>
+                <div id="sub-불수정-${name}" class="tabular-nums">0</div>
+                
                 <div class="flex items-center gap-1 text-gray-600">
                   <img src="images/icon_Meet.webp" class="w-5 h-5" alt="고기">
                 </div>
@@ -429,7 +441,15 @@
                   <img src="images/icon_Wood.webp" class="w-5 h-5" alt="나무">
                 </div>  
                 <div id="sub-나무-${name}" class="tabular-nums">0</div>
+              </div>
 
+              <!-- 2행: 정제 / 석탄 / 철광 -->
+              <div class="grid grid-cols-6 gap-x-3 items-center">                
+                <div class="flex items-center gap-1 text-gray-600">
+                  <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+                </div>
+                <div id="sub-정제-${name}" class="tabular-nums">0</div>
+                
                 <div class="flex items-center gap-1 text-gray-600">
                   <img src="images/icon_Coal.webp" class="w-5 h-5" alt="석탄">
                 </div>
@@ -443,7 +463,7 @@
 
               <!-- 3행: 건설시간 -->
               <div class="grid grid-cols-4 gap-x-3 items-center pt-1 border-t border-gray-200 mt-1">
-                <div class="text-gray-600">Estimated Time</div>
+                <div class="text-gray-600">かかる時間</div>
                 <div id="sub-시간-${name}" class="tabular-nums font-medium">0</div>
                 <div class="svs-score-label text-gray-600">SVS Point</div>
                 <div id="sub-점수-${name}" class="svs-score-value tabular-nums font-medium">0</div>
@@ -474,7 +494,7 @@
 
         const maxIndex = buildingData[name].length - 1; // 원본 기준
         buildingCards.push({name, maxIndex});
-      });
+      });    
     }
 
     function getFactorForTime(){
@@ -489,7 +509,6 @@
       }
       return factor;
     }
-      
     // ======== 🔷 변경: 버프 계수 계산 ========
     function getFactorForTime(){
       const buildSpeed = parseFloat(document.getElementById("buildSpeed").value || 0);
@@ -512,13 +531,13 @@
 
     function calculateAll(){
       // 합계
-      const total = { "고기":0, "나무":0, "석탄":0, "철광":0 };
+      const total = { "불수정":0, "정제":0, "고기":0, "나무":0, "석탄":0, "철광":0 };
       let totalHours = 0;
       let totalSvs = 0;
       
       // 카드별 필요 합계 초기화
       buildingCards.forEach(({name})=>{
-        ["고기","나무","석탄","철광"].forEach(res=>{
+        ["불수정","정제","고기","나무","석탄","철광"].forEach(res=>{
           const el = document.getElementById(`sub-${res}-${name}`);
           if (el) el.textContent = "0";
         });
@@ -551,8 +570,8 @@
         });
 
         // 카드 우측 ‘필요 합계’ 갱신 (체크와 무관 / 항상 표시)
-        //document.getElementById(`sub-불수정-${name}`).textContent = sub["불수정"].toLocaleString();
-        //document.getElementById(`sub-정제-${name}`).textContent   = sub["정제"].toLocaleString();
+        document.getElementById(`sub-불수정-${name}`).textContent = sub["불수정"].toLocaleString();
+        document.getElementById(`sub-정제-${name}`).textContent   = sub["정제"].toLocaleString();
         document.getElementById(`sub-고기-${name}`).textContent    = formatValue(sub["고기"]);
         document.getElementById(`sub-나무-${name}`).textContent    = formatValue(sub["나무"]);
         document.getElementById(`sub-석탄-${name}`).textContent    = formatValue(sub["석탄"]);
@@ -568,17 +587,17 @@
         document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
         
         // ✅ SVS 점수 = (불수정*2000) + (정제불수*30000) × (1 + 발레리아 보너스)
-        //const FireCrystal = (sub["불수정"] * 2000);
-        //const Refind = (sub["정제"] * 30000);
+        const FireCrystal = (sub["불수정"] * 2000);
+        const Refind = (sub["정제"] * 30000);
         const vBonus = getValeriaBonus(); // 0 ~ 0.20
         
-        //const fScore = Math.floor(FireCrystal * (1 + vBonus));
-        //const rScore = Math.floor(Refind * (1 + vBonus));
+        const fScore = Math.floor(FireCrystal * (1 + vBonus));
+        const rScore = Math.floor(Refind * (1 + vBonus));
         const tScore = Math.floor(((adjHours * 60) * 30) * (1 + vBonus));        
-        const finalScore = tScore;
+        let finalScore = fScore+rScore+tScore;
 
         const scoreEl = document.getElementById(`sub-점수-${name}`);
-        if (scoreEl) scoreEl.textContent = formatSVS(finalScore);
+        if (scoreEl) scoreEl.textContent = finalScore.toLocaleString();  
 
         // 체크된 카드만 총합 포함
         if (start < end){
@@ -589,30 +608,30 @@
       });
 
       // 보유(불수정/정제)
-      //const owned = {
-      //  "불수정": parseFloat(document.getElementById("owned-불수정").value || 0),
-      //  "정제": parseFloat(document.getElementById("owned-정제").value || 0),
-      //};
+      const owned = {
+        "불수정": parseFloat(document.getElementById("owned-불수정").value || 0),
+        "정제": parseFloat(document.getElementById("owned-정제").value || 0),
+      };
 
       // 하단 요약
-      //document.getElementById("sum-불수정").textContent = total["불수정"].toLocaleString();
-      //document.getElementById("sum-정제").textContent = total["정제"].toLocaleString();
+      document.getElementById("sum-불수정").textContent = total["불수정"].toLocaleString();
+      document.getElementById("sum-정제").textContent = total["정제"].toLocaleString();
       document.getElementById("sum-고기").textContent = formatValue(total["고기"]);
       document.getElementById("sum-나무").textContent = formatValue(total["나무"]);
       document.getElementById("sum-석탄").textContent = formatValue(total["석탄"]);
       document.getElementById("sum-철광").textContent = formatValue(total["철광"]);
       document.getElementById("sum-시간").textContent = formatHourToTime(totalHours);
 
-      //const defA = document.getElementById("def-불수정");
-      //const defB = document.getElementById("def-정제");
-      //defA.textContent = ( owned["불수정"] - total["불수정"] ).toLocaleString();
-      //defB.textContent = ( owned["정제"] - total["정제"] ).toLocaleString();
-      //defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
-      //defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+      const defA = document.getElementById("def-불수정");
+      const defB = document.getElementById("def-정제");
+      defA.textContent = ( owned["불수정"] - total["불수정"] ).toLocaleString();
+      defB.textContent = ( owned["정제"] - total["정제"] ).toLocaleString();
+      defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
 
       // ✅ 3) 총합 SVS 출력
-      const elLong  = document.getElementById("sum-svs");  
-      if (elLong)  elLong.textContent  = formatSVS(totalSvs);     
+      const elLong  = document.getElementById("sum-svs");      
+      if (elLong) elLong.textContent = formatSVS(totalSvs);
       
       sendHeightToParent();
     }
@@ -643,15 +662,15 @@
           scheduleCalc();
           break;
         case "buildSpeed":
-        //case "owned-불수정":
-        //case "owned-정제":
+        case "owned-불수정":
+        case "owned-정제":
           scheduleCalc();
           break;
         default:
           break;
       }
     });
-    ["buildSpeed"].forEach(id=>{
+    ["buildSpeed","owned-불수정","owned-정제"].forEach(id=>{
       const el=document.getElementById(id);
       if (el) el.addEventListener("input", scheduleCalc);
     });
@@ -670,10 +689,10 @@
   </script>
 	<script>
 		// 토글 상태 기억
-		//let useFireCrystal = localStorage.getItem('useFireCrystal') === '1';
+		let useFireCrystal = localStorage.getItem('useFireCrystal') === '1';
 
 		// 레벨 라벨 필터 → 원본 인덱스/라벨 쌍 반환
-		function filterLevelsWithIndex(levelLabels) {
+		function filterLevelsWithIndex(levelLabels, useFire) {
 			// CSV 라벨 정제
 			const labels = levelLabels.map(v => String(v ?? '').trim());
 			const out = [];
@@ -690,7 +709,7 @@
 				});
 				return out;
 			};
-      /*
+
 			if (useFire) {
 				// 1) 이상적: CSV에 30-1 ~ FC10 모두 있는 경우
 				const s1 = findIdx('30');
@@ -715,7 +734,7 @@
 				collectBy(/^(30-\d|FC0*[1-9]|FC0*10)$/i);
 				return out;
 			}
-      */
+
 			// 일반 모드: 1~30이 있으면 그 범위, 없으면 FC1~FC10 범위
 			const numeric = [];
 			labels.forEach((lv, i) => {
@@ -741,35 +760,34 @@
 		}
 
 		// 토글 핸들러
-		//function hookFireCrystalToggle() {
-//			const el = document.getElementById('fireCrystalToggle');
-//			if (!el) return;
-//
-//			// ✅ 항상 체크 상태로 시작
-//			useFireCrystal = true;
-//			el.checked = true;
-//
-//			// ✅ localStorage에 즉시 저장해서 새로고침 후에도 유지
-//			localStorage.setItem('useFireCrystal', '1');
-//
-//			el.addEventListener('change', () => {
-//				useFireCrystal = el.checked;
-//				localStorage.setItem('useFireCrystal', useFireCrystal ? '1' : '0');
-//				renderBuildingSelectors();
-//				scheduleCalc();
-//			});
-//		}
+		function hookFireCrystalToggle() {
+			const el = document.getElementById('fireCrystalToggle');
+			if (!el) return;
+
+			// ✅ 항상 체크 상태로 시작
+			useFireCrystal = true;
+			el.checked = true;
+
+			// ✅ localStorage에 즉시 저장해서 새로고침 후에도 유지
+			localStorage.setItem('useFireCrystal', '1');
+
+			el.addEventListener('change', () => {
+				useFireCrystal = el.checked;
+				localStorage.setItem('useFireCrystal', useFireCrystal ? '1' : '0');
+				renderBuildingSelectors();
+				scheduleCalc();
+			});
+		}
 
 		// 페이지 로드 시 1번만 호출
-		//document.addEventListener('DOMContentLoaded', hookFireCrystalToggle);
+		document.addEventListener('DOMContentLoaded', hookFireCrystalToggle);
 	</script>	
-  
   <script>
     window.addEventListener('message', (e) => {
       if (e.data?.type === 'DARK_MODE') {
         document.body.classList.toggle('dark-mode', e.data.value);
       }
     });
-  </script>  
+  </script>
 </body>
 </html>
