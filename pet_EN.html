@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🐾 펫 계산기</title>
+  <title>Pet</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* ===== 다크모드 ===== */
@@ -41,170 +41,227 @@
   </script>
 </head>
 <body class="bg-gray-100 p-2 font-sans text-sm">
-  <div class="max-w-6xl mx-auto bg-white p-3 rounded-xl shadow-md space-y-5">
+  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md space-y-5">
     <h1 class="text-2xl font-bold text-gray-800">🐾 Pet</h1>
+
+    <!-- 보유량 -->
+    <div class="rounded-xl border border-black/10 p-3">
+      <div class="flex items-center justify-between mb-2">
+        <div class="font-semibold">Owned Items</div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div class="flex items-center gap-2">
+          <label class="text-[12px] text-gray-600 w-24">Pet Food</label>
+          <input type="number" id="own-펫먹이"
+            class="flex-1 border rounded-lg px-3 py-2 text-sm"
+            placeholder="0" min="0" />
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label class="text-[12px] text-gray-600 w-24">Manual</label>
+          <input type="number" id="own-조련매뉴얼"
+            class="flex-1 border rounded-lg px-3 py-2 text-sm"
+            placeholder="0" min="0" />
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label class="text-[12px] text-gray-600 w-24">Potion</label>
+          <input type="number" id="own-활력의약"
+            class="flex-1 border rounded-lg px-3 py-2 text-sm"
+            placeholder="0" min="0" />
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label class="text-[12px] text-gray-600 w-24">Serum</label>
+          <input type="number" id="own-강화혈청"
+            class="flex-1 border rounded-lg px-3 py-2 text-sm"
+            placeholder="0" min="0" />
+        </div>
+      </div>
+    </div>    
     
-    <!-- 카드 그리드 -->
-    <div id="petGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-
-    <!-- 보유 자원 카드 -->
-    <div class="exp-card">
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-[15px] font-semibold text-gray-800">Owned Items</h3>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div>
-            <label class="block text-[12px] text-gray-600 mb-1">Owned Pet Food</label>
-            <input type="number" id="own-펫먹이" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-          </div>
-          <div>
-            <label class="block text-[12px] text-gray-600 mb-1">Owned Manual</label>
-            <input type="number" id="own-조련매뉴얼" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-          </div>
-          <div>
-            <label class="block text-[12px] text-gray-600 mb-1">Owned Potion</label>
-            <input type="number" id="own-활력의약" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-          </div>
-          <div>
-            <label class="block text-[12px] text-gray-600 mb-1">Owned Serum</label>
-            <input type="number" id="own-강화혈청" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <!-- 섹션별 카드 컨테이너 (스크린샷 스타일) -->
+    <div id="petSections" class="space-y-4"></div>
+		
     <!-- 하단 총합 패널 -->
-    <div id="summaryPanel" class="exp-card">
-      <div class="p-4">
-        <div id="summaryBody"></div>
+    <div id="summaryPanel">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <!-- 총합 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">Total</div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Pet Food</span><span id="sum-펫먹이">0</span></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Manual</span><span id="sum-조련매뉴얼">0</span></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Potion</span><span id="sum-활력의약">0</span></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Serum</span><span id="sum-강화혈청">0</span></div>
+          </div>              
+        </div>              
+        <!-- 과부족 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">Surplus</div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Pet Food</span><span id="def-펫먹이">0</span></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Manual</span><span id="def-조련매뉴얼">0</span></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Potion</span><span id="def-활력의약">0</span></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Serum</span><span id="def-강화혈청">0</span></div>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="flex justify-end mt-2">
+      <button id="btn-calc-total" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">Total Calc</button>
+    </div>    
   </div>
 
   <!-- ===== 데이터 & 로직 ===== -->
   <script>
-    // 등급 목록 및 CSV 맵핑
-    const grades = ["기간토","매머드","호랑이","코뿔소","고릴라","동굴사자","흑표범","큰뿔사슴","티타니스","테이퍼","사향소","북극늑대","하이에나"];
-    const gradeLabels = {
-      "기간토":"SSR",
-      "매머드":"SSR",
-      "호랑이":"SSR",
-      "코뿔소":"SSR",
-      "고릴라":"SSR",
-      "동굴사자":"SSR",
-      "흑표범":"SR",
-      "큰뿔사슴":"SR",
-      "티타니스":"R",
-      "테이퍼":"R",
-      "사향소":"N",
-      "북극늑대":"N",
-      "하이에나":"UnKnown" // 저장소에 해당 CSV가 없으면 건너뜀
+    // ===============================
+    // ✅ 스크린샷 스타일: 등급(희귀도) 섹션 + 펫 카드
+    // - 펫 목록이 안나오는 원인(등급/이름 혼동, index 기반 누적) 제거
+    // - CSV는 희귀도 키(SSR/SR/R/N/UnKnown) 단위로 1회 로드
+    // - 카드는 '펫 이름' 단위로 1장만 생성
+    // ===============================
+
+    // 화면에 표시할 펫 순서(스크린샷 순서)
+    const pets = [
+      { name: "Cave Hyena", rarityKey: "N" },
+
+      { name: "Arctic Wolf", rarityKey: "UnKnown" },
+      { name: "Musk Ox", rarityKey: "UnKnown" },
+
+      { name: "Giant Tapir", rarityKey: "R" },
+      { name: "Titan Roc", rarityKey: "R" },
+
+      { name: "Giant Elk", rarityKey: "SR" },
+      { name: "Snow Leopard", rarityKey: "SR" },
+
+      { name: "Cave Lion", rarityKey: "SSR" },
+      { name: "Snoe Ape", rarityKey: "SSR" },
+      { name: "Iron Rhino", rarityKey: "SSR" },
+      { name: "Saber-tooth Tiger", rarityKey: "SSR" },
+      { name: "Mammoth", rarityKey: "SSR" },
+      { name: "Frost Gorilla", rarityKey: "SSR" },
+      { name: "Frostscale Chameleon", rarityKey: "SSR" },
+    ];
+
+    // ✅ DOM id에 한글/특수문자/%가 들어가면 querySelector가 깨질 수 있어서
+    //   펫마다 안전한 고유키를 만들어서 사용한다.
+    const petKeyByName = Object.create(null);
+    pets.forEach((p, i) => { petKeyByName[p.name] = `p${i}`; });
+
+    // 희귀도 섹션(스크린샷 헤더) 매핑
+    const sectionMeta = {
+      "N":       { title: "Common",    dot: "bg-slate-400", bar: "bg-slate-200", text: "text-slate-700" },
+      "UnKnown": { title: "Uncommon",  dot: "bg-emerald-500", bar: "bg-emerald-200", text: "text-emerald-700" },
+      "R":       { title: "Rare",      dot: "bg-blue-500", bar: "bg-blue-200", text: "text-blue-700" },
+      "SR":      { title: "Epic",      dot: "bg-purple-500", bar: "bg-purple-200", text: "text-purple-700" },
+      "SSR":     { title: "SSR",       dot: "bg-orange-500", bar: "bg-orange-200", text: "text-orange-800" },
     };
-    
-    const nameAlias = {
-      "기간토": "Frost Gorilla",
-      "매머드": "Mammoth",
-      "호랑이": "Saber-tooth Tiger",
-      "코뿔소": "Iron Rhino", 
-      "고릴라": "Snoe Ape", 
-      "동굴사자": "Cave Lion",
-      "흑표범": "Snow Leopard",
-      "큰뿔사슴": "Giant Elk",
-      "티타니스": "Titan Roc",
-      "테이퍼": "Giant Tapir", 
-      "사향소": "Musk Ox",
-      "북극늑대": "Arctic Wolf",
-      "하이에나": "Cave Hyena"
-    };
-    
+
+    // CSV 기본 경로
     const CSV_BASE = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Pet/";
 
-    // 등급별 CSV 데이터 캐시
-    const petDataMap = {};  // grade -> 전체행[]
-    const petNamesByGrade = {}; // grade -> 이름 목록
-    const levelsByPet = {}; // `${grade}|${name}` -> 레벨 배열 (정렬 보장)
+    // 캐시
+    const dataByRarity = {};     // rarityKey -> rows[]
+    const levelsByPet = {};      // petName -> sorted levels[]
 
     // UI 루트
-    const grid = document.getElementById("petGrid");
+    const sectionsRoot = document.getElementById("petSections");
 
     // util: 안전 split 줄바꿈
-    function splitLines(t){ return t.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n"); }
+    function splitLines(t){ return t.replaceAll("돌파","Advanced").replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n"); }
 
     async function fetchPetCSV(gradeKey) {
       const url = `${CSV_BASE}Pet_${gradeKey}.csv`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("CSV not found: " + url);
+
       const text = await res.text();
-      const lines = splitLines(text).filter(Boolean).map(row => row.split(","));
-      const headers = lines[0].map(h=>h.trim());
+      const lines = splitLines(text)
+        .filter(Boolean)
+        .map(row => row.split(","));
+
+      const headers = lines[0].map(h => h.trim());
+
       const rows = lines.slice(1).map(cols => {
         const obj = {};
-        headers.forEach((h,i)=> obj[h] = (cols[i] ?? "").trim());
+        headers.forEach((h, i) => {
+          obj[h] = (cols[i] ?? "").trim();
+        });
         return obj;
       });
-      return rows;
+
+      return rows; // ✅ 이 줄이 핵심
     }
 
     async function loadAll() {
-      // 등급 키(SSR/SR/R/N/UnKnown) 기준으로 한번씩만 로드
-      const uniqueKeys = [...new Set(Object.values(gradeLabels))];
+      // 희귀도 키 기준 1회 로드
+      const uniqueKeys = [...new Set(pets.map(p => p.rarityKey))];
       for (const key of uniqueKeys) {
         try {
-          const data = await fetchPetCSV(key);
-          // 이 key를 쓰는 모든 등급에 데이터 공유
-          grades.filter(g => gradeLabels[g] === key).forEach(g => petDataMap[g] = data);
+          dataByRarity[key] = await fetchPetCSV(key);
         } catch (e) {
-          // 없는 CSV는 스킵
           console.warn(key, e.message);
+          dataByRarity[key] = [];
         }
       }
-
-      // 등급/이름/레벨 파생 정보 세팅
-      grades.forEach(g => {
-        const data = petDataMap[g];
-        if (!data) return;
-        const names = [...new Set(data.map(d => d["이름"]))];
-        petNamesByGrade[g] = names;
-        names.forEach(name => {
-          const lvList = data.filter(d=>d["이름"]===name).map(d=>d["레벨"]);
-          // 레벨이 숫자면 숫자 정렬, 아니면 문자열 정렬
-          const nums = lvList.map(v=>Number(v));
-          const allNum = nums.every(n=>!Number.isNaN(n));
-          levelsByPet[`${g}|${name}`] = allNum
-            ? [...lvList].sort((a,b)=>Number(a)-Number(b))
-            : [...lvList];
-        });
+    
+      // 펫별 레벨 목록 준비(정렬)
+      pets.forEach(p => {
+        const rows = dataByRarity[p.rarityKey] || [];
+        const lvSet = new Set(rows.map(r => (r["레벨"] || "").trim()).filter(Boolean));
+        const lvList = [...lvSet];
+        const nums = lvList.map(v => Number(v));
+        const allNum = nums.every(n => !Number.isNaN(n));
+        levelsByPet[p.name] = allNum ? lvList.sort((a,b)=>Number(a)-Number(b)) : lvList;
       });
 
-      renderCards();
+      renderSections();
       bindOwnedInputs();
-      scheduleCalc();
     }
 
-    function renderCards() {
-      grid.innerHTML = "";
-      grades.forEach(grade => {
-        const data = petDataMap[grade];
-        if (!data) return; // 해당 등급 CSV 없으면 스킵
+    function renderSections() {
+      sectionsRoot.innerHTML = "";
 
-        const names = petNamesByGrade[grade] || [];
-        names.forEach((petName, idx) => {
-          const key = `${grade}-${idx}`;
-          const lvList = levelsByPet[`${grade}|${petName}`] || [];
-          const options = lvList.map(lv=>`<option value="${lv}">${lv}</option>`).join("");
+      // rarityKey 순서 = 스크린샷
+      const rarityOrder = ["N", "UnKnown", "R", "SR", "SSR"];
+
+      for (const rk of rarityOrder) {
+        const meta = sectionMeta[rk];
+        if (!meta) continue;
+
+        // 해당 희귀도에 포함되는 펫
+        const groupPets = pets.filter(p => p.rarityKey === rk);
+        if (groupPets.length === 0) continue;
+
+        const section = document.createElement("section");
+        //section.className = "space-y-2";
+
+        // 헤더 바
+        section.innerHTML = `
+          <div class="flex items-center gap-2 px-2 py-2 rounded-lg ${meta.bar}">
+            <span class="w-2.5 h-2.5 rounded-full ${meta.dot}"></span>
+            <div class="font-semibold ${meta.text}">${meta.title}</div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-rarity="${rk}"></div>
+        `;
+        sectionsRoot.appendChild(section);
+
+        const grid = section.querySelector(`[data-rarity="${rk}"]`);
+        groupPets.forEach((p) => {
+          const key = `pet-${petKeyByName[p.name]}`;
+          const lvList = levelsByPet[p.name] || [];
+          const options = lvList.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+
           const card = document.createElement("div");
-          const displayName = nameAlias[grade] || grade;
-          
           card.className = "exp-card";
           card.innerHTML = `
             <div class="p-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div class="flex items-center gap-2 mb-2">
-                    <h3 class="text-[15px] font-semibold text-gray-800">${displayName}</h3>
+                    <h3 class="text-[15px] font-semibold text-gray-800">${p.name}</h3>
                   </div>
-                  <!-- 현재/목표 세로 배치 -->
                   <div class="grid grid-cols-1 gap-2">
                     <div class="flex items-center justify-between gap-2">
                       <span class="text-[12px] text-gray-600">Current</span>
@@ -230,77 +287,103 @@
           `;
           grid.appendChild(card);
 
-          const curSel = card.querySelector(`#cur-${key}`);
-          const tgtSel = card.querySelector(`#tgt-${key}`);
+          const curSel = document.getElementById(`cur-${key}`);
+          const tgtSel = document.getElementById(`tgt-${key}`);
 
-          const onChange = () => { updateCardSubtotal(grade, petName, key); scheduleCalc(); };
-          curSel.addEventListener("change", () => { tgtSel.value = curSel.value; onChange(); });
-          tgtSel.addEventListener("change", onChange);
+          const onAnyChange = () => {
+            // 현재를 올렸는데 목표가 더 낮으면 목표를 현재로 맞춤(오류/역전 방지)
+            const lvListLocal = levelsByPet[p.name] || [];
+            const ci = lvListLocal.indexOf(curSel.value);
+            const ti = lvListLocal.indexOf(tgtSel.value);
+            if (ci !== -1 && ti !== -1 && ti < ci) tgtSel.value = curSel.value;
 
-          // 초기 계산
-          updateCardSubtotal(grade, petName, key);
+            updateCardSubtotal(p, key);
+          };
+
+          curSel.addEventListener("change", onAnyChange);
+          tgtSel.addEventListener("change", onAnyChange);
+
+          // 초기값: 첫 레벨
+          if (lvList.length > 0) {
+            curSel.value = lvList[0];
+            tgtSel.value = lvList[0];
+          }
+
+          updateCardSubtotal(p, key);
         });
-      });
+      }
     }
 
-    function updateCardSubtotal(grade, petName, key) {
-      const data = petDataMap[grade] || [];
-      const list = data.filter(d => d["이름"] === petName);
-      const lvArr = list.map(d => d["레벨"]);
-      const cur = document.getElementById(`cur-${key}`).value;
-      const tgt = document.getElementById(`tgt-${key}`).value;
+    function toNum(v){
+      const n = Number(String(v ?? "").replace(/,/g, "").trim());
+      return Number.isFinite(n) ? n : 0;
+    }
 
-      const s = lvArr.indexOf(cur);
-      const e = lvArr.indexOf(tgt);
+    function updateCardSubtotal(pet, key) {
+      const rows = (dataByRarity[pet.rarityKey] || []).slice();
+
+      const lvList = levelsByPet[pet.name] || [];
+      const cur = document.getElementById(`cur-${key}`)?.value ?? "";
+      const tgt = document.getElementById(`tgt-${key}`)?.value ?? "";
+
+      const s = lvList.indexOf(cur);
+      const e = lvList.indexOf(tgt);
 
       const sum = { food:0, manual:0, vital:0, serum:0 };
       if (s >= 0 && e > s) {
+        // 레벨 기반으로 정확히 누적(행 순서에 의존 X)
         for (let i = s + 1; i <= e; i++) {
-          const r = list[i];
-          sum.food   += parseFloat(r["펫먹이"] || "0");
-          sum.manual += parseFloat(r["조련매뉴얼"] || "0");
-          sum.vital  += parseFloat(r["활력의약"] || "0");
-          sum.serum  += parseFloat(r["강화혈청"] || "0");
+          const lv = lvList[i];
+          const r = rows.find(x => String(x["레벨"]).trim() === String(lv).trim());
+          if (!r) continue;
+          sum.food   += toNum(r["펫먹이"]);
+          sum.manual += toNum(r["조련매뉴얼"]);
+          sum.vital  += toNum(r["활력의약"]);
+          sum.serum  += toNum(r["강화혈청"]);
         }
       }
-      document.getElementById(`sub-food-${key}`).textContent   = sum.food.toLocaleString();
-      document.getElementById(`sub-manual-${key}`).textContent = sum.manual.toLocaleString();
-      document.getElementById(`sub-vital-${key}`).textContent  = sum.vital.toLocaleString();
-      document.getElementById(`sub-serum-${key}`).textContent  = sum.serum.toLocaleString();
+
+      const a = document.getElementById(`sub-food-${key}`);
+      const b = document.getElementById(`sub-manual-${key}`);
+      const c = document.getElementById(`sub-vital-${key}`);
+      const d = document.getElementById(`sub-serum-${key}`);
+      if (a) a.textContent = sum.food.toLocaleString();
+      if (b) b.textContent = sum.manual.toLocaleString();
+      if (c) c.textContent = sum.vital.toLocaleString();
+      if (d) d.textContent = sum.serum.toLocaleString();
     }
 
     function calculateTotals() {
       const totals = { food:0, manual:0, vital:0, serum:0 };
 
-      grades.forEach(grade => {
-        const names = petNamesByGrade[grade] || [];
-        names.forEach((petName, idx) => {
-          const key = `${grade}-${idx}`;
-          
-          const data = petDataMap[grade] || [];
-          const list = data.filter(d => d["이름"] === petName);
-          const lvArr = list.map(d => d["레벨"]);
-          const cur = document.getElementById(`cur-${key}`).value;
-          const tgt = document.getElementById(`tgt-${key}`).value;
-          const s = lvArr.indexOf(cur);
-          const e = lvArr.indexOf(tgt);
-          if (s === -1 || e === -1 || s >= e) return;
+      pets.forEach(p => {
+        const key = `pet-${petKeyByName[p.name]}`;
+        const lvList = levelsByPet[p.name] || [];
+        const cur = document.getElementById(`cur-${key}`)?.value ?? "";
+        const tgt = document.getElementById(`tgt-${key}`)?.value ?? "";
 
-          for (let i = s + 1; i <= e; i++) {
-            const r = list[i];
-            totals.food   += parseFloat(r["펫먹이"] || "0");
-            totals.manual += parseFloat(r["조련매뉴얼"] || "0");
-            totals.vital  += parseFloat(r["활력의약"] || "0");
-            totals.serum  += parseFloat(r["강화혈청"] || "0");
-          }
-        });
+        const s = lvList.indexOf(cur);
+        const e = lvList.indexOf(tgt);
+        if (s === -1 || e === -1 || s >= e) return;
+
+        const rows = dataByRarity[p.rarityKey] || [];
+
+        for (let i = s + 1; i <= e; i++) {
+          const lv = lvList[i];
+          const r = rows.find(x => String(x["레벨"]).trim() === String(lv).trim());
+          if (!r) continue;
+          totals.food   += toNum(r["펫먹이"]);
+          totals.manual += toNum(r["조련매뉴얼"]);
+          totals.vital  += toNum(r["활력의약"]);
+          totals.serum  += toNum(r["강화혈청"]);
+        }
       });
 
       return totals;
     }
 
     function renderSummary() {
-      const t = calculateTotals();
+      const total = calculateTotals();
       const owned = {
         food:   parseFloat(document.getElementById("own-펫먹이").value)||0,
         manual: parseFloat(document.getElementById("own-조련매뉴얼").value)||0,
@@ -308,38 +391,31 @@
         serum:  parseFloat(document.getElementById("own-강화혈청").value)||0,
       };
       const deficit = {
-        food: owned.food - t.food,
-        manual: owned.manual - t.manual,
-        vital: owned.vital - t.vital,
-        serum: owned.serum - t.serum,
+        food: owned.food - total.food,
+        manual: owned.manual - total.manual,
+        vital: owned.vital - total.vital,
+        serum: owned.serum - total.serum,
       };
 
-      const html = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Total</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Pet Food</span><span>${t.food.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Manual</span><span>${t.manual.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Potion</span><span>${t.vital.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Serum</span><span>${t.serum.toLocaleString()}</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Stock</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Pet Food</span><span>${owned.food.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Manual</span><span>${owned.manual.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Potion</span><span>${owned.vital.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Serum</span><span>${owned.serum.toLocaleString()}</span></div>
-          </div>
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Quantity required</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Pet Food</span><span class="${deficit.food<0?'text-red-600':''}">${deficit.food.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Manual</span><span class="${deficit.manual<0?'text-red-600':''}">${deficit.manual.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Potion</span><span class="${deficit.vital<0?'text-red-600':''}">${deficit.vital.toLocaleString()}</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">Serum</span><span class="${deficit.serum<0?'text-red-600':''}">${deficit.serum.toLocaleString()}</span></div>
-          </div>
-        </div>`;
-      const el = document.getElementById("summaryBody");
-      if (el) el.innerHTML = html;
+			document.getElementById("sum-펫먹이").textContent = total["food"].toLocaleString();
+      document.getElementById("sum-조련매뉴얼").textContent = total["manual"].toLocaleString();
+			document.getElementById("sum-활력의약").textContent = total["vital"].toLocaleString();
+			document.getElementById("sum-강화혈청").textContent = total["serum"].toLocaleString();
+      
+      const defA = document.getElementById("def-펫먹이");
+      const defB = document.getElementById("def-조련매뉴얼");
+      const defC = document.getElementById("def-활력의약");
+      const defD = document.getElementById("def-강화혈청");
+
+      defA.textContent = ( (parseFloat(document.getElementById("own-펫먹이").value||0) - total["food"]) ).toLocaleString();
+      defB.textContent = ( (parseFloat(document.getElementById("own-조련매뉴얼").value||0) - total["manual"]) ).toLocaleString();
+			defC.textContent = ( (parseFloat(document.getElementById("own-활력의약").value||0) - total["vital"]) ).toLocaleString();
+			defD.textContent = ( (parseFloat(document.getElementById("own-강화혈청").value||0) - total["serum"]) ).toLocaleString();
+
+      defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+			defC.classList.toggle("text-red-600", parseFloat(defC.textContent.replace(/,/g,'')) < 0);
+			defD.classList.toggle("text-red-600", parseFloat(defD.textContent.replace(/,/g,'')) < 0);
     }
 
     // 디바운스
@@ -350,18 +426,16 @@
     }
 
     function bindOwnedInputs() {
-      ["own-펫먹이","own-조련매뉴얼","own-활력의약","own-강화혈청"].forEach(id=>{
-        const el = document.getElementById(id);
-        if (el) el.addEventListener("input", scheduleCalc);
-      });
+
     }
 
     // 시작
     loadAll();
     function sendHeightToParent() {
-      const height = document.body.scrollHeight + 10;
+      const height = document.body.scrollHeight + 160;
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
+    document.getElementById("btn-calc-total")?.addEventListener("click", () => {renderSummary();});
     window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
   </script>
   <script>
@@ -387,6 +461,6 @@
         document.body.classList.toggle('dark-mode', e.data.value);
       }
     });
-  </script>  
+  </script>
 </body>
 </html>

@@ -108,6 +108,7 @@
 
             const val = cell?.effectiveValue;
             let text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";          
+            text = text.replace("10불 15세대","FC10, Gen15");
             text = text.replace("10불 14세대","FC10, Gen14");
             text = text.replace("10불 13세대","FC10, Gen13");
             text = text.replace("10불 12세대","FC10, Gen12");
@@ -154,6 +155,7 @@
             text = text.replace("1Group4","Group14");
             text = text.replace("1Group5","Group15");
             text = text.replace("1Group6","Group16");
+            text = text.replace("1Group7","Group17");
             text = text.replace("진행도","Progress");
             text = text.replace("28일","28d ");
             text = text.replace("42일","42d ");
