@@ -145,45 +145,48 @@
     </div>
 
     <!-- 카드 그리드 -->
-    <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-4"></div>
+    <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-2 mb-4"></div>
   
     <!-- ✅ 최하단 총합계 패널 -->
     <div id="summaryPanel" class="mt-4">      
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          <!-- 총합 -->
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">총합</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수조각</span><span id="sum-가루">0</span></div>
-            <div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="sum-철강재">0</span></div>           
-            <div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">소요시간</span><span id="sum-시간">0분</span></div>
-          </div>
-    
-          <!-- 보유량 -->          
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">보유량</div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label for="owned-가루" class="block text-[13px] text-gray-600 mb-1">보유 가루</label>
-                <input type="number" id="owned-가루" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
-              </div>
-              <div>
-                <label for="owned-철강재" class="block text-[13px] text-gray-600 mb-1">보유 철강재</label>
-                <input type="number" id="owned-철강재" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
-              </div>
+        <!-- 총합 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">총합</div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수조각</span><span id="sum-가루">0</span></div>
+          <div class="font-semibold mb-2"></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="sum-철강재">0</span></div>           
+          <div class="font-semibold mb-2"></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">소요시간</span><span id="sum-시간">0분</span></div>
+        </div>
+
+        <!-- 보유량 -->          
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">보유량</div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label for="owned-가루" class="block text-[13px] text-gray-600 mb-1">보유 가루</label>
+              <input type="number" id="owned-가루" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+            </div>
+            <div>
+              <label for="owned-철강재" class="block text-[13px] text-gray-600 mb-1">보유 철강재</label>
+              <input type="number" id="owned-철강재" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
             </div>
           </div>
-    
-          <!-- 과부족 -->
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">과부족</div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">가루</span><span id="def-가루">0</span></div>
-						<div class="font-semibold mb-2"></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="def-철강재">0</span></div>
-          </div>
-        </div>      
+        </div>
+
+        <!-- 과부족 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">과부족</div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">가루</span><span id="def-가루">0</span></div>
+          <div class="font-semibold mb-2"></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="def-철강재">0</span></div>
+        </div>
+      </div>
     </div>
+    <div class="flex justify-end mt-2">
+      <button id="btn-calc-total" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">총합계산</button>
+    </div>  
   </div>
 
   <script>
@@ -402,39 +405,82 @@
       });
     }
 	  
+    function getTroopCode(){
+      if (document.getElementById("chkInf")?.checked) return "inf";   // 방패
+      if (document.getElementById("chkLan")?.checked) return "lan";   // 창
+      if (document.getElementById("chkMask")?.checked) return "mask"; // 궁
+      return "inf";
+    }
+          
     function renderResearchCards() {
       const container = document.getElementById("researchGrid");
-      container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-4";
+      container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4";
       container.innerHTML = "";
+
+      const POS = {
+        "I": {r:1,c:2},           // 불꽃부대
+        "II-A": {r:2,c:1},        // 불꽃공격
+        "II-B": {r:2,c:3},        // 불꽃방패
+        "III": {r:3,c:2},         // 불꽃군단
+        "IV-A": {r:4,c:1},        // 불꽃도끼
+        "IV-B": {r:4,c:3},        // 불꽃수호
+        "V": {r:5,c:2},           // 헬리오스 병사
+        "Healing": {r:6,c:1},     // 치료연구
+        "Training": {r:7,c:2},    // 훈련연구
+        "HealingTime": {r:6,c:3}  // 구급연구
+      };
 
       researchList.forEach(item => {
         const wrap = document.createElement("div");
         wrap.className = "exp-card";
+        if (POS[item.key]) {
+          wrap.style.gridRowStart = POS[item.key].r;
+          wrap.style.gridColumnStart = POS[item.key].c;
+        }
 
         const chkId = `check-${item.key}`;
         const curId = `current-${item.key}`;
         const tgtId = `target-${item.key}`;
 
+        const troop = getTroopCode();
+        const imgSrc = `images/helios/${troop}/${troop}-${item.key}.png`;
+      
         wrap.innerHTML = `
           <div class="p-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <div>
-                <div class="flex items-center gap-2 mb-2">
-                  <h3 class="text-[15px] font-semibold text-gray-800">${item.label}</h3>
-                </div>
-                <p class="muted mb-3">레벨 범위 (최대 Lv.${item.max})</p>
-                <div class="flex items-center gap-3">
-                  <div class="flex items-center gap-2">
-                    <span class="text-[12px] text-gray-600">현재</span>
-                    <select id="${curId}" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
-                      ${createLevelOptions(item.max)}
-                    </select>
+              <div class="flex gap-2">
+                <!-- ✅ 공통 카드 이미지 -->
+                <div class="shrink-0">
+                  <div class="w-[84px] h-[84px]">
+                    <img src="${imgSrc}"class="w-full h-full object-cover" alt="card-icon" loading="lazy" />
                   </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-[12px] text-gray-600">목표</span>
-                    <select id="${tgtId}" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
-                      ${createLevelOptions(item.max)}
-                    </select>
+                </div>
+
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 mb-2">
+                    <h3 class="text-[15px] font-semibold text-gray-800">${item.label}</h3>
+                  </div>
+                  <p class="muted mb-3">레벨 범위 (최대 Lv.${item.max})</p>
+
+                  <!-- ✅ 현재/목표 세로 배치 -->
+                  <div class="flex flex-col gap-2">
+                    <!-- 현재 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[12px] text-gray-600 w-[42px]">현재</span>
+                      <select id="${curId}"
+                        class="border rounded-lg px-2 py-1 text-sm w-full min-w-[88px]">
+                        ${createLevelOptions(item.max)}
+                      </select>
+                    </div>
+
+                    <!-- 목표 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[12px] text-gray-600 w-[42px]">목표</span>
+                      <select id="${tgtId}"
+                        class="border rounded-lg px-2 py-1 text-sm w-full min-w-[88px]">
+                        ${createLevelOptions(item.max)}
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -516,6 +562,69 @@
       if (e.target.id === "chkVP15") handleVPCheck("chkVP15");
     });
 
+    /* ========== 계산 로직 (분리) ========== */
+    function calculateTotals(){
+      let total = { 가루: 0, 철강재: 0, 시간: 0 };
+
+      // 연구속도/버프 계수 (시간에만 적용)
+      let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+      if (document.getElementById("chkVP10").checked) factor += 0.10;
+      if (document.getElementById("chkVP15").checked) factor += 0.15;
+      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+
+      researchList.forEach(item => {
+        const curEl = document.getElementById(`current-${item.key}`);
+        const tgtEl = document.getElementById(`target-${item.key}`);
+        if (!curEl || !tgtEl) return;
+
+        const cur = parseInt(curEl.value, 10);
+        const tgt = parseInt(tgtEl.value, 10);
+        if (!Number.isFinite(cur) || !Number.isFinite(tgt) || cur >= tgt) return;
+
+        const data = researchData[item.key] || [];
+        for (let lv = cur + 1; lv <= tgt; lv++) {
+          const row = data.find(r => r.level === lv);
+          if (!row) continue;
+
+          total.가루 += row.가루 || 0;
+          total.철강재 += row.철강재 || 0;
+          total.시간 += parseTimeToSeconds(row.시간) || 0;
+        }
+      });
+
+      return { total, factor };
+    }
+    
+    function renderSummary(){
+      const { total, factor } = calculateTotals();
+
+      // 보유량
+      const ownedDust  = parseFloat(document.getElementById("owned-가루").value) || 0;
+      const ownedSteel = parseFloat(document.getElementById("owned-철강재").value) || 0;
+
+      const totalTime = Math.round(total.시간 / factor);
+
+      // 총합
+      document.getElementById("sum-가루").textContent   = total.가루.toLocaleString();
+      document.getElementById("sum-철강재").textContent = total.철강재.toLocaleString();
+      document.getElementById("sum-시간").textContent   = formatTime(totalTime);
+
+      // 과부족(보유 - 필요)  ← 너 원래 방식 그대로
+      const defA = document.getElementById("def-가루");
+      const defB = document.getElementById("def-철강재");
+
+      const vA = ownedDust - total.가루;
+      const vB = ownedSteel - total.철강재;
+
+      defA.textContent = vA.toLocaleString();
+      defB.textContent = vB.toLocaleString();
+
+      defA.classList.toggle("text-red-600", vA < 0);
+      defB.classList.toggle("text-red-600", vB < 0);
+    }
+
+    document.getElementById("btn-calc-total")?.addEventListener("click", () => { renderSummary();});
+
     /* ========== 계산 로직 (자동) ========== */
     function calculateResearch() {
       let total = { 가루: 0, 철강재: 0, 시간: 0 };
@@ -588,32 +697,7 @@
             </tr>`;
         }
       });
-
-      // 보유량
-      const owned = {
-        가루: parseFloat(document.getElementById("owned-가루").value) || 0,
-        철강재: parseFloat(document.getElementById("owned-철강재").value) || 0,
-      };
-
-      // 하단 '총합계' 패널 갱신 (가루/철강재만)
-      const deficit = {
-        가루: (owned.가루 - total.가루),
-        철강재: (owned.철강재 - total.철강재),
-      };
-      
-      const totalTime = Math.round(total.시간 / factor);
-      
-      document.getElementById("sum-가루").textContent = total["가루"].toLocaleString();
-      document.getElementById("sum-철강재").textContent = total["철강재"].toLocaleString();     
-      document.getElementById("sum-시간").textContent = formatTime(totalTime);
-      
-      const defA = document.getElementById("def-가루");
-      const defB = document.getElementById("def-철강재");
-      defA.textContent = ( (parseFloat(document.getElementById("owned-가루").value||0) - total["가루"]) ).toLocaleString();
-      defB.textContent = ( (parseFloat(document.getElementById("owned-철강재").value||0) - total["철강재"]) ).toLocaleString();
-      defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
-      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
-		
+    
       sendHeightToParent();
     }
 

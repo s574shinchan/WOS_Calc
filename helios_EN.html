@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>헬리오스 연구 계산기</title>
+  <title>Helios</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* ========== 다크모드 기본 ========== */
@@ -45,6 +45,11 @@
     body.dark-mode .exp-card{ background-color:#2c2c2c !important; border-color:#444 !important; }
     body.dark-mode .exp-divider{ border-color:#444 !important; }
     body.dark-mode .muted{ color:#b7b7b7 !important; }
+    body.dark-mode .svs-score-label,
+    body.dark-mode .svs-score-value {
+      font-weight: 700;
+      color: #16AC7A !important;
+    }
   </style>
 
   <!-- ✅ 다크모드 상태 유지 -->
@@ -61,86 +66,145 @@
     <h1 class="text-2xl font-bold text-gray-800 mb-4">🧪 Heilos</h1>
 
     <div class="text-gray-600 mb-4 text-sm">
-      <div class="mb-4">
-        <p>Calculate the items (Fire Crystal Shard, Steel) required for Helios Research.</p>
-        <p>Select a research item and specify its current/target level, and it will be automatically added up.</p>
-      </div>
-
-      <!-- 병종 선택 -->
-      <div class="grid grid-cols-6 gap-x-4 px-0 text-center mb-2">
-        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
-          <input type="checkbox" id="chkInf" checked class="mr-1 w-4 h-4" /> Infantry
-        </label>
-        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
-          <input type="checkbox" id="chkLan" class="mr-1 w-4 h-4" /> Lancer
-        </label>
-        <label class="flex items-center text-sm font-semibold leading-tight col-span-2 sm:col-span-1">
-          <input type="checkbox" id="chkMask" class="mr-1 w-4 h-4" /> Marksman
-        </label>
-      </div>
-
-      <!-- 버프/속도 -->
-      <div class="grid grid-cols-2 md:flex md:flex-wrap md:items-center gap-4 mb-3">
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="chkVP10" class="mr-2 w-4 h-4">Vice President (10%)
-        </label>
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="chkVP15" class="mr-2 w-4 h-4">Vice President (15%)
-        </label>
-        <label class="inline-flex items-center font-semibold">
-          <input type="checkbox" id="chkServerBuff" class="mr-2 w-4 h-4">Research Advancement (10%)
-        </label>
-        <div class="flex items-center gap-2">
-          <label for="speedPercent" class="font-semibold whitespace-nowrap">Research Speed (%)</label>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+        <!-- 병종 선택 (버튼 토글) -->
+        <div>
+          <div class="text-sm font-medium mb-1">Select Troop</div>          
+          <div class="grid grid-cols-3 gap-2 mb-2">
+            <button type="button"
+                    class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkInf" data-group="troop" data-mode="single">
+              Infantry
+            </button>
+            <button type="button"
+                    class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkLan" data-group="troop" data-mode="single">
+              Lancer
+            </button>
+            <button type="button"
+                    class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkMask" data-group="troop" data-mode="single">
+              Maskman
+            </button>
+            <!-- ✅ 기존 로직 그대로 쓰기 위한 체크박스(숨김) -->
+            <input type="checkbox" id="chkInf" checked hidden>
+            <input type="checkbox" id="chkLan" hidden>
+            <input type="checkbox" id="chkMask" hidden>
+          </div>
+        </div>        
+        <!-- 부집행관 -->
+        <div>
+          <div class="text-sm font-medium mb-1">Vice President</div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button"
+                    class="w-[105px] px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkVP10" data-group="vp" data-mode="single">
+              10%
+            </button>
+            <button type="button"
+                    class="w-[105px] px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkVP15" data-group="vp" data-mode="single">
+              15%
+            </button>
+          </div>
+          <input type="checkbox" id="chkVP10" hidden>
+          <input type="checkbox" id="chkVP15" hidden>
+        </div>
+        <div>
+          <label class="block text-sm mb-1">Valeria</label>
+          <select id="chkExpertV" class="w-full rounded-md border px-2 py-2">
+            <option>None</option>
+            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+            <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+          </select>
+        </div>
+        <!--서버버프-->
+        <div>
+          <div class="text-sm font-medium mb-1">Research Advancement (10%)</div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button"
+                    class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                    data-toggle="chkServerBuff" data-group="server" data-mode="single">
+              Active
+            </button>
+          </div>
+          <input type="checkbox" id="chkServerBuff" hidden>
+        </div>        
+        <!-- 연구속도 -->
+        <div>
+          <label for="speedPercent" class="block text-sm mb-1">Research Speed (%)</label>
           <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
         </div>
       </div>
     </div>
 
     <!-- 카드 그리드 -->
-    <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-4"></div>
-
-    <!-- ✅ 보유 자원 카드 -->
-    <div class="exp-card mt-4">
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-[15px] font-semibold text-gray-800">Owned Items</h3>
+    <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-2 mb-4"></div>
+  
+    <!-- ✅ 최하단 총합계 패널 -->
+    <div id="summaryPanel" class="mt-4">      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <!-- 총합 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">Total</div>
+          <div class="flex justify-between text-[13px]">
+            <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_FCShard.webp" class="w-6 h-6" alt="불수조각">
+              <span>FC Shard</span>
+            </div>
+            <span id="sum-가루">0</span>
+          </div>
+          <div class="font-semibold mb-2"></div>
+          <div class="flex justify-between text-[13px]">
+            <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_Steel.webp" class="w-6 h-6" alt="철강재">
+              <span>Steel</span>
+            </div>
+            <span id="sum-철강재">0</span>
+          </div>           
+          <div class="font-semibold mb-2"></div>
+          <div class="flex justify-between text-[13px]"><span class="text-gray-600">Required Time</span><span id="sum-시간">0min</span></div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="own-가루" class="block text-[12px] text-gray-600 mb-1">Owned Fire Crystal Shard</label>
-            <input
-              type="number"
-              id="own-가루"
-              class="w-full border rounded-lg px-3 py-2 text-sm"
-              placeholder="0"
-              min="0"
-              inputmode="numeric"
-            />
+        <!-- 보유량 -->          
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">Owned</div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label for="owned-가루" class="block text-[13px] text-gray-600 mb-1">FC Shard</label>
+              <input type="number" id="owned-가루" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+            </div>
+            <div>
+              <label for="owned-철강재" class="block text-[13px] text-gray-600 mb-1">Steel</label>
+              <input type="number" id="owned-철강재" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+            </div>
           </div>
-          <div>
-            <label for="own-철강재" class="block text-[12px] text-gray-600 mb-1">Owned Steel</label>
-            <input
-              type="number"
-              id="own-철강재"
-              class="w-full border rounded-lg px-3 py-2 text-sm"
-              placeholder="0"
-              min="0"
-              inputmode="numeric"
-            />
+        </div>
+
+        <!-- 과부족 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="font-semibold mb-2">Surplus</div>
+          <div class="flex justify-between text-[13px]">
+            <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_FCShard.webp" class="w-6 h-6" alt="불수조각">
+              <span>FC Shard</span>
+            </div>
+            <span id="def-가루">0</span>
+          </div>
+          <div class="font-semibold mb-2"></div>
+          <div class="flex justify-between text-[13px]">
+            <div class="flex items-center gap-2 text-gray-600">
+              <img src="images/icon_Steel.webp" class="w-6 h-6" alt="철강재">
+              <span>Steel</span>
+            </div>
+            <span id="def-철강재">0</span>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- ✅ 최하단 총합계 패널 -->
-    <div id="summaryPanel" class="mt-4">      
-      <div class="flex items-center justify-between mb-2">
-        <span class="muted"></span>
-      </div>
-      <div id="summaryBody"></div>
-    </div>    
+    <div class="flex justify-end mt-2">
+      <button id="btn-calc-total" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">Total Calc</button>
+    </div>  
   </div>
 
   <script>
@@ -255,7 +319,44 @@
         { level: 10, 가루: 765, 철강재: 220000, 시간: "15d 15:00:00" },
       ]
     };
+    
+    // ✅ 발레리아(SVS 점수 보너스)
+    const EXPERT_BONUS = {
+      "None":0,
+      "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+      "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+    };
+    const EXPERT_DESC = {
+      "Lv.1":  "+2%",
+      "Lv.2":  "+4%",
+      "Lv.3":  "+6%",
+      "Lv.4":  "+8%",
+      "Lv.5":  "+10%",
+      "Lv.6":  "+12%",
+      "Lv.7":  "+14%",
+      "Lv.8":  "+16%",
+      "Lv.9":  "+18%",
+      "Lv.10": "+20%"
+    };
 
+    function getValeriaBonus(){
+      const sel = document.getElementById("chkExpertV");
+      if (!sel) return 0;
+      const key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+      return EXPERT_BONUS[key] ?? 0;
+    }
+
+    function getValeriaDesc(){
+      const expertSel = document.getElementById("chkExpertV");
+      const lv = expertSel.value;
+      const text = EXPERT_DESC[lv]
+        ? "SvS 점수 " + EXPERT_DESC[lv]
+        : "SvS 점수";
+
+      document.querySelectorAll(".svs-score-label").forEach(el => {
+        el.textContent = text;
+      });
+    }
     /* ========== 상태 & 유틸 ========== */
     let researchList = [];
 
@@ -276,7 +377,7 @@
     function createLevelOptions(max) {
       return Array.from({length:max+1}, (_,i)=>`<option value="${i}">${i}</option>`).join('');
     }
-
+	  
     function updateResearchList() {
       const chkInf = document.getElementById("chkInf");
       const chkLan = document.getElementById("chkLan");
@@ -323,48 +424,90 @@
         return { key, label, max: Math.max(...value.map(v=>v.level)) };
       });
     }
-
+	  
+    function getTroopCode(){
+      if (document.getElementById("chkInf")?.checked) return "inf";   // 방패
+      if (document.getElementById("chkLan")?.checked) return "lan";   // 창
+      if (document.getElementById("chkMask")?.checked) return "mask"; // 궁
+      return "inf";
+    }
+          
     function renderResearchCards() {
       const container = document.getElementById("researchGrid");
-      container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-4";
+      container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4";
       container.innerHTML = "";
+
+      const POS = {
+        "I": {r:1,c:2},           // 불꽃부대
+        "II-A": {r:2,c:1},        // 불꽃공격
+        "II-B": {r:2,c:3},        // 불꽃방패
+        "III": {r:3,c:2},         // 불꽃군단
+        "IV-A": {r:4,c:1},        // 불꽃도끼
+        "IV-B": {r:4,c:3},        // 불꽃수호
+        "V": {r:5,c:2},           // 헬리오스 병사
+        "Healing": {r:6,c:1},     // 치료연구
+        "Training": {r:7,c:2},    // 훈련연구
+        "HealingTime": {r:6,c:3}  // 구급연구
+      };
 
       researchList.forEach(item => {
         const wrap = document.createElement("div");
         wrap.className = "exp-card";
+        if (POS[item.key]) {
+          wrap.style.gridRowStart = POS[item.key].r;
+          wrap.style.gridColumnStart = POS[item.key].c;
+        }
 
         const chkId = `check-${item.key}`;
         const curId = `current-${item.key}`;
         const tgtId = `target-${item.key}`;
 
+        const troop = getTroopCode();
+        const imgSrc = `images/helios/${troop}/${troop}-${item.key}.png`;
+      
         wrap.innerHTML = `
           <div class="p-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <div class="flex items-center gap-2 mb-2">
-                  <input id="${chkId}" type="checkbox" class="h-4 w-4">
-                  <h3 class="text-[15px] font-semibold text-gray-800">${item.label}</h3>
-                </div>
-                <p class="muted mb-3">Level Range (Max Lv.${item.max})</p>
-                <div class="flex items-center gap-3">
-                  <div class="flex items-center gap-2">
-                    <span class="text-[12px] text-gray-600">Current</span>
-                    <select id="${curId}" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
-                      ${createLevelOptions(item.max)}
-                    </select>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div class="flex gap-2">
+                <!-- ✅ 공통 카드 이미지 -->
+                <div class="shrink-0">
+                  <div class="w-[84px] h-[84px]">
+                    <img src="${imgSrc}"class="w-full h-full object-cover" alt="card-icon" loading="lazy" />
                   </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-[12px] text-gray-600">Target</span>
-                    <select id="${tgtId}" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
-                      ${createLevelOptions(item.max)}
-                    </select>
+                </div>
+
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 mb-2">
+                    <h3 class="text-[15px] font-semibold text-gray-800">${item.label}</h3>
+                  </div>
+                  <p class="muted mb-3">Level Range (Max Lv.${item.max})</p>
+
+                  <!-- ✅ 현재/목표 세로 배치 -->
+                  <div class="flex flex-col gap-2">
+                    <!-- 현재 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[12px] text-gray-600 w-[42px]">Current</span>
+                      <select id="${curId}"
+                        class="border rounded-lg px-2 py-1 text-sm w-full min-w-[88px]">
+                        ${createLevelOptions(item.max)}
+                      </select>
+                    </div>
+
+                    <!-- 목표 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[12px] text-gray-600 w-[42px]">Target　</span>
+                      <select id="${tgtId}"
+                        class="border rounded-lg px-2 py-1 text-sm w-full min-w-[88px]">
+                        ${createLevelOptions(item.max)}
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="md:pl-4">
                 <div class="font-semibold text-gray-800 mb-2">Sub Total</div>
-                <div class="grid grid-cols-2 gap-x-3 text-[13px]">
+                <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
                   <div class="flex items-center gap-2 text-gray-600">
                     <img src="images/icon_FCShard.webp" class="w-6 h-6" alt="불수조각">
                     <span>FC Shard</span>
@@ -375,8 +518,12 @@
                     <span>Steel</span>
                   </div>
                   <div class="text-right tabular-nums" id="subtotal-steel-${item.key}">0</div>
-                  <div class="text-gray-600">Time Required</div>
+                  <div class="text-gray-600">Required Time</div>
                   <div class="text-right tabular-nums" id="subtotal-time-${item.key}">0</div>
+                  <div class="col-span-2 border-t border-gray-200 mt-1"></div>
+                  <div class="svs-score-label text-gray-600">SVS Score</div>
+                  <div id="sub-점수-${item.label}" class="svs-score-value text-right tabular-nums font-medium">0</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -422,17 +569,87 @@
       else if (toggleId === "chkVP15" && chkVP15.checked) chkVP10.checked = false;
       scheduleCalc();
     }
-
+    // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
+    function formatSVS(value){
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "0";
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+      if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+      return num.toLocaleString();
+    }
     // 이벤트 바인딩
     document.addEventListener("change", (e) => {
       if (e.target.id === "chkVP10" || e.target.id === "chkVP15" || e.target.id === "chkServerBuff") scheduleCalc();
-      if (e.target.id === "speedPercent" || e.target.id === "own-가루" || e.target.id === "own-철강재") scheduleCalc();
+      if (e.target.id === "speedPercent" || e.target.id === "owned-가루" || e.target.id === "owned-철강재") scheduleCalc();
       if (e.target.id === "chkInf") handleCheck("chkInf");
       if (e.target.id === "chkLan") handleCheck("chkLan");
       if (e.target.id === "chkMask") handleCheck("chkMask");
       if (e.target.id === "chkVP10") handleVPCheck("chkVP10");
       if (e.target.id === "chkVP15") handleVPCheck("chkVP15");
     });
+
+    /* ========== 계산 로직 (분리) ========== */
+    function calculateTotals(){
+      let total = { 가루: 0, 철강재: 0, 시간: 0 };
+
+      // 연구속도/버프 계수 (시간에만 적용)
+      let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+      if (document.getElementById("chkVP10").checked) factor += 0.10;
+      if (document.getElementById("chkVP15").checked) factor += 0.15;
+      if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+
+      researchList.forEach(item => {
+        const curEl = document.getElementById(`current-${item.key}`);
+        const tgtEl = document.getElementById(`target-${item.key}`);
+        if (!curEl || !tgtEl) return;
+
+        const cur = parseInt(curEl.value, 10);
+        const tgt = parseInt(tgtEl.value, 10);
+        if (!Number.isFinite(cur) || !Number.isFinite(tgt) || cur >= tgt) return;
+
+        const data = researchData[item.key] || [];
+        for (let lv = cur + 1; lv <= tgt; lv++) {
+          const row = data.find(r => r.level === lv);
+          if (!row) continue;
+
+          total.가루 += row.가루 || 0;
+          total.철강재 += row.철강재 || 0;
+          total.시간 += parseTimeToSeconds(row.시간) || 0;
+        }
+      });
+
+      return { total, factor };
+    }
+    
+    function renderSummary(){
+      const { total, factor } = calculateTotals();
+
+      // 보유량
+      const ownedDust  = parseFloat(document.getElementById("owned-가루").value) || 0;
+      const ownedSteel = parseFloat(document.getElementById("owned-철강재").value) || 0;
+
+      const totalTime = Math.round(total.시간 / factor);
+
+      // 총합
+      document.getElementById("sum-가루").textContent   = total.가루.toLocaleString();
+      document.getElementById("sum-철강재").textContent = total.철강재.toLocaleString();
+      document.getElementById("sum-시간").textContent   = formatTime(totalTime);
+
+      // 과부족(보유 - 필요)  ← 너 원래 방식 그대로
+      const defA = document.getElementById("def-가루");
+      const defB = document.getElementById("def-철강재");
+
+      const vA = ownedDust - total.가루;
+      const vB = ownedSteel - total.철강재;
+
+      defA.textContent = vA.toLocaleString();
+      defB.textContent = vB.toLocaleString();
+
+      defA.classList.toggle("text-red-600", vA < 0);
+      defB.classList.toggle("text-red-600", vB < 0);
+    }
+
+    document.getElementById("btn-calc-total")?.addEventListener("click", () => { renderSummary();});
 
     /* ========== 계산 로직 (자동) ========== */
     function calculateResearch() {
@@ -459,7 +676,6 @@
       researchList.forEach(item => {
         const cur = parseInt(document.getElementById(`current-${item.key}`).value);
         const tgt = parseInt(document.getElementById(`target-${item.key}`).value);
-        const checked = document.getElementById(`check-${item.key}`)?.checked;
 
         const data = researchData[item.key];
         const subtotal = { 가루: 0, 철강재: 0, 시간: 0 };
@@ -481,9 +697,18 @@
         if (dEl) dEl.textContent = subtotal.가루.toLocaleString();
         if (sEl) sEl.textContent = subtotal.철강재.toLocaleString();
         if (tEl) tEl.textContent = formatTime(Math.round(subtotal.시간 / factor));
+        
+        // ✅ SVS 점수 = (가루*1000) × (1 + 발레리아 보너스)
+        const shard = (subtotal.가루 * 1000);
+        const vBonus = getValeriaBonus(); // 0 ~ 0.20      
+        const sScore = Math.floor(shard * (1 + vBonus));        
+        const tScore = Math.floor((subtotal.시간/60) * (1 + vBonus));        
+        let finalScore = sScore+tScore;
 
-        // ✅ 체크된 항목만 하단 총합/결과표에 포함
-        if (checked && cur < tgt) {
+        const scoreEl = document.getElementById(`sub-점수-${item.label}`);
+        if (scoreEl) scoreEl.textContent = finalScore.toLocaleString();
+        
+        if (cur < tgt) {
           total.가루 += subtotal.가루;
           total.철강재 += subtotal.철강재;
           total.시간 += subtotal.시간;
@@ -498,104 +723,7 @@
             </tr>`;
         }
       });
-
-      // 보유량
-      const owned = {
-        가루: parseFloat(document.getElementById("own-가루").value) || 0,
-        철강재: parseFloat(document.getElementById("own-철강재").value) || 0,
-      };
-
-      // 하단 '총합계' 패널 갱신 (가루/철강재만)
-      const deficit = {
-        가루: (owned.가루 - total.가루),
-        철강재: (owned.철강재 - total.철강재),
-      };
-
-      const totalTime = Math.round(total.시간 / factor);
-      
-      const summaryBody = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Total</div>
-
-            <!-- 전체 3칸 (FC, Steel, Time) -->
-            <div class="grid grid-cols-3 text-[13px] text-gray-600">
-
-              <!-- FC Shard -->
-              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
-                <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
-                <div>
-                  <div class="font-semibold">FC Shard</div>
-                  <div>${total.가루.toLocaleString()}</div>
-                </div>
-              </div>
-
-              <!-- Steel -->
-              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
-                <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
-                <div>
-                  <div class="font-semibold">Steel</div>
-                  <div>${total.철강재.toLocaleString()}</div>
-                </div>
-              </div>
-
-              <!-- Time Required -->
-              <div class="grid grid-cols-[auto_1fr] items-center justify-center text-right">
-                <div>
-                  <div class="font-semibold">Time Required</div>
-                  <div>${formatTime(totalTime)}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Stock</div>
-            <div class="grid grid-cols-2 text-[13px] text-gray-600">
-              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
-                <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
-                <div>
-                  <div class="font-semibold">FC Shard</div>
-                  <span>${owned.가루.toLocaleString()}</span>
-                </div>
-              </div>
-
-              <!-- Steel -->
-              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
-                <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
-                <div>
-                  <div class="font-semibold">Steel</div>
-                  <span>${owned.철강재.toLocaleString()}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">Surplus</div>
-              <div class="grid grid-cols-2 text-[13px] text-gray-600">
-              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
-                <img src="images/icon_FCShard.webp" class="w-12 h-12 mx-auto" alt="FC Shard">
-                <div>
-                  <div class="font-semibold">FC Shard</div>
-                  <span class="${deficit.가루<0?'text-red-600':''}">${deficit.가루.toLocaleString()}</span>
-                </div>
-              </div>
-
-              <!-- Steel -->
-              <div class="grid grid-cols-[auto_1fr] items-center justify-center">
-                <img src="images/icon_Steel.webp" class="w-12 h-12 mx-auto" alt="Steel">
-                <div>
-                  <div class="font-semibold">Steel</div>
-                  <span class="text-right ${deficit.철강재<0?'text-red-600':''}">${deficit.철강재.toLocaleString()}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          `;
-      const summaryEl = document.getElementById("summaryBody");
-      if (summaryEl) summaryEl.innerHTML = summaryBody;
-
+    
       sendHeightToParent();
     }
 
@@ -612,7 +740,7 @@
     scheduleCalc();
 
     // 숫자 입력 즉시 계산
-    ["own-가루","own-철강재","speedPercent"].forEach(id=>{
+    ["owned-가루","owned-철강재","speedPercent"].forEach(id=>{
       const el = document.getElementById(id);
       if (el) el.addEventListener("input", scheduleCalc);
     });
@@ -622,15 +750,91 @@
       window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
     }
     window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
-
-    // F12/복사 방지 (원코드 유지)
-    document.addEventListener("contextmenu", e => e.preventDefault());
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
         e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
       }
     });
+  </script>  
+  <style>
+    .toggle-btn{ transition:.12s ease; user-select:none; }
+    .toggle-btn:active{ transform:scale(.98); }
+
+    /* OFF */
+    .toggle-btn{
+      background: transparent;
+      border-color: rgba(148,163,184,.65);
+      color: inherit;
+    }
+
+    /* ON (건물계산기 스타일: 파란 배경 + 흰 글자) */
+    .toggle-btn.is-on{
+      background: #2563eb;   /* blue-600 */
+      border-color: #1d4ed8; /* blue-700 */
+      color: #fff;
+    }
+
+    /* 다크모드 OFF 버튼 테두리 */
+    body.dark-mode .toggle-btn{ border-color:#444; }
+  </style>
+  <script>
+    /* ===== 핵심: 버튼 → 체크박스 → 기존 로직 ===== */
+    function setBtn(btn,on){
+      btn.classList.toggle('is-on',on);
+    }
+    document.querySelectorAll('.toggle-btn').forEach(btn=>{
+      const chk = document.getElementById(btn.dataset.toggle);
+      if (chk) btn.classList.toggle('is-on', chk.checked);
+
+      btn.addEventListener('click', () => {
+        const group=btn.dataset.group;
+        
+        if (group === 'troop') {
+          document.querySelectorAll('.toggle-btn[data-group="troop"]').forEach(b=>{
+            const c = document.getElementById(b.dataset.toggle);
+            c.checked = false;
+            b.classList.remove('is-on');
+          });
+          chk.checked = true;
+          btn.classList.add('is-on');
+        }
+        else {
+          chk.checked = !chk.checked;
+          btn.classList.toggle('is-on', chk.checked);
+        }
+        chk.dispatchEvent(new Event('change', { bubbles:true }));
+      });
+    });
+
+    /* ===== 기존 계산 로직은 그대로 ===== */
+    document.addEventListener('change',(e)=>{
+      const id = e.target.id;
+      if(id === "chkExpertV")  getValeriaDesc();
+      scheduleCalc();
+    });
+    
+    ['owned-가루','owned-철강재','speedPercent'].forEach(id=>{
+      document.getElementById(id)?.addEventListener('input',scheduleCalc);
+    });
   </script>
-  </body>
+</body>
 </html>
