@@ -155,8 +155,8 @@
 
     // 희귀도 섹션(스크린샷 헤더) 매핑
     const sectionMeta = {
-      "N":       { title: "Common",    dot: "bg-slate-400", bar: "bg-slate-200", text: "text-slate-700" },
-      "UnKnown": { title: "Uncommon",  dot: "bg-emerald-500", bar: "bg-emerald-200", text: "text-emerald-700" },
+      "UnKnown": { title: "Common",  dot: "bg-emerald-500", bar: "bg-emerald-200", text: "text-emerald-700" },
+      "N":       { title: "Uncommon",    dot: "bg-slate-400", bar: "bg-slate-200", text: "text-slate-700" },
       "R":       { title: "Rare",      dot: "bg-blue-500", bar: "bg-blue-200", text: "text-blue-700" },
       "SR":      { title: "Epic",      dot: "bg-purple-500", bar: "bg-purple-200", text: "text-purple-700" },
       "SSR":     { title: "SSR",       dot: "bg-orange-500", bar: "bg-orange-200", text: "text-orange-800" },
@@ -228,7 +228,7 @@
       sectionsRoot.innerHTML = "";
 
       // rarityKey 순서 = 스크린샷
-      const rarityOrder = ["N", "UnKnown", "R", "SR", "SSR"];
+      const rarityOrder = ["UnKnown", "N", "R", "SR", "SSR"];
 
       for (const rk of rarityOrder) {
         const meta = sectionMeta[rk];
@@ -400,7 +400,7 @@
         vital: owned.vital - total.vital,
         serum: owned.serum - total.serum,
       };
-
+		
 			document.getElementById("sum-펫먹이").textContent = total["food"].toLocaleString();
       document.getElementById("sum-조련매뉴얼").textContent = total["manual"].toLocaleString();
 			document.getElementById("sum-활력의약").textContent = total["vital"].toLocaleString();
