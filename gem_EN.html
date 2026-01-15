@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Charm Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .muted{color:#6b7280}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    .tabular-nums{font-variant-numeric: tabular-nums}
+    select.pill{height:32px}
+    .err{color:#b45309}
+
+    /* Dark mode */
+    body.dark-mode{background-color:#121212;color:#f0f0f0}
+    .dark-mode .border{border-color:#444!important}
+    .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
+    .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#f0f0f0!important}
+    .dark-mode .muted{ color:#f0f0f0 !important; }
+    .dark-mode select option,
+    .dark-mode select,
+    .dark-mode input{color:#000!important}
+  </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+
+<body class="bg-gray-100 p-3 font-sans text-sm">
+  <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
+
+    <header class="p-4">
+      <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">
+        💎 Charm Calculator
+      </h1>
+      <p class="text-sm muted mt-1">
+        Calculate total <b>Charm Guide / Charm Design / Charm Secrets</b> required.
+      </p>
+      <p class="text-xs muted mt-1">
+        Totals are calculated <b>only when clicking [📊 Calculate]</b>.
+      </p>
+    </header>
+
+    <!-- Input Sections -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4" id="InputSections"></section>
+
+    <!-- List / Result -->
+    <div class="grid md:grid-cols-2 gap-3 mt-4">
+      <!-- List -->
+      <div class="bg-white border rounded-xl shadow-sm p-3">
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-base font-bold text-gray-700">📋 Selected Items</h2>
+          <div class="flex gap-x-2">
+            <button id="calculateFromList" class="text-blue-500 text-sm hover:underline">
+              📊 Calculate
+            </button>
+            <button id="clearList" class="text-sm text-red-600 hover:underline">
+              🧹 Clear
+            </button>
+          </div>
+        </div>
+        <div class="space-y-1 text-sm" id="listContainer"></div>
+      </div>
+
+      <!-- Result -->
+      <div class="bg-white border rounded-xl shadow-sm p-3">
+        <h2 class="text-base font-bold text-gray-700">📈 Result</h2>
+        <div id="resultContainer" class="mt-2">
+          <div class="text-sm text-gray-600">
+            Add items and click <b>[📊 Calculate]</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ===================== DATA ===================== */
+const csvUrl =
+  "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
+
+let levels=[], stepGuide=[], stepDesign=[], stepSecrets=[], levelToIdx=new Map();
+let items=[], lastTotal={g:0,d:0,s:0};
+
+const fmt=n=>Number(n||0).toLocaleString();
+
+/* ===================== CSV ===================== */
+function parseCSV(text){
+  const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+  const M=[],D=[],S=[],L=[];
+  for(let i=1;i<lines.length;i++){
+    const [lv,g,d,s]=lines[i].split(",");
+    L.push(+lv); M.push(+g); D.push(+d); S.push(+s);
+  }
+  return {L,M,D,S};
+}
+
+/* ===================== INIT ===================== */
+fetch(csvUrl).then(r=>r.text()).then(t=>{
+  const p=parseCSV(t);
+  levels=p.L;
+  for(let i=0;i<levels.length-1;i++){
+    stepGuide[i]=p.M[i+1];
+    stepDesign[i]=p.D[i+1];
+    stepSecrets[i]=p.S[i+1];
+    levelToIdx.set(levels[i],i);
+  }
+  createSections();
+});
+
+/* ===================== UI ===================== */
+function createSections(){
+  const sec=[
+    {k:"shield",l:"Shield"},
+    {k:"spear",l:"Lancer"},
+    {k:"arch",l:"Archer"},
+  ];
+  const wrap=document.getElementById("InputSections");
+  sec.forEach(s=>{
+    wrap.insertAdjacentHTML("beforeend",`
+      <div class="bg-white border rounded-xl p-3">
+        <h2 class="font-bold mb-2">[${s.l}]</h2>
+        <select id="cur-${s.k}" class="border rounded p-2 w-full mb-2"></select>
+        <select id="tgt-${s.k}" class="border rounded p-2 w-full mb-2"></select>
+        <button class="w-full bg-gray-200 p-2 rounded"
+          onclick="addItem('${s.l}','${s.k}')">Add</button>
+      </div>
+    `);
+    fillOptions(`cur-${s.k}`,true);
+  });
+}
+
+function fillOptions(id){
+  const el=document.getElementById(id);
+  el.innerHTML=`<option></option>`+levels.map(l=>`<option>${l}</option>`).join("");
+}
+
+/* ===================== LOGIC ===================== */
+function addItem(label,key){
+  const f=+document.getElementById(`cur-${key}`).value;
+  const t=+document.getElementById(`tgt-${key}`).value;
+  if(!f||!t||t<=f) return;
+  items.push({label,f,t});
+  renderList();
+}
+
+function sum(arr,f,t){
+  let s=0;
+  for(let lv=f;lv<t;lv++){
+    const i=levelToIdx.get(lv);
+    if(i!=null) s+=arr[i];
+  }
+  return s;
+}
+
+function calculate(){
+  let g=0,d=0,s=0,rows=[];
+  items.forEach(it=>{
+    const sg=sum(stepGuide,it.f,it.t);
+    const sd=sum(stepDesign,it.f,it.t);
+    const ss=sum(stepSecrets,it.f,it.t);
+    g+=sg; d+=sd; s+=ss;
+    rows.push(`
+      <tr>
+        <td>${it.label}</td>
+        <td>${it.f} → ${it.t}</td>
+        <td>${fmt(sg)}</td>
+        <td>${fmt(sd)}</td>
+        <td>${fmt(ss)}</td>
+      </tr>`);
+  });
+  document.getElementById("resultContainer").innerHTML=`
+    <table class="w-full border table-fixed text-sm">
+      <colgroup>
+        <col width="20%"><col width="20%">
+        <col width="20%"><col width="20%"><col width="20%">
+      </colgroup>
+      <thead><tr>
+        <th>Type</th><th>Level</th>
+        <th>Charm Guide</th>
+        <th>Charm Design</th>
+        <th>Charm Secrets</th>
+      </tr></thead>
+      <tbody>${rows.join("")}</tbody>
+    </table>`;
+  document.getElementById("sum-guide").textContent=fmt(g);
+  document.getElementById("sum-design").textContent=fmt(d);
+  document.getElementById("sum-secrets").textContent=fmt(s);
+  lastTotal={g,d,s};
+  updateDef();
+}
+
+function updateDef(){
+  const og=+own-guide.value||0,
+        od=+own-design.value||0,
+        os=+own-secrets.value||0;
+  def-guide.textContent=fmt(og-lastTotal.g);
+  def-design.textContent=fmt(od-lastTotal.d);
+  def-secrets.textContent=fmt(os-lastTotal.s);
+}
+
+function renderList(){
+  listContainer.innerHTML=items.map(
+    (i,idx)=>`<div>${i.label} ${i.f}→${i.t}
+    <button onclick="items.splice(${idx},1);renderList()">x</button></div>`
+  ).join("");
+}
+
+calculateFromList.onclick=calculate;
+["own-guide","own-design","own-secrets"].forEach(id=>{
+  document.getElementById(id).oninput=updateDef;
+});
+clearList.onclick=()=>{items=[];renderList();};
+</script>
+  <!-- 우클릭/단축키 제한 (기존 유지) -->
+  <script>
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+        e.preventDefault();
+      }
+    });
+  </script>
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });
+  </script>
+</body>
+</html>
