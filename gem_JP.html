@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>領主宝石 計算</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    .tabular-nums{font-variant-numeric: tabular-nums}
+    select.pill{height:32px}
+    .err{color:#b45309}
+    .muted{color:#6b7280}
+
+    /* ✅ 다크모드 */
+    body.dark-mode{background-color:#121212;color:#f0f0f0}
+    .dark-mode .border{border-color:#444!important}
+    .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
+    .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#f0f0f0!important}
+    .dark-mode .bg-purple-50,.dark-mode .bg-orange-50,.dark-mode .bg-red-50{background-color:#2e2e2e!important}
+    .dark-mode select option{color:#000!important}
+    .dark-mode select{color:#000!important}
+    .dark-mode input{color:#000!important}
+  </style>
+  <script>
+    // 다크모드 유지
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+
+<body class="bg-gray-100 p-3 font-sans text-sm">
+  <main class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
+    <header class="flex items-center justify-between">
+      <div class="p-4">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">💎 領主宝石</h1>
+        <p class="text-sm muted mt-1">項目を追加してから <b>[📊 計算]</b> を押すと結果が計算されます。</p>
+      </div>
+    </header>
+
+    <!-- ✅ 입력 카드 3개 (盾兵 / 槍兵 / 弓兵) -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4" id="InputSections">
+      <!-- JS로 채움 -->
+    </section>
+
+    <!-- ✅ 좌: 선택목록 / 우: 결과 -->
+    <div class="grid md:grid-cols-2 gap-3 mt-4">
+      <!-- 목록 -->
+      <div class="bg-white border rounded-xl shadow-sm p-3">
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-base font-bold text-gray-700">📋 追加した項目</h2>
+          <div class="flex gap-x-2">
+            <button id="btnCalculate" class="text-blue-500 text-sm hover:underline">📊 計算</button>
+            <button id="btnClear" class="text-sm text-red-600 hover:underline">🧹 クリア</button>
+          </div>
+        </div>
+        <div class="space-y-1 text-sm" id="listContainer"></div>
+        <div class="text-xs muted mt-2">※ 同じ項目も複数回追加できます。</div>
+      </div>
+
+      <!-- 결과 -->
+      <div class="bg-white border rounded-xl shadow-sm p-3">
+        <h2 class="text-base font-bold text-gray-700">📈 結果</h2>
+        <div id="resultContainer" class="mt-2 overflow-auto">
+          <div class="text-sm text-gray-600">項目を追加して <b>[📊 計算]</b> を押してください。</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ====== 임베드 높이 보고 ======
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 120));
+
+    // ====== 데이터 소스 ======
+    const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
+
+    // ====== 상태 ======
+    let gemLevels = [];
+    let levelToIdx = new Map(); // lv -> step index (lv -> lv+1)
+    let stepM = [];
+    let stepB = [];
+    let stepV = [];
+
+    // ✅ 목록(추가된 항목) - 중복 허용
+    // item: { section: "盾兵|槍兵|弓兵", from:number, to:number }
+    let addedItems = [];
+
+    // ====== 유틸 ======
+    const fmt = (n) => Number(n || 0).toLocaleString("ja-JP");
+    const detectDelim = (sample) => (sample.includes("\t") ? "\t" : (sample.includes(";") ? ";" : ","));
+    const toNum = (s) => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+    const toInt = (s) => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+
+    function preprocessByLevel(text){
+      let s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
+      if (!s.includes("\n") && /Lv\.?\s*\d+/i.test(s)) {
+        s = s.replace(/(Lv\.?\s*\d+)/gi, "\n$1");
+      }
+      return s;
+    }
+
+    // 누적/구간 자동 판별 → 구간비용 스텝으로 변환
+    function parseGemCSV(text){
+      const pre = preprocessByLevel(text);
+      const lines = pre.split("\n").filter(l => l.trim() !== "");
+      if (!lines.length) return { levels:[], manual:[], blue:[], vision:[] };
+
+      const delim = detectDelim(lines[0]);
+      const hasHeader = /(레벨|lv|level|매뉴얼|도면|비전|manual|blue|vision|合計|누적|total|cumulative)/i.test(lines[0]);
+      const start = hasHeader ? 1 : 0;
+      const headerLine = hasHeader ? lines[0] : "";
+      const markCumulative = /(누적|합계|total|cumulative|合計)/i.test(headerLine);
+
+      const M = new Map(), B = new Map(), V = new Map();
+      const rawLevels = [];
+
+      for (let i=start;i<lines.length;i++){
+        const c = lines[i].split(delim);
+        if (!c.length) continue;
+
+        let lv, m, b, v;
+        if (c.length >= 4){
+          lv = toInt(c[0]); m = toNum(c[1]); b = toNum(c[2]); v = toNum(c[3]);
+        }else{
+          lv = (i - start) + 1;
+          m = toNum(c[0]); b = toNum(c[1]); v = toNum(c[2] || 0);
+        }
+        if (!Number.isFinite(lv)) continue;
+
+        rawLevels.push(lv);
+        M.set(lv, m); B.set(lv, b); V.set(lv, v);
+      }
+
+      const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
+      if (levels.length < 2) return { levels, manual:[], blue:[], vision:[] };
+
+      const sM=[], sB=[], sV=[];
+      for (let i=0;i<levels.length-1;i++){
+        const a = levels[i], b = levels[i+1];
+        if (markCumulative) {
+          sM[i] = Math.max(0, (M.get(b)||0) - (M.get(a)||0));
+          sB[i] = Math.max(0, (B.get(b)||0) - (B.get(a)||0));
+          sV[i] = Math.max(0, (V.get(b)||0) - (V.get(a)||0));
+        } else {
+          sM[i] = Math.max(0, (M.get(b)||0));
+          sB[i] = Math.max(0, (B.get(b)||0));
+          sV[i] = Math.max(0, (V.get(b)||0));
+        }
+      }
+
+      return { levels, manual:sM, blue:sB, vision:sV };
+    }
+
+    function renderOptions(selectEl, levels){
+      const label = (lv)=>`Lv.${lv}`;
+      const opts = ['<option value=""></option>'].concat(
+        levels.map(lv => `<option value="${lv}">${label(lv)}</option>`)
+      ).join("");
+      selectEl.innerHTML = opts;
+    }
+
+    function renderTargetOptions(selectEl, levels, greaterThan){
+      const label = (lv)=>`Lv.${lv}`;
+      const filtered = levels.filter(lv => lv > greaterThan);
+      const opts = ['<option value=""></option>'].concat(
+        filtered.map(lv => `<option value="${lv}">${label(lv)}</option>`)
+      ).join("");
+      selectEl.innerHTML = opts;
+    }
+
+    // fromLv→toLv 합: (fromLv+1 ... toLv)
+    function sumRange(steps, fromLv, toLv){
+      if (!Array.isArray(steps) || steps.length === 0) return 0;
+      let s = 0;
+      for (let lv = fromLv; lv < toLv; lv++) {
+        const idx = levelToIdx.get(lv);
+        if (idx !== undefined && idx >= 0 && idx < steps.length) {
+          s += steps[idx] || 0;
+        }
+      }
+      return s;
+    }
+
+    // ====== UI 생성: 3개 섹션 입력 카드 ======
+    function createSectionCards(){
+      const wrap = document.getElementById("InputSections");
+      wrap.innerHTML = "";
+
+      const sections = [
+        { key:"shield", label:"盾兵", color:"text-blue-700" },
+        { key:"spear",  label:"槍兵", color:"text-green-700" },
+        { key:"arch",   label:"弓兵", color:"text-purple-700" },
+      ];
+
+      sections.forEach((s) => {
+        const card = document.createElement("div");
+        card.className = "bg-white border rounded-xl shadow-sm p-3";
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-base font-bold ${s.color}">[${s.label}]</h2>
+            <span id="warn-${s.key}" class="text-xs err"></span>
+          </div>
+
+          <div class="grid grid-cols-[64px_1fr] gap-x-3 gap-y-2">
+            <div class="text-[15px] text-gray-600 font-semibold self-center">現在</div>
+            <select class="border rounded p-2 text-sm w-full" id="cur-${s.key}"></select>
+
+            <div class="text-[15px] text-gray-600 font-semibold self-center">目標</div>
+            <select class="border rounded p-2 text-sm w-full" id="tgt-${s.key}"></select>
+          </div>
+
+          <button type="button"
+            class="w-full mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black"
+            data-section="${s.label}" data-key="${s.key}" id="btnAdd-${s.key}">追加</button>
+
+          <div class="mt-2 text-xs muted">最大: <span id="cap-${s.key}"></span></div>
+        `;
+        wrap.appendChild(card);
+      });
+    }
+
+    // ====== 목록 렌더 ======
+    function renderList(){
+      const list = document.getElementById("listContainer");
+      list.innerHTML = "";
+
+      if (!addedItems.length) {
+        list.innerHTML = `<div class="text-sm text-gray-500">追加した項目がありません。</div>`;
+        sendHeightToParent();
+        return;
+      }
+
+      addedItems.forEach((item, idx) => {
+        const row = document.createElement("div");
+        row.className = "flex justify-between items-center p-2 rounded border";
+
+        row.innerHTML = `
+          <span class="font-semibold">[${item.section}] ${item.from} → ${item.to}</span>
+          <button class="text-xs text-red-500 hover:underline" data-remove="${idx}">削除</button>
+        `;
+
+        row.querySelector("button[data-remove]").addEventListener("click", (e) => {
+          const i = parseInt(e.currentTarget.getAttribute("data-remove"), 10);
+          if (Number.isFinite(i)) {
+            addedItems.splice(i, 1);
+            renderList();
+          }
+        });
+
+        list.appendChild(row);
+      });
+
+      sendHeightToParent();
+    }
+
+    // ====== 계산: 목록 기준(버튼 클릭) ======
+    function calculateFromList(){
+      if (!addedItems.length) {
+        alert("計算する項目がありません。");
+        return;
+      }
+
+      let totalM = 0, totalB = 0, totalV = 0;
+      const rowsHtml = [];
+
+      addedItems.forEach((item) => {
+        const sM = sumRange(stepM, item.from, item.to);
+        const sB = sumRange(stepB, item.from, item.to);
+        const sV = sumRange(stepV, item.from, item.to);
+
+        totalM += sM; totalB += sB; totalV += sV;
+
+        rowsHtml.push(`
+          <tr class="bg-white">
+            <td class="border p-1 font-medium">${item.section}</td>
+            <td class="border p-1">${item.from} → ${item.to}</td>
+            <td class="border p-1 tabular-nums text-right">
+              <div class="flex items-center justify-end gap-2">
+                <img src="images/icon_Charm Guide.webp" class="w-5 h-5" alt="Guide">
+                <span>${fmt(sM)}</span>
+              </div>
+            </td>
+            <td class="border p-1 tabular-nums text-right">
+              <div class="flex items-center justify-end gap-2">
+                <img src="images/icon_Charm Design.webp" class="w-5 h-5" alt="Design">
+                <span>${fmt(sB)}</span>
+              </div>
+            </td>
+            <td class="border p-1 tabular-nums text-right">
+              <div class="flex items-center justify-end gap-2">
+                <img src="images/icon_Charm Secrets.webp" class="w-5 h-5" alt="Secrets">
+                <span>${fmt(sV)}</span>
+              </div>
+            </td>
+          </tr>
+        `);
+      });
+
+      // ✅ 5열 고정 폭 + 자원 3열 동일 폭
+      const html = `
+        <table class="w-full border text-sm text-center table-fixed">
+          <colgroup>
+            <col style="width:20%">
+            <col style="width:20%">
+            <col style="width:20%">
+            <col style="width:20%">
+            <col style="width:20%">
+          </colgroup>
+          <thead class="bg-blue-100">
+            <tr>
+              <th class="border p-1">種別</th>
+              <th class="border p-1">レベル</th>
+              <th class="border p-1">宝石ハンドブック</th>
+              <th class="border p-1">宝石図面</th>
+              <th class="border p-1">宝石秘典</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml.join("")}</tbody>
+          <tfoot class="bg-gray-100 font-semibold">
+            <tr>
+              <td class="border p-1" colspan="2">合計</td>
+              <td class="border p-1 tabular-nums text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <img src="images/icon_Charm Guide.webp" class="w-5 h-5" alt="Guide">
+                  <span>${fmt(totalM)}</span>
+                </div>
+              </td>
+              <td class="border p-1 tabular-nums text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <img src="images/icon_Charm Design.webp" class="w-5 h-5" alt="Design">
+                  <span>${fmt(totalB)}</span>
+                </div>
+              </td>
+              <td class="border p-1 tabular-nums text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <img src="images/icon_Charm Secrets.webp" class="w-5 h-5" alt="Secrets">
+                  <span>${fmt(totalV)}</span>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      `;
+
+      document.getElementById("resultContainer").innerHTML = html;
+      sendHeightToParent();
+    }
+
+    // ====== 이벤트 바인딩 ======
+    function wireSectionEvents(){
+      const sections = [
+        { key:"shield", label:"盾兵" },
+        { key:"spear",  label:"槍兵" },
+        { key:"arch",   label:"弓兵" },
+      ];
+
+      // 현재 변경 -> 목표 옵션 재구성 + 기본 cur+1
+      sections.forEach((s) => {
+        const curEl = document.getElementById(`cur-${s.key}`);
+        const tgtEl = document.getElementById(`tgt-${s.key}`);
+        const warnEl = document.getElementById(`warn-${s.key}`);
+
+        curEl.addEventListener("change", () => {
+          warnEl.textContent = "";
+          const cur = +curEl.value;
+          if (!cur) {
+            tgtEl.innerHTML = '<option value=""></option>';
+          } else {
+            renderTargetOptions(tgtEl, gemLevels, cur);
+            if (tgtEl.options.length > 1) tgtEl.selectedIndex = 1; // 기본 cur+1
+          }
+          sendHeightToParent();
+        });
+
+        tgtEl.addEventListener("change", () => {
+          warnEl.textContent = "";
+          sendHeightToParent();
+        });
+
+        // 追加 버튼
+        document.getElementById(`btnAdd-${s.key}`).addEventListener("click", () => {
+          warnEl.textContent = "";
+
+          const from = parseInt(curEl.value, 10);
+          const to = parseInt(tgtEl.value, 10);
+
+          if (!from || !to || to <= from) {
+            warnEl.textContent = "有効なレベルを選択してください。";
+            return;
+          }
+
+          // ✅ 중복 허용 (중복 체크 없음)
+          addedItems.push({ section: s.label, from, to });
+          renderList();
+        });
+      });
+
+      // 목록 초기화
+      document.getElementById("btnClear").addEventListener("click", () => {
+        addedItems = [];
+        renderList();
+        document.getElementById("resultContainer").innerHTML =
+          `<div class="text-sm text-gray-500">項目を追加して <span class="font-semibold">[📊 計算]</span> を押してください。</div>`;
+        sendHeightToParent();
+      });
+
+      // 계산 버튼
+      document.getElementById("btnCalculate").addEventListener("click", calculateFromList);
+    }
+
+    // ====== CSV 1회 로드/파싱 후 UI 초기화 ======
+    let gemParsedPromise = null;
+
+    function fetchGemParsedOnce(){
+      if (gemParsedPromise) return gemParsedPromise;
+      gemParsedPromise = fetch(csvUrl, { cache:"no-store", mode:"cors", redirect:"follow", referrerPolicy:"no-referrer" })
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(text => parseGemCSV(text));
+      return gemParsedPromise;
+    }
+
+    async function init(){
+      try{
+        const parsed = await fetchGemParsedOnce();
+        gemLevels = parsed.levels;
+        stepM = parsed.manual;
+        stepB = parsed.blue;
+        stepV = parsed.vision;
+
+        // lv -> step index (lv -> lv+1)
+        levelToIdx = new Map(gemLevels.map((lv, i) => [lv, i]));
+
+        // UI 생성
+        createSectionCards();
+
+        // 옵션 채우기
+        ["shield","spear","arch"].forEach((k) => {
+          const curEl = document.getElementById(`cur-${k}`);
+          const tgtEl = document.getElementById(`tgt-${k}`);
+          const capEl = document.getElementById(`cap-${k}`);
+
+          renderOptions(curEl, gemLevels);
+          tgtEl.innerHTML = '<option value=""></option>';
+          capEl.textContent = gemLevels.length ? `Lv.${gemLevels[gemLevels.length-1]}` : "-";
+        });
+
+        // 목록 초기 상태
+        renderList();
+
+        // 이벤트 연결
+        wireSectionEvents();
+
+      } catch(err){
+        console.error("CSV ロード失敗:", err);
+        document.getElementById("InputSections").innerHTML =
+          '<div class="rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg text-sm err">データを読み込めませんでした。CSV URL を確認してください。</div>';
+      } finally {
+        sendHeightToParent();
+      }
+    }
+
+    init();
+  </script>
+
+  <!-- 선택: 개발자도구/우클릭 방지 (원 코드 유지) -->
+  <script>
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });
+  </script>
+</body>
+</html>
