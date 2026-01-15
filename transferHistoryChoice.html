@@ -71,9 +71,17 @@
     // ✅ NAVIGATE_FRAME 보내기 (건물계산 선택과 동일)
     function openPage(url){
       const msg = { type:'NAVIGATE_FRAME', url };
-      console.log('[transferHistoryChoice] postMessage:', msg);
-      window.parent.postMessage(msg, '*');
-      window.top.postMessage(msg, '*');
+      console.log('[transferHistoryChoice] postMessage:', msg, 'in iframe?', window.self !== window.top);
+  
+      // ✅ iframe 안이면 부모에게 요청
+      if (window.self !== window.top) {
+        window.parent.postMessage(msg, '*');
+        // window.top.postMessage(msg, '*'); // 중첩일 때만 필요하면 유지
+        return;
+      }
+  
+      // ✅ iframe 밖(단독 페이지)면 그냥 이동
+      window.location.href = url;
     }
 
     // ✅ 높이 보내기 (iframe 높이 자동 조절용)
