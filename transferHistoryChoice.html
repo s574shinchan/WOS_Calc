@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>이전 기록 선택</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .muted{color:#6b7280}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    .tabular-nums{font-variant-numeric: tabular-nums}
+    select.pill{height:32px}
+    .err{color:#b45309}
+
+    /* ✅ 다크모드 */
+    body.dark-mode{background-color:#121212;color:#f0f0f0}
+    .dark-mode .border{border-color:#444!important}
+    .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
+    .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#dddddd!important}
+    .dark-mode .bg-purple-50,.dark-mode .bg-orange-50,.dark-mode .bg-red-50{background-color:#2e2e2e!important}
+    .dark-mode select option{color:#000!important}
+    .dark-mode select{color:#000!important}
+    .dark-mode input{color:#000!important}
+  </style>
+
+  <script>
+    // 다크모드 유지
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+
+<body class="px-4 pb-10">
+  <h1 style="font-size: 3.25rem; font-weight: 800; text-align: center; margin: 3rem 0 3.5rem;">
+    이전 기록
+  </h1>
+
+  <!-- ✅ 상단 안내(선택) -->
+  <div style="max-width: 1600px; margin: 0 auto 2rem;">
+    <div class="bg-white border rounded-2xl p-5">
+      <div class="text-lg font-semibold mb-1">연도를 선택하세요</div>
+      <div class="muted text-sm leading-relaxed">
+        클릭하면 해당 연도의 월별 이민 히스토리를 확인 할 수 있습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 연도 카드 그리드 -->
+  <div id="yearGrid"
+       style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem; width:100%; max-width:1600px; margin:0 auto;">
+    <!-- JS가 카드 생성 -->
+  </div>
+
+  <script>
+    // ✅ 부모에서 다크모드 토글 메시지 받기
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });
+  </script>
+
+  <script>
+    console.log('[transferHistoryChoice] in iframe?', window.self !== window.top);
+
+    // ✅ NAVIGATE_FRAME 보내기 (건물계산 선택과 동일)
+    function openPage(url){
+      const msg = { type:'NAVIGATE_FRAME', url };
+      console.log('[transferHistoryChoice] postMessage:', msg);
+      window.parent.postMessage(msg, '*');
+      window.top.postMessage(msg, '*');
+    }
+
+    // ✅ 높이 보내기 (iframe 높이 자동 조절용)
+    function sendHeightToParent(){
+      const h = document.body.scrollHeight + 50;
+      window.parent.postMessage({type:"FRAME_CHANGE", height:h}, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 50));
+
+    // ==========================
+    // ✅ 연도 카드 구성
+    // ==========================
+    // 여기만 바꾸면 됨: 표시할 연도/설명/뱃지(선택)
+    const years = [
+      { year: 2026, title: "이전 기록", desc: "2026년 기록 확인", badge: "NEW" },
+      { year: 2025, title: "이전 기록", desc: "2025년 기록 확인", badge: "" },
+      { year: 2024, title: "이전 기록", desc: "2024년 기록 확인", badge: "" },
+    ];
+
+    function cardGradientByIndex(i){
+      // 이미지 대신 그라데이션만 다르게
+      const grads = [
+        "linear-gradient(135deg, rgba(59,130,246,0.12), rgba(147,197,253,0.05))",
+        "linear-gradient(135deg, rgba(239,68,68,0.12), rgba(252,165,165,0.05))",
+        "linear-gradient(135deg, rgba(168,85,247,0.12), rgba(216,180,254,0.06))",
+        "linear-gradient(135deg, rgba(16,185,129,0.12), rgba(167,243,208,0.06))",
+        "linear-gradient(135deg, rgba(245,158,11,0.12), rgba(253,230,138,0.06))",
+      ];
+      return grads[i % grads.length];
+    }
+
+    function renderYearCards(){
+      const grid = document.getElementById('yearGrid');
+      grid.innerHTML = "";
+
+      years.forEach((y, idx) => {
+        const url = `transferHistory${y.year}.html`;
+
+        const section = document.createElement('section');
+        section.style.cursor = 'pointer';
+        section.onclick = () => openPage(url);
+
+        // 카드 wrapper
+        const wrap = document.createElement('div');
+        wrap.style.position = 'relative';
+        wrap.style.borderRadius = '1.25rem';
+        wrap.style.overflow = 'hidden';
+        wrap.style.cursor = 'pointer';
+        wrap.style.transition = '0.25s';
+        wrap.style.boxShadow = 'rgba(0,0,0,0.15) 0px 12px 24px';
+        wrap.className = "bg-white border";
+
+        // 상단 “이미지 자리” 대신 헤더 영역
+        const top = document.createElement('div');
+        top.style.padding = '1.25rem 1.5rem';
+        top.style.background = cardGradientByIndex(idx);
+
+        // 큰 연도 텍스트
+        const yearText = document.createElement('div');
+        yearText.className = "tabular-nums";
+        yearText.style.fontSize = '3.25rem';
+        yearText.style.fontWeight = '800';
+        yearText.style.lineHeight = '1';
+        yearText.textContent = y.year;
+
+        // 뱃지(선택)
+        const badge = document.createElement('div');
+        if (y.badge) {
+          badge.textContent = y.badge;
+          badge.style.position = "absolute";
+          badge.style.top = "14px";
+          badge.style.right = "14px";
+          badge.style.fontSize = "0.75rem";
+          badge.style.fontWeight = "700";
+          badge.style.padding = ".25rem .6rem";
+          badge.style.borderRadius = "999px";
+          badge.style.border = "1px solid rgba(0,0,0,0.15)";
+          badge.style.background = "rgba(255,255,255,0.85)";
+        }
+
+        top.appendChild(yearText);
+
+        // 하단 설명 영역
+        const bottom = document.createElement('div');
+        bottom.style.padding = '1.25rem 1.5rem';
+
+        const h2 = document.createElement('h2');
+        h2.style.fontSize = '1.5rem';
+        h2.style.fontWeight = '600';
+        h2.style.marginBottom = '.35rem';
+        h2.textContent = y.title;
+
+        const p = document.createElement('p');
+        p.style.fontSize = '1rem';
+        p.style.lineHeight = '1.6';
+        p.className = "muted";
+        p.textContent = y.desc + `  (클릭 → ${url})`;
+
+        bottom.appendChild(h2);
+        bottom.appendChild(p);
+
+        wrap.appendChild(top);
+        wrap.appendChild(bottom);
+        if (y.badge) wrap.appendChild(badge);
+
+        // hover 느낌(선택)
+        wrap.addEventListener("mouseenter", () => {
+          wrap.style.transform = "translateY(-2px)";
+          wrap.style.boxShadow = "rgba(0,0,0,0.22) 0px 16px 30px";
+        });
+        wrap.addEventListener("mouseleave", () => {
+          wrap.style.transform = "translateY(0px)";
+          wrap.style.boxShadow = "rgba(0,0,0,0.15) 0px 12px 24px";
+        });
+
+        section.appendChild(wrap);
+        grid.appendChild(section);
+      });
+
+      // ✅ 렌더 후 iframe 높이 재전송
+      setTimeout(sendHeightToParent, 50);
+    }
+
+    renderYearCards();
+  </script>
+
+  <script>
+    // 우클릭/개발자도구 키 막기(네 기존 스타일 유지)
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
