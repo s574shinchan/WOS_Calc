@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>영주보석 계산기 (이미지 선택 + 수동 계산)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body.dark { background:#121212; color:#f0f0f0; }
+    body.dark .panel { background:#2b2b2b; border-color:#3f3f3f; }
+    body.dark .card { background:#2f2f2f; border-color:#3f3f3f; }
+    body.dark .muted { color:#bdbdbd; }
+    body.dark .pill { background:#1f1f1f; border-color:#3f3f3f; color:#f0f0f0; }
+    body.dark .modal { background:#1a1a1a; border-color:#444; }
+    body.dark .btn { border-color:#444; }
+    body.dark .link { color:#7ab7ff; }
+    body.dark .danger { color:#ff6b6b; }
+    .tabular-nums{ font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+
+<body class="dark p-6">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- 헤더 -->
+    <div class="panel border rounded-2xl p-6">
+      <div class="flex items-center gap-3">
+        <div class="text-2xl">💎</div>
+        <div>
+          <div class="text-2xl font-extrabold tracking-tight">영주보석 계산기</div>
+          <div class="muted text-sm mt-1">보석 업그레이드에 필요한 재료 합계를 계산합니다.</div>
+          <div class="muted text-xs mt-1">※ 항목을 추가한 뒤 <span class="link">📊 계산하기</span> 버튼을 눌렀을 때만 총합이 계산됩니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 상단 3섹션: 이미지 선택 카드 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+
+      <!-- 카드 템플릿: 방패 -->
+      <div class="card border rounded-xl p-4" data-card data-unit="Infantry">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-base font-bold text-blue-400">[방패]</div>
+          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
+        </div>
+
+        <!-- 이미지 2개 -->
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600"
+                  data-pick-image data-slot="left">
+            <img data-slot-img="left" class="hidden w-full h-28 object-contain bg-black/10"/>
+            <div data-empty="left" class="w-full h-28 bg-black/10"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600"
+                  data-pick-image data-slot="right">
+            <img data-slot-img="right" class="hidden w-full h-28 object-contain bg-black/10"/>
+            <div data-empty="right" class="w-full h-28 bg-black/10"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- 현재/목표 라벨 -->
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <div class="muted text-xs mb-1">현재 레벨</div>
+            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+          <div>
+            <div class="muted text-xs mb-1">목표 레벨</div>
+            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn mt-4 w-full rounded-lg border bg-white/5 hover:bg-white/10 py-2 text-sm"
+                data-add>
+          추가
+        </button>
+      </div>
+
+      <!-- 창병 -->
+      <div class="card border rounded-xl p-4" data-card data-unit="Lancer">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-base font-bold text-green-400">[창병]</div>
+          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600"
+                  data-pick-image data-slot="left">
+            <img data-slot-img="left" class="hidden w-full h-28 object-contain bg-black/10"/>
+            <div data-empty="left" class="w-full h-28 bg-black/10"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600"
+                  data-pick-image data-slot="right">
+            <img data-slot-img="right" class="hidden w-full h-28 object-contain bg-black/10"/>
+            <div data-empty="right" class="w-full h-28 bg-black/10"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <div class="muted text-xs mb-1">현재 레벨</div>
+            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+          <div>
+            <div class="muted text-xs mb-1">목표 레벨</div>
+            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn mt-4 w-full rounded-lg border bg-white/5 hover:bg-white/10 py-2 text-sm"
+                data-add>
+          추가
+        </button>
+      </div>
+
+      <!-- 궁병 -->
+      <div class="card border rounded-xl p-4" data-card data-unit="Marskman">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-base font-bold text-purple-400">[궁병]</div>
+          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600"
+                  data-pick-image data-slot="left">
+            <img data-slot-img="left" class="hidden w-full h-28 object-contain bg-black/10"/>
+            <div data-empty="left" class="w-full h-28 bg-black/10"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600"
+                  data-pick-image data-slot="right">
+            <img data-slot-img="right" class="hidden w-full h-28 object-contain bg-black/10"/>
+            <div data-empty="right" class="w-full h-28 bg-black/10"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <div class="muted text-xs mb-1">현재 레벨</div>
+            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+          <div>
+            <div class="muted text-xs mb-1">목표 레벨</div>
+            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn mt-4 w-full rounded-lg border bg-white/5 hover:bg-white/10 py-2 text-sm"
+                data-add>
+          추가
+        </button>
+      </div>
+    </div>
+
+    <!-- 하단 2패널: 선택된 목록 + 계산 결과 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <!-- 선택된 목록 -->
+      <div class="panel border rounded-xl p-4">
+        <div class="flex items-center justify-between gap-3">
+          <div class="text-base font-bold">📄 선택된 목록</div>
+          <div class="flex items-center gap-3 text-sm">
+            <button id="btnCalc" class="link hover:underline">📊 계산하기</button>
+            <button id="btnClearAll" class="danger hover:underline">🧹 목록 초기화</button>
+          </div>
+        </div>
+
+        <div id="listWrap" class="mt-3 space-y-2">
+          <!-- rows -->
+        </div>
+      </div>
+
+      <!-- 계산 결과 -->
+      <div class="panel border rounded-xl p-4">
+        <div class="text-base font-bold flex items-center gap-2">
+          <span>🧾</span><span>계산 결과</span>
+        </div>
+        <div id="resultHint" class="muted text-sm mt-2">
+          항목을 추가하고 <span class="link">📊 계산하기</span>를 눌러주세요.
+        </div>
+
+        <div id="resultBox" class="mt-3 hidden">
+          <div class="muted text-xs mb-2">총 합계</div>
+          <div id="totalsBox" class="text-sm tabular-nums leading-6"></div>
+        </div>
+
+        <!-- CSV 로딩(숨김/간단) -->
+        <div class="mt-4 border-t border-gray-700 pt-3">
+          <div class="muted text-xs mb-2">CSV 재료 데이터</div>
+          <div class="flex items-center gap-2">
+            <input id="csvUrl" class="w-full border border-gray-600 rounded-lg px-3 py-2 text-sm bg-black/20 text-white"
+                   placeholder="gem.html CSV URL 입력 (또는 CONFIG.defaultCsvUrl 사용)" />
+            <button id="btnLoadCsv" class="btn px-3 py-2 rounded-lg border bg-white/5 hover:bg-white/10 text-sm">로드</button>
+          </div>
+          <div id="csvStatus" class="muted text-xs mt-2">CSV 미로드</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 이미지 선택 모달 -->
+  <div id="imgModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 p-4 z-50">
+    <div class="modal w-full max-w-4xl border rounded-xl p-4">
+      <div class="flex items-center justify-between mb-3">
+        <div class="font-semibold" id="modalTitle">이미지 선택</div>
+        <button id="btnCloseModal" class="btn px-3 py-1 rounded-lg border hover:bg-white/10 text-sm">닫기</button>
+      </div>
+      <div id="imgGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 max-h-[70vh] overflow-auto pr-1"></div>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   ✅ CONFIG: gem.html에서 쓰는 CSV URL을 넣어두면 자동 로드 가능
+   ========================================================= */
+const CONFIG = {
+  defaultCsvUrl: "", // TODO: gem.html CSV URL
+  unitHeaderHints: ["unit","Unit","병종","type","Type"],
+  levelHeaderHints: ["level","Level","레벨","Lv"],
+  unitValueMap: {
+    "보병":"Infantry", "방패":"Infantry",
+    "창병":"Lancer",
+    "궁병":"Marskman", "마크스맨":"Marskman", "Marksman":"Marskman"
+  }
+};
+
+const MAX_LV = 16;
+const UNITS = ["Infantry", "Lancer", "Marskman"];
+const UNIT_KO = { Infantry:"방패", Lancer:"창병", Marskman:"궁병" };
+
+const IMAGE_BY_UNIT = Object.fromEntries(
+  UNITS.map(u => [u, Array.from({length: MAX_LV}, (_,i)=> `images/${u}/${u}_${i+1}.png`)])
+);
+
+function levelFromUrl(url){
+  const name = (String(url||"").split("/").pop() || "");
+  const m = name.match(/_(\d+)(?:\.[a-zA-Z0-9]+)?$/);
+  return m ? Number(m[1]) : null;
+}
+function toNum(v){
+  const s = String(v ?? "").trim().replace(/,/g,"");
+  if(!s) return 0;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : 0;
+}
+
+/* =========================
+   CSV 비용 테이블
+   costs[unit][level] = { material: value, ... }
+   ========================= */
+let costs = {};
+let matKeys = [];
+let csvReady = false;
+
+const csvStatus = document.getElementById("csvStatus");
+const csvUrlInput = document.getElementById("csvUrl");
+const btnLoadCsv = document.getElementById("btnLoadCsv");
+
+function setCsvStatus(ok, msg){
+  csvStatus.textContent = msg;
+  csvStatus.classList.toggle("text-green-400", !!ok);
+  csvStatus.classList.toggle("text-red-400", !ok);
+}
+
+function parseCsv(text){
+  const lines = text.replace(/\r/g,"").split("\n").filter(x=>x.trim().length>0);
+  if(lines.length < 2) throw new Error("CSV 행이 부족합니다.");
+
+  const headers = lines[0].split(",").map(h=>h.trim());
+  const rows = lines.slice(1).map(line=>{
+    const cols = line.split(",");
+    const obj = {};
+    headers.forEach((h,i)=> obj[h] = (cols[i] ?? "").trim());
+    return obj;
+  });
+
+  const findHeader = (hints)=>{
+    const lower = headers.map(h=>h.toLowerCase());
+    for(const hint of hints){
+      const idx = lower.findIndex(h=>h.includes(hint.toLowerCase()));
+      if(idx !== -1) return headers[idx];
+    }
+    return null;
+  };
+
+  const unitCol = findHeader(CONFIG.unitHeaderHints);
+  const levelCol = findHeader(CONFIG.levelHeaderHints);
+  if(!unitCol || !levelCol) throw new Error(`유닛/레벨 컬럼을 찾지 못했습니다. (unitCol=${unitCol}, levelCol=${levelCol})`);
+
+  const mats = headers.filter(h => h !== unitCol && h !== levelCol);
+  if(mats.length === 0) throw new Error("재료 컬럼이 없습니다.");
+
+  const table = {};
+  for(const r of rows){
+    let u = String(r[unitCol] ?? "").trim();
+    u = CONFIG.unitValueMap[u] ?? u;
+    const lv = toNum(r[levelCol]);
+    if(!u || !lv) continue;
+    if(!table[u]) table[u] = {};
+    const obj = {};
+    for(const mk of mats) obj[mk] = toNum(r[mk]);
+    table[u][lv] = obj;
+  }
+  return { table, mats };
+}
+
+async function loadCsv(url){
+  setCsvStatus(false, "CSV 로딩 중...");
+  const res = await fetch(url, { cache:"no-store" });
+  if(!res.ok) throw new Error(`CSV fetch 실패: ${res.status}`);
+  const text = await res.text();
+
+  const { table, mats } = parseCsv(text);
+  costs = table;
+  matKeys = mats;
+  csvReady = true;
+
+  setCsvStatus(true, `CSV 로드 완료 (재료 ${matKeys.length}개)`);
+}
+
+btnLoadCsv.addEventListener("click", async ()=>{
+  const url = (csvUrlInput.value || CONFIG.defaultCsvUrl || "").trim();
+  if(!url){
+    setCsvStatus(false, "CSV URL이 비어있습니다.");
+    return;
+  }
+  try{ await loadCsv(url); }
+  catch(e){ console.error(e); setCsvStatus(false, String(e.message||e)); }
+});
+
+window.addEventListener("DOMContentLoaded", async ()=>{
+  if(CONFIG.defaultCsvUrl){
+    csvUrlInput.value = CONFIG.defaultCsvUrl;
+    try{ await loadCsv(CONFIG.defaultCsvUrl); } catch(e){ setCsvStatus(false, String(e.message||e)); }
+  }
+});
+
+/* =========================
+   모달/선택 상태
+   ========================= */
+const modal = document.getElementById("imgModal");
+const imgGrid = document.getElementById("imgGrid");
+const btnCloseModal = document.getElementById("btnCloseModal");
+const modalTitle = document.getElementById("modalTitle");
+
+let activeCardEl = null;
+let activeSlot = "left";
+
+function openModal(cardEl, slot, unit){
+  activeCardEl = cardEl;
+  activeSlot = slot;
+
+  modalTitle.textContent = `${UNIT_KO[unit] ?? unit} - 이미지 선택`;
+  renderGrid(unit);
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+function closeModal(){
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+btnCloseModal.addEventListener("click", closeModal);
+modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+
+function setCardLevelLabel(cardEl, kind, lv){
+  const el = cardEl.querySelector(`[data-lbl="${kind}"]`);
+  el.textContent = (lv === "-" ? "-" : `Lv.${lv}`);
+}
+
+function applySelectedImage(url){
+  if(!activeCardEl) return;
+
+  const imgEl = activeCardEl.querySelector(`[data-slot-img="${activeSlot}"]`);
+  const emptyEl = activeCardEl.querySelector(`[data-empty="${activeSlot}"]`);
+
+  if (emptyEl) emptyEl.classList.add("hidden");
+  imgEl.classList.remove("hidden");
+
+  imgEl.src = url;
+  imgEl.alt = url;
+
+  const lv = levelFromUrl(url);
+  if(lv != null){
+    const clamped = Math.min(Math.max(lv, 1), MAX_LV);
+    if(activeSlot === "left") setCardLevelLabel(activeCardEl, "current", clamped);
+    else setCardLevelLabel(activeCardEl, "target", clamped);
+  }
+}
+
+function clearSelectedImage(){
+  if(!activeCardEl) return;
+
+  const imgEl   = activeCardEl.querySelector(`[data-slot-img="${activeSlot}"]`);
+  const emptyEl = activeCardEl.querySelector(`[data-empty="${activeSlot}"]`);
+
+  imgEl.classList.add("hidden");
+  imgEl.src = "";
+  imgEl.alt = "empty";
+
+  if (emptyEl) emptyEl.classList.remove("hidden");
+
+  if(activeSlot === "left") setCardLevelLabel(activeCardEl, "current", "-");
+  else setCardLevelLabel(activeCardEl, "target", "-");
+}
+
+function renderGrid(unit){
+  imgGrid.innerHTML = "";
+
+  // 선택 취소
+  {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "group border border-gray-600 rounded-lg overflow-hidden hover:bg-white/5";
+    btn.innerHTML = `
+      <div class="aspect-square bg-black/10 flex items-center justify-center">
+        <div class="w-full h-full"></div>
+      </div>
+      <div class="px-2 py-2 text-[13px] muted text-center">선택 취소</div>
+    `;
+    btn.addEventListener("click", ()=>{ clearSelectedImage(); closeModal(); });
+    imgGrid.appendChild(btn);
+  }
+
+  (IMAGE_BY_UNIT[unit] || []).forEach(url=>{
+    const lv = levelFromUrl(url);
+    const caption = (lv != null) ? `Lv.${lv}` : "Lv.?";
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "group border border-gray-600 rounded-lg overflow-hidden hover:bg-white/5";
+    btn.innerHTML = `
+      <div class="aspect-square bg-black/10 flex items-center justify-center">
+        <img src="${url}" alt="${caption}" class="max-w-full max-h-full object-contain p-2" />
+      </div>
+      <div class="px-2 py-2 text-[13px] muted text-center">${caption}</div>
+    `;
+    btn.addEventListener("click", ()=>{ applySelectedImage(url); closeModal(); });
+    imgGrid.appendChild(btn);
+  });
+}
+
+/* =========================
+   목록 상태 (여기서는 재료 계산 X)
+   ========================= */
+const listWrap = document.getElementById("listWrap");
+const btnCalc = document.getElementById("btnCalc");
+const btnClearAll = document.getElementById("btnClearAll");
+
+const resultHint = document.getElementById("resultHint");
+const resultBox = document.getElementById("resultBox");
+const totalsBox = document.getElementById("totalsBox");
+
+let selections = []; // {id, unit, fromLv, toLv}
+
+function renderList(){
+  listWrap.innerHTML = "";
+
+  if(selections.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "muted text-sm px-3 py-3 border border-gray-700 rounded-lg bg-black/10";
+    empty.textContent = "선택된 항목이 없습니다.";
+    listWrap.appendChild(empty);
+    return;
+  }
+
+  selections.forEach(item=>{
+    const row = document.createElement("div");
+    row.className = "flex items-center justify-between gap-3 px-3 py-2 border border-gray-700 rounded-lg bg-black/10";
+    row.innerHTML = `
+      <div class="text-sm tabular-nums">
+        <span class="font-semibold">[${UNIT_KO[item.unit] ?? item.unit}]</span>
+        <span class="ml-1">${item.fromLv} → ${item.toLv}</span>
+      </div>
+      <button class="danger text-xs hover:underline" data-del="${item.id}">삭제</button>
+    `;
+    listWrap.appendChild(row);
+  });
+
+  listWrap.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del");
+      selections = selections.filter(x => x.id !== id);
+      renderList();
+      // 계산 결과는 유지(원하면 여기서 reset 가능)
+    });
+  });
+}
+
+btnClearAll.addEventListener("click", ()=>{
+  selections = [];
+  renderList();
+  // 결과도 초기화
+  resultBox.classList.add("hidden");
+  resultHint.classList.remove("hidden");
+  resultHint.innerHTML = '항목을 추가하고 <span class="link">📊 계산하기</span>를 눌러주세요.';
+});
+
+function calcRangeCost(unit, fromLv, toLv){
+  const out = {};
+  if(!csvReady) return out;
+  const uTable = costs[unit] || {};
+  for(let lv = fromLv + 1; lv <= toLv; lv++){
+    const row = uTable[lv];
+    if(!row) continue;
+    for(const k of matKeys){
+      out[k] = (out[k] || 0) + toNum(row[k]);
+    }
+  }
+  return out;
+}
+
+function renderTotalsFromSelections(){
+  if(!csvReady){
+    resultHint.classList.remove("hidden");
+    resultHint.innerHTML = 'CSV가 로드되지 않았습니다. 우측 하단에서 CSV를 로드한 뒤 다시 <span class="link">📊 계산하기</span>를 눌러주세요.';
+    resultBox.classList.add("hidden");
+    return;
+  }
+
+  const sum = {};
+  selections.forEach(it=>{
+    const mats = calcRangeCost(it.unit, it.fromLv, it.toLv);
+    for(const k of matKeys){
+      sum[k] = (sum[k] || 0) + toNum(mats[k]);
+    }
+  });
+
+  const lines = matKeys.map(k => `${k}: ${(sum[k]||0).toLocaleString()}`);
+  totalsBox.innerHTML = lines.length ? lines.join("<br/>") : "-";
+
+  resultHint.classList.add("hidden");
+  resultBox.classList.remove("hidden");
+}
+
+btnCalc.addEventListener("click", ()=>{
+  if(selections.length === 0){
+    resultHint.classList.remove("hidden");
+    resultHint.textContent = "항목을 먼저 추가하세요.";
+    resultBox.classList.add("hidden");
+    return;
+  }
+  renderTotalsFromSelections();
+});
+
+/* =========================
+   카드 이벤트 (추가)
+   ========================= */
+function getCardLevels(cardEl){
+  const leftSrc = cardEl.querySelector('[data-slot-img="left"]')?.getAttribute("src") || "";
+  const rightSrc = cardEl.querySelector('[data-slot-img="right"]')?.getAttribute("src") || "";
+  const fromLv = levelFromUrl(leftSrc);
+  const toLv = levelFromUrl(rightSrc);
+  return { fromLv, toLv };
+}
+
+document.querySelectorAll("[data-card]").forEach(cardEl=>{
+  // 이미지 선택
+  cardEl.querySelectorAll("[data-pick-image]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const slot = btn.getAttribute("data-slot");
+      const unit = cardEl.getAttribute("data-unit");
+      openModal(cardEl, slot, unit);
+    });
+  });
+
+  // 추가
+  cardEl.querySelector("[data-add]").addEventListener("click", ()=>{
+    const unit = cardEl.getAttribute("data-unit");
+    const { fromLv, toLv } = getCardLevels(cardEl);
+
+    if(!fromLv || !toLv){
+      alert("현재/목표 이미지를 모두 선택하세요.");
+      return;
+    }
+    if(fromLv >= toLv){
+      alert("목표 레벨은 현재 레벨보다 높아야 합니다.");
+      return;
+    }
+
+    selections.push({
+      id: String(Date.now()) + "-" + Math.random().toString(16).slice(2),
+      unit,
+      fromLv,
+      toLv
+    });
+    renderList();
+  });
+
+  // 이미지 로드 실패 시 빈칸
+  cardEl.querySelectorAll("img[data-slot-img]").forEach(img=>{
+    img.addEventListener("error", ()=>{
+      const slot = img.getAttribute("data-slot-img");
+      const emptyEl = cardEl.querySelector(`[data-empty="${slot}"]`);
+      img.classList.add("hidden");
+      if (emptyEl) emptyEl.classList.remove("hidden");
+    });
+  });
+});
+
+// 초기 렌더
+renderList();
+</script>
+</body>
+</html>

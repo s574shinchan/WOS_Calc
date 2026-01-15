@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>영주보석 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .muted{color:#6b7280}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    .tabular-nums{font-variant-numeric: tabular-nums}
+    select.pill{height:32px}
+    .err{color:#b45309}
+
+    /* ✅ 다크모드 */
+    body.dark-mode { background-color:#121212; color:#f0f0f0; }
+    .dark-mode .border{ border-color:#444 !important; }
+    .dark-mode .bg-white{ background-color:#2c2c2c !important; color:#f0f0f0 !important; }
+    .dark-mode .bg-gray-100{ background-color:#1e1e1e !important; }
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#f0f0f0 !important; }
+    .dark-mode .text-blue-700{ color:#66b0ff !important; }
+    .dark-mode .text-green-700{ color:#79e68c !important; }
+    .dark-mode .text-purple-700{ color:#bfa6ff !important; }
+    .dark-mode table{ background-color:#2c2c2c; color:#f0f0f0; }
+    .dark-mode th,.dark-mode td{ border-color:#444 !important; }
+    .dark-mode thead th{ color:#f0f0f0 !important; }
+    .dark-mode .bg-blue-100,.dark-mode .bg-gray-50{ background-color:#2e2e2e !important; }
+    .dark-mode select option,.dark-mode select,.dark-mode input{ color:#000 !important; }
+  </style>
+  <script>
+    // 다크모드 유지
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-3 font-sans text-sm">
+  <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
+    <header class="flex items-center justify-between">
+      <div class="p-4">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">💎 영주보석 계산기</h1>
+        <p class="text-sm muted mt-1">보석 업그레이드에 필요한 <b>매뉴얼 / 도면 / 비전</b> 합계를 계산합니다.</p>
+        <p class="text-xs muted mt-1">※ 항목을 추가한 뒤 <b>[📊 계산하기]</b> 버튼을 눌렀을 때만 총합이 계산됩니다.</p>
+      </div>
+    </header>
+
+    <!-- ✅ 입력 카드 3개 (방패/창병/궁병) -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4" id="InputSections">
+      <!-- JS로 채움 -->
+    </section>
+
+    <!-- ✅ 좌: 선택목록 / 우: 결과 -->
+    <div class="grid md:grid-cols-2 gap-3 mt-4">
+      <!-- 목록 -->
+      <div class="bg-white border rounded-xl shadow-sm p-3" id="addedList">
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-base font-bold text-gray-700">📋 선택된 목록</h2>
+          <div class="flex gap-x-2">
+            <button id="calculateFromList" class="text-blue-500 text-sm hover:underline">📊 계산하기</button>
+            <button id="clearList" class="text-sm text-red-600 hover:underline">🧹 목록 초기화</button>
+          </div>
+        </div>
+        <div class="space-y-1 text-sm" id="listContainer"></div>
+      </div>
+
+      <!-- 결과 -->
+      <div class="bg-white border rounded-xl shadow-sm p-3" id="resultCard">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base font-bold text-gray-700">📈 계산 결과</h2>
+        </div>
+        <div id="resultContainer" class="mt-2 overflow-auto">
+          <div class="text-sm text-gray-600">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== 임베드 높이 보고 ======
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 120));
+  </script>
+
+  <script>
+    // ====== 데이터 소스 ======
+    const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
+
+    // ====== 상태 ======
+    let gemLevels = [];
+    let levelToIdx = new Map();  // lv -> step index (lv -> lv+1)
+    let stepM = [];
+    let stepB = [];
+    let stepV = [];
+
+    // ✅ 목록(추가된 항목)
+    // item: { section: "방패|창병|궁병", from: number, to: number }
+    let addedItems = [];
+
+    // ✅ 마지막 계산 결과(총합) 저장: 보유값 입력 시 과부족 계산용
+    let lastTotal = { m: 0, b: 0, v: 0 };
+
+    // ====== 유틸 ======
+    const fmt = (n) => Number(n || 0).toLocaleString("ko-KR");
+    const detectDelim = (sample) => (sample.includes("\t") ? "\t" : (sample.includes(";") ? ";" : ","));
+    const toNum = (s) => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+    const toInt = (s) => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+
+    function preprocessByLevel(text){
+      let s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
+      if (!s.includes("\n") && /Lv\.?\s*\d+/i.test(s)) {
+        s = s.replace(/(Lv\.?\s*\d+)/gi, "\n$1");
+      }
+      return s;
+    }
+
+    // ====== CSV 파서 ======
+    function parseGemCSV(text){
+      const pre = preprocessByLevel(text);
+      const lines = pre.split("\n").filter(l => l.trim() !== "");
+      if (!lines.length) return { levels:[], manual:[], blue:[], vision:[] };
+
+      const delim = detectDelim(lines[0]);
+      const hasHeader = /(레벨|lv|level|매뉴얼|도면|비전|manual|blue|vision|합계|누적|total|cumulative)/i.test(lines[0]);
+      const start = hasHeader ? 1 : 0;
+      const headerLine = hasHeader ? lines[0] : "";
+      const markCumulative = /(누적|합계|total|cumulative)/i.test(headerLine);
+
+      const M = new Map(), B = new Map(), V = new Map();
+      const rawLevels = [];
+
+      for (let i=start;i<lines.length;i++){
+        const c = lines[i].split(delim);
+        if (!c.length) continue;
+
+        let lv, m, b, v;
+        if (c.length >= 4){
+          lv = toInt(c[0]); m = toNum(c[1]); b = toNum(c[2]); v = toNum(c[3]);
+        }else{
+          lv = (i - start) + 1;
+          m = toNum(c[0]); b = toNum(c[1]); v = toNum(c[2] || 0);
+        }
+        if (!Number.isFinite(lv)) continue;
+
+        rawLevels.push(lv);
+        M.set(lv, m); B.set(lv, b); V.set(lv, v);
+      }
+
+      const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
+      if (levels.length < 2) return { levels, manual:[], blue:[], vision:[] };
+
+      const sM=[], sB=[], sV=[];
+      for (let i=0;i<levels.length-1;i++){
+        const a = levels[i], b = levels[i+1];
+        if (markCumulative) {
+          sM[i] = Math.max(0, (M.get(b)||0) - (M.get(a)||0));
+          sB[i] = Math.max(0, (B.get(b)||0) - (B.get(a)||0));
+          sV[i] = Math.max(0, (V.get(b)||0) - (V.get(a)||0));
+        } else {
+          sM[i] = Math.max(0, (M.get(b)||0));
+          sB[i] = Math.max(0, (B.get(b)||0));
+          sV[i] = Math.max(0, (V.get(b)||0));
+        }
+      }
+      return { levels, manual:sM, blue:sB, vision:sV };
+    }
+
+    function renderOptions(selectEl, levels){
+      const label = (lv)=>`Lv.${lv}`;
+      const opts = ['<option value=""></option>'].concat(
+        levels.map(lv => `<option value="${lv}">${label(lv)}</option>`)
+      ).join("");
+      selectEl.innerHTML = opts;
+    }
+
+    function renderTargetOptions(selectEl, levels, greaterThan){
+      const label = (lv)=>`Lv.${lv}`;
+      const filtered = levels.filter(lv => lv > greaterThan);
+      const opts = ['<option value=""></option>'].concat(
+        filtered.map(lv => `<option value="${lv}">${label(lv)}</option>`)
+      ).join("");
+      selectEl.innerHTML = opts;
+    }
+
+    // fromLv→toLv 합: (fromLv+1 ... toLv)
+    function sumRange(steps, fromLv, toLv){
+      if (!Array.isArray(steps) || steps.length === 0) return 0;
+      let s = 0;
+      for (let lv = fromLv; lv < toLv; lv++) {
+        const idx = levelToIdx.get(lv);
+        if (idx !== undefined && idx >= 0 && idx < steps.length) s += steps[idx] || 0;
+      }
+      return s;
+    }
+
+    // ====== UI 생성: 방패/창병/궁병 입력 카드 3개 ======
+    function createSectionCards(){
+      const wrap = document.getElementById("InputSections");
+      wrap.innerHTML = "";
+
+      const sections = [
+        { key:"shield", label:"방패", color:"text-blue-700" },
+        { key:"spear",  label:"창병", color:"text-green-700" },
+        { key:"arch",   label:"궁병", color:"text-purple-700" },
+      ];
+
+      sections.forEach((s) => {
+        const card = document.createElement("div");
+        card.className = "bg-white border rounded-xl shadow-sm p-3";
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-base font-bold ${s.color}">[${s.label}]</h2>
+            <span id="warn-${s.key}" class="text-xs err"></span>
+          </div>
+
+          <div class="grid grid-cols-[64px_1fr] gap-x-3 gap-y-2">
+            <div class="text-[15px] text-gray-600 font-semibold self-center">현재</div>
+            <select class="border rounded p-2 text-sm w-full" id="cur-${s.key}"></select>
+
+            <div class="text-[15px] text-gray-600 font-semibold self-center">목표</div>
+            <select class="border rounded p-2 text-sm w-full" id="tgt-${s.key}"></select>
+          </div>
+
+          <button type="button"
+            class="w-full mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn"
+            data-section="${s.label}" data-key="${s.key}">추가</button>
+
+          <div class="mt-2 text-xs muted">레벨 범위: <span id="cap-${s.key}"></span></div>
+        `;
+
+        wrap.appendChild(card);
+      });
+    }
+
+    // ====== 목록 렌더 ======
+    function renderList(){
+      const list = document.getElementById("listContainer");
+      list.innerHTML = "";
+
+      if (!addedItems.length) {
+        list.innerHTML = `<div class="text-sm text-gray-500">추가된 항목이 없습니다.</div>`;
+        sendHeightToParent();
+        return;
+      }
+
+      addedItems.forEach((item, idx) => {
+        const row = document.createElement("div");
+        row.className = "flex justify-between items-center p-2 rounded border";
+
+        row.innerHTML = `
+          <span class="font-semibold">[${item.section}] ${item.from} → ${item.to}</span>
+          <button class="text-xs text-red-500 hover:underline" data-remove="${idx}">삭제</button>
+        `;
+
+        row.querySelector("button[data-remove]").addEventListener("click", (e) => {
+          const i = parseInt(e.currentTarget.getAttribute("data-remove"), 10);
+          if (Number.isFinite(i)) {
+            addedItems.splice(i, 1);
+            renderList();
+          }
+        });
+
+        list.appendChild(row);
+      });
+
+      sendHeightToParent();
+    }
+
+    // ====== 과부족만 갱신(총합은 버튼에서만) ======
+    function updateDeficitOnly(){
+      const owned = {
+        m: +(document.getElementById("own-매뉴얼").value || 0),
+        b: +(document.getElementById("own-도면").value || 0),
+        v: +(document.getElementById("own-비전").value || 0),
+      };
+      const def = { m: owned.m - lastTotal.m, b: owned.b - lastTotal.b, v: owned.v - lastTotal.v };
+
+      const dM = document.getElementById("def-매뉴얼");
+      const dB = document.getElementById("def-도면");
+      const dV = document.getElementById("def-비전");
+
+      dM.textContent = fmt(def.m);
+      dB.textContent = fmt(def.b);
+      dV.textContent = fmt(def.v);
+
+      dM.classList.toggle("text-red-600", parseFloat(String(def.m)) < 0);
+      dB.classList.toggle("text-red-600", parseFloat(String(def.b)) < 0);
+      dV.classList.toggle("text-red-600", parseFloat(String(def.v)) < 0);
+
+      sendHeightToParent();
+    }
+
+    // ====== 계산: 목록 기준으로만 계산(버튼 클릭) ======
+    function calculateFromList(){
+      if (!addedItems.length) {
+        alert("계산할 항목이 없습니다.");
+        return;
+      }
+
+      let total = { m:0, b:0, v:0 };
+      const rowsHtml = [];
+
+      addedItems.forEach((item) => {
+        const sM = sumRange(stepM, item.from, item.to);
+        const sB = sumRange(stepB, item.from, item.to);
+        const sV = sumRange(stepV, item.from, item.to);
+
+        total.m += sM;
+        total.b += sB;
+        total.v += sV;
+
+        rowsHtml.push(`
+          <tr class="bg-white">
+            <td class="border p-1 font-medium w-2/6">${item.section}</td>
+            <td class="border p-1">${item.from} → ${item.to}</td>
+            <td class="border p-1 tabular-nums text-right">${fmt(sM)}</td>
+            <td class="border p-1 tabular-nums text-right">${fmt(sB)}</td>
+            <td class="border p-1 tabular-nums text-right">${fmt(sV)}</td>
+          </tr>
+        `);
+      });
+
+      // ✅ 결과 테이블
+      const html = `
+        <table class="w-full border text-sm text-center table-fixed">
+          <colgroup>
+            <col style="width:20%">
+            <col style="width:20%">
+            <col style="width:20%">
+            <col style="width:20%">
+            <col style="width:20%">
+          </colgroup>
+          <thead class="bg-blue-100">
+            <tr>
+              <th class="border p-1">구분</th>
+              <th class="border p-1">레벨</th>
+              <th class="border p-1">매뉴얼</th>
+              <th class="border p-1">도면</th>
+              <th class="border p-1">비전</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml.join("")}</tbody>
+          <tfoot class="bg-gray-100 font-semibold">
+            <tr>
+              <td class="border p-1" colspan="2">총합</td>
+              <td class="border p-1 tabular-nums text-right">${fmt(total.m)}</td>
+              <td class="border p-1 tabular-nums text-right">${fmt(total.b)}</td>
+              <td class="border p-1 tabular-nums text-right">${fmt(total.v)}</td>
+            </tr>
+          </tfoot>
+        </table>
+      `;
+      document.getElementById("resultContainer").innerHTML = html;
+
+      sendHeightToParent();
+    }
+
+    // ====== 이벤트 바인딩 ======
+    function wireSectionEvents(){
+      const sections = [
+        { key:"shield", label:"방패" },
+        { key:"spear",  label:"창병" },
+        { key:"arch",   label:"궁병" },
+      ];
+
+      // 현재 변경 -> 목표 옵션 재구성 + 기본 cur+1
+      sections.forEach((s) => {
+        const curEl = document.getElementById(`cur-${s.key}`);
+        const tgtEl = document.getElementById(`tgt-${s.key}`);
+        const warnEl = document.getElementById(`warn-${s.key}`);
+
+        curEl.addEventListener("change", () => {
+          warnEl.textContent = "";
+          const cur = +curEl.value;
+          if (!cur) {
+            tgtEl.innerHTML = '<option value=""></option>';
+          } else {
+            renderTargetOptions(tgtEl, gemLevels, cur);
+            if (tgtEl.options.length > 1) tgtEl.selectedIndex = 1; // 기본 cur+1
+          }
+          sendHeightToParent();
+        });
+
+        tgtEl.addEventListener("change", () => {
+          warnEl.textContent = "";
+          sendHeightToParent();
+        });
+      });
+
+      // 추가 버튼
+      document.querySelectorAll(".add-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const sectionLabel = btn.getAttribute("data-section");
+          const key = btn.getAttribute("data-key");
+          const warnEl = document.getElementById(`warn-${key}`);
+
+          const curEl = document.getElementById(`cur-${key}`);
+          const tgtEl = document.getElementById(`tgt-${key}`);
+
+          const from = parseInt(curEl.value, 10);
+          const to = parseInt(tgtEl.value, 10);
+
+          warnEl.textContent = "";
+
+          if (!from || !to || to <= from) {
+            warnEl.textContent = "유효한 레벨을 선택하세요.";
+            return;
+          }
+
+          //// ✅ 중복 방지 (같은 섹션 + 같은 from/to)
+          //const exists = addedItems.some(x => x.section === sectionLabel && x.from === from && x.to === to);
+          //if (exists) {
+          //  warnEl.textContent = "이미 추가된 항목입니다.";
+          //  return;
+          //}
+
+          addedItems.push({ section: sectionLabel, from, to });
+          renderList();
+        });
+      });
+
+      // 목록 초기화
+      document.getElementById("clearList").addEventListener("click", () => {
+        addedItems = [];
+        renderList();
+
+        // 결과 영역 리셋
+        document.getElementById("resultContainer").innerHTML =
+          `<div class="text-sm text-gray-500">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>`;
+
+        // 총합 리셋(연구 방식: 계산 버튼만 반영)
+        lastTotal = { m:0, b:0, v:0 };
+        document.getElementById("sum-매뉴얼").textContent = "0";
+        document.getElementById("sum-도면").textContent = "0";
+        document.getElementById("sum-비전").textContent = "0";
+        updateDeficitOnly();
+
+        sendHeightToParent();
+      });
+
+      // 계산 버튼
+      document.getElementById("calculateFromList").addEventListener("click", calculateFromList);
+    }
+
+    // ====== CSV 1회 로드/파싱 후 UI 초기화 ======
+    let gemParsedPromise = null;
+
+    function fetchGemParsedOnce(){
+      if (gemParsedPromise) return gemParsedPromise;
+      gemParsedPromise = fetch(csvUrl, { cache:"no-store", mode:"cors", redirect:"follow", referrerPolicy:"no-referrer" })
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(text => parseGemCSV(text));
+      return gemParsedPromise;
+    }
+
+    async function init(){
+      try{
+        const parsed = await fetchGemParsedOnce();
+        gemLevels = parsed.levels;
+        stepM = parsed.manual;
+        stepB = parsed.blue;
+        stepV = parsed.vision;
+
+        levelToIdx = new Map(gemLevels.map((lv, i) => [lv, i]));
+
+        // 입력카드 생성
+        createSectionCards();
+
+        // 옵션 채우기 (현재는 전체, 목표는 현재 선택 후 필터)
+        const sections = ["shield","spear","arch"];
+        sections.forEach((k) => {
+          const curEl = document.getElementById(`cur-${k}`);
+          const tgtEl = document.getElementById(`tgt-${k}`);
+          const capEl = document.getElementById(`cap-${k}`);
+
+          renderOptions(curEl, gemLevels);
+          tgtEl.innerHTML = '<option value=""></option>';
+          capEl.textContent = gemLevels.length ? `최대 Lv.${gemLevels[gemLevels.length-1]}` : "-";
+        });
+
+        // 목록 초기 상태
+        renderList();
+
+        // 이벤트 연결
+        wireSectionEvents();
+
+      } catch(err){
+        console.error("CSV 로드 실패:", err);
+        document.getElementById("InputSections").innerHTML =
+          '<div class="rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg text-sm err">데이터를 불러오지 못했습니다. CSV 경로를 확인하세요.</div>';
+      } finally {
+        sendHeightToParent();
+      }
+    }
+
+    init();
+  </script>
+
+  <!-- 선택: 개발자도구/우클릭 방지 (원 코드 유지) -->
+  <script>
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });
+  </script>
+</body>
+</html>

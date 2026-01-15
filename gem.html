@@ -27,6 +27,21 @@
     .dark-mode thead th{ color:#f0f0f0 !important; }
     .dark-mode .bg-blue-100,.dark-mode .bg-gray-50{ background-color:#2e2e2e !important; }
     .dark-mode select option,.dark-mode select,.dark-mode input{ color:#000 !important; }
+  
+    /* ✅ 패널/카드/모달 기본(이 파일에서 누락된 클래스 보완) */
+    .panel{ background:#fff; border:1px solid #e5e7eb; }
+    .card { background:#fff; border:1px solid #e5e7eb; }
+    .modal{ background:#ffffff; border:1px solid #e5e7eb; box-shadow: 0 18px 60px rgba(0,0,0,.45); }
+    /* 이미지 타일/빈칸 배경(모달/카드 공통) */
+    .tile-bg{ background: rgba(0,0,0,.06); }
+    .dark-mode .tile-bg{ background: rgba(0,0,0,.35) !important; } /* ✅ 다크에서 더 진하게 */
+
+    /* ✅ 다크모드: 모달 배경 불투명/명확 */
+    .dark-mode .panel{ background:#2b2b2b !important; border-color:#3f3f3f !important; }
+    .dark-mode .card { background:#2f2f2f !important; border-color:#3f3f3f !important; }
+    .dark-mode .modal{ background:#1a1a1a !important; border-color:#4b5563 !important; }
+    .dark-mode #imgModal{ background: rgba(0,0,0,.70) !important; } /* 오버레이 더 진하게 */
+
   </style>
   <script>
     // 다크모드 유지
@@ -47,486 +62,548 @@
       </div>
     </header>
 
-    <!-- ✅ 입력 카드 3개 (방패/창병/궁병) -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-4" id="InputSections">
-      <!-- JS로 채움 -->
-    </section>
+    <!-- 상단 3섹션: 이미지 선택 카드 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
 
-    <!-- ✅ 좌: 선택목록 / 우: 결과 -->
-    <div class="grid md:grid-cols-2 gap-3 mt-4">
-      <!-- 목록 -->
-      <div class="bg-white border rounded-xl shadow-sm p-3" id="addedList">
-        <div class="flex justify-between items-center mb-2">
-          <h2 class="text-base font-bold text-gray-700">📋 선택된 목록</h2>
-          <div class="flex gap-x-2">
-            <button id="calculateFromList" class="text-blue-500 text-sm hover:underline">📊 계산하기</button>
-            <button id="clearList" class="text-sm text-red-600 hover:underline">🧹 목록 초기화</button>
+      <div class="card border rounded-xl p-4" data-card data-unit="Infantry">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-base font-bold text-blue-400">[방패]</div>
+          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
+            <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
+            <div data-empty="left" class="w-full h-28 tile-bg"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
+            <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
+            <div data-empty="right" class="w-full h-28 tile-bg"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <div class="muted text-xs mb-1">현재 레벨</div>
+            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+          <div>
+            <div class="muted text-xs mb-1">목표 레벨</div>
+            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
           </div>
         </div>
-        <div class="space-y-1 text-sm" id="listContainer"></div>
+
+        <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
       </div>
 
-      <!-- 결과 -->
-      <div class="bg-white border rounded-xl shadow-sm p-3" id="resultCard">
-        <div class="flex items-center justify-between">
-          <h2 class="text-base font-bold text-gray-700">📈 계산 결과</h2>
+      <div class="card border rounded-xl p-4" data-card data-unit="Lancer">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-base font-bold text-green-400">[창병]</div>
+          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
         </div>
-        <div id="resultContainer" class="mt-2 overflow-auto">
+
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
+            <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
+            <div data-empty="left" class="w-full h-28 tile-bg"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
+            <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
+            <div data-empty="right" class="w-full h-28 tile-bg"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <div class="muted text-xs mb-1">현재 레벨</div>
+            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+          <div>
+            <div class="muted text-xs mb-1">목표 레벨</div>
+            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+        </div>
+        <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
+      </div>
+
+      <div class="card border rounded-xl p-4" data-card data-unit="Marskman">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-base font-bold text-purple-400">[궁병]</div>
+          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
+            <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
+            <div data-empty="left" class="w-full h-28 tile-bg"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
+            <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
+            <div data-empty="right" class="w-full h-28 tile-bg"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <div class="muted text-xs mb-1">현재 레벨</div>
+            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+          <div>
+            <div class="muted text-xs mb-1">목표 레벨</div>
+            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+          </div>
+        </div>
+        <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
+      </div>
+
+    </div>
+
+    <!-- 하단 2패널 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <div class="panel border rounded-xl p-4">
+        <div class="flex items-center justify-between gap-3">
+          <div class="text-base font-bold">📄 선택된 목록</div>
+          <div class="flex items-center gap-3 text-sm">
+            <button id="btnCalc" class="text-blue-500 text-sm hover:underline">📊 계산하기</button>
+            <button id="btnClearAll" class="text-sm text-red-600 hover:underline">🧹 목록 초기화</button>
+          </div>
+        </div>
+        <div id="listWrap" class="mt-3 space-y-2"></div>
+      </div>
+
+      <div class="panel border rounded-xl p-4">
+        <div class="text-base font-bold flex items-center gap-2">
+          <span>🧾</span><span>계산 결과</span>
+        </div>
+        <div id="resultHint" class="muted text-sm mt-2">
           <div class="text-sm text-gray-600">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>
+        </div>
+
+        
+        <div id="resultBox" class="mt-3 hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm table-fixed">
+              <thead>
+                <tr class="bg-black/20">
+                  <th class="border border-gray-700 p-2 text-center">구분</th>
+                  <th class="border border-gray-700 p-2 text-center">레벨</th>
+                  <th class="border border-gray-700 p-2 text-center">매뉴얼</th>
+                  <th class="border border-gray-700 p-2 text-center">도면</th>
+                  <th class="border border-gray-700 p-2 text-center">비전</th>
+                </tr>
+              </thead>
+              <tbody id="resultRows"></tbody>
+              <tfoot>
+                <tr class="bg-black/20 font-bold">
+                  <td class="border border-gray-700 p-2 text-center" colspan="2">총합</td>
+                  <td id="sumM" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
+                  <td id="sumB" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
+                  <td id="sumV" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 
-  <script>
-    // ====== 임베드 높이 보고 ======
-    function sendHeightToParent() {
-      const height = document.body.scrollHeight + 10;
-      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
-    }
-    window.addEventListener("load", () => setTimeout(sendHeightToParent, 120));
-  </script>
+  <!-- 이미지 선택 모달 -->
+  <div id="imgModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 p-4 z-50">
+    <div class="modal w-full max-w-4xl border rounded-xl p-4">
+      <div class="flex items-center justify-between mb-3">
+        <div class="font-semibold" id="modalTitle">이미지 선택</div>
+        <button id="btnCloseModal" class="btn px-3 py-1 rounded-lg border hover:bg-white/10 text-sm">닫기</button>
+      </div>
+      <div id="imgGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 max-h-[70vh] overflow-auto pr-1"></div>
+    </div>
+  </div>
 
-  <script>
-    // ====== 데이터 소스 ======
-    const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
+<script>
+/* ====== iframe 높이 전송(원본 gem.html 호환) ====== */
+function sendHeightToParent(){
+  try {
+    const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    window.parent && window.parent.postMessage({ type:"FRAME_HEIGHT", height:h }, "*");
+  } catch {}
+}
+window.addEventListener("load", () => setTimeout(sendHeightToParent, 120));
+window.addEventListener("resize", () => setTimeout(sendHeightToParent, 120));
 
-    // ====== 상태 ======
-    let gemLevels = [];
-    let levelToIdx = new Map();  // lv -> step index (lv -> lv+1)
-    let stepM = [];
-    let stepB = [];
-    let stepV = [];
+/* ====== 데이터 소스: gem.html과 동일 ====== */
+const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
 
-    // ✅ 목록(추가된 항목)
-    // item: { section: "방패|창병|궁병", from: number, to: number }
-    let addedItems = [];
+/* ====== 이미지 소스 ====== */
+const MAX_LV = 16;
+const UNITS = ["Infantry", "Lancer", "Marskman"];
+const UNIT_KO = { Infantry:"방패", Lancer:"창병", Marskman:"궁병" };
+const IMAGE_BY_UNIT = Object.fromEntries(
+  UNITS.map(u => [u, Array.from({length: MAX_LV}, (_,i)=> `images/${u}/${u}_${i+1}.png`)])
+);
 
-    // ✅ 마지막 계산 결과(총합) 저장: 보유값 입력 시 과부족 계산용
-    let lastTotal = { m: 0, b: 0, v: 0 };
+function levelFromUrl(url){
+  const name = (String(url||"").split("/").pop() || "");
+  const m = name.match(/_(\d+)(?:\.[a-zA-Z0-9]+)?$/);
+  return m ? Number(m[1]) : null;
+}
+const fmt = (n) => Number(n || 0).toLocaleString("ko-KR");
+const num = (s) => {
+  const m = String(s ?? "").replace(/,/g,"").match(/-?\d+(\.\d+)?/);
+  return m ? Number(m[0]) : 0;
+};
+const detectDelim = (sample) => (sample.includes("\t") ? "\t" : ",");
 
-    // ====== 유틸 ======
-    const fmt = (n) => Number(n || 0).toLocaleString("ko-KR");
-    const detectDelim = (sample) => (sample.includes("\t") ? "\t" : (sample.includes(";") ? ";" : ","));
-    const toNum = (s) => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
-    const toInt = (s) => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+/* ====== CSV 로드/파싱: gem.html 방식(레벨별 비용 배열) ====== */
+let stepM = [];
+let stepB = [];
+let stepV = [];
+let csvReady = false;
 
-    function preprocessByLevel(text){
-      let s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
-      if (!s.includes("\n") && /Lv\.?\s*\d+/i.test(s)) {
-        s = s.replace(/(Lv\.?\s*\d+)/gi, "\n$1");
-      }
-      return s;
-    }
+async function loadCsv(){
+  const res = await fetch(csvUrl, { cache:"no-store" });
+  if(!res.ok) throw new Error("CSV fetch 실패: " + res.status);
+  const text = await res.text();
 
-    // ====== CSV 파서 ======
-    function parseGemCSV(text){
-      const pre = preprocessByLevel(text);
-      const lines = pre.split("\n").filter(l => l.trim() !== "");
-      if (!lines.length) return { levels:[], manual:[], blue:[], vision:[] };
+  const lines = text.replace(/\r/g,"").split("\n").filter(x=>x.trim().length>0);
+  const delim = detectDelim(lines[0]);
+  const headers = lines[0].split(delim).map(h=>h.trim());
 
-      const delim = detectDelim(lines[0]);
-      const hasHeader = /(레벨|lv|level|매뉴얼|도면|비전|manual|blue|vision|합계|누적|total|cumulative)/i.test(lines[0]);
-      const start = hasHeader ? 1 : 0;
-      const headerLine = hasHeader ? lines[0] : "";
-      const markCumulative = /(누적|합계|total|cumulative)/i.test(headerLine);
+  // gem.csv는 보통: Level, Manual, Blueprint, Vision
+  const idxLv = headers.findIndex(h => /lv|level|레벨/i.test(h));
+  const idxM  = headers.findIndex(h => /manual|매뉴얼/i.test(h));
+  const idxB  = headers.findIndex(h => /blue|도면/i.test(h));
+  const idxV  = headers.findIndex(h => /vision|비전/i.test(h));
 
-      const M = new Map(), B = new Map(), V = new Map();
-      const rawLevels = [];
+  if(idxLv === -1 || idxM === -1 || idxB === -1 || idxV === -1){
+    throw new Error("CSV 헤더에서 레벨/매뉴얼/도면/비전을 찾지 못했습니다.");
+  }
 
-      for (let i=start;i<lines.length;i++){
-        const c = lines[i].split(delim);
-        if (!c.length) continue;
+  const maxLv = MAX_LV;
+  stepM = Array(maxLv + 1).fill(0);
+  stepB = Array(maxLv + 1).fill(0);
+  stepV = Array(maxLv + 1).fill(0);
 
-        let lv, m, b, v;
-        if (c.length >= 4){
-          lv = toInt(c[0]); m = toNum(c[1]); b = toNum(c[2]); v = toNum(c[3]);
-        }else{
-          lv = (i - start) + 1;
-          m = toNum(c[0]); b = toNum(c[1]); v = toNum(c[2] || 0);
-        }
-        if (!Number.isFinite(lv)) continue;
+  for(let i=1; i<lines.length; i++){
+    const cols = lines[i].split(delim);
+    const lv = num(cols[idxLv]);
+    if(!lv || lv<1 || lv>maxLv) continue;
+    stepM[lv] = num(cols[idxM]);
+    stepB[lv] = num(cols[idxB]);
+    stepV[lv] = num(cols[idxV]);
+  }
 
-        rawLevels.push(lv);
-        M.set(lv, m); B.set(lv, b); V.set(lv, v);
-      }
+  csvReady = true;
+}
 
-      const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
-      if (levels.length < 2) return { levels, manual:[], blue:[], vision:[] };
+function sumRange(stepArr, fromLv, toLv){
+  let s = 0;
+  for(let lv = fromLv + 1; lv <= toLv; lv++) s += (stepArr[lv] || 0);
+  return s;
+}
 
-      const sM=[], sB=[], sV=[];
-      for (let i=0;i<levels.length-1;i++){
-        const a = levels[i], b = levels[i+1];
-        if (markCumulative) {
-          sM[i] = Math.max(0, (M.get(b)||0) - (M.get(a)||0));
-          sB[i] = Math.max(0, (B.get(b)||0) - (B.get(a)||0));
-          sV[i] = Math.max(0, (V.get(b)||0) - (V.get(a)||0));
-        } else {
-          sM[i] = Math.max(0, (M.get(b)||0));
-          sB[i] = Math.max(0, (B.get(b)||0));
-          sV[i] = Math.max(0, (V.get(b)||0));
-        }
-      }
-      return { levels, manual:sM, blue:sB, vision:sV };
-    }
+/* ====== 목록(추가된 항목): item { section, from, to } ====== */
+let addedItems = [];
 
-    function renderOptions(selectEl, levels){
-      const label = (lv)=>`Lv.${lv}`;
-      const opts = ['<option value=""></option>'].concat(
-        levels.map(lv => `<option value="${lv}">${label(lv)}</option>`)
-      ).join("");
-      selectEl.innerHTML = opts;
-    }
+/* ====== UI 요소 ====== */
+const listWrap = document.getElementById("listWrap");
+const btnCalc = document.getElementById("btnCalc");
+const btnClearAll = document.getElementById("btnClearAll");
 
-    function renderTargetOptions(selectEl, levels, greaterThan){
-      const label = (lv)=>`Lv.${lv}`;
-      const filtered = levels.filter(lv => lv > greaterThan);
-      const opts = ['<option value=""></option>'].concat(
-        filtered.map(lv => `<option value="${lv}">${label(lv)}</option>`)
-      ).join("");
-      selectEl.innerHTML = opts;
-    }
+const resultHint = document.getElementById("resultHint");
+const resultBox = document.getElementById("resultBox");
+const resultRows = document.getElementById("resultRows");
+const sumM = document.getElementById("sumM");
+const sumB = document.getElementById("sumB");
+const sumV = document.getElementById("sumV");
 
-    // fromLv→toLv 합: (fromLv+1 ... toLv)
-    function sumRange(steps, fromLv, toLv){
-      if (!Array.isArray(steps) || steps.length === 0) return 0;
-      let s = 0;
-      for (let lv = fromLv; lv < toLv; lv++) {
-        const idx = levelToIdx.get(lv);
-        if (idx !== undefined && idx >= 0 && idx < steps.length) s += steps[idx] || 0;
-      }
-      return s;
-    }
 
-    // ====== UI 생성: 방패/창병/궁병 입력 카드 3개 ======
-    function createSectionCards(){
-      const wrap = document.getElementById("InputSections");
-      wrap.innerHTML = "";
+/* ====== 목록 렌더 ====== */
+function renderList(){
+  listWrap.innerHTML = "";
+  if(!addedItems.length){
+    const empty = document.createElement("div");
+    empty.className = "muted text-sm px-3 py-3 border border-gray-700 rounded-lg bg-black/10";
+    empty.textContent = "선택된 항목이 없습니다.";
+    listWrap.appendChild(empty);
+    sendHeightToParent();
+    return;
+  }
 
-      const sections = [
-        { key:"shield", label:"방패", color:"text-blue-700" },
-        { key:"spear",  label:"창병", color:"text-green-700" },
-        { key:"arch",   label:"궁병", color:"text-purple-700" },
-      ];
+  addedItems.forEach((item, idx)=>{
+    const row = document.createElement("div");
+    row.className = "flex items-center justify-between gap-3 px-3 py-2 border border-gray-700 rounded-lg bg-black/10";
+    row.innerHTML = `
+      <div class="text-sm tabular-nums">
+        <span class="font-semibold">[${item.section}]</span>
+        <span class="ml-1">Lv.${item.from} → Lv.${item.to}</span>
+      </div>
+      <button class="text-xs text-red-500 hover:underline" data-del="${idx}">삭제</button>
+    `;
+    listWrap.appendChild(row);
+  });
 
-      sections.forEach((s) => {
-        const card = document.createElement("div");
-        card.className = "bg-white border rounded-xl shadow-sm p-3";
-
-        card.innerHTML = `
-          <div class="flex items-center justify-between mb-2">
-            <h2 class="text-base font-bold ${s.color}">[${s.label}]</h2>
-            <span id="warn-${s.key}" class="text-xs err"></span>
-          </div>
-
-          <div class="grid grid-cols-[64px_1fr] gap-x-3 gap-y-2">
-            <div class="text-[15px] text-gray-600 font-semibold self-center">현재</div>
-            <select class="border rounded p-2 text-sm w-full" id="cur-${s.key}"></select>
-
-            <div class="text-[15px] text-gray-600 font-semibold self-center">목표</div>
-            <select class="border rounded p-2 text-sm w-full" id="tgt-${s.key}"></select>
-          </div>
-
-          <button type="button"
-            class="w-full mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn"
-            data-section="${s.label}" data-key="${s.key}">추가</button>
-
-          <div class="mt-2 text-xs muted">레벨 범위: <span id="cap-${s.key}"></span></div>
-        `;
-
-        wrap.appendChild(card);
-      });
-    }
-
-    // ====== 목록 렌더 ======
-    function renderList(){
-      const list = document.getElementById("listContainer");
-      list.innerHTML = "";
-
-      if (!addedItems.length) {
-        list.innerHTML = `<div class="text-sm text-gray-500">추가된 항목이 없습니다.</div>`;
-        sendHeightToParent();
-        return;
-      }
-
-      addedItems.forEach((item, idx) => {
-        const row = document.createElement("div");
-        row.className = "flex justify-between items-center p-2 rounded border";
-
-        row.innerHTML = `
-          <span class="font-semibold">[${item.section}] ${item.from} → ${item.to}</span>
-          <button class="text-xs text-red-500 hover:underline" data-remove="${idx}">삭제</button>
-        `;
-
-        row.querySelector("button[data-remove]").addEventListener("click", (e) => {
-          const i = parseInt(e.currentTarget.getAttribute("data-remove"), 10);
-          if (Number.isFinite(i)) {
-            addedItems.splice(i, 1);
-            renderList();
-          }
-        });
-
-        list.appendChild(row);
-      });
-
-      sendHeightToParent();
-    }
-
-    // ====== 과부족만 갱신(총합은 버튼에서만) ======
-    function updateDeficitOnly(){
-      const owned = {
-        m: +(document.getElementById("own-매뉴얼").value || 0),
-        b: +(document.getElementById("own-도면").value || 0),
-        v: +(document.getElementById("own-비전").value || 0),
-      };
-      const def = { m: owned.m - lastTotal.m, b: owned.b - lastTotal.b, v: owned.v - lastTotal.v };
-
-      const dM = document.getElementById("def-매뉴얼");
-      const dB = document.getElementById("def-도면");
-      const dV = document.getElementById("def-비전");
-
-      dM.textContent = fmt(def.m);
-      dB.textContent = fmt(def.b);
-      dV.textContent = fmt(def.v);
-
-      dM.classList.toggle("text-red-600", parseFloat(String(def.m)) < 0);
-      dB.classList.toggle("text-red-600", parseFloat(String(def.b)) < 0);
-      dV.classList.toggle("text-red-600", parseFloat(String(def.v)) < 0);
-
-      sendHeightToParent();
-    }
-
-    // ====== 계산: 목록 기준으로만 계산(버튼 클릭) ======
-    function calculateFromList(){
-      if (!addedItems.length) {
-        alert("계산할 항목이 없습니다.");
-        return;
-      }
-
-      let total = { m:0, b:0, v:0 };
-      const rowsHtml = [];
-
-      addedItems.forEach((item) => {
-        const sM = sumRange(stepM, item.from, item.to);
-        const sB = sumRange(stepB, item.from, item.to);
-        const sV = sumRange(stepV, item.from, item.to);
-
-        total.m += sM;
-        total.b += sB;
-        total.v += sV;
-
-        rowsHtml.push(`
-          <tr class="bg-white">
-            <td class="border p-1 font-medium w-2/6">${item.section}</td>
-            <td class="border p-1">${item.from} → ${item.to}</td>
-            <td class="border p-1 tabular-nums text-right">${fmt(sM)}</td>
-            <td class="border p-1 tabular-nums text-right">${fmt(sB)}</td>
-            <td class="border p-1 tabular-nums text-right">${fmt(sV)}</td>
-          </tr>
-        `);
-      });
-
-      // ✅ 결과 테이블
-      const html = `
-        <table class="w-full border text-sm text-center table-fixed">
-          <colgroup>
-            <col style="width:20%">
-            <col style="width:20%">
-            <col style="width:20%">
-            <col style="width:20%">
-            <col style="width:20%">
-          </colgroup>
-          <thead class="bg-blue-100">
-            <tr>
-              <th class="border p-1">구분</th>
-              <th class="border p-1">레벨</th>
-              <th class="border p-1">매뉴얼</th>
-              <th class="border p-1">도면</th>
-              <th class="border p-1">비전</th>
-            </tr>
-          </thead>
-          <tbody>${rowsHtml.join("")}</tbody>
-          <tfoot class="bg-gray-100 font-semibold">
-            <tr>
-              <td class="border p-1" colspan="2">총합</td>
-              <td class="border p-1 tabular-nums text-right">${fmt(total.m)}</td>
-              <td class="border p-1 tabular-nums text-right">${fmt(total.b)}</td>
-              <td class="border p-1 tabular-nums text-right">${fmt(total.v)}</td>
-            </tr>
-          </tfoot>
-        </table>
-      `;
-      document.getElementById("resultContainer").innerHTML = html;
-
-      sendHeightToParent();
-    }
-
-    // ====== 이벤트 바인딩 ======
-    function wireSectionEvents(){
-      const sections = [
-        { key:"shield", label:"방패" },
-        { key:"spear",  label:"창병" },
-        { key:"arch",   label:"궁병" },
-      ];
-
-      // 현재 변경 -> 목표 옵션 재구성 + 기본 cur+1
-      sections.forEach((s) => {
-        const curEl = document.getElementById(`cur-${s.key}`);
-        const tgtEl = document.getElementById(`tgt-${s.key}`);
-        const warnEl = document.getElementById(`warn-${s.key}`);
-
-        curEl.addEventListener("change", () => {
-          warnEl.textContent = "";
-          const cur = +curEl.value;
-          if (!cur) {
-            tgtEl.innerHTML = '<option value=""></option>';
-          } else {
-            renderTargetOptions(tgtEl, gemLevels, cur);
-            if (tgtEl.options.length > 1) tgtEl.selectedIndex = 1; // 기본 cur+1
-          }
-          sendHeightToParent();
-        });
-
-        tgtEl.addEventListener("change", () => {
-          warnEl.textContent = "";
-          sendHeightToParent();
-        });
-      });
-
-      // 추가 버튼
-      document.querySelectorAll(".add-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const sectionLabel = btn.getAttribute("data-section");
-          const key = btn.getAttribute("data-key");
-          const warnEl = document.getElementById(`warn-${key}`);
-
-          const curEl = document.getElementById(`cur-${key}`);
-          const tgtEl = document.getElementById(`tgt-${key}`);
-
-          const from = parseInt(curEl.value, 10);
-          const to = parseInt(tgtEl.value, 10);
-
-          warnEl.textContent = "";
-
-          if (!from || !to || to <= from) {
-            warnEl.textContent = "유효한 레벨을 선택하세요.";
-            return;
-          }
-
-          //// ✅ 중복 방지 (같은 섹션 + 같은 from/to)
-          //const exists = addedItems.some(x => x.section === sectionLabel && x.from === from && x.to === to);
-          //if (exists) {
-          //  warnEl.textContent = "이미 추가된 항목입니다.";
-          //  return;
-          //}
-
-          addedItems.push({ section: sectionLabel, from, to });
-          renderList();
-        });
-      });
-
-      // 목록 초기화
-      document.getElementById("clearList").addEventListener("click", () => {
-        addedItems = [];
+  listWrap.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const i = Number(btn.getAttribute("data-del"));
+      if(Number.isFinite(i)) {
+        addedItems.splice(i, 1);
         renderList();
-
-        // 결과 영역 리셋
-        document.getElementById("resultContainer").innerHTML =
-          `<div class="text-sm text-gray-500">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>`;
-
-        // 총합 리셋(연구 방식: 계산 버튼만 반영)
-        lastTotal = { m:0, b:0, v:0 };
-        document.getElementById("sum-매뉴얼").textContent = "0";
-        document.getElementById("sum-도면").textContent = "0";
-        document.getElementById("sum-비전").textContent = "0";
-        updateDeficitOnly();
-
-        sendHeightToParent();
-      });
-
-      // 계산 버튼
-      document.getElementById("calculateFromList").addEventListener("click", calculateFromList);
-    }
-
-    // ====== CSV 1회 로드/파싱 후 UI 초기화 ======
-    let gemParsedPromise = null;
-
-    function fetchGemParsedOnce(){
-      if (gemParsedPromise) return gemParsedPromise;
-      gemParsedPromise = fetch(csvUrl, { cache:"no-store", mode:"cors", redirect:"follow", referrerPolicy:"no-referrer" })
-        .then(res => {
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          return res.text();
-        })
-        .then(text => parseGemCSV(text));
-      return gemParsedPromise;
-    }
-
-    async function init(){
-      try{
-        const parsed = await fetchGemParsedOnce();
-        gemLevels = parsed.levels;
-        stepM = parsed.manual;
-        stepB = parsed.blue;
-        stepV = parsed.vision;
-
-        levelToIdx = new Map(gemLevels.map((lv, i) => [lv, i]));
-
-        // 입력카드 생성
-        createSectionCards();
-
-        // 옵션 채우기 (현재는 전체, 목표는 현재 선택 후 필터)
-        const sections = ["shield","spear","arch"];
-        sections.forEach((k) => {
-          const curEl = document.getElementById(`cur-${k}`);
-          const tgtEl = document.getElementById(`tgt-${k}`);
-          const capEl = document.getElementById(`cap-${k}`);
-
-          renderOptions(curEl, gemLevels);
-          tgtEl.innerHTML = '<option value=""></option>';
-          capEl.textContent = gemLevels.length ? `최대 Lv.${gemLevels[gemLevels.length-1]}` : "-";
-        });
-
-        // 목록 초기 상태
-        renderList();
-
-        // 이벤트 연결
-        wireSectionEvents();
-
-      } catch(err){
-        console.error("CSV 로드 실패:", err);
-        document.getElementById("InputSections").innerHTML =
-          '<div class="rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg text-sm err">데이터를 불러오지 못했습니다. CSV 경로를 확인하세요.</div>';
-      } finally {
-        sendHeightToParent();
-      }
-    }
-
-    init();
-  </script>
-
-  <!-- 선택: 개발자도구/우클릭 방지 (원 코드 유지) -->
-  <script>
-    document.onkeydown = function (e) {
-      if (
-        e.keyCode === 123 || // F12
-        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
-        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
-        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
-      ) {
-        e.preventDefault();
-        return false;
-      }
-    };
-    document.addEventListener("contextmenu", (e) => e.preventDefault());
-  </script>
-
-  <script>
-    window.addEventListener('message', (e) => {
-      if (e.data?.type === 'DARK_MODE') {
-        document.body.classList.toggle('dark-mode', e.data.value);
       }
     });
-  </script>
+  });
+
+  sendHeightToParent();
+}
+
+/* ====== 계산: 목록 기준으로만 계산(버튼 클릭) ====== */
+async function calculateFromList(){
+  if(!addedItems.length) {
+    alert("계산할 항목이 없습니다.");
+    return;
+  }
+  if(!csvReady) {
+    try{ await loadCsv(); } catch(e){ alert("CSV 로드 실패: " + (e.message||e)); return; }
+  }
+
+  let total = { m:0, b:0, v:0 };
+  const rowsHtml = [];
+
+  addedItems.forEach((item) => {
+    const sM = sumRange(stepM, item.from, item.to);
+    const sB = sumRange(stepB, item.from, item.to);
+    const sV = sumRange(stepV, item.from, item.to);
+
+    total.m += sM;
+    total.b += sB;
+    total.v += sV;
+
+    rowsHtml.push(`
+      <tr class="bg-black/10">
+        <td class="border border-gray-700 p-2 font-medium text-center">${item.section}</td>
+        <td class="border border-gray-700 p-2 text-center tabular-nums">Lv.${item.from} → Lv.${item.to}</td>
+        <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sM)}</td>
+        <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sB)}</td>
+        <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sV)}</td>
+      </tr>
+    `);
+    });
+
+  // 결과 반영
+  resultRows.innerHTML = rowsHtml.join("");
+  sumM.textContent = fmt(total.m);
+  sumB.textContent = fmt(total.b);
+  sumV.textContent = fmt(total.v);
+
+  
+  resultHint.classList.add("hidden");
+  resultBox.classList.remove("hidden");
+
+  sendHeightToParent();
+}
+
+btnCalc.addEventListener("click", calculateFromList);
+btnClearAll.addEventListener("click", ()=>{
+  addedItems = [];
+  renderList();
+  resultBox.classList.add("hidden");
+  resultHint.classList.remove("hidden");
+  resultHint.innerHTML = '항목을 추가하고 <span class="link">📊 계산하기</span>를 눌러주세요.';
+  });
+
+/* ====== 이미지 선택 모달 ====== */
+const modal = document.getElementById("imgModal");
+const imgGrid = document.getElementById("imgGrid");
+const btnCloseModal = document.getElementById("btnCloseModal");
+const modalTitle = document.getElementById("modalTitle");
+
+let activeCardEl = null;
+let activeSlot = "left";
+
+function openModal(cardEl, slot, unit){
+  activeCardEl = cardEl;
+  activeSlot = slot;
+
+  modalTitle.textContent = `${UNIT_KO[unit] ?? unit} - 이미지 선택`;
+  renderGrid(unit);
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+function closeModal(){
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+btnCloseModal.addEventListener("click", closeModal);
+modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+
+function setCardLevelLabel(cardEl, kind, lv){
+  const el = cardEl.querySelector(`[data-lbl="${kind}"]`);
+  el.textContent = (lv === "-" ? "-" : `Lv.${lv}`);
+}
+
+function applySelectedImage(url){
+  if(!activeCardEl) return;
+
+  const imgEl = activeCardEl.querySelector(`[data-slot-img="${activeSlot}"]`);
+  const emptyEl = activeCardEl.querySelector(`[data-empty="${activeSlot}"]`);
+
+  if (emptyEl) emptyEl.classList.add("hidden");
+  imgEl.classList.remove("hidden");
+
+  imgEl.src = url;
+  imgEl.alt = url;
+
+  const lv = levelFromUrl(url);
+  if(lv != null){
+    const clamped = Math.min(Math.max(lv, 1), MAX_LV);
+    if(activeSlot === "left") setCardLevelLabel(activeCardEl, "current", clamped);
+    else setCardLevelLabel(activeCardEl, "target", clamped);
+  }
+}
+
+function clearSelectedImage(){
+  if(!activeCardEl) return;
+
+  const imgEl   = activeCardEl.querySelector(`[data-slot-img="${activeSlot}"]`);
+  const emptyEl = activeCardEl.querySelector(`[data-empty="${activeSlot}"]`);
+
+  imgEl.classList.add("hidden");
+  imgEl.src = "";
+  imgEl.alt = "empty";
+
+  if (emptyEl) emptyEl.classList.remove("hidden");
+
+  if(activeSlot === "left") setCardLevelLabel(activeCardEl, "current", "-");
+  else setCardLevelLabel(activeCardEl, "target", "-");
+}
+
+function renderGrid(unit){
+  imgGrid.innerHTML = "";
+
+  // 선택 취소
+  {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "group border border-gray-600 rounded-lg overflow-hidden hover:bg-white/5";
+    btn.innerHTML = `
+      <div class="aspect-square tile-bg flex items-center justify-center">
+        <div class="w-full h-full"></div>
+      </div>
+      <div class="px-2 py-2 text-[13px] muted text-center">선택 취소</div>
+    `;
+    btn.addEventListener("click", ()=>{ clearSelectedImage(); closeModal(); });
+    imgGrid.appendChild(btn);
+  }
+
+  (IMAGE_BY_UNIT[unit] || []).forEach(url=>{
+    const lv = levelFromUrl(url);
+    const caption = (lv != null) ? `Lv.${lv}` : "Lv.?";
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "group border border-gray-600 rounded-lg overflow-hidden hover:bg-white/5";
+    btn.innerHTML = `
+      <div class="aspect-square tile-bg flex items-center justify-center">
+        <img src="${url}" alt="${caption}" class="max-w-full max-h-full object-contain p-2" />
+      </div>
+      <div class="px-2 py-2 text-[13px] muted text-center">${caption}</div>
+    `;
+    btn.addEventListener("click", ()=>{ applySelectedImage(url); closeModal(); });
+    imgGrid.appendChild(btn);
+  });
+}
+
+/* ====== 카드 이벤트: 추가 ====== */
+function getCardLevels(cardEl){
+  const leftSrc = cardEl.querySelector('[data-slot-img="left"]')?.getAttribute("src") || "";
+  const rightSrc = cardEl.querySelector('[data-slot-img="right"]')?.getAttribute("src") || "";
+  const fromLv = levelFromUrl(leftSrc);
+  const toLv = levelFromUrl(rightSrc);
+  return { fromLv, toLv };
+}
+
+document.querySelectorAll("[data-card]").forEach(cardEl=>{
+  cardEl.querySelectorAll("[data-pick-image]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const slot = btn.getAttribute("data-slot");
+      const unit = cardEl.getAttribute("data-unit");
+      openModal(cardEl, slot, unit);
+    });
+  });
+
+  cardEl.querySelector("[data-add]").addEventListener("click", ()=>{
+    const unit = cardEl.getAttribute("data-unit");
+    const section = UNIT_KO[unit] ?? unit;
+    const { fromLv, toLv } = getCardLevels(cardEl);
+
+    if(!fromLv || !toLv){
+      alert("현재/목표 이미지를 모두 선택하세요.");
+      return;
+    }
+    if(fromLv >= toLv){
+      alert("목표 레벨은 현재 레벨보다 높아야 합니다.");
+      return;
+    }
+
+    addedItems.push({ section, from: fromLv, to: toLv });
+    renderList();
+  });
+
+  cardEl.querySelectorAll("img[data-slot-img]").forEach(img=>{
+    img.addEventListener("error", ()=>{
+      const slot = img.getAttribute("data-slot-img");
+      const emptyEl = cardEl.querySelector(`[data-empty="${slot}"]`);
+      img.classList.add("hidden");
+      if (emptyEl) emptyEl.classList.remove("hidden");
+    });
+  });
+});
+
+// 초기
+renderList();
+
+</script>
+<!-- 선택: 개발자도구/우클릭 방지 (원 코드 유지) -->
+<script>
+  document.onkeydown = function (e) {
+    if (
+      e.keyCode === 123 || // F12
+      (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+      (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+      (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  };
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
+</script>
+
+<script>
+  window.addEventListener('message', (e) => {
+    if (e.data?.type === 'DARK_MODE') {
+      document.body.classList.toggle('dark-mode', e.data.value);
+    }
+  });
+</script>
 </body>
 </html>
