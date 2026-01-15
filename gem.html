@@ -234,21 +234,19 @@
         <div class="font-semibold" id="modalTitle">이미지 선택</div>
         <button id="btnCloseModal" class="btn px-3 py-1 rounded-lg border hover:bg-white/10 text-sm">닫기</button>
       </div>
-      <div id="imgGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 max-h-[70vh] overflow-auto pr-1"></div>
+      <div id="imgGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 max-h-[80vh] overflow-auto pr-1"></div>
     </div>
   </div>
 
 <script>
-/* ====== iframe 높이 전송(원본 gem.html 호환) ====== */
-function sendHeightToParent(){
-  try {
-    const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    window.parent && window.parent.postMessage({ type:"FRAME_HEIGHT", height:h }, "*");
-  } catch {}
-}
-window.addEventListener("load", () => setTimeout(sendHeightToParent, 120));
-window.addEventListener("resize", () => setTimeout(sendHeightToParent, 120));
-
+  // ====== 임베드 높이 보고 ======
+  function sendHeightToParent() {
+    const height = document.body.scrollHeight + 10;
+    window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
+  }
+  window.addEventListener("load", () => setTimeout(sendHeightToParent, 120));
+</script>
+<script>
 /* ====== 데이터 소스: gem.html과 동일 ====== */
 const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
 
