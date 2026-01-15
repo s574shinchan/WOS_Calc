@@ -7,22 +7,24 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .muted{color:#6b7280}
-    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
     .inline-label{display:flex;align-items:center;gap:.5rem}
     .tabular-nums{font-variant-numeric: tabular-nums}
-    select.pill{height:32px}
     .err{color:#b45309}
 
     /* Dark mode */
-    body.dark-mode{background-color:#121212;color:#f0f0f0}
-    .dark-mode .border{border-color:#444!important}
-    .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
-    .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#f0f0f0!important}
-    .dark-mode .muted{ color:#f0f0f0 !important; }
-    .dark-mode select option,
-    .dark-mode select,
-    .dark-mode input{color:#000!important}
+    body.dark-mode { background-color:#121212; color:#f0f0f0; }
+    .dark-mode .border{ border-color:#444 !important; }
+    .dark-mode .bg-white{ background-color:#2c2c2c !important; color:#f0f0f0 !important; }
+    .dark-mode .bg-gray-100{ background-color:#1e1e1e !important; }
+    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#f0f0f0 !important; }
+    .dark-mode .text-blue-700{ color:#66b0ff !important; }
+    .dark-mode .text-green-700{ color:#79e68c !important; }
+    .dark-mode .text-purple-700{ color:#bfa6ff !important; }
+    .dark-mode table{ background-color:#2c2c2c; color:#f0f0f0; }
+    .dark-mode th,.dark-mode td{ border-color:#444 !important; }
+    .dark-mode thead th{ color:#f0f0f0 !important; }
+    .dark-mode .bg-blue-100,.dark-mode .bg-gray-50{ background-color:#2e2e2e !important; }
+    .dark-mode select option,.dark-mode select,.dark-mode input{ color:#000 !important; }
   </style>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -67,12 +69,13 @@
           </div>
         </div>
         <div class="space-y-1 text-sm" id="listContainer"></div>
+        <div class="text-xs muted mt-2">Duplicates are allowed.</div>
       </div>
 
       <!-- Result -->
       <div class="bg-white border rounded-xl shadow-sm p-3">
         <h2 class="text-base font-bold text-gray-700">📈 Result</h2>
-        <div id="resultContainer" class="mt-2">
+        <div id="resultContainer" class="mt-2 overflow-auto">
           <div class="text-sm text-gray-600">
             Add items and click <b>[📊 Calculate]</b>.
           </div>
@@ -83,11 +86,10 @@
 
 <script>
 /* ===================== DATA ===================== */
-const csvUrl =
-  "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
+const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
 
 let levels=[], stepGuide=[], stepDesign=[], stepSecrets=[], levelToIdx=new Map();
-let items=[], lastTotal={g:0,d:0,s:0};
+let items=[];
 
 const fmt=n=>Number(n||0).toLocaleString();
 
@@ -103,123 +105,199 @@ function parseCSV(text){
 }
 
 /* ===================== INIT ===================== */
-fetch(csvUrl).then(r=>r.text()).then(t=>{
-  const p=parseCSV(t);
-  levels=p.L;
-  for(let i=0;i<levels.length-1;i++){
-    stepGuide[i]=p.M[i+1];
-    stepDesign[i]=p.D[i+1];
-    stepSecrets[i]=p.S[i+1];
-    levelToIdx.set(levels[i],i);
-  }
-  createSections();
-});
+fetch(csvUrl)
+  .then(r => {
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    return r.text();
+  })
+  .then(t=>{
+    const p=parseCSV(t);
+    levels=p.L;
+
+    for(let i=0;i<levels.length-1;i++){
+      stepGuide[i]=p.M[i+1];
+      stepDesign[i]=p.D[i+1];
+      stepSecrets[i]=p.S[i+1];
+      levelToIdx.set(levels[i],i);
+    }
+    createSections();
+    renderList();
+  })
+  .catch(err=>{
+    console.error("CSV load failed:", err);
+    document.getElementById("InputSections").innerHTML =
+      `<div class="bg-white border rounded-xl p-3 text-sm err">
+        Failed to load CSV. Please check network/CSP or GitHub raw access.
+      </div>`;
+  });
 
 /* ===================== UI ===================== */
 function createSections(){
   const sec=[
-    {k:"shield",l:"Shield"},
-    {k:"spear",l:"Lancer"},
-    {k:"arch",l:"Archer"},
+    {k:"Infantry",l:"Infantry"},
+    {k:"Lancer",l:"Lancer"},
+    {k:"Marksman",l:"Marksman"},
   ];
   const wrap=document.getElementById("InputSections");
+  wrap.innerHTML = "";
   sec.forEach(s=>{
     wrap.insertAdjacentHTML("beforeend",`
       <div class="bg-white border rounded-xl p-3">
-        <h2 class="font-bold mb-2">[${s.l}]</h2>
-        <select id="cur-${s.k}" class="border rounded p-2 w-full mb-2"></select>
-        <select id="tgt-${s.k}" class="border rounded p-2 w-full mb-2"></select>
-        <button class="w-full bg-gray-200 p-2 rounded"
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="font-bold text-gray-700">[${s.l}]</h2>
+          <span id="warn-${s.k}" class="text-xs err"></span>
+        </div>
+
+        <div class="grid grid-cols-[64px_1fr] gap-x-3 gap-y-2">
+          <div class="text-[15px] text-gray-600 font-semibold self-center">Current</div>
+          <select id="cur-${s.k}" class="border rounded p-2 text-sm w-full"></select>
+
+          <div class="text-[15px] text-gray-600 font-semibold self-center">Target</div>
+          <select id="tgt-${s.k}" class="border rounded p-2 text-sm w-full"></select>
+        </div>
+
+        <button class="w-full mt-3 bg-gray-200 p-2 rounded hover:bg-blue-300 text-black"
           onclick="addItem('${s.l}','${s.k}')">Add</button>
       </div>
     `);
-    fillOptions(`cur-${s.k}`,true);
+
+    fillOptions(`cur-${s.k}`);
+    // target starts empty until current chosen
+    document.getElementById(`tgt-${s.k}`).innerHTML = `<option value=""></option>`;
+
+    // wire: when current changes, rebuild target (> current) and auto select current+1
+    const curEl = document.getElementById(`cur-${s.k}`);
+    const tgtEl = document.getElementById(`tgt-${s.k}`);
+    const warnEl = document.getElementById(`warn-${s.k}`);
+
+    curEl.addEventListener("change", () => {
+      warnEl.textContent = "";
+      const cur = +curEl.value;
+      if(!cur){
+        tgtEl.innerHTML = `<option value=""></option>`;
+        return;
+      }
+      const filtered = levels.filter(lv => lv > cur);
+      tgtEl.innerHTML = `<option value=""></option>` + filtered.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+      if (tgtEl.options.length > 1) tgtEl.selectedIndex = 1; // default cur+1
+    });
+
+    tgtEl.addEventListener("change", ()=> warnEl.textContent = "");
   });
 }
 
 function fillOptions(id){
   const el=document.getElementById(id);
-  el.innerHTML=`<option></option>`+levels.map(l=>`<option>${l}</option>`).join("");
+  el.innerHTML=`<option value=""></option>`+levels.map(l=>`<option value="${l}">${l}</option>`).join("");
 }
 
 /* ===================== LOGIC ===================== */
 function addItem(label,key){
+  const warnEl = document.getElementById(`warn-${key}`);
+  warnEl.textContent = "";
+
   const f=+document.getElementById(`cur-${key}`).value;
   const t=+document.getElementById(`tgt-${key}`).value;
-  if(!f||!t||t<=f) return;
+
+  if(!f || !t || t<=f){
+    warnEl.textContent = "Select valid levels.";
+    return;
+  }
+
+  // ✅ duplicates allowed
   items.push({label,f,t});
   renderList();
 }
 
 function sum(arr,f,t){
   let s=0;
-  for(let lv=f;lv<t;lv++){
+  for(let lv=f; lv<t; lv++){
     const i=levelToIdx.get(lv);
-    if(i!=null) s+=arr[i];
+    if(i!=null) s+=arr[i] || 0;
   }
   return s;
 }
 
 function calculate(){
+  if(!items.length){
+    alert("No items to calculate.");
+    return;
+  }
+
   let g=0,d=0,s=0,rows=[];
   items.forEach(it=>{
     const sg=sum(stepGuide,it.f,it.t);
     const sd=sum(stepDesign,it.f,it.t);
     const ss=sum(stepSecrets,it.f,it.t);
     g+=sg; d+=sd; s+=ss;
-    rows.push(`
-      <tr>
-        <td>${it.label}</td>
-        <td>${it.f} → ${it.t}</td>
-        <td>${fmt(sg)}</td>
-        <td>${fmt(sd)}</td>
-        <td>${fmt(ss)}</td>
-      </tr>`);
-  });
-  document.getElementById("resultContainer").innerHTML=`
-    <table class="w-full border table-fixed text-sm">
-      <colgroup>
-        <col width="20%"><col width="20%">
-        <col width="20%"><col width="20%"><col width="20%">
-      </colgroup>
-      <thead><tr>
-        <th>Type</th><th>Level</th>
-        <th>Charm Guide</th>
-        <th>Charm Design</th>
-        <th>Charm Secrets</th>
-      </tr></thead>
-      <tbody>${rows.join("")}</tbody>
-    </table>`;
-  document.getElementById("sum-guide").textContent=fmt(g);
-  document.getElementById("sum-design").textContent=fmt(d);
-  document.getElementById("sum-secrets").textContent=fmt(s);
-  lastTotal={g,d,s};
-  updateDef();
-}
 
-function updateDef(){
-  const og=+own-guide.value||0,
-        od=+own-design.value||0,
-        os=+own-secrets.value||0;
-  def-guide.textContent=fmt(og-lastTotal.g);
-  def-design.textContent=fmt(od-lastTotal.d);
-  def-secrets.textContent=fmt(os-lastTotal.s);
+    rows.push(`
+      <tr class="bg-white">
+        <td class="border p-1 font-medium">${it.label}</td>
+        <td class="border p-1">${it.f} → ${it.t}</td>
+        <td class="border p-1 tabular-nums text-right">${fmt(sg)}</td>
+        <td class="border p-1 tabular-nums text-right">${fmt(sd)}</td>
+        <td class="border p-1 tabular-nums text-right">${fmt(ss)}</td>
+      </tr>
+    `);
+  });
+
+  // ✅ 5-column fixed layout (resource columns same width)
+  document.getElementById("resultContainer").innerHTML=`
+    <table class="w-full border table-fixed text-sm text-center">
+      <colgroup>
+        <col style="width:20%"><col style="width:20%">
+        <col style="width:20%"><col style="width:20%"><col style="width:20%">
+      </colgroup>
+      <thead class="bg-blue-100">
+        <tr>
+          <th class="border p-1">Type</th>
+          <th class="border p-1">Level</th>
+          <th class="border p-1">Charm Guide</th>
+          <th class="border p-1">Charm Design</th>
+          <th class="border p-1">Charm Secrets</th>
+        </tr>
+      </thead>
+      <tbody>${rows.join("")}</tbody>
+      <tfoot class="bg-gray-100 font-semibold">
+        <tr>
+          <td class="border p-1" colspan="2">Total</td>
+          <td class="border p-1 tabular-nums text-right">${fmt(g)}</td>
+          <td class="border p-1 tabular-nums text-right">${fmt(d)}</td>
+          <td class="border p-1 tabular-nums text-right">${fmt(s)}</td>
+        </tr>
+      </tfoot>
+    </table>`;
 }
 
 function renderList(){
-  listContainer.innerHTML=items.map(
-    (i,idx)=>`<div>${i.label} ${i.f}→${i.t}
-    <button onclick="items.splice(${idx},1);renderList()">x</button></div>`
-  ).join("");
+  const box = document.getElementById("listContainer");
+  if(!items.length){
+    box.innerHTML = `<div class="text-sm text-gray-500">No items added.</div>`;
+    return;
+  }
+
+  box.innerHTML = items.map((i,idx)=>`
+    <div class="flex justify-between items-center p-2 rounded border">
+      <span class="font-semibold">[${i.label}] ${i.f} → ${i.t}</span>
+      <button class="text-xs text-red-500 hover:underline" onclick="items.splice(${idx},1);renderList()">Remove</button>
+    </div>
+  `).join("");
 }
 
-calculateFromList.onclick=calculate;
-["own-guide","own-design","own-secrets"].forEach(id=>{
-  document.getElementById(id).oninput=updateDef;
+/* ===================== BUTTONS ===================== */
+document.getElementById("calculateFromList").addEventListener("click", calculate);
+document.getElementById("clearList").addEventListener("click", ()=>{
+  items=[];
+  renderList();
+  document.getElementById("resultContainer").innerHTML = `
+    <div class="text-sm text-gray-600">
+      Add items and click <b>[📊 Calculate]</b>.
+    </div>`;
 });
-clearList.onclick=()=>{items=[];renderList();};
 </script>
-  <!-- 우클릭/단축키 제한 (기존 유지) -->
+
+  <!-- Right click / shortcut lock (keep) -->
   <script>
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("keydown", function (e) {
@@ -230,6 +308,7 @@ clearList.onclick=()=>{items=[];renderList();};
       }
     });
   </script>
+
   <script>
     window.addEventListener('message', (e) => {
       if (e.data?.type === 'DARK_MODE') {
