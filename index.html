@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료모음" />
   <meta name="twitter:image" content="https://raw.githubusercontent.com/s574shinchan/WOS_Calc/e66ed083ba7662f678ff42bcb3d0ee2b03ad3169/images/og-image.png" />
   <link rel="canonical" href="https://d1xsb5o91gjadf.cloudfront.net/" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
   <title>WOS 계산기 ＆ 자료모음</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google tag (gtag.js) -->
@@ -278,10 +278,11 @@
 <body>
   <div class="topbar">
     <div class="nav">
-      <div class="brand">
-        <div class="text-center mb-4 mt-6 sm:mt-4">
-          <img src="images/logo.webp" alt="logo"
-               class="mx-auto w-24 drop-shadow-lg cursor-pointer"/></div>
+      <div class="brand flex flex-col items-center">
+        <div class="text-center mb-2 mt-6 sm:mt-4">
+          <img src="images/logo.png" alt="logo"
+               class="mx-auto w-48 drop-shadow-lg cursor-pointer"/>
+        </div>
         <span>WOS 통합 계산기</span>
       </div>
 
@@ -335,6 +336,10 @@
                        gap-2 bg-slate-600 text-white justify-center w-full">
           컨설팅문의
         </button>
+        <button onclick="window.open('https://buymeacoffee.com/shin0825', '_blank')" 
+                class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center 
+                       gap-2 bg-slate-600 text-white justify-center w-full">
+          운영지원</button>
       </div>
       
       <div class="navlist">
@@ -428,13 +433,7 @@
             <option value="index.html" selected>🇰🇷 한국어</option>
             <option value="index_EN.html">🇺🇸 English</option>
             <option value="index_JP.html">🇯🇵 日本語</option>
-          </select>
-          
-          <button onclick="window.open('https://buymeacoffee.com/shin0825', '_blank')" 
-                   class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center 
-                          gap-2 dd-btn text-white justify-center w-full"
-                  type="button" aria-haspopup="menu" aria-expanded="false">
-              후원하기</button>
+          </select>        
         </div>
       </div>  
     </div>

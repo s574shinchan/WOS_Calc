@@ -84,11 +84,13 @@
     </header>
 
     <section class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-      <div class="toolbar text-gray-800"
-           style="display:grid;grid-template-columns:180px 1fr auto;gap:16px;align-items:center;">
-        <div class="space-y-1">
+      <div class="grid gap-4 md:gap-6 md:grid-cols-[220px_1fr_1.1fr] md:items-stretch">
+        <!-- LEFT: 전문가 선택 -->
+        <div class="space-y-2">
           <div class="font-semibold">Expert Choice</div>
-          <select id="selType" class="pill w-full">
+
+          <!-- 기존 로직용 select 유지(숨김) -->
+          <select id="selType" class="pill w-full hidden">
             <option value="Cyrille">Cyrille</option>
             <option value="Agnes">Agnes</option>
             <option value="Holger">Holger</option>
@@ -97,30 +99,55 @@
             <option value="Fabian">Fabian</option>
             <option value="Valeria">Valeria</option>
           </select>
-        </div>
 
-        <div class="space-y-1">
-          <div class="font-semibold">Level Range<span id="expertCap" class="muted"></span></div>
-          <div class="flex flex-wrap items-center gap-6">
-            <label class="inline-label"><span class="muted">Current</span>
-              <select id="expertCur" class="pill w-28"></select></label>
-            <label class="inline-label"><span class="muted">Target</span>
-              <select id="expertTgt" class="pill w-28"></select></label>
+          <!-- ✅ 팝업 그리드 카드 느낌: 단일 라운드 박스 + 이미지 -->
+          <div class="expert-imgbox w-full rounded-2xl border border-black/10 p-4 flex items-center justify-center">
+            <button id="expertPickBtn" type="button" class="w-full flex flex-col items-center gap-3">
+              <!-- ✅ 두번째 사진 느낌: 밝은 패널 + 큰 이미지 -->
+              <div class="expert-card-light w-full rounded-2xl border border-black/10 p-4 flex items-center justify-center">
+                <img id="expertPickImg" alt="" class="w-[140px] h-[140px] object-contain" />
+              </div>
+
+              <div id="expertPickName" class="font-bold text-gray-100 text-center">-</div>
+            </button>
           </div>
-          <p id="expertWarn" class="text-xs err mt-1"></p>
         </div>
 
-        <div class="text-right">
-          <button id="btnCalc" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">Calculate</button>          
-          <button id="btnReset" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">Reset</button>
-        </div>
-      </div>
+        <!-- MIDDLE: 레벨 범위 -->
+        <div class="space-y-2">
+          <div class="font-semibold text-gray-800">Level Range</div>
+          <div class="flex items-center gap-3"></div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 text-sm text-gray-600">Current</div>
+              <select id="expertCur" class="pill w-44"></select>
+            </div>            
+            <div class="flex items-center gap-3"></div>
+            <div class="flex items-center gap-3">
+              <div class="w-10 text-sm text-gray-600">Target</div>
+              <select id="expertTgt" class="pill w-44"></select>
+            </div>
 
-      <!-- 전문가 카드(section) 내부 어딘가, 계산 영역 아래에 추가 -->
-      <div class="exp-divider border-t mt-4"></div>
-      <div class="pt-3 text-sm">
-        <div class="font-semibold mb-1">Expert Effect (Target-Based)</div>
-        <div id="expertEffect" class="muted">-</div>
+            <p id="expertWarn" class="text-xs err"></p>
+
+            <div class="pb-2">
+              <div class="font-semibold py-4 mb-1 text-blue-700">Expert Effect (Target-Based)</div>
+              <div id="expertEffect" class="muted">-</div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <button id="btnCalc" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">Calculate</button>          
+              <button id="btnReset" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: 효과/관계 (✅ 세로선 + ✅ 가로선) -->
+        <div class="divider-v md:pl-4">
+          <div class="h-full grid grid-rows-2">
+
+          </div>
+        </div>
       </div>
     </section>
 
@@ -129,7 +156,7 @@
         <h3 class="text-base font-bold mb-3 skill-title muted" data-index="0">Skill 1</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <div class="text-sm font-semibold mb-1">Level Range<span id="s1Cap" class="muted"></span></div>
+            <div class="text-sm font-semibold mb-4">Level Range<span id="s1Cap" class="muted"></span></div>
             <div class="flex items-center gap-4">
               <label class="inline-label"><span class="muted">Current</span><select id="s1Cur" class="pill w-20"></select></label>
               <label class="inline-label"><span class="muted">Target</span><select id="s1Tgt" class="pill w-20"></select></label>
@@ -155,7 +182,7 @@
         <h3 class="text-base font-bold mb-3 skill-title muted" data-index="1">Skill 2</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <div class="text-sm font-semibold mb-1">Level Range <span id="s2Cap" class="muted"></span></div>
+            <div class="text-sm font-semibold mb-4">Level Range <span id="s2Cap" class="muted"></span></div>
             <div class="flex items-center gap-4">
               <label class="inline-label"><span class="muted">Current</span><select id="s2Cur" class="pill w-20"></select></label>
               <label class="inline-label"><span class="muted">Target</span><select id="s2Tgt" class="pill w-20"></select></label>
@@ -181,7 +208,7 @@
         <h3 class="text-base font-bold mb-3 skill-title muted" data-index="2">Skill 3</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <div class="text-sm font-semibold mb-1">Level Range <span id="s3Cap" class="muted"></span></div>
+            <div class="text-sm font-semibold mb-4">Level Range <span id="s3Cap" class="muted"></span></div>
             <div class="flex items-center gap-4">
               <label class="inline-label"><span class="muted">Current</span><select id="s3Cur" class="pill w-20"></select></label>
               <label class="inline-label"><span class="muted">Target</span><select id="s3Tgt" class="pill w-20"></select></label>
@@ -207,7 +234,7 @@
         <h3 class="text-base font-bold mb-3 skill-title muted" data-index="3">Skill 4</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <div class="text-sm font-semibold mb-1">Level Range <span id="s4Cap" class="muted"></span></div>
+            <div class="text-sm font-semibold mb-4">Level Range <span id="s4Cap" class="muted"></span></div>
             <div class="flex items-center gap-4">
               <label class="inline-label"><span class="muted">Current</span><select id="s4Cur" class="pill w-20"></select></label>
               <label class="inline-label"><span class="muted">Target</span><select id="s4Tgt" class="pill w-20"></select></label>
@@ -245,8 +272,115 @@
         </div>
       </div>
     </div>
-  </main>
+    
+    <!-- ✅ 전문가 선택 모달 -->
+    <div id="expertModal" class="fixed inset-0 z-50 hidden">
+      <div class="absolute inset-0 bg-black/60"></div>
 
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-[720px] rounded-2xl border border-black/10 bg-white shadow-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b">
+            <div class="font-bold text-gray-800">Expert Choice</div>
+            <button id="expertModalClose" type="button"
+              class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+              Close
+            </button>
+          </div>
+
+          <div class="p-4">
+            <div id="expertGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </main>
+<script>
+    // ✅ 전문가 이미지/표시명 매핑 (필요시 경로 수정)
+    const EXPERT_UI = [
+      { key:"Cyrille", name:"Cyrille",    img:"images/experts/Cyrille.png" },
+      { key:"Agnes",   name:"Agnes", img:"images/experts/Agnes.png" },
+      { key:"Holger",  name:"Holger",   img:"images/experts/Holger.png" },
+      { key:"Romulus", name:"Romulus", img:"images/experts/Romulus.png" },
+      { key:"Baldur",  name:"Baldur",     img:"images/experts/Baldur.png" },
+      { key:"Fabian",  name:"Fabian",   img:"images/experts/Fabian.png" },
+      { key:"Valeria", name:"Valeria", img:"images/experts/Valeria.png" },
+    ];
+
+    function openExpertModal(){
+      document.getElementById("expertModal")?.classList.remove("hidden");
+    }
+    function closeExpertModal(){
+      document.getElementById("expertModal")?.classList.add("hidden");
+    }
+
+    function setExpertUIByKey(key){
+      const found = EXPERT_UI.find(x => x.key === key);
+      if (!found) return;
+      const imgEl = document.getElementById("expertPickImg");
+      const nameEl = document.getElementById("expertPickName");
+      if (imgEl) imgEl.src = found.img;
+      if (nameEl) nameEl.textContent = found.name;
+    }
+
+    function applyExpert(key){
+      const sel = document.getElementById("selType");
+      if (!sel) return;
+
+      // ✅ 기존 로직 트리거를 위해 select 값 변경 + change 이벤트 발사
+      sel.value = key;
+      sel.dispatchEvent(new Event("change", { bubbles:true }));
+
+      // ✅ 화면 표시 갱신
+      setExpertUIByKey(key);
+
+      closeExpertModal();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const pickBtn = document.getElementById("expertPickBtn");
+      const modal = document.getElementById("expertModal");
+      const closeBtn = document.getElementById("expertModalClose");
+      const grid = document.getElementById("expertGrid");
+      const sel = document.getElementById("selType");
+
+      // 초기 표시(현재 select값 기준)
+      if (sel) setExpertUIByKey(sel.value || "Cyrille");
+
+      // 그리드 렌더
+      if (grid){
+        grid.innerHTML = EXPERT_UI.map(e => `
+          <button type="button"
+            class="group w-full rounded-2xl p-3 bg-white hover:bg-slate-50 border border-slate-300 hover:border-slate-400 transition"
+            data-key="${e.key}">
+            <div class="expert-icon-frame">
+              <img src="${e.img}" alt="${e.name}" class="expert-icon-img" />
+            </div>
+            <div class="mt-3 text-base font-bold text-gray-800 text-center">${e.name}</div>
+          </button>
+        `).join("");
+
+        grid.addEventListener("click", (ev) => {
+          const btn = ev.target.closest("button[data-key]");
+          if (!btn) return;
+          applyExpert(btn.getAttribute("data-key"));
+        });
+      }
+
+      pickBtn?.addEventListener("click", openExpertModal);
+      closeBtn?.addEventListener("click", closeExpertModal);
+
+      // 바깥 클릭 닫기
+      modal?.addEventListener("click", (ev) => {
+        if (ev.target === modal) closeExpertModal();
+      });
+
+      // ESC 닫기
+      window.addEventListener("keydown", (ev) => {
+        if (ev.key === "Escape") closeExpertModal();
+      });
+    });
+  </script>
   <script>
   document.addEventListener("DOMContentLoaded", () => {
     const SETTINGS = {
