@@ -111,6 +111,7 @@
         </div>
 
         <div class="text-right">
+          <button id="btnSum" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">계산하기</button>
           <button id="btnReset" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">초기화</button>
         </div>
       </div>
@@ -369,6 +370,7 @@
     const sumExpertExp  = $("sumExpertExp");
     const sumExpertMark = $("sumExpertMark");
     const btnReset = $("btnReset");
+    const btnCalc = $("btnSum");
     const expertEffect =$("expertEffect");
 
     const sRef = [1,2,3,4].map(i=>({
@@ -597,6 +599,39 @@
       } else {
         if (expertWarn) expertWarn.textContent = "";
       }
+
+      // 스킬
+      let tExp=0, tItem=0;
+      sRef.forEach((ref,i)=>{
+        let sE=0, sI=0;
+        const cV = ref.cur.value, tV = ref.tgt.value;
+        if (isFilled(cV) && isFilled(tV) && skillLevels[i].length>1){
+          const c=+cV, t=+tV;
+          ref.warn.textContent = (t<=c) ? "목표 레벨은 현재보다 커야 합니다." : "";
+          if (t>c){ sE = sumRangeSteps(skillExp[i], c, t); sI = sumRangeSteps(skillItem[i], c, t); }
+        } else {
+          ref.warn.textContent = "";
+        }
+        ref.outE.textContent = fmt(sE);
+        ref.outI.textContent = fmt(sI);
+        tExp += sE; tItem += sI;
+      });
+    }
+    function calcSum(){
+      // 본체
+      let eExp=0, eMark=0;
+      const curLv = +expertCur.value, tgtLv = +expertTgt.value;
+      if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
+        const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
+        if (expertWarn) {
+          expertWarn.textContent = (ti<=fi) ? "" : "";
+        }
+        if (fi>=0 && ti>fi){
+          for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
+        }
+      } else {
+        if (expertWarn) expertWarn.textContent = "";
+      }
       if (sumExpertExp)  sumExpertExp.textContent  = fmt(eExp);
       if (sumExpertMark) sumExpertMark.textContent = fmt(eMark);
 
@@ -647,7 +682,6 @@
       renderTargetOptions(expertTgt, expertLevels, cur, true);
       // 첫 유효 옵션(=cur+1)이 있으면 자동 선택
       if (expertTgt.options.length > 1) expertTgt.selectedIndex = 1;
-      calc();
       updateExpertEffect();
     });
 
@@ -657,7 +691,6 @@
         if (!isFilled(cur)) { 
           ref.tgt.innerHTML = '<option value=""></option>'; 
           ref.warn.textContent=""; 
-          calc(); 
           updateSkillEffects();
           updateSkillConditions();
           return; 
@@ -665,14 +698,12 @@
         renderTargetOptions(ref.tgt, skillLevels[i], cur, true);
         if (ref.tgt.options.length > 1) ref.tgt.selectedIndex = 1;
         ref.warn.textContent = "";
-        calc();
         updateSkillEffects();
         updateSkillConditions();
       });
     });
 
     expertTgt.addEventListener("change", () => {
-      calc();
       updateExpertEffect();
     });
 
@@ -692,7 +723,7 @@
       updateExpertEffect();
     });
     btnReset.addEventListener("click", clearAll);
-    
+    btnCalc.addEventListener("click", calcSum);
     (async function init(){ await loadDataFor(selType.value); })();
   });
   </script>
