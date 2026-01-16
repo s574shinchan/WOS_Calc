@@ -5,17 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>건물 계산기</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    /* 모바일 페이지 분기(원 코드 유지 가능) */
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const width = window.innerWidth;
-    const isMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua.toLowerCase()) && width <= 640;
-    const isOnMobilePage = location.pathname.includes('building_m');
-    if (isMobile && !isOnMobilePage) {
-      // 필요 시 모바일 전용 페이지가 있다면 사용
-      // window.location.href = "building_m.html";
-    }
-  </script>
   <style>
     /* 다크모드 */
     body.dark-mode { background:#121212; color:#f0f0f0; }
@@ -56,6 +45,16 @@
     .muted{ font-size:12px; color:#6b7280; }
     body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
     body.dark-mode .muted{ color:#b7b7b7 !important; }
+    .building-imgbox{
+      background: transparent !important;
+      outline: 1px solid rgba(0,0,0,.12);
+    }
+
+    /* 다크모드 */
+    body.dark-mode .building-imgbox{
+      background: transparent !important;
+      outline: 1px solid rgba(255,255,255,.18);
+    }
   </style>
   <script>
     /* 다크모드 유지 */
@@ -79,10 +78,6 @@
         <p>각 건물별 SVS 점수는 <span class="font-semibold text-blue-300">[불수정 소모점수 + 정제불수 소모점수 + 소요시간만큼 가속아이템을 사용할 경우]</span> 계산된 점수입니다.</p>
       </div>
 			
-			<label class="inline-flex items-center gap-2 mb-2 font-semibold text-[15px] text-red-600 hidden">
-				<input type="checkbox" id="fireCrystalToggle">불의 수정 단계
-			</label>
-
       <!-- 상단 그리드 -->
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-4">
         <div>
@@ -213,12 +208,10 @@
             </div>
           </div>
 
-    
           <!-- 보유량 -->
           <div class="rounded-xl border border-black/10 p-3">
             <div class="flex items-center justify-between mb-2">
               <div class="font-semibold">보유량</div>
-              <span class="muted">입력 시 자동 계산</span>
             </div>
             <div class="space-y-3">
               <div>
@@ -247,6 +240,9 @@
             </div>
           </div>
         </div>
+    </div>
+    <div class="flex justify-end mt-2">
+      <button id="btnCalc" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">총합계산</button>
     </div>
   </div>	
   <script>
@@ -310,6 +306,28 @@
     const buildingData = {};
     let buildingCards = []; // {name, maxIndex}
 
+    // ✅ 건물명(한글) -> 이미지 파일명(영문) 매핑 (images/building/*)
+    const BUILDING_IMG_EN = {
+      "용광로": "Fire Crystal Furnace",
+      "대사관": "Fire Crystal Embassy",
+      "지휘부": "Fire Crystal Command Center",
+      "방패병": "Fire Crystal Infantry Camp",
+      "의무실": "Fire Crystal Infirmary",
+      "창병": "Fire Crystal Lancer Camp",
+      "궁병": "Fire Crystal Marksman Camp",
+      "아카데미": "War Academy"
+    };
+
+    function getBuildingImgWebp(name){
+      const en = BUILDING_IMG_EN[name] || name;
+      return `images/building/${en}.webp`;
+    }
+    function getBuildingImgPng(name){
+      const en = BUILDING_IMG_EN[name] || name;
+      return `images/building/${en}.png`;
+    }
+
+
     const nf1 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
 
     // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
@@ -343,7 +361,7 @@
       const s=document.getElementById("chkSPVP");
       if(which==="chkVP" && v?.checked) s.checked=false;
       if(which==="chkSPVP" && s?.checked) v.checked=false;
-      scheduleCalc();
+      //scheduleCalc();
     }
 
     // ======== 🔷 추가: 버튼 토글/펫버프 판독 유틸 ========
@@ -442,7 +460,7 @@
         buildingData[name]=data;
       }
       renderBuildingSelectors();
-      scheduleCalc();
+      //scheduleCalc();
     }
 
     function renderBuildingSelectors(){
@@ -479,78 +497,92 @@
         const card = document.createElement("div");
         card.className = "exp-card";
         card.innerHTML = `
-          <div class="p-4 space-y-3">
+          <div class="p-2">
+            <div class="flex gap-2 items-stretch">
 
-            <!-- 상단: 건물이름 + 최대레벨 + 현재/목표 -->
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-              <!-- 왼쪽: 이름/최대레벨 -->
-              <div>
+              <!-- LEFT: 이미지 -->
+              <div class="building-imgbox w-[170px] h-[160px] flex-shrink-0 rounded-2xl border overflow-hidden
+                          bg-gray-100 dark:bg-[#1e1e1e] flex items-center justify-center">
+                <img
+                  src="${getBuildingImgWebp(name)}"
+                  onerror="this.onerror=null; this.src='${getBuildingImgPng(name)}';"
+                  alt="${name}"
+                  class="w-full h-full object-contain"
+                />
+              </div>
+
+              <!-- MID: 이름/최대레벨 + 현재/목표 -->
+              <div class="flex-1 min-w-[200px]">
                 <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
-                <p class="muted mb-3">최대 레벨: ${maxLabel}</p>
+                <div class="muted mt-1">최대 레벨: ${maxLabel}</div>
+
+                <div class="mt-5 grid grid-cols-[46px_1fr] gap-y-3 items-center">
+                  <div class="text-sm text-gray-600">현재</div>
+                  <select id="start-${name}" class="border rounded-lg px-3 py-2 text-sm w-full">
+                    ${options}
+                  </select>
+
+                  <div class="text-sm text-gray-600">목표</div>
+                  <select id="end-${name}" class="border rounded-lg px-3 py-2 text-sm w-full">
+                    ${options}
+                  </select>
+                </div>
               </div>
 
-              <!-- 오른쪽: 현재/목표 드롭다운 -->
-              <div class="flex flex-wrap items-center gap-2">
-                <label class="text-sm text-gray-600">현재</label>
-                <select id="start-${name}"
-                        class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">
-                  ${options}
-                </select>
+              <!-- RIGHT: 필요자원 패널 (기존 id 그대로) -->
+              <div class="w-[480px] max-w-full rounded-2xl border p-4">
+                <div class="grid grid-cols-6 gap-x-3 gap-y-3 items-center text-[13px]">
+                  <div class="flex items-center gap-1 text-gray-600">
+                    <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">
+                  </div>
+                  <div id="sub-불수정-${name}" class="tabular-nums">0</div>
 
-                <label class="text-sm text-gray-600">목표</label>
-                <select id="end-${name}"
-                        class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">
-                  ${options}
-                </select>
+                  <div class="flex items-center gap-1 text-gray-600">
+                    <img src="images/icon_Meet.webp" class="w-5 h-5" alt="고기">
+                  </div>
+                  <div id="sub-고기-${name}" class="tabular-nums">0</div>
+
+                  <div class="flex items-center gap-1 text-gray-600">
+                    <img src="images/icon_Wood.webp" class="w-5 h-5" alt="나무">
+                  </div>
+                  <div id="sub-나무-${name}" class="tabular-nums">0</div>
+
+                  <div class="flex items-center gap-1 text-gray-600">
+                    <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+                  </div>
+                  <div id="sub-정제-${name}" class="tabular-nums">0</div>
+
+                  <div class="flex items-center gap-1 text-gray-600">
+                    <img src="images/icon_Coal.webp" class="w-5 h-5" alt="석탄">
+                  </div>
+                  <div id="sub-석탄-${name}" class="tabular-nums">0</div>
+
+                  <div class="flex items-center gap-1 text-gray-600">
+                    <img src="images/icon_Iron.webp" class="w-5 h-5" alt="철광">
+                  </div>
+                  <div id="sub-철광-${name}" class="tabular-nums">0</div>
+                </div>
+
+                <div class="border-t border-gray-200 my-3"></div>
+
+                <div class="grid grid-cols-1 gap-1 text-[13px]">
+                  <!-- 건설시간 -->
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-600">건설시간</span>
+                    <span id="sub-시간-${name}" class="tabular-nums font-medium">0</span>
+                  </div>
+
+                  <!-- SVS -->
+                  <div class="flex justify-between items-center">
+                    <span class="svs-score-label font-semibold">SVS 점수</span>
+                    <div class="flex gap-2">
+                      <span id="sub-점수-${name}" class="svs-score-value tabular-nums font-medium">0</span>
+                      <span id="sub-점수A-${name}" class="svs-score-value tabular-nums font-medium">0</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <!-- 필요자원 표 -->
-            <div class="rounded-md border p-3 text-[13px] space-y-1">
-              <!-- 1행: 불수정 / 고기, 나무 -->
-              <div class="grid grid-cols-6 gap-x-3 items-center">
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">
-                </div>
-                <div id="sub-불수정-${name}" class="tabular-nums">0</div>
-                
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_Meet.webp" class="w-5 h-5" alt="고기">
-                </div>
-                <div id="sub-고기-${name}" class="tabular-nums">0</div>
-
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_Wood.webp" class="w-5 h-5" alt="나무">
-                </div>  
-                <div id="sub-나무-${name}" class="tabular-nums">0</div>
-              </div>
-
-              <!-- 2행: 정제 / 석탄 / 철광 -->
-              <div class="grid grid-cols-6 gap-x-3 items-center">                
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
-                </div>
-                <div id="sub-정제-${name}" class="tabular-nums">0</div>
-                
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_Coal.webp" class="w-5 h-5" alt="석탄">
-                </div>
-                <div id="sub-석탄-${name}" class="tabular-nums">0</div>
-
-                <div class="flex items-center gap-1 text-gray-600 mb-2">
-                  <img src="images/icon_Iron.webp" class="w-5 h-5" alt="철광">
-                </div>
-                <div id="sub-철광-${name}" class="tabular-nums">0</div>
-              </div>
-
-              <!-- 3행: 건설시간 -->
-              <div class="grid grid-cols-6 gap-x-3 items-center pt-1 border-t border-gray-200">
-                <div class="text-gray-600">건설시간</div>
-                <div id="sub-시간-${name}" class="tabular-nums font-medium">0</div>
-                <div class="svs-score-label text-gray-600">SVS 점수</div>
-                <div id="sub-점수-${name}" class="svs-score-value tabular-nums font-medium">0</div>
-                <div id="sub-점수A-${name}" class="svs-score-value tabular-nums font-medium">0</div>
-              </div>
             </div>
           </div>
         `;
@@ -571,9 +603,9 @@
 
         startSel.addEventListener("change", ()=>{
           endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
-          scheduleCalc();
+          //scheduleCalc();
         });
-        endSel.addEventListener("change", scheduleCalc);
+        endSel.addEventListener("change", calculateCard);
 
         const maxIndex = buildingData[name].length - 1; // 원본 기준
         buildingCards.push({name, maxIndex});
@@ -600,7 +632,7 @@
     }
     // ======================================
 
-    function calculateAll(){
+    function calculateCard(){
       // 합계
       const total = { "불수정":0, "정제":0, "고기":0, "나무":0, "석탄":0, "철광":0 };
       let totalHours = 0;
@@ -681,6 +713,15 @@
           totalSvs   += finalScore;
         }
       });
+      
+      sendHeightToParent();
+      
+      return { total, totalHours, totalSvs };
+    }
+
+    
+    function calculateAll(){
+      const { total, totalHours, totalSvs } = calculateCard();
 
       // 보유(불수정/정제)
       const owned = {
@@ -720,6 +761,8 @@
       calcTimer = setTimeout(calculateAll, 120);
     }
 
+    document.getElementById("btnCalc")?.addEventListener("click", () => { calculateAll();});
+
     // 상단 토글/입력 이벤트
     document.addEventListener("change",(e)=>{
       const id = e.target.id;
@@ -733,30 +776,30 @@
         case "chkCityBuff":
         case "buffSelect":
         case "chkExpertA":
-          scheduleCalc();
+          //scheduleCalc();
           break;
         case "chkExpertV":
           getValeriaDesc();
-          scheduleCalc();
+          //scheduleCalc();
           break;
         case "buildSpeed":
         case "owned-불수정":
         case "owned-정제":
-          scheduleCalc();
+          //scheduleCalc();
           break;
         default:
           break;
       }
     });
-    ["buildSpeed","owned-불수정","owned-정제"].forEach(id=>{
-      const el=document.getElementById(id);
-      if (el) el.addEventListener("input", scheduleCalc);
-    });
-
-    // 🔷 버튼(토글/VP) 클릭 시에도 즉시 계산 반영
-    document.querySelectorAll('.toggle-btn, .vp-btn').forEach(b=>{
-      b.addEventListener('click', scheduleCalc);
-    });
+    //["buildSpeed","owned-불수정","owned-정제"].forEach(id=>{
+//      const el=document.getElementById(id);
+//      if (el) el.addEventListener("input", scheduleCalc);
+//    });
+//
+//    // 🔷 버튼(토글/VP) 클릭 시에도 즉시 계산 반영
+//    document.querySelectorAll('.toggle-btn, .vp-btn').forEach(b=>{
+//      b.addEventListener('click', scheduleCalc);
+//    });
 
     // 데이터 로드 & 초기 렌더
     fetchBuildingData();
@@ -849,7 +892,7 @@
 				useFireCrystal = el.checked;
 				localStorage.setItem('useFireCrystal', useFireCrystal ? '1' : '0');
 				renderBuildingSelectors();
-				scheduleCalc();
+				//calculateCard();
 			});
 		}
 
