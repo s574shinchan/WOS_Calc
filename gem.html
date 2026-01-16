@@ -138,7 +138,7 @@
         <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
       </div>
 
-      <div class="card border rounded-xl p-4" data-card data-unit="Marskman">
+      <div class="card border rounded-xl p-4" data-card data-unit="Marksman">
         <div class="flex items-center justify-between mb-3">
           <div class="text-base font-bold text-purple-400">[궁병]</div>
           <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
@@ -252,8 +252,8 @@ const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/dat
 
 /* ====== 이미지 소스 ====== */
 const MAX_LV = 16;
-const UNITS = ["Infantry", "Lancer", "Marskman"];
-const UNIT_KO = { Infantry:"방패", Lancer:"창병", Marskman:"궁병" };
+const UNITS = ["Infantry", "Lancer", "Marksman"];
+const UNIT_KO = { Infantry:"방패", Lancer:"창병", Marksman:"궁병" };
 const IMAGE_BY_UNIT = Object.fromEntries(
   UNITS.map(u => [u, Array.from({length: MAX_LV}, (_,i)=> `images/${u}/${u}_${i+1}.png`)])
 );
