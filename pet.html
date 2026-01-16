@@ -29,6 +29,9 @@
 
     body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
     body.dark-mode .muted{ color:#b7b7b7 !important; }
+    .dark-mode .bg-gray-100 { background-color:#1e1e1e !important;}
+    .exp-card img { transition: transform .2s ease; }
+    .exp-card:hover img { transform: scale(1.05); }
   </style>
 
   <!-- 다크모드 상태 유지 -->
@@ -147,6 +150,23 @@
       { name: "기간토", rarityKey: "SSR" },
       { name: "카멜레온", rarityKey: "SSR" },
     ];
+    
+    const PET_IMAGE = {
+      "하이에나": "images/pets/Cave Hyena.webp",
+      "북극늑대": "images/pets/Arctic Wolf.webp",
+      "사향소": "images/pets/Musk Ox.webp",
+      "테이퍼": "images/pets/Giant Tapir.webp",
+      "티타니스": "images/pets/Titan Roc.webp",
+      "큰뿔사슴": "images/pets/Giant Elk.webp",
+      "흑표범": "images/pets/Snow Leopard.webp",
+      "동굴사자": "images/pets/Cave Lion.webp",
+      "고릴라": "images/pets/Snoe Ape.webp",
+      "코뿔소": "images/pets/Iron Rhino.webp",
+      "호랑이": "images/pets/Saber-tooth Tiger.webp",
+      "매머드": "images/pets/Mammoth.webp",
+      "기간토": "images/pets/Frost Gorilla.webp",
+      "카멜레온": "images/pets/Frostscale Chameleon.webp",
+    };
 
     // ✅ DOM id에 한글/특수문자/%가 들어가면 querySelector가 깨질 수 있어서
     //   펫마다 안전한 고유키를 만들어서 사용한다.
@@ -249,10 +269,11 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-rarity="${rk}"></div>
         `;
-        sectionsRoot.appendChild(section);
-
+        sectionsRoot.appendChild(section);        
+        
         const grid = section.querySelector(`[data-rarity="${rk}"]`);
         groupPets.forEach((p) => {
+          const imgSrc = PET_IMAGE[p.name];
           const key = `pet-${petKeyByName[p.name]}`;
           const lvList = levelsByPet[p.name] || [];
           const options = lvList.map(lv => `<option value="${lv}">${lv}</option>`).join("");
@@ -261,7 +282,15 @@
           card.className = "exp-card";
           card.innerHTML = `
             <div class="p-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-[96px_1fr_1fr] gap-4 items-start">
+                <!-- 이미지 -->
+                <div class="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <img src="${imgSrc}" alt="${p.name}"
+                       class="w-full h-full object-contain"
+                       loading="lazy"
+                       onerror="this.src='/images/pets/default.webp'"/>
+                </div>
+                <!-- 이름 + 현재/목표 -->
                 <div>
                   <div class="flex items-center gap-2 mb-2">
                     <h3 class="text-[15px] font-semibold text-gray-800">${p.name}</h3>
@@ -277,6 +306,8 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- 필요 합계 -->
                 <div class="md:pl-4">
                   <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
                   <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
@@ -286,6 +317,7 @@
                     <div class="text-gray-600">강화혈청</div><div class="text-right tabular-nums" id="sub-serum-${key}">0</div>
                   </div>
                 </div>
+
               </div>
             </div>
           `;

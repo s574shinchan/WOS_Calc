@@ -246,9 +246,9 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-rarity="${rk}"></div>
         `;
         sectionsRoot.appendChild(section);
-
         const grid = section.querySelector(`[data-rarity="${rk}"]`);
         groupPets.forEach((p) => {
+          const imgSrc = `images/pets/${encodeURIComponent(p.name)}.webp`;
           const key = `pet-${petKeyByName[p.name]}`;
           const lvList = levelsByPet[p.name] || [];
           const options = lvList.map(lv => `<option value="${lv}">${lv}</option>`).join("");
@@ -257,7 +257,13 @@
           card.className = "exp-card";
           card.innerHTML = `
             <div class="p-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-[96px_1fr_1fr] gap-4 items-start">
+                <!-- 이미지 -->
+                <div class="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <img src="${imgSrc}" alt="${p.name}"
+                       class="w-full h-full object-contain"
+                       loading="lazy"/>
+                </div>
                 <div>
                   <div class="flex items-center gap-2 mb-2">
                     <h3 class="text-[15px] font-semibold text-gray-800">${p.name}</h3>

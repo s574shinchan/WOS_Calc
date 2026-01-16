@@ -88,7 +88,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <!-- 총합 -->
         <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">Total</div>
+          <div class="font-semibold mb-2">合計</div>
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="flex justify-between text-[13px]"><span class="text-gray-600">ペットの餌</span><span id="sum-펫먹이">0</span></div>
           <div class="flex justify-between text-[13px]"><span class="text-gray-600">獣調教手帳</span><span id="sum-조련매뉴얼">0</span></div>
@@ -98,7 +98,7 @@
         </div>              
         <!-- 과부족 -->
         <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">Surplus</div>
+          <div class="font-semibold mb-2">余分</div>
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="flex justify-between text-[13px]"><span class="text-gray-600">ペットの餌</span><span id="def-펫먹이">0</span></div>
           <div class="flex justify-between text-[13px]"><span class="text-gray-600">獣調教手帳</span><span id="def-조련매뉴얼">0</span></div>
@@ -127,7 +127,7 @@
       { name: "洞窟ハイエナ", rarityKey: "UnKnown" },
 
       { name: "北極オオカミ", rarityKey: "N" },
-      { name: "Muskジャコウウシ", rarityKey: "N" },
+      { name: "ジャコウウシ", rarityKey: "N" },
 
       { name: "ジャイアントバク", rarityKey: "R" },
       { name: "巨鳥タイタン", rarityKey: "R" },
@@ -144,6 +144,23 @@
       { name: "巨大なカメレオン", rarityKey: "SSR" },
     ];
 
+    const PET_IMAGE = {
+      "洞窟ハイエナ": "images/pets/Cave Hyena.webp",
+      "北極オオカミ": "images/pets/Arctic Wolf.webp",
+      "ジャコウウシ": "images/pets/Musk Ox.webp",
+      "ジャイアントバク": "images/pets/Giant Tapir.webp",
+      "巨鳥タイタン": "images/pets/Titan Roc.webp",
+      "オオツノジカ": "images/pets/Giant Elk.webp",
+      "ユキヒョウ": "images/pets/Snow Leopard.webp",
+      "ホラアナライオン": "images/pets/Cave Lion.webp",
+      "スノーエイプ": "images/pets/Snoe Ape.webp",
+      "アイアンライノ": "images/pets/Iron Rhino.webp",
+      "サーベルタイガー": "images/pets/Saber-tooth Tiger.webp",
+      "マンモス": "images/pets/Mammoth.webp",
+      "霧氷の古猿": "images/pets/Frost Gorilla.webp",
+      "巨大なカメレオン": "images/pets/Frostscale Chameleon.webp",
+    };
+    
     // ✅ DOM id에 한글/특수문자/%가 들어가면 querySelector가 깨질 수 있어서
     //   펫마다 안전한 고유키를 만들어서 사용한다.
     const petKeyByName = Object.create(null);
@@ -249,6 +266,7 @@
 
         const grid = section.querySelector(`[data-rarity="${rk}"]`);
         groupPets.forEach((p) => {
+          const imgSrc = PET_IMAGE[p.name];          
           const key = `pet-${petKeyByName[p.name]}`;
           const lvList = levelsByPet[p.name] || [];
           const options = lvList.map(lv => `<option value="${lv}">${lv}</option>`).join("");
@@ -257,7 +275,14 @@
           card.className = "exp-card";
           card.innerHTML = `
             <div class="p-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-[96px_1fr_1fr] gap-4 items-start">
+                <!-- 이미지 -->
+                <div class="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <img src="${imgSrc}" alt="${p.name}"
+                       class="w-full h-full object-contain"
+                       loading="lazy"
+                       onerror="this.src='/images/pets/default.webp'"/>
+                </div>
                 <div>
                   <div class="flex items-center gap-2 mb-2">
                     <h3 class="text-[15px] font-semibold text-gray-800">${p.name}</h3>
