@@ -141,6 +141,10 @@
           <label for="speedPercent" class="block text-sm mb-1">연구속도 (%)</label>
           <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
         </div>
+        <div id="svs" class="hidden">
+          <label for="svspoint" class="block text-sm mb-1">SVS Point</label>
+          <input type="text" id="svspoint" class="border rounded p-2 text-sm w-full text-right cursor-not-allowed" readonly  tabindex="-1"/>
+        </div>
       </div>
     </div>
 
@@ -621,9 +625,26 @@
 
       defA.classList.toggle("text-red-600", vA < 0);
       defB.classList.toggle("text-red-600", vB < 0);
-    }
+      
+      // ✅ (추가) SVS Point = 카드별 SVS 점수 합산 (버튼 클릭 시에만)
+      let totalSVS = 0;
+      researchList.forEach(item => {
+        const scoreEl = document.getElementById(`sub-점수-${item.label}`);
+        if (!scoreEl) return;
 
-    document.getElementById("btn-calc-total")?.addEventListener("click", () => { renderSummary();});
+        // 카드에 표시된 "1,234,567" 형태를 숫자로 변환
+        const v = parseFloat(String(scoreEl.textContent || "0").replace(/,/g, "")) || 0;
+        totalSVS += v;
+      });
+
+      const svsInput = document.getElementById("svspoint");
+      if (svsInput) svsInput.value = Math.floor(totalSVS).toLocaleString();      
+    }
+      
+    document.getElementById("btn-calc-total")?.addEventListener("click", () => {
+      document.getElementById("svs")?.classList.remove("hidden");
+      renderSummary();
+    });
 
     /* ========== 계산 로직 (자동) ========== */
     function calculateResearch() {
