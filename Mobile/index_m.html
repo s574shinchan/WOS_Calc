@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=1500, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="index, follow" />
   <meta name="description" content="화이트아웃 서바이벌(WOS) 전용 계산기 및 각종 자료들이 한곳에!">
   <meta name="google-adsense-account" content="ca-pub-8205102847358210">
@@ -272,82 +272,238 @@
     .dark-mode .input { width:110px; height:34px; border:1px solid #d0d5dd; border-radius:8px; padding:0 10px; outline:none; color: #121212; }
     .input { width:110px; height:34px; border:1px solid #d0d5dd; border-radius:8px; padding:0 10px; outline:none; }
     .btn   { height:34px; padding:0 14px; border:0; border-radius:8px; background:#2563eb; color:#fff; cursor:pointer; flex:0 0 auto; }
-  </style>
-  <script>
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
-    
-    if (isMobile && !location.pathname.includes('index_m')) {
-      window.location.href = "index_m.html";
+  
+
+    /* ========== Mobile optimizations (index_mobile.html) ========== */
+    /* 모바일에서 상단바/메뉴/iframe을 보기 편하게 재배치 */
+    @media (max-width: 1024px){
+      .topbar{ padding: 10px 10px; }
+      .nav{ gap:10px; padding-left: 6px; padding-right: 6px; }
+      .navlist{ display:none !important; }
+      #mobileMenuBtn{ display:inline-flex !important; }
+      .content{ padding: 18px 12px; }
+      .max-w-\[1500px\]{ max-width: 100% !important; }
     }
-  </script>
+    @media (max-width: 640px){
+      body{ background: linear-gradient(180deg, var(--bg2), var(--bg1)); }
+      .topbar{ position: sticky; top:0; }
+      .nav{ flex-wrap: wrap; justify-content: space-between; }
+      .nav > .text-center{ display:flex; align-items:center; gap:10px; }
+      .nav > .text-center img{ width:52px; }
+      .nav > .text-center .font-bold{ font-size: 14px; }
+
+      /* Support/Buttons 영역: 한 줄 가로 스크롤(넘치면) */
+      .nav .relative.absolute{ position: relative !important; width:100%; }
+      .nav .relative.absolute > .inline-flex{ width:100%; justify-content:center; }
+      .nav .relative.absolute button{ font-size: 14px; }
+
+      /* 모바일에서 메인 컨테이너 패딩 줄이기 */
+      .max-w-\[1500px\].mx-auto{ padding: 8px !important; }
+
+      /* iframe: 화면 가득 (헤더 제외) */
+      #frameWrapper{ border-radius: 14px; overflow:hidden; }
+      #mainFrame{ width:100%; min-height: calc(100vh - 120px); }
+
+      /* 큰 표/내용은 가로 스크롤 유지 */
+      table{ min-width: 520px; }
+
+      /* 스크롤탑 버튼 위치 살짝 위로 */
+      #scrollToTopBtn{ right: 14px; bottom: 14px; }
+    }
+
+    /* 모바일 드로어 */
+    #mobileDrawer .drawer{
+      width: min(92vw, 420px);
+      height: 100vh;
+    }
+    #mobileDrawer a, #mobileDrawer button{
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mob-group-title{ color: rgba(232,239,255,.85); font-weight: 900; font-size: 12px; letter-spacing:.3px; }
+    .mob-item{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 12px 12px;
+      border-radius: 12px;
+      color: #e8efff;
+      text-decoration:none;
+      font-weight: 800;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .mob-item:active{ transform: translateY(1px); }
+    .mob-item small{ color: rgba(185,199,255,.9); font-weight:700; }
+    
+    /* ✅ 모바일에서 테이블 가로 스크롤 최소화 */
+    @media (max-width: 640px){
+      table{ width:100%; table-layout:fixed; }
+      th, td{ word-break:break-word; }
+      .whitespace-nowrap{ white-space:normal !important; }
+    }
+    /* ✅ 기본: 스크롤 컨테이너로 만들지 않음 */
+    .tblwrap{ overflow-x: visible; }
+
+    /* ✅ 실제로 넘칠 때만 스크롤 허용 */
+    .tblwrap.is-scroll{ overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* ✅ 모바일에서 표는 최대한 줄바꿈으로 버팀 */
+    @media (max-width: 640px){
+      table{ width:100%; table-layout:fixed; }
+      th, td{ word-break:break-word; }
+      .whitespace-nowrap{ white-space:normal !important; }
+    }
+  </style>
 </head>
 
 <body>
   <div class="topbar">
     <div class="nav">
-      <div class="text-center">
-        <img src="images/logo.png" alt="logo"
-             class="mx-auto w-20 drop-shadow-lg cursor-pointer"/>
-        <div class="font-bold">WOS 계산기</div>
+      <!-- ✅ Row 1: 로고/타이틀 + 햄버거 -->
+      <div class="grid grid-cols-[1fr_auto] items-center gap-2">
+        <div class="flex items-center gap-3 min-w-0">
+          <img src="../images/logo.png" alt="logo"
+               class="w-12 h-12 drop-shadow-lg cursor-pointer shrink-0"/>
+          <span class="text-2xl font-bold truncate">WOS 계산기</span>
+        </div>
+
+        <!-- 메뉴 버튼 (우측 고정 느낌) -->
+        <button id="mobileMenuBtn" type="button"
+                class="flex items-center justify-center w-11 h-11 rounded-xl
+                       border border-white/20 bg-white/10 text-white text-xl font-black
+                       md:hidden"
+                aria-label="Open menu">☰</button>
       </div>
 
-      <!-- Support Badge + Toast Wrapper -->
-      <div class="relative absolute">
-        <!-- Support Badge -->
-        <div class="inline-flex items-center gap-2 bg-slate-600 text-white text-xs px-3 py-1 rounded-md shadow">
-          <span class="opacity-80"> Support :</span>
-          <span id="supportNumber" class="font-bold tracking-wide">67331703</span>
-
-          <!-- 복사 버튼 -->
-          <button id="copyBtn"
-                  onclick="copySupportNumber()"
-                  class="ml-1 bg-slate-700 hover:bg-slate-600 text-white p-1.5 rounded-md transition flex items-center">
-
-            <!-- 책 아이콘 -->
-            <svg id="iconBook" xmlns="http://www.w3.org/2000/svg"
-                 class="w-3.5 h-3.5"
-                 fill="none" viewBox="0 0 24 24"
-                 stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
-              <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
-              <path d="M3 6l0 13" />
-              <path d="M12 6l0 13" />
-              <path d="M21 6l0 13" />
-            </svg>
-
-            <!-- 체크 아이콘 -->
-            <svg id="iconCheck" xmlns="http://www.w3.org/2000/svg"
-                 class="w-3.5 h-3.5 hidden"
-                 fill="none" viewBox="0 0 24 24"
-                 stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M5 13l4 4L19 7" />
-            </svg>
-          </button>
-        </div>
-
-        <!-- ★ Support 아래 표시되는 Toast -->
-        <div id="toast"
-             class="absolute left-1/2 top-[110%] transform -translate-x-1/2
-                    bg-emerald-500 text-white text-xs font-semibold
-                    px-3 py-2 rounded-lg shadow-lg
-                    opacity-0 pointer-events-none whitespace-nowrap
-                    transition-opacity duration-300">
-          사용자 ID가 복사되었습니다.
-        </div>
+      <!-- ✅ Row 2: 컨설팅/운영지원/서포트 (로고 아래) -->
+      <div class="mt-3 grid grid-cols-3 gap-2">
+        <!-- 컨설팅문의 -->
         <button onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')"
-                class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center 
-                       gap-2 bg-slate-600 text-white justify-center w-full">
+                class="flex px-3 py-2 rounded-md shadow text-[15px] items-center
+                       gap-2 bg-slate-600 text-white justify-center w-full whitespace-nowrap">
           컨설팅문의
         </button>
-        <button onclick="window.open('https://buymeacoffee.com/shin0825', '_blank')" 
-                class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center 
-                       gap-2 bg-slate-600 text-white justify-center w-full">
-          운영지원</button>
+
+        <!-- 운영지원 -->
+        <button onclick="window.open('https://buymeacoffee.com/shin0825', '_blank')"
+                class="flex px-3 py-2 rounded-md shadow text-[15px] items-center
+                       gap-2 bg-slate-600 text-white justify-center w-full whitespace-nowrap">
+          운영지원
+        </button>
+
+        <!-- Support Badge + Toast -->
+        <div class="relative w-full">
+          <div class="inline-flex w-full overflow-hidden items-center gap-2
+                      bg-slate-600 text-white text-xs px-3 py-2 rounded-md shadow">
+            <span id="supportNumber"
+                  class="font-bold tracking-wide flex-1 min-w-0 truncate text-right">
+              67331703
+            </span>
+
+            <button id="copyBtn"
+                    onclick="copySupportNumber()"
+                    class="ml-1 bg-slate-700 hover:bg-slate-600 text-white p-1.5 rounded-md transition flex items-center shrink-0">
+              <svg id="iconBook" xmlns="http://www.w3.org/2000/svg"
+                   class="w-3.5 h-3.5"
+                   fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+                <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+                <path d="M3 6l0 13" />
+                <path d="M12 6l0 13" />
+                <path d="M21 6l0 13" />
+              </svg>
+
+              <svg id="iconCheck" xmlns="http://www.w3.org/2000/svg"
+                   class="w-3.5 h-3.5 hidden"
+                   fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M5 13l4 4L19 7" />
+              </svg>
+            </button>
+          </div>
+
+          <div id="toast"
+               class="absolute left-1/2 top-[110%] -translate-x-1/2
+                      bg-emerald-500 text-white text-xs font-semibold
+                      px-3 py-2 rounded-lg shadow-lg
+                      opacity-0 pointer-events-none whitespace-nowrap
+                      transition-opacity duration-300">
+            사용자 ID가 복사되었습니다.
+          </div>
+        </div>
       </div>
-      
+
+
+      <!-- ✅ Mobile Drawer Menu -->
+      <div id="mobileDrawer" class="fixed inset-0 z-[999] hidden">
+        <div class="absolute inset-0 bg-black/55" data-close-drawer></div>
+        <div class="absolute right-0 top-0 drawer bg-gradient-to-b from-[#0a1634] to-[#0f1a33] border-l border-white/10 shadow-2xl p-4 overflow-y-auto">
+          <div class="flex items-center justify-between">
+            <div class="text-white font-black text-lg">메뉴</div>
+            <button type="button" class="w-10 h-10 rounded-xl bg-white/10 border border-white/15 text-white" data-close-drawer aria-label="Close">✕</button>
+          </div>
+
+          <div class="mt-4 space-y-3">
+            <a type="button" class="mob-item" id="mobHomeBtn">
+              <span>Home</span><small>자료모음</small>
+            </a>
+
+            <div class="space-y-2">
+              <div class="mob-group-title">계산기</div>
+              <a class="mob-item dd-item" href="#" data-frame="buildingchoice_m.html"><span>건물계산</span><small>Building</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="enquirychoice_m.html"><span>연구계산</span><small>Research</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="experts_m.html"><span>전문가</span><small>Experts</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="pet.html"><span>펫돌파</span><small>Pets</small></a>
+            </div>
+
+            <div class="space-y-2">
+              <div class="mob-group-title">영웅장비</div>
+              <a class="mob-item dd-item" href="#" data-frame="hero_Mithril.html"><span>미스릴</span><small>Mithril</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="hero_Mastery.html"><span>마스터리</span><small>Mastery</small></a>
+            </div>
+
+            <div class="space-y-2">
+              <div class="mob-group-title">장비 및 보석</div>
+              <a class="mob-item dd-item" href="#" data-frame="equip.html"><span>영주장비</span><small>Chief Gear</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="gem.html"><span>영주보석</span><small>Gems</small></a>
+            </div>
+
+            <div class="space-y-2">
+              <div class="mob-group-title">편의항목</div>
+              <a class="mob-item dd-item" href="#" data-frame="beartrap.html"><span>부대계산</span><small>Troops</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="troop.html"><span>병사생산</span><small>Training</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="SVS_PreMission.html"><span>SVS점수</span><small>SVS</small></a>
+            </div>
+
+            <div class="space-y-2">
+              <div class="mob-group-title">자료 및 일정</div>
+              <a class="mob-item dd-item" href="#" data-frame="transfer.html"><span>이민예측</span><small>Transfer</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="schedule.html"><span>주간일정</span><small>Weekly</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="pakage.html"><span>패키지자료</span><small>Packages</small></a>
+              <a class="mob-item dd-item" href="#" data-frame="imagedata.html"><span>이미지자료</span><small>Images</small></a>
+            </div>
+
+            <div class="space-y-2">
+              <div class="mob-group-title">바로가기</div>
+              <a type="button" class="mob-item" id="mobRequestBtn"><span>자료요청</span><small>Kakao</small></a>
+              <a type="button" class="mob-item" id="mobConsultBtn"><span>컨설팅문의</span><small>Kakao</small></a>
+              <a type="button" class="mob-item" id="mobDonateBtn"><span>운영지원</span><small>BMC</small></a>
+            </div>
+
+            <div class="space-y-2">
+              <div class="mob-group-title">설정</div>
+              <div class="flex items-center gap-2">
+                <button type="button" id="DarkModeMobile"
+                        class="mob-item" style="justify-content:center; gap:10px;">
+                  <span>다크모드 토글</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="navlist">
         <div class="dd" data-dd>
           <button onclick="ReturnHome()"
@@ -433,663 +589,1143 @@
                          color: blue; font-size: 1.3rem; 
                          cursor: pointer;">☀️</button>
         </div>
-        <div>
-          <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm text-gray-800">
-            <option value="index.html">🌐 Language</option>
-            <option value="index.html" selected>🇰🇷 한국어</option>
-            <option value="index_EN.html">🇺🇸 English</option>
-            <option value="index_JP.html">🇯🇵 日本語</option>
-          </select>        
-        </div>
       </div>  
     </div>
   </div>
 
-  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="w-full max-w-[1500px] mx-auto bg-white rounded-2xl shadow p-2 flex flex-col gap-2">
     <!-- guideDetails: 처음에만 표시됨 -->
-    <div id="guideDetails" class="flex-1 bg-white rounded p-2 space-y-4 shadow">
-      <div class="bg-gray-100 p-2 font-sans text-sm">
-        <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
+    <div id="guideDetails" class="w-full rounded-2xl p-0 space-y-4">
+      <div class="bg-gray-100 p-2 font-sans text-sm rounded-2xl">
+        <div class="w-full bg-white p-3 rounded-2xl space-y-10">
           <div class="space-y-4">
             <h1 class="text-2xl font-bold text-gray-800 mb-4">📘 자료모음</h1>
             
-            <!-- ⚔️ SVS_Event -->
+            <!-- ⚔️ SVS_Event (Mobile Card Version: 월~금) -->
             <details class="bg-white border border-blue-300 rounded-md p-4">
               <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS 미션</summary>
-              <!-- ✅ 3열 그리드: 월/화/수, 목/ 금/(빈칸) -->
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+              <!-- ✅ 카드 그리드 (모바일 1열 / 큰 화면 2~3열) -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
+
                 <!-- 월요일 -->
-                <div class="overflow-x-auto">
-                  <table class="table-auto border w-full text-xs text-center">
-                    <thead class="bg-orange-100">
-                      <tr>
-                        <th class="border p-1 w-[80px]">요일</th>
-                        <th class="border p-1">임무</th>
-                        <th class="border p-1 w-[140px]">포인트</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="border p-1 font-semibold" rowspan="4">월요일</td>
-                        <td class="border p-1 text-left">영주 보석</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1pt당 70pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">불수정 건물 업그레이드</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 2,000pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">불수정 가루 연구</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 1,000pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">제련으로 건물 업그레이드</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 30,000pt</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                    <div class="font-bold text-slate-900">월요일</div>
+                  </div>
+
+                  <ul class="divide-y divide-slate-100">
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">영주 보석 업그레이드</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt당 70pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">불수정 건물 업그레이드</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 2,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">불수정 가루 연구</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">제련으로 건물 업그레이드</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 30,000pt</div>
+                    </li>
+                  </ul>
+                </section>
 
                 <!-- 화요일 -->
-                <div class="overflow-x-auto">
-                  <table class="table-auto border w-full text-xs text-center">
-                    <thead class="bg-orange-100">
-                      <tr>
-                        <th class="border p-1 w-[80px]">요일</th>
-                        <th class="border p-1">임무</th>
-                        <th class="border p-1 w-[140px]">포인트</th>
-                      </tr>
-                    </thead>
-                    <tbody class="bg-amber-50">
-                      <tr>
-                        <td class="border p-1 font-semibold" rowspan="11">화요일</td>
-                        <td class="border p-1 text-left">행운룰렛</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1회 8,000pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">불수정 건물 업그레이드</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 2,000pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">불수정 가루 연구</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 1,000pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">제련으로 건물 업그레이드</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 30,000pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">건설/연구/훈련 가속</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1분 30pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">레어 영웅 성급업</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 350pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">에픽 영웅 성급업</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 1,220pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">레전드 영웅 성급업</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 3,040pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">전문가 표식 소모</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 6,000pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">학문의 책 소모</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1개 60pt</td>
-                      </tr>
-                      <tr>
-                        <td class="border p-1 text-left">채집</td>
-                        <td class="border p-1 text-right whitespace-nowrap">2pt</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                    <div class="font-bold text-slate-900">화요일</div>
+                  </div>
+
+                  <ul class="divide-y divide-slate-100 bg-amber-50">
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">행운룰렛</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1회 8,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">불수정 건물 업그레이드</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 2,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">불수정 가루 연구</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">제련으로 건물 업그레이드</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 30,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">건설/연구/훈련 가속</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1분 30pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">레어 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 350pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">에픽 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,220pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">레전드 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 3,040pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">전문가 표식 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 6,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">학문의 책 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 60pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">채집</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">2pt</div>
+                    </li>
+                  </ul>
+                </section>
 
                 <!-- 수요일 -->
-                <div class="overflow-x-auto">
-                  <table class="table-auto border w-full text-xs text-center">
-                    <thead class="bg-orange-100">
-                      <tr>
-                        <th class="border p-1 w-[80px]">요일</th>
-                        <th class="border p-1">임무</th>
-                        <th class="border p-1 w-[140px]">포인트</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="border p-1 font-semibold" rowspan="12">수요일</td>
-                        <td class="border p-1 text-left">영주 보석</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1pt당 70pt</td>
-                      </tr>
-                      <tr><td class="border p-1 text-left">행운룰렛</td><td class="border p-1 text-right whitespace-nowrap">1회 8,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">펫 돌파</td><td class="border p-1 text-right whitespace-nowrap">1개 50pt</td></tr>
-                      <tr><td class="border p-1 text-left">고급 펫 단련</td><td class="border p-1 text-right whitespace-nowrap">1개 15,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">일반 펫 단련</td><td class="border p-1 text-right whitespace-nowrap">1개 1,150pt</td></tr>
-                      <tr><td class="border p-1 text-left">레어 영웅 성급업</td><td class="border p-1 text-right whitespace-nowrap">1개 350pt</td></tr>
-                      <tr><td class="border p-1 text-left">에픽 영웅 성급업</td><td class="border p-1 text-right whitespace-nowrap">1개 1,220pt</td></tr>
-                      <tr><td class="border p-1 text-left">레전드 영웅 성급업</td><td class="border p-1 text-right whitespace-nowrap">1개 3,040pt</td></tr>
-                      <tr><td class="border p-1 text-left">전문가 표식 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 6,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">학문의 책 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 60pt</td></tr>
-                      <tr><td class="border p-1 text-left">빙원괴수집결</td><td class="border p-1 text-right whitespace-nowrap">1마리당 30,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">야수처치</td><td class="border p-1 text-right whitespace-nowrap">1마리당 9,000 ~ 12,000pt</td></tr>
-                    </tbody>
-                  </table>
-                </div>
+                <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                    <div class="font-bold text-slate-900">수요일</div>
+                    <div class="text-[11px] text-slate-600">SVS</div>
+                  </div>
+
+                  <ul class="divide-y divide-slate-100">
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">영주 보석</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt당 70pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">행운룰렛</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1회 8,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">펫 돌파</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 50pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">고급 펫 단련</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 15,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">일반 펫 단련</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,150pt</div>
+                      </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">레어 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 350pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">에픽 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,220pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">레전드 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 3,040pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">전문가 표식 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 6,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">학문의 책 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 60pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">빙원괴수집결</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1마리당 30,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">야수처치</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1마리당 9,000 ~ 12,000pt</div>
+                    </li>
+                  </ul>
+                </section>
 
                 <!-- 목요일 -->
-                <div class="overflow-x-auto">
-                  <table class="table-auto border w-full text-xs text-center">
-                    <thead class="bg-orange-100">
-                      <tr>
-                        <th class="border p-1 w-[80px]">요일</th>
-                        <th class="border p-1">임무</th>
-                        <th class="border p-1 w-[140px]">포인트</th>
-                      </tr>
-                    </thead>
-                    <tbody class="bg-amber-50">
-                      <tr>
-                        <td class="border p-1 font-semibold" rowspan="5">목요일</td>
-                        <td class="border p-1 text-left">영주 보석</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1pt당 70pt</td>
-                      </tr>
-                      <tr><td class="border p-1 text-left">마스터리석 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 4,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">영웅전용무기 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 8,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">미스릴 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 144,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">병사 훈련</td><td class="border p-1 text-right whitespace-nowrap">3 ~ 75pt</td></tr>
-                    </tbody>
-                  </table>
-                </div>
+                <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                    <div class="font-bold text-slate-900">목요일</div>
+                  </div>
 
-                <!-- 금요일 (왼쪽만 표시) -->
-                <div class="overflow-x-auto">
-                  <table class="table-auto border w-full text-xs text-center">
-                    <thead class="bg-orange-100">
-                      <tr>
-                        <th class="border p-1 w-[80px]">요일</th>
-                        <th class="border p-1">임무</th>
-                        <th class="border p-1 w-[140px]">포인트</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="border p-1 font-semibold" rowspan="11">금요일</td>
-                        <td class="border p-1 text-left">영주 장비</td>
-                        <td class="border p-1 text-right whitespace-nowrap">1종 36pt</td>
-                      </tr>
-                      <tr><td class="border p-1 text-left">마스터리석 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 4,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">영웅전용무기 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 8,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">미스릴 소모</td><td class="border p-1 text-right whitespace-nowrap">1개 144,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">불수정 건물 업그레이드</td><td class="border p-1 text-right whitespace-nowrap">1개 2,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">불수정 가루 연구</td><td class="border p-1 text-right whitespace-nowrap">1개 1,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">제련으로 건물 업그레이드</td><td class="border p-1 text-right whitespace-nowrap">1개 30,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">펫 돌파</td><td class="border p-1 text-right whitespace-nowrap">1개 50pt</td></tr>
-                      <tr><td class="border p-1 text-left">고급 펫 단련</td><td class="border p-1 text-right whitespace-nowrap">1개 15,000pt</td></tr>
-                      <tr><td class="border p-1 text-left">일반 펫 단련</td><td class="border p-1 text-right whitespace-nowrap">1개 1,150pt</td></tr>
-                      <tr><td class="border p-1 text-left">건설/연구/훈련 가속</td><td class="border p-1 text-right whitespace-nowrap">1분 30pt</td></tr>
-                    </tbody>
-                  </table>
-                </div>
+                  <ul class="divide-y divide-slate-100">
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">영주 보석</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt당 70pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">마스터리석 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 4,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">영웅전용무기 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 8,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">미스릴 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 144,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">병사 훈련</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">3 ~ 75pt</div>
+                    </li>
+                  </ul>
+                </section>
 
-                <!-- ✅ 금요일 오른쪽 빈칸(PC에서만 자리 맞추기) -->
-                <div class="hidden md:block"></div>
+                <!-- 금요일 -->
+                <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                    <div class="font-bold text-slate-900">금요일</div>
+                  </div>
+
+                  <ul class="divide-y divide-slate-100">
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">영주 장비</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1종 36pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">마스터리석 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 4,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 font-semibold leading-5">영웅전용무기 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 8,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 font-semibold leading-5">미스릴 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 144,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">불수정 건물 업그레이드</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 2,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">불수정 가루 연구</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">제련으로 건물 업그레이드</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 30,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">펫 돌파</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 50pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">고급 펫 단련</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 15,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">일반 펫 단련</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,150pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      
+                      <div class="flex-1 font-semibold leading-5">건설/연구/훈련 가속</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1분 30pt</div>
+                    </li>
+                  </ul>
+                </section>
 
               </div>
             </details>
-            
+
             <!-- 연맹대작전 -->
             <details class="bg-white border border-blue-300 rounded-md p-4">
               <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🚛 연맹대작전</summary>
+
               <div id="연맹대작전" class="mt-3 space-y-4 text-sm text-gray-800">
-                <div class="overflow-x-auto">
-                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                <!-- ✅ 카드 그리드 (모바일 1열 / sm 2열 / lg 3열) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
 
-                    <!-- Day-1 -->
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <tr>
-                          <th class="border p-1">요일</th>
-                          <th class="border p-1">임무</th>
-                          <th class="border p-1">포인트</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr><td class="border p-1 font-bold whitespace-nowrap" rowspan="8">월요일</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">제련된 불의 수정 1개 소모</td><td class="border p-1">18,750pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
-                        <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
-                        <tr><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
-                        <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
-                      </tbody>
-                    </table>
+                  <!-- 월요일 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                      <div class="font-bold text-slate-900">월요일</div>
+                    </div>
+                    <ul class="divide-y divide-slate-100">
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 호송</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 약탈</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">제련된 불의 수정 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">18,750pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">불의 수정 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1,250pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">불의 수정 조각 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">625pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">건설/연구/훈련 가속</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1분 18pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">채집</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">2pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">다이아 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt</div>
+                      </li>
+                    </ul>
+                  </section>
 
-                    <!-- Day-2 -->
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <tr>
-                          <th class="border p-1">요일</th>
-                          <th class="border p-1">임무</th>
-                          <th class="border p-1">포인트</th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-orange-50">
-                        <tr><td class="border p-1 font-bold whitespace-nowrap" rowspan="10">화요일</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 210pt</td></tr>
-                        <tr><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 750pt</td></tr>
-                        <tr><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 1,875pt</td></tr>
-                        <tr><td class="border p-1">제련된 불의 수정 1개 소모</td><td class="border p-1">18,750pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
-                        <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
-                        <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
-                      </tbody>
-                    </table>
-
-                    <!-- Day-3 -->
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <tr>
-                          <th class="border p-1">요일</th>
-                          <th class="border p-1">임무</th>
-                          <th class="border p-1">포인트</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr><td class="border p-1 font-bold whitespace-nowrap" rowspan="11">수요일</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 45pt</td></tr>
-                        <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 30pt</td></tr>
-                        <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 9,370pt</td></tr>
-                        <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 680pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
-                        <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
-                        <tr><td class="border p-1">채집</td><td class="border p-1">2pt</td></tr>
-                        <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
-                      </tbody>
-                    </table>
-
-                    <!-- Day-4 -->
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <tr>
-                          <th class="border p-1">요일</th>
-                          <th class="border p-1">임무</th>
-                          <th class="border p-1">포인트</th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-orange-50">
-                        <tr><td class="border p-1 font-bold whitespace-nowrap" rowspan="8">목요일</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 45pt</td></tr>
-                        <tr><td class="border p-1">마스터리 에너지석 1개 소모</td><td class="border p-1">1,875pt</td></tr>
-                        <tr><td class="border p-1">임의의 영웅 전용장비 부속품 1개 소모</td><td class="border p-1">3,750pt</td></tr>
-                        <tr><td class="border p-1">미스릴 1개 소모</td><td class="border p-1">18,750pt</td></tr>
-                        <tr><td class="border p-1">병사 훈련</td><td class="border p-1">1 ~ 30pt</td></tr>
-                        <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
-                      </tbody>
-                    </table>
-
-                    <!-- Day-5 -->
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <tr>
-                          <th class="border p-1">요일</th>
-                          <th class="border p-1">임무</th>
-                          <th class="border p-1">포인트</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr><td class="border p-1 font-bold whitespace-nowrap" rowspan="8">금요일</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">영주 장비 업그레이드</td><td class="border p-1">1종 22pt</td></tr>
-                        <tr><td class="border p-1">제련된 불의 수정 1개 소모</td><td class="border p-1">18,750pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
-                        <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
-                        <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
-                      </tbody>
-                    </table>
-
-                    <!-- Day-6 -->
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <tr>
-                          <th class="border p-1">요일</th>
-                          <th class="border p-1">임무</th>
-                          <th class="border p-1">포인트</th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-orange-50">
-                        <tr><td class="border p-1 font-bold whitespace-nowrap" rowspan="17">토요일</td><td class="border p-1">임의의 등급 행상 1회 호송</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">임의의 등급 행상 1회 약탈</td><td class="border p-1">10,000pt</td></tr>
-                        <tr><td class="border p-1">영주 장비 업그레이드</td><td class="border p-1">1종 22pt</td></tr>
-                        <tr><td class="border p-1">영주 보석</td><td class="border p-1">1pt당 45pt</td></tr>
-                        <tr><td class="border p-1">마스터리 에너지석 1개 소모</td><td class="border p-1">1,875pt</td></tr>
-                        <tr><td class="border p-1">임의의 영웅 전용장비 부속품 1개 소모</td><td class="border p-1">3,750pt</td></tr>
-                        <tr><td class="border p-1">미스릴 1개 소모</td><td class="border p-1">18,750pt</td></tr>
-                        <tr><td class="border p-1">레어 영웅 성급업</td><td class="border p-1">1개 210pt</td></tr>
-                        <tr><td class="border p-1">에픽 영웅 성급업</td><td class="border p-1">1개 750pt</td></tr>
-                        <tr><td class="border p-1">레전드 영웅 성급업</td><td class="border p-1">1개 1,875pt</td></tr>
-                        <tr><td class="border p-1">펫 돌파</td><td class="border p-1">1개 30pt</td></tr>
-                        <tr><td class="border p-1">고급 펫 단련</td><td class="border p-1">1개 9,370pt</td></tr>
-                        <tr><td class="border p-1">일반 펫 단련</td><td class="border p-1">1개 680pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 1개 소모</td><td class="border p-1">1,250pt</td></tr>
-                        <tr><td class="border p-1">불의 수정 조각 1개 소모</td><td class="border p-1">625pt</td></tr>
-                        <tr><td class="border p-1">건설/연구/훈련 가속</td><td class="border p-1">1분 18pt</td></tr>
-                        <tr><td class="border p-1">다이아 1개 소모</td><td class="border p-1">1pt</td></tr>
-                      </tbody>
-                    </table>
-
+                  <!-- 화요일 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                    <div class="font-bold text-slate-900">화요일</div>
                   </div>
-                </div>
+                  <ul class="divide-y divide-slate-100">
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 호송</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 약탈</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">레어 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 210pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">에픽 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 750pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">레전드 영웅 성급업</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,875pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">제련된 불의 수정 1개 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">18,750pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">불의 수정 1개 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1,250pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">불의 수정 조각 1개 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">625pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">건설/연구/훈련 가속</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1분 18pt</div>
+                    </li>
+                    <li class="px-4 py-3 flex items-start gap-3">
+                      <div class="flex-1 text-sm leading-5">다이아 1개 소모</div>
+                      <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt</div>
+                    </li>
+                  </ul>
+                </section>
 
+                  <!-- 수요일 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                      <div class="font-bold text-slate-900">수요일</div>
+                    </div>
+                    <ul class="divide-y divide-slate-100">
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 호송</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 약탈</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">영주 보석</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt당 45pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">펫 돌파</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 30pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">고급 펫 단련</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 9,370pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">일반 펫 단련</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 680pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">불의 수정 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1,250pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">불의 수정 조각 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">625pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">건설/연구/훈련 가속</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1분 18pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">채집</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">2pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">다이아 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt</div>
+                      </li>
+                    </ul>
+                  </section>
+
+                  <!-- 목요일 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                      <div class="font-bold text-slate-900">목요일</div>
+                      
+                    </div>
+                    <ul class="divide-y divide-slate-100">
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 호송</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 약탈</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">영주 보석</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt당 45pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">마스터리 에너지석 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1,875pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 영웅 전용장비 부속품 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">3,750pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">미스릴 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">18,750pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">병사 훈련</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1 ~ 30pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3"
+                          ><div class="flex-1 text-sm leading-5">다이아 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt</div>
+                      </li>
+                    </ul>
+                  </section>
+
+                  <!-- 금요일 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                      <div class="font-bold text-slate-900">금요일</div>
+                      
+                    </div>
+                    <ul class="divide-y divide-slate-100">
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 호송</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 약탈</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">영주 장비 업그레이드</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1종 22pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">제련된 불의 수정 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">18,750pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">불의 수정 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1,250pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">불의 수정 조각 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">625pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">건설/연구/훈련 가속</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1분 18pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">다이아 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt</div>
+                      </li>
+                    </ul>
+                  </section>
+
+                  <!-- 토요일 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                      <div class="font-bold text-slate-900">토요일</div>
+                      
+                    </div>
+                    <ul class="divide-y divide-slate-100">
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 호송</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 등급 행상 1회 약탈</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">10,000pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">영주 장비 업그레이드</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1종 22pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">영주 보석</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt당 45pt</div
+                          ></li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">마스터리 에너지석 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1,875pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">임의의 영웅 전용장비 부속품 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">3,750pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">미스릴 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">18,750pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">레어 영웅 성급업</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 210pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">에픽 영웅 성급업</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 750pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">레전드 영웅 성급업</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 1,875pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">펫 돌파</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 30pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">고급 펫 단련</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 9,370pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">일반 펫 단련</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1개 680pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">불의 수정 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1,250pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">불의 수정 조각 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">625pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">건설/연구/훈련 가속</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1분 18pt</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="flex-1 text-sm leading-5">다이아 1개 소모</div>
+                        <div class="min-w-[92px] text-right font-semibold whitespace-normal">1pt</div>
+                      </li>
+                    </ul>
+                  </section>
+
+                </div>
               </div>
-            </details>    
+            </details>
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <!-- 용광로 업그레이드 조건 -->
-              <details id="detail3" class="bg-white border border-blue-300 rounded-md p-4" open>
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 용광로 업그레이드 조건</summary>
-                <div id="용광로조건" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <div class="mb-2 mt-2">
-                    <div class="flex flex-col md:flex-row w-full">
-                      <div class="w-full md:w-1/2 px-1">
-                        <div class="overflow-x-auto">
-                          <table class="table-auto border w-full text-xs text-center">
-                            <thead class="bg-orange-100">
-                              <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td class="border p-1">FC1</td><td class="border p-1">대사관 Lv.30, 연구소 Lv.30</td>
-                              </tr>
-                              <tr class="bg-indigo-50">
-                                <td class="border p-1">FC2</td><td class="border p-1">대사관 FC1, 창병 병영 FC1</td>              
-                              </tr>
-                              <tr>
-                                <td class="border p-1">FC3</td><td class="border p-1">대사관 FC2, 방패 병영 FC2</td>              
-                              </tr>
-                              <tr class="bg-indigo-50">
-                                <td class="border p-1">FC4</td><td class="border p-1">대사관 FC3, 궁병 병영 FC3</td>              
-                              </tr>
-                              <tr>
-                                <td class="border p-1">FC5</td><td class="border p-1">대사관 FC4, 창병 병영 FC4</td>              
-                              </tr>
-                            </tbody>
-                          </table>
+            <details id="detail3" class="bg-white border border-blue-300 rounded-md p-4" open>
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 용광로 업그레이드 조건</summary>
+
+              <div id="용광로조건" class="mt-3 space-y-4 text-sm text-gray-800">
+                <!-- ✅ 카드 그리드 (모바일 1열 / md 2열) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                  <!-- FC1 ~ FC5 카드 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <ul class="divide-y divide-slate-100">
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC1</div>
+                        <div class="flex-1 text-sm leading-5">대사관 Lv.30, 연구소 Lv.30</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC2</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC1, 창병 병영 FC1</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC3</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC2, 방패 병영 FC2</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC4</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC3, 궁병 병영 FC3</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC5</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC4, 창병 병영 FC4</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC6</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC5, 방패 병영 FC5</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC7</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC6, 궁병 병영 FC6</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC8</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC7, 창병 병영 FC7</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC9</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC8, 방패 병영 FC8</div>
+                      </li>
+                      <li class="px-4 py-3 flex items-start gap-3">
+                        <div class="min-w-[52px] text-left text-sm font-semibold ">FC10</div>
+                        <div class="flex-1 text-sm leading-5">대사관 FC9, 궁병 병영 FC9</div>
+                      </li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </details>
+
+            <!-- 정제불수 기댓값 (카드형) -->
+            <details class="bg-white border border-blue-300 rounded-md p-4" open>
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 제련불수 기대값</summary>
+
+              <div id="제련불수" class="mt-3 space-y-4 text-sm text-gray-800">
+                <!-- ✅ 전체 래퍼 카드 -->
+                <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                    <div class="font-bold text-slate-900">제련 시나리오별 기대값</div>
+                    <div class="text-sm text-slate-900">주간 기준</div>
+                  </div>
+
+                  <!-- ✅ 컬럼 헤더(테이블 느낌만 살짝, 배경색 과하지 않게) -->
+                  <div class="px-4 py-2 border-b border-slate-100 text-[12px]hidden sm:block">
+                    <div class="grid grid-cols-12 gap-3">
+                      <div class="col-span-6 font-semibold">제련 방식</div>
+                      <div class="col-span-3 text-right font-semibold">주당 불수 소모</div>
+                      <div class="col-span-3 text-right font-semibold">주당 획득 제련불수</div>
+                    </div>
+                  </div>
+
+                  <!-- ✅ 행 리스트 -->
+                  <ul class="divide-y divide-slate-100">
+                    <!-- 1 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 leading-5">
+                          매일 한 번씩만 제련
+                        </div>
+
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">70</div>
+                        </div>
+
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">10.15</div>
                         </div>
                       </div>
+                    </li>
 
-                      <div class="w-full md:w-1/2 px-1">
-                        <div class="overflow-x-auto">
-                          <table class="table-auto border w-full text-xs text-center">
-                            <thead class="bg-orange-100">
-                              <tr><th class="border p-1">목표</th><th class="border p-1">조건</th></tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td class="border p-1">FC6</td><td class="border p-1">대사관 FC5, 방패 병영 FC5</td>
-                              </tr>
-                              <tr class="bg-indigo-50">
-                                <td class="border p-1">FC7</td><td class="border p-1">대사관 FC6, 궁병 병영 FC6</td>
-                              </tr>
-                              <tr>
-                                <td class="border p-1">FC8</td><td class="border p-1">대사관 FC7, 창병 병영 FC7</td>
-                              </tr>
-                              <tr class="bg-indigo-50">
-                                <td class="border p-1">FC9</td><td class="border p-1">대사관 FC8, 방패 병영 FC8</td>
-                              </tr>
-                              <tr>
-                                <td class="border p-1">FC10</td><td class="border p-1">대사관 FC9, 궁병 병영 FC9</td>
-                              </tr>
-                            </tbody>
-                          </table>
+                    <!-- 2 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 leading-5">
+                          월요일 14번, 이후 매일 한 번씩(주 20회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="text-sm sm:hidden">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">330</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="text-sm sm:hidden">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">29.00</div>
                         </div>
                       </div>
+                    </li>
+
+                    <!-- 3 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 text-gray-700 leading-5">
+                          월요일 20번, 이후 매일 한 번씩(주 26회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">540</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">41.90</div>
+                        </div>
+                      </div>
+                    </li>
+
+                    <!-- 4 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 text-gray-700 leading-5">
+                          월요일 34번, 이후 매일 한 번씩(주 40회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">1,240</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">72.00</div>
+                        </div>
+                      </div>
+                    </li>
+
+                    <!-- 5 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 text-gray-700 leading-5">
+                          월요일 40번, 이후 매일 한 번씩(주 46회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">1,690</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">91.08</div>
+                        </div>
+                      </div>
+                    </li>
+
+                    <!-- 6 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 text-gray-700 leading-5">
+                          월요일 54번, 이후 매일 한 번씩(주 60회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">3,090</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">135.60</div>
+                        </div>
+                      </div>
+                    </li>
+
+                    <!-- 7 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 text-gray-700 leading-5">
+                          월요일 60번, 이후 매일 한 번씩(주 66회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">3,700</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">156.60</div>
+                        </div>
+                      </div>
+                    </li>
+
+                    <!-- 8 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 text-gray-700 leading-5">
+                          월요일 74번, 이후 매일 한 번씩(주 80회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">5,600</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">204.60</div>
+                        </div>
+                      </div>
+                    </li>
+
+                    <!-- 9 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 text-gray-700 leading-5">
+                          월요일 80번, 이후 매일 한 번씩(주 86회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">6,470</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">226.56</div>
+                        </div>
+                      </div>
+                    </li>
+
+                    <!-- 10 -->
+                    <li class="px-4 py-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="sm:col-span-6 text-gray-700 leading-5">
+                          월요일 94번, 이후 매일 한 번씩(주 100회)
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 불수 소모</div>
+                          <div class="text-right font-semibold tabular-nums">8,710</div>
+                        </div>
+                        <div class="sm:col-span-3 flex sm:block justify-between sm:justify-end">
+                          <div class="flex-1 text-sm leading-5">주당 획득</div>
+                          <div class="text-right font-semibold tabular-nums">278.50</div>
+                        </div>
+                      </div>
+                    </li>
+
+                  </ul>
+                </section>
+              </div>
+            </details>
+
+            <!-- 영웅 성급업 -->
+            <details id="detail2" class="bg-white border border-blue-300 rounded-md p-4" open>
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 영웅성급업표</summary>
+              <div id="영웅성급" class="mt-3 space-y-4 text-sm">
+                <div class="tblwrap">
+                  <h2>최초 모집 시 영웅조각 10개 필요</h2>
+                  <table id="hero-upgrade-table" class="table-auto border w-full text-xs text-center">
+                    <thead class="bg-orange-100">
+                      <th class="border p-1">등급</th>
+                      <th class="border p-1">
+                        <img src="images/tier1.webp" class="w-6 h-6 mx-auto" alt="1단계">
+                      </th>
+                      <th class="border p-1">
+                        <img src="images/tier2.webp" class="w-6 h-6 mx-auto" alt="2단계">
+                      </th>
+                      <th class="border p-1">
+                        <img src="images/tier3.webp" class="w-6 h-6 mx-auto" alt="3단계">
+                      </th>
+                      <th class="border p-1">
+                        <img src="images/tier4.webp" class="w-6 h-6 mx-auto" alt="4단계">
+                      </th>
+                      <th class="border p-1">
+                        <img src="images/tier5.webp" class="w-6 h-6 mx-auto" alt="5단계">
+                      </th>
+                      <th class="border p-1">
+                        <img src="images/tier6.webp" class="w-6 h-6 mx-auto" alt="6단계">
+                      </th>
+                      <th class="border p-1">SubTotal</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1">1성</td>
+                        <td class="border p-1">1</td>
+                        <td class="border p-1">1</td>
+                        <td class="border p-1">2</td>
+                        <td class="border p-1">2</td>
+                        <td class="border p-1">2</td>
+                        <td class="border p-1">2</td>
+                        <td class="border p-1">20</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">2성</td>
+                        <td class="border p-1">5</td>
+                        <td class="border p-1">5</td>
+                        <td class="border p-1">5</td>
+                        <td class="border p-1">5</td>
+                        <td class="border p-1">5</td>
+                        <td class="border p-1">15</td>
+                        <td class="border p-1">40</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">3성</td>
+                        <td class="border p-1">15</td>
+                        <td class="border p-1">15</td>
+                        <td class="border p-1">15</td>
+                        <td class="border p-1">15</td>
+                        <td class="border p-1">15</td>
+                        <td class="border p-1">40</td>
+                        <td class="border p-1">115</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">4성</td>
+                        <td class="border p-1">40</td>
+                        <td class="border p-1">40</td>
+                        <td class="border p-1">40</td>
+                        <td class="border p-1">40</td>
+                        <td class="border p-1">40</td>
+                        <td class="border p-1">100</td>
+                        <td class="border p-1">300</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">5성</td>
+                        <td class="border p-1">100</td>
+                        <td class="border p-1">100</td>
+                        <td class="border p-1">100</td>
+                        <td class="border p-1">100</td>
+                        <td class="border p-1">100</td>
+                        <td class="border p-1">100</td>
+                        <td class="border p-1">600</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="font-bold">
+                        <td colspan="7" class="border px-2 py-1 text-right">Total</td>
+                        <td class="border p-1">1075</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card w-full">
+                <!-- ✅ 전부 가로 한 줄 (넘치면 가로 스크롤) -->
+                <div class="row">
+                  <div style="font-weight:600;">보유 영웅 조각 수 : </div>
+                  <input id="pieceInput" type="number" min="0" value="0" max="1075" class="input">
+                  <div style="font-weight:600">기대 결과</div>
+                  <div id="hero-shard-strip"></div>
+                  <p id="tierFallback" class="hidden text-gray-400"></p>
+                </div>
+              </div>
+            </details>
+
+            <!-- VIP 점수 -->
+            <details id="detail1" class="bg-white border border-blue-300 rounded-md p-4" open>
+              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔰 VIP 구간별 경험치</summary>
+
+              <div class="mt-3 space-y-4 text-sm text-gray-800">
+                <!-- ✅ 카드 그리드: 모바일 1열 / md 2열 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                  <!-- ✅ 카드1: 구간별 경험치 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                      <div class="font-bold text-slate-900">구간별 경험치</div>
                     </div>
-                  </div>
-                </div>
-              </details>
+                    <ul class="divide-y divide-slate-100">
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-1 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP1 → VIP2</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 2,500</div>
+                        </div>
+                      </li>
 
-              <!-- 정제불수 기댓값 -->
-              <details class="bg-white border border-blue-300 rounded-md p-4" open>
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔥 제련불수 기대값</summary>
-                <div id="제련불수" class="mt-3 space-y-4 text-sm text-gray-800">
-                  <div class="overflow-x-auto">
-                    <table class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <tr>
-                          <th class="border p-1">매일 한 번씩만 제련</th>
-                          <th class="border p-1">주당 불수 소모</th>
-                          <th class="border p-1">주당 획득 제련불수</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="border p-1">매일 한 번씩만 제련</td>
-                          <td class="border p-1">70</td>
-                          <td class="border p-1">10.15</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 14번, 이후 매일 한 번씩(주 20회)</td>
-                          <td class="border p-1">330</td>
-                          <td class="border p-1">29.00</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 20번, 이후 매일 한 번씩(주 26회)</td>
-                          <td class="border p-1">540</td>
-                          <td class="border p-1">41.90</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 34번, 이후 매일 한 번씩(주 40회)</td>
-                          <td class="border p-1">1,240</td>
-                          <td class="border p-1">72.00</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 40번, 이후 매일 한 번씩(주 46회)</td>
-                          <td class="border p-1">1,690</td>
-                          <td class="border p-1">91.08</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 54번, 이후 매일 한 번씩(주 60회)</td>
-                          <td class="border p-1">3,090</td>
-                          <td class="border p-1">135.60</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 60번, 이후 매일 한 번씩(주 66회)</td>
-                          <td class="border p-1">3,700</td>
-                          <td class="border p-1">156.60</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 74번, 이후 매일 한 번씩(주 80회)</td>
-                          <td class="border p-1">5,600</td>
-                          <td class="border p-1">204.60</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 80번, 이후 매일 한 번씩(주 86회)</td>
-                          <td class="border p-1">6,470</td>
-                          <td class="border p-1">226.56</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">월요일 94번, 이후 매일 한 번씩(주 100회)</td>
-                          <td class="border p-1">8,710</td>
-                          <td class="border p-1">278.50</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </details>
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP2 → VIP3</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 5,000</div>
+                        </div>
+                      </li>
 
-              <!-- 영웅 성급업 -->
-              <details id="detail2" class="bg-white border border-blue-300 rounded-md p-4" open>
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 영웅성급업표</summary>
-                <div id="영웅성급" class="mt-3 space-y-4 text-sm">
-                  <div class="overflow-x-auto">
-                    <h2>최초 모집 시 영웅조각 10개 필요</h2>
-                    <table id="hero-upgrade-table" class="table-auto border w-full text-xs text-center">
-                      <thead class="bg-orange-100">
-                        <th class="border p-1">등급</th>
-                        <th class="border p-1">
-                          <img src="images/tier1.webp" class="w-6 h-6 mx-auto" alt="1단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="images/tier2.webp" class="w-6 h-6 mx-auto" alt="2단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="images/tier3.webp" class="w-6 h-6 mx-auto" alt="3단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="images/tier4.webp" class="w-6 h-6 mx-auto" alt="4단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="images/tier5.webp" class="w-6 h-6 mx-auto" alt="5단계">
-                        </th>
-                        <th class="border p-1">
-                          <img src="images/tier6.webp" class="w-6 h-6 mx-auto" alt="6단계">
-                        </th>
-                        <th class="border p-1">SubTotal</th>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="border p-1">1성</td>
-                          <td class="border p-1">1</td>
-                          <td class="border p-1">1</td>
-                          <td class="border p-1">2</td>
-                          <td class="border p-1">2</td>
-                          <td class="border p-1">2</td>
-                          <td class="border p-1">2</td>
-                          <td class="border p-1">20</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">2성</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">5</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">40</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">3성</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">15</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">115</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">4성</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">40</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">300</td>
-                        </tr>
-                        <tr>
-                          <td class="border p-1">5성</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">100</td>
-                          <td class="border p-1">600</td>
-                        </tr>
-                      </tbody>
-                      <tfoot>
-                        <tr class="font-bold">
-                          <td colspan="7" class="border px-2 py-1 text-right">Total</td>
-                          <td class="border p-1">1075</td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                </div>
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP3 → VIP4</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 12,500</div>
+                        </div>
+                      </li>
 
-                <div class="card w-full">
-                  <!-- ✅ 전부 가로 한 줄 (넘치면 가로 스크롤) -->
-                  <div class="row">
-                    <div style="font-weight:600;">보유 영웅 조각 수 : </div>
-                    <input id="pieceInput" type="number" min="0" value="0" max="1075" class="input">
-                    <div style="font-weight:600">기대 결과</div>
-                    <div id="hero-shard-strip"></div>
-                    <p id="tierFallback" class="hidden text-gray-400"></p>
-                  </div>
-                </div>
-              </details>
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP4 → VIP5</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 30,000</div>
+                        </div>
+                      </li>
 
-              <!-- VIP 점수 -->
-              <details id="detail1" class="bg-white border border-blue-300 rounded-md p-4" open>
-                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🔰 VIP 구간별 경험치</summary>
-                <div class="mb-2 mt-2">
-                  <div class="flex flex-col md:flex-row w-full">
-                    <div class="w-full md:w-1/2 px-1 mb-2">
-                      <div class="overflow-x-auto">
-                        <h3 class="font-semibold text-orange-500">🔹 구간별 경험치</h3>
-                        <table class="table-auto border w-full text-xs text-center">
-                          <thead class="bg-orange-100 font-semibold">
-                            <tr><th class="border p-1">현재</th><th class="border p-1">목표</th><th class="border p-1">경험치</th></tr>
-                          </thead>
-                          <tbody>
-                            <tr><td class="border p-1">VIP1</td><td class="border p-1">VIP2</td><td class="border p-1">2,500</td></tr>
-                            <tr><td class="border p-1">VIP2</td><td class="border p-1">VIP3</td><td class="border p-1">5,000</td></tr>
-                            <tr><td class="border p-1">VIP3</td><td class="border p-1">VIP4</td><td class="border p-1">12,500</td></tr>
-                            <tr><td class="border p-1">VIP4</td><td class="border p-1">VIP5</td><td class="border p-1">30,000</td></tr>
-                            <tr><td class="border p-1">VIP5</td><td class="border p-1">VIP6</td><td class="border p-1">40,000</td></tr>
-                            <tr><td class="border p-1">VIP6</td><td class="border p-1">VIP7</td><td class="border p-1">60,000</td></tr>
-                            <tr><td class="border p-1">VIP7</td><td class="border p-1">VIP8</td><td class="border p-1">100,000</td></tr>
-                            <tr><td class="border p-1">VIP8</td><td class="border p-1">VIP9</td><td class="border p-1">350,000</td></tr>
-                            <tr><td class="border p-1">VIP9</td><td class="border p-1">VIP10</td><td class="border p-1">600,000</td></tr>
-                            <tr><td class="border p-1">VIP10</td><td class="border p-1">VIP11</td><td class="border p-1">1,200,000</td></tr>
-                            <tr><td class="border p-1">VIP11</td><td class="border p-1">VIP12</td><td class="border p-1">2,400,000</td></tr>
-                          </tbody>
-                        </table>
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP5 → VIP6</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 40,000</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP6 → VIP7</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 60,000</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP7 → VIP8</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 100,000</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP8 → VIP9</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 350,000</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP9 → VIP10</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 600,000</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                        <div class="text-gray-700 font-semibold">VIP10 → VIP11</div>
+                        <div class="flex-1 text-sm leading-5">경험치 : 1,200,000</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">VIP11 → VIP12</div>
+                          <div class="flex-1 text-sm leading-5">경험치 : 2,400,000</div>
+                        </div>
+                      </li>
+                    </ul>
+                  </section>
+
+                  <!-- ✅ 카드2: 패키지별 VIP 포인트 -->
+                  <section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-orange-100 flex items-center justify-between">
+                      <div class="font-bold text-slate-900">패키지별 VIP 포인트</div>
+                    </div>
+
+                    <div class="px-4 py-2 border-b border-slate-100 text-[12px] sm:block">
+                      <div class="grid grid-cols-3 gap-3">
+                        <div class="font-semibold">가격</div>
+                        <div class="font-semibold">VIP점수</div>
+                        <div class="text-right font-semibold">개수</div>
                       </div>
                     </div>
 
-                    <div class="w-full md:w-1/2 px-1 mb-2">
-                      <div class="overflow-x-auto">
-                        <h3 class="font-semibold text-orange-500">🔹 패키지별 VIP 포인트 아이템 포함 수</h3>
-                        <table class="table-auto border w-full text-xs text-center">
-                          <thead class="bg-orange-100 font-semibold">
-                            <tr><th class="border p-1">가격</th><th class="border p-1">VIP점수</th><th class="border p-1">개수</th></tr>
-                          </thead>
-                          <tbody>
-                            <tr><td class="border p-1">1,500</td><td class="border p-1">100pt</td><td class="border p-1">5</td></tr>
-                            <tr><td class="border p-1">4,400</td><td class="border p-1">100pt</td><td class="border p-1">15</td></tr>
-                            <tr><td class="border p-1">7,500</td><td class="border p-1">100pt</td><td class="border p-1">25</td></tr>
-                            <tr><td class="border p-1">15,000</td><td class="border p-1">100pt</td><td class="border p-1">40</td></tr>
-                            <tr><td class="border p-1">30,000</td><td class="border p-1">100pt</td><td class="border p-1">60</td></tr>
-                            <tr><td class="border p-1">79,000</td><td class="border p-1">1000pt</td><td class="border p-1">12</td></tr>
-                            <tr><td class="border p-1">149,000</td><td class="border p-1">1000pt</td><td class="border p-1">20</td></tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
+                    <ul class="divide-y divide-slate-100">
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-3 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold">1,500</div>
+                          <div class="text-gray-700">100pt</div>
+                          <div class="text-right font-semibold tabular-nums">5</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-3 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold tabular-nums">4,400</div>
+                          <div class="text-gray-700">100pt</div>
+                          <div class="text-right font-semibold tabular-nums">15</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-3 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold tabular-nums">7,500</div>
+                          <div class="text-gray-700">100pt</div>
+                          <div class="text-right font-semibold tabular-nums">25</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-3 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold tabular-nums">15,000</div>
+                          <div class="text-gray-700">100pt</div>
+                          <div class="text-right font-semibold tabular-nums">40</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-3 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold tabular-nums">30,000</div>
+                          <div class="text-gray-700">100pt</div>
+                          <div class="text-right font-semibold tabular-nums">60</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-3 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold tabular-nums">79,000</div>
+                          <div class="text-gray-700">1000pt</div>
+                          <div class="text-right font-semibold tabular-nums">12</div>
+                        </div>
+                      </li>
+
+                      <li class="px-4 py-3">
+                        <div class="grid grid-cols-3 gap-2 sm:gap-3 items-start">
+                          <div class="text-gray-700 font-semibold tabular-nums">149,000</div>
+                          <div class="text-gray-700">1000pt</div>
+                          <div class="text-right font-semibold tabular-nums">20</div>
+                        </div>
+                      </li>
+                    </ul>
+                  </section>
+
                 </div>
-              </details>
-            </div>
+              </div>
+            </details>
 
             <!-- 깃발해금 -->
             <details class="bg-white border border-blue-300 rounded-md p-4">
               <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🚩 합병 후 깃발해금</summary>
               <div id="깃발해금" class="mt-3 space-y-4 text-sm text-gray-800">
-                <div class="overflow-x-auto">
+                <div class="tblwrap">
                   <table class="table-auto border w-full text-xs text-center">
                   <thead class="bg-orange-100">
                     <tr>
@@ -1153,7 +1789,7 @@
             <!-- 요새 주차별 보상 -->
             <details class="border border-blue-300 rounded-md p-4 shadow">
               <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">👑 요새 주차별 보상</summary>
-              <div class="overflow-x-auto w-full">
+              <div class="tblwrap w-full">
                 <table id="fortress" class="min-w-full table-fixed border border-gray-400 text-center">
                   <thead class="bg-orange-100 font-semibold">
                     <tr>
@@ -1400,7 +2036,7 @@
             <!-- 세대별 영웅 특성 -->
             <details class="border border-blue-300 rounded-md p-4 shadow">
               <summary class="cursor-pointer text-lg font-semibold text-blue-700">🧬 세대별 영웅 특성</summary>
-              <div class="overflow-x-auto w-full">
+              <div class="tblwrap w-full">
                 <table class="table-auto border w-full text-sm text-center">
                   <thead class="bg-orange-100">
                     <tr>
@@ -1816,7 +2452,7 @@
                 </section>
 
                 <h3 class="font-semibold text-green-600">✈️ 이민권 패키지</h3>
-                <div class="overflow-x-auto">
+                <div class="tblwrap">
                   <table class="table-auto border w-full text-xs text-center">
                     <thead class="bg-orange-100">
                       <tr>
@@ -1915,7 +2551,10 @@
     
     <!-- iframe 영역 -->
     <div id="frameWrapper" class="max-w-[1500px] w-full hidden bg-white rounded shadow gap-2">
-      <iframe id="mainFrame" class="w-full bg-white rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
+        <iframe id="mainFrame"
+          class="w-full block bg-white"
+          style="height: calc(100svh - var(--topbar-h, 180px)); border:0;"
+          frameborder="0"></iframe>
     </div>
 
     <!-- Scroll to Top Button -->
@@ -1934,7 +2573,37 @@
   <footer class="text-center text-xs font-bold text-white mt-5 mb-4">⛔ 무단 복제 금지 | © Made By S645 ShinChan(67331703)
     <span id="updateLink"  class="underline cursor-pointer hover:text-white-100 ml-2">업데이트내역</span>
   </footer>
-	
+  
+	<script>
+    function setTopbarHeightVar(){
+      const tb = document.querySelector('.topbar');
+      if (!tb) return;
+      const h = Math.ceil(tb.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--topbar-h', `${h + 16}px`);
+    }
+    window.addEventListener('load', setTopbarHeightVar);
+    window.addEventListener('resize', setTopbarHeightVar);
+    window.addEventListener('orientationchange', setTopbarHeightVar);
+    
+    function updateTableScrollState(){
+      document.querySelectorAll('.tblwrap').forEach(w=>{
+        const t = w.querySelector('table');
+        if (!t) return;
+
+        // 1) 일단 스크롤 꺼놓고
+        w.classList.remove('is-scroll');
+
+        // 2) 실제로 넘치면 스크롤 켬
+        // (table-layout/줄바꿈 적용 후 판단해야 해서 RAF 한 번)
+        requestAnimationFrame(()=>{
+          if (t.scrollWidth > w.clientWidth + 1) w.classList.add('is-scroll');
+        });
+      });
+    }
+
+    window.addEventListener('load', updateTableScrollState);
+    window.addEventListener('resize', updateTableScrollState);
+  </script>
   <script>
   (function () {
     const MIN_INTERVAL = 10000;
@@ -2107,11 +2776,15 @@
     dropdowns.forEach(dd => {
       const btn = dd.querySelector('.dd-btn');
 
-      // 1) Hover 시 열기
-      dd.addEventListener('mouseenter', () => {
-        closeAll(dd);
-        setOpen(dd, true);
-      });
+      const canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+
+      // 1) Hover 시 열기 (터치 디바이스에서는 비활성)
+      if (canHover) {
+        dd.addEventListener('mouseenter', () => {
+          closeAll(dd);
+          setOpen(dd, true);
+        });
+      }
 
       // 3) Click 토글
       btn.addEventListener('click', (e) => {
@@ -2588,7 +3261,6 @@
       장인보물창고장비: '보불창고_장비.html',
       여행자팩 : '여행자팩.html',
       만물잡화 : '만물잡화점.html',
-      연맹대작전 : '연맹대작전.html'
     };
     
     // [ID] => 로딩 여부 저장
@@ -2908,5 +3580,61 @@
       }
     });
   </script>
-  </body>
+  
+  <script>
+    // ===== Mobile drawer controls =====
+    (function(){
+      const btn = document.getElementById('mobileMenuBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      const closeEls = drawer ? drawer.querySelectorAll('[data-close-drawer]') : [];
+
+      function openDrawer(){ if (!drawer) return; drawer.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      function closeDrawer(){ if (!drawer) return; drawer.classList.add('hidden'); document.body.style.overflow = ''; }
+
+      btn?.addEventListener('click', (e)=>{ e.preventDefault(); openDrawer(); });
+      closeEls.forEach(el => el.addEventListener('click', (e)=>{ e.preventDefault(); closeDrawer(); }));
+
+      // ESC to close
+      document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeDrawer(); });
+
+      // Close drawer after selecting a frame link
+      drawer?.addEventListener('click', (e)=>{
+        const a = e.target.closest('a.dd-item[data-frame]');
+        if (a) closeDrawer();
+      });
+
+      // Home button
+      document.getElementById('mobHomeBtn')?.addEventListener('click', ()=>{
+        try {
+          // show guide
+          document.getElementById('guideDetails')?.classList.remove('hidden');
+          document.getElementById('frameWrapper')?.classList.add('hidden');
+          document.querySelectorAll('.dd-item.active').forEach(x => x.classList.remove('active'));
+        } catch {}
+        closeDrawer();
+      });
+
+      // Shortcuts
+      document.getElementById('mobRequestBtn')?.addEventListener('click', ()=>{ window.open('https://open.kakao.com/o/suX41pYg','_blank'); closeDrawer(); });
+      document.getElementById('mobConsultBtn')?.addEventListener('click', ()=>{ window.open('https://open.kakao.com/o/sUPPaqqh','_blank'); closeDrawer(); });
+      document.getElementById('mobDonateBtn')?.addEventListener('click', ()=>{ window.open('https://buymeacoffee.com/shin0825','_blank'); closeDrawer(); });
+
+      // Dark mode toggle (reuse existing)
+      document.getElementById('DarkModeMobile')?.addEventListener('click', ()=>{ try{ ActiveDarkMode(); }catch{} closeDrawer(); });
+
+      // Language select (mobile)
+      const langMob = document.getElementById('langSelectMobile');
+      if (langMob) {
+        langMob.addEventListener('change', ()=>{
+          const v = langMob.value;
+          if (v) window.location.href = v;
+        });
+      }
+
+      // Keep mobile lang select in sync with PC
+      const langPC = document.getElementById('langSelectPC');
+    })();
+  </script>
+
+</body>
 </html>

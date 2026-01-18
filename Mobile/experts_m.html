@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>전문가/스킬 레벨업 계산기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .muted{ color: gray-600; }
+    .value{min-width:3rem;text-align:right}
+    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+    @media (max-width : 900px ){
+      .toolbar{grid-template-columns: 1fr}
+    }
+    .inline-label{display:flex;align-items:center;gap:.5rem}
+    select.pill{height:32px}
+    .err{color:#b45309}
+     /* ✅ 다크모드 전용 */
+    body.dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    
+    .dark-mode .border { border-color: #444 !important; }
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+  
+    .dark-mode .text-gray-800,
+    .dark-mode .text-gray-600 { color: #dddddd !important; }
+    
+    .dark-mode .text-gray-700 { color: #6DA7D8 !important; }
+
+    .dark-mode .text-blue-700 { color: #66b0ff !important; }
+    .dark-mode .text-blue-600 { color: #80caff !important; }
+    .dark-mode .text-orange-500 { color: #ffa94d !important; }
+    .dark-mode .text-green-600 { color: #79e68c !important; }
+    .dark-mode .text-red-500 { color: #ff8080 !important; }
+    .dark-mode .text-gray-500 { color: #aaa !important; }    
+    
+    .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
+    .dark-mode th, .dark-mode td { border-color: #444 !important; }
+    .dark-mode thead th { color: #000 !important; }
+    
+    .dark-mode .bg-amber-100,    
+    .dark-mode .bg-green-100,
+    .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
+    
+    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
+    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
+    
+    .dark-mode .bg-amber-50,
+    .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
+
+    .dark-mode .bg-blue-100,
+    .dark-mode .bg-blue-50,
+    .dark-mode .bg-orange-50,
+    .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
+    
+    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
+    .dark-mode ul li { color: #ddd; }
+    
+    .dark-mode select option { color: #000 !important; }
+    .dark-mode select { color: #000 !important; }
+    .dark-mode input { color: #000 !important; }
+    
+    .divider-h{ border-top: 1px solid rgba(0,0,0,.18); }
+
+    body.dark-mode .divider-v{ border-left:1px solid rgba(255,255,255,.22) !important; }
+    body.dark-mode .divider-h{ border-top: 1px solid rgba(255,255,255,.22) !important; }
+    /* 이미지 프레임: 배경 ❌ / 테두리만 */
+    .expert-imgframe{
+      background: transparent !important;
+      border: 1px solid rgba(0,0,0,.12);
+      padding: 16px;
+    }
+
+    /* 다크모드 대응 */
+    body.dark-mode .expert-imgframe{
+      border: 1px solid rgba(255,255,255,.22);
+    }
+
+    /* 혹시 모를 img 배경 강제 제거 */
+    #expertPickImg{
+      background: transparent !important;
+    }
+    /* ✅ 전문가 아이콘 프레임(팝업/메인 공용) */
+    .expert-icon-frame{
+      background: #eef1f5;                 /* 연회색(팝업처럼) */
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 18px;
+      padding: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    body.dark-mode .expert-icon-frame{
+      background: rgba(255,255,255,.10) !important; /* 다크에서도 비슷한 톤 */
+      border-color: rgba(255,255,255,.18) !important;
+    }
+    .expert-icon-img{
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+      background: transparent !important;
+    }
+    .expert-actions > button{
+      white-space: nowrap !important;
+      min-width: 0 !important;
+    }    
+  </style>
+  <!-- ✅ 다크모드 상태 유지 스크립트 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-3 font-sans text-sm">
+  <main class="w-full mx-auto bg-white p-2 rounded-xl shadow-md">
+    <header class="flex items-center justify-between">
+      <div class ="p-4">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">전문가 계산기</h1>
+        <p class="text-sm muted mt-1">레벨을 선택하면 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
+      </div>
+    </header>
+    
+    <section class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+      <div class="grid gap-4 md:gap-6 grid-cols-2 md:grid-cols-[220px_1fr_1.1fr] md:items-stretch">
+
+        <!-- LEFT: 전문가 선택 -->
+        <div class="space-y-2">
+          <div class="font-semibold text-gray-800">전문가 선택</div>
+
+          <!-- 기존 로직용 select 유지(숨김) -->
+          <select id="selType" class="pill w-full hidden">
+            <option value="Cyrille">키릴</option>
+            <option value="Agnes">아그네스</option>
+            <option value="Holger">홀게르</option>
+            <option value="Romulus">로물루스</option>
+            <option value="Baldur">발데</option>
+            <option value="Fabian">파비안</option>
+            <option value="Valeria">발레리아</option>
+          </select>
+
+          <!-- ✅ 팝업 그리드 카드 느낌: 단일 라운드 박스 + 이미지 -->
+          <div class="expert-imgbox w-full rounded-2xl p-0 flex items-center justify-center">
+            <button id="expertPickBtn" type="button" class="w-full flex flex-col items-center gap-3">
+              <!-- ✅ 두번째 사진 느낌: 밝은 패널 + 큰 이미지 -->
+              <div class="expert-card-light w-full rounded-2xl border border-black/10 p-4 flex items-center justify-center">
+                <img id="expertPickImg" alt="" class="w-[140px] h-[140px] object-contain" />
+              </div>
+
+              <div id="expertPickName" class="font-bold text-gray-600 text-center">-</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- MIDDLE: 레벨 범위 -->
+        <div class="space-y-2 col-span-1">
+          <div class="font-semibold text-gray-800">레벨 범위</div>
+          <div class="flex items-center gap-3"></div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 text-sm text-gray-600">현재</div>
+              <select id="expertCur" class="pill w-44"></select>
+            </div>            
+            <div class="flex items-center gap-3"></div>
+            <div class="flex items-center gap-3">
+              <div class="w-10 text-sm text-gray-600">목표</div>
+              <select id="expertTgt" class="pill w-44"></select>
+            </div>
+
+            <p id="expertWarn" class="text-xs err"></p>
+            <div class="h-1"></div>
+            <div class="expert-actions flex items-center gap-2">
+              <button id="btnSum"
+                class="px-5 py-2 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+                계산하기
+              </button>
+              <button id="btnReset"
+                class="px-5 py-2 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+                초기화
+              </button>
+            </div>                  
+            
+          </div>
+        </div>
+
+        <!-- RIGHT: 효과/관계 (✅ 세로선 + ✅ 가로선) -->
+        <div class="md:pl-4 col-span-2 md:col-span-1 md:border-black/10 pl-0 md:pl-4">
+          <div class="h-full grid grid-rows-2">
+            <div class="pb-3">
+              <div class="font-semibold mb-1 text-blue-700">전문가 효과 (목표 기준)</div>
+              <div id="expertEffect" class="muted">-</div>
+            </div>
+
+            <div class="divider-h pt-3">
+              <div class="font-semibold mb-1 text-blue-700">전문가 관계</div>
+              <div id="expertrelationship" class="muted">-</div>
+            </div>
+            
+<!--            <div class="divider-h pt-3">
+              <div class="font-semibold mb-1 text-blue-700">총합</div>
+              <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <div class="flex justify-between"><span class="muted">경험치</span><span id="sumExpertExp">0</span></div>
+                  <div class="flex justify-between"><span class="muted">표식</span><span id="sumExpertMark">0</span></div>
+                </div>
+                <div>
+                  <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="sumSkillExp">0</span></div>
+                  <div class="flex justify-between"><span class="muted">학습의 책</span><span id="sumSkillItem">0</span></div>
+                </div>
+              </div>
+            </div>-->
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-2 gap-2 mb-2">
+      <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+           
+        <div class="flex items-center gap-2 mb-3">
+          <label class="inline-label cursor-pointer select-none">
+            <input type="checkbox" id="useSkill1" class="w-4 h-4">
+            <span class="text-base font-bold skill-title muted" data-index="0">스킬 1</span>
+          </label>
+        </div>
+        
+        <!-- ✅ [추가] 체크 ON일 때만 보일 영역 -->
+        <div id="skillBody1" class="skill-body space-y-0">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <div class="text-sm font-semibold mb-4">레벨 범위<span id="s1Cap" class="muted"></span></div>
+              <div class="flex items-center gap-2">
+                <label class="inline-label"><span class="muted">현재</span><select id="s1Cur" class="pill w-24"></select></label>
+                <label class="inline-label"><span class="muted">목표</span><select id="s1Tgt" class="pill w-24"></select></label>
+              </div>
+              <p id="s1Warn" class="text-xs err mt-1"></p>
+            </div>
+            <div>
+              <div class="text-sm font-semibold mb-1">필요 합계</div>
+              <div class="space-y-1 text-sm">
+                <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s1Exp">0</span></div>
+                <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s1Item">0</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="exp-divider border-t mt-4"></div>
+          <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+            <div class="pt-3">
+              <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+              <div class="skill-effect muted whitespace-pre-line" data-index="0">-</div>
+            </div>
+            <!-- 세로 구분선 -->
+            <div class="w-px mx-2"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+              <div class="skill-cond muted whitespace-pre-line" data-index="0">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+        <div class="flex items-center gap-2 mb-3">
+          <label class="inline-label cursor-pointer select-none">
+            <input type="checkbox" id="useSkill2" class="w-4 h-4">
+            <span class="text-base font-bold skill-title muted" data-index="1">스킬 2</span>
+          </label>
+        </div>        
+
+        <div id="skillBody2" class="skill-body space-y-0">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <div class="text-sm font-semibold mb-4">레벨 범위<span id="s2Cap" class="muted"></span></div>
+              <div class="flex items-center gap-2">
+                <label class="inline-label"><span class="muted">현재</span><select id="s2Cur" class="pill w-24"></select></label>
+                <label class="inline-label"><span class="muted">목표</span><select id="s2Tgt" class="pill w-24"></select></label>
+              </div>
+              <p id="s2Warn" class="text-xs err mt-1"></p>
+            </div>
+            <div>
+              <div class="text-sm font-semibold mb-1">필요 합계</div>
+              <div class="space-y-1 text-sm">
+                <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s2Exp">0</span></div>
+                <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s2Item">0</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="exp-divider border-t mt-4"></div>
+          <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+            <div class="pt-3 pr-4">
+              <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+              <div class="skill-effect muted whitespace-pre-line" data-index="1">-</div>
+            </div>
+            <!-- 세로 구분선 -->
+            <div class="w-px mx-2"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+              <div class="skill-cond muted whitespace-pre-line" data-index="1">-</div>
+            </div>
+          </div>
+        </div>
+      </div>        
+
+      <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+        <div class="flex items-center gap-2 mb-3">
+          <label class="inline-label cursor-pointer select-none">
+            <input type="checkbox" id="useSkill3" class="w-4 h-4">
+            <span class="text-base font-bold skill-title muted" data-index="2">스킬 3</span>
+          </label>
+        </div>      
+        
+        <div id="skillBody3" class="skill-body space-y-0">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <div class="text-sm font-semibold mb-4">레벨 범위<span id="s3Cap" class="muted"></span></div>
+              <div class="flex items-center gap-2">
+                <label class="inline-label"><span class="muted">현재</span><select id="s3Cur" class="pill w-24"></select></label>
+                <label class="inline-label"><span class="muted">목표</span><select id="s3Tgt" class="pill w-24"></select></label>
+              </div>
+              <p id="s3Warn" class="text-xs err mt-1"></p>
+            </div>
+            <div>
+              <div class="text-sm font-semibold mb-1">필요 합계</div>
+              <div class="space-y-1 text-sm">
+                <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s3Exp">0</span></div>
+                <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s3Item">0</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="exp-divider border-t mt-4"></div>
+          <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+            <div class="pt-3 pr-4">
+              <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+              <div class="skill-effect muted whitespace-pre-line" data-index="2">-</div>
+            </div>
+            <!-- 세로 구분선 -->
+            <div class="w-px mx-2"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+              <div class="skill-cond muted whitespace-pre-line" data-index="2">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+        
+        <div class="flex items-center gap-2 mb-3">
+          <label class="inline-label cursor-pointer select-none">
+            <input type="checkbox" id="useSkill4" class="w-4 h-4">
+            <span class="text-base font-bold skill-title muted" data-index="3">스킬 4</span>
+          </label>
+        </div>
+        
+        <div id="skillBody4" class="skill-body space-y-0">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <div class="text-sm font-semibold mb-4">레벨 범위<span id="s4Cap" class="muted"></span></div>
+              <div class="flex items-center gap-2">
+                <label class="inline-label"><span class="muted">현재</span><select id="s4Cur" class="pill w-24"></select></label>
+                <label class="inline-label"><span class="muted">목표</span><select id="s4Tgt" class="pill w-24"></select></label>
+              </div>
+              <p id="s4Warn" class="text-xs err mt-1"></p>
+            </div>
+            <div>
+              <div class="text-sm font-semibold mb-1">필요 합계</div>
+              <div class="space-y-1 text-sm">
+                <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s4Exp">0</span></div>
+                <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s4Item">0</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="exp-divider border-t mt-4"></div>
+          <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+            <div class="pt-3 pr-4">
+              <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+              <div class="skill-effect muted whitespace-pre-line" data-index="3">-</div>
+            </div>
+            <!-- 세로 구분선 -->
+            <div class="w-px mx-2"></div>
+            <div class="pt-3">
+              <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+              <div class="skill-cond muted whitespace-pre-line" data-index="3">-</div>
+            </div>
+          </div>
+        </div>          
+      </div>
+    </section>
+    
+    <!-- ✅ 전체 총합 (최하단) -->
+    <section id="summary" class="mt-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+      <div class="font-semibold mb-2 text-blue-700">총합</div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="muted">경험치</span>
+            <span id="sumExpertExp">0</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="muted">표식</span>
+            <span id="sumExpertMark">0</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="muted">스킬 경험치</span>
+            <span id="sumSkillExp">0</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="muted">학습의 책</span>
+            <span id="sumSkillItem">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ 전문가 선택 모달 -->
+    <div id="expertModal" class="fixed inset-0 z-50 hidden">
+      <div class="absolute inset-0 bg-black/60"></div>
+
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-[720px] rounded-2xl border border-black/10 bg-white shadow-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b">
+            <div class="font-bold text-gray-800">전문가 선택</div>
+            <button id="expertModalClose" type="button"
+              class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+              닫기
+            </button>
+          </div>
+
+          <div class="p-4">
+            <div id="expertGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    // ✅ [추가] 스킬 체크 ON/OFF → 카드 내용 표시/숨김 + 계산에서 제외
+    function setSkillVisible(i, on){
+      const body = document.getElementById(`skillBody${i}`);
+      if (!body) return;
+      body.classList.toggle("hidden", !on);
+
+      // OFF면 값/출력 초기화 (원하면 이 블록은 지워도 됨)
+      if (!on){
+        const cur = document.getElementById(`s${i}Cur`);
+        const tgt = document.getElementById(`s${i}Tgt`);
+        const warn = document.getElementById(`s${i}Warn`);
+        const outE = document.getElementById(`s${i}Exp`);
+        const outI = document.getElementById(`s${i}Item`);
+        if (cur) cur.value = "";
+        if (tgt) tgt.innerHTML = '<option value=""></option>';
+        if (warn) warn.textContent = "";
+        if (outE) outE.textContent = "0";
+        if (outI) outI.textContent = "0";
+      }
+
+      // 높이 동기화 (네 기존 함수 그대로 활용)
+      if (typeof sendHeightToParent === "function") sendHeightToParent();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      [1,2,3,4].forEach(i => {
+        const chk = document.getElementById(`useSkill${i}`);
+        if (!chk) return;
+
+        // 초기 반영
+        setSkillVisible(i, chk.checked);
+
+        chk.addEventListener("change", () => {
+          setSkillVisible(i, chk.checked);
+        });
+      });
+    });
+  </script>
+  
+  <script>
+    // ✅ 전문가 이미지/표시명 매핑 (필요시 경로 수정)
+    const EXPERT_UI = [
+      { key:"Cyrille", name:"키릴",    img:"../images/experts/Cyrille.png" },
+      { key:"Agnes",   name:"아그네스", img:"../images/experts/Agnes.png" },
+      { key:"Holger",  name:"홀게르",   img:"../images/experts/Holger.png" },
+      { key:"Romulus", name:"로물루스", img:"../images/experts/Romulus.png" },
+      { key:"Baldur",  name:"발데",     img:"../images/experts/Baldur.png" },
+      { key:"Fabian",  name:"파비안",   img:"../images/experts/Fabian.png" },
+      { key:"Valeria", name:"발레리아", img:"../images/experts/Valeria.png" },
+    ];
+
+    function openExpertModal(){
+      document.getElementById("expertModal")?.classList.remove("hidden");
+    }
+    function closeExpertModal(){
+      document.getElementById("expertModal")?.classList.add("hidden");
+    }
+
+    function setExpertUIByKey(key){
+      const found = EXPERT_UI.find(x => x.key === key);
+      if (!found) return;
+      const imgEl = document.getElementById("expertPickImg");
+      const nameEl = document.getElementById("expertPickName");
+      if (imgEl) imgEl.src = found.img;
+      if (nameEl) nameEl.textContent = found.name;
+    }
+
+    function applyExpert(key){
+      const sel = document.getElementById("selType");
+      if (!sel) return;
+
+      // ✅ 기존 로직 트리거를 위해 select 값 변경 + change 이벤트 발사
+      sel.value = key;
+      sel.dispatchEvent(new Event("change", { bubbles:true }));
+
+      // ✅ 화면 표시 갱신
+      setExpertUIByKey(key);
+
+      closeExpertModal();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const pickBtn = document.getElementById("expertPickBtn");
+      const modal = document.getElementById("expertModal");
+      const closeBtn = document.getElementById("expertModalClose");
+      const grid = document.getElementById("expertGrid");
+      const sel = document.getElementById("selType");
+
+      // 초기 표시(현재 select값 기준)
+      if (sel) setExpertUIByKey(sel.value || "Cyrille");
+
+      // 그리드 렌더
+      if (grid){
+        grid.innerHTML = EXPERT_UI.map(e => `
+          <button type="button"
+            class="group w-full rounded-2xl p-3 bg-white hover:bg-slate-50 border border-slate-300 hover:border-slate-400 transition"
+            data-key="${e.key}">
+            <div class="expert-icon-frame">
+              <img src="${e.img}" alt="${e.name}" class="expert-icon-img" />
+            </div>
+            <div class="mt-3 text-base font-bold text-gray-800 text-center">${e.name}</div>
+          </button>
+        `).join("");
+
+        grid.addEventListener("click", (ev) => {
+          const btn = ev.target.closest("button[data-key]");
+          if (!btn) return;
+          applyExpert(btn.getAttribute("data-key"));
+        });
+      }
+
+      pickBtn?.addEventListener("click", openExpertModal);
+      closeBtn?.addEventListener("click", closeExpertModal);
+
+      // 바깥 클릭 닫기
+      modal?.addEventListener("click", (ev) => {
+        if (ev.target === modal) closeExpertModal();
+      });
+
+      // ESC 닫기
+      window.addEventListener("keydown", (ev) => {
+        if (ev.key === "Escape") closeExpertModal();
+      });
+    });
+  </script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const SETTINGS = {
+      "Cyrille": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S4.csv" },
+        ]
+      },
+      "Agnes": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S4.csv" },
+        ]
+      },
+      "Holger": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S4.csv" },
+        ]
+      },
+      "Romulus": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S4.csv" },
+        ]
+      },
+      "Baldur": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S4.csv" },
+        ]
+      },
+      "Fabian": {
+        base: { csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian.csv" },
+        skills: [
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S4.csv" },
+        ]
+      },
+      "Valeria": {
+        base:{ csv: "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria.csv" },
+        skills:[
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria_S1.csv"},
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria_S2.csv"},
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria_S3.csv"},
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria_S4.csv"},
+        ]        
+      },
+    };
+
+    // ===== STATE =====
+    let expertLevels = [], expertExp = [], expertMark = [];
+    const skillLevels = [[],[],[],[]];
+    const skillExp  = [[],[],[],[]];
+    const skillItem = [[],[],[],[]];
+
+    // ===== DOM =====
+    const $ = (id)=>document.getElementById(id);
+    const selType = $("selType");
+    const expertCur = $("expertCur");
+    const expertTgt = $("expertTgt");
+    const expertWarn = document.getElementById("expertWarn"); // 없을 수 있음
+    const sumExpertExp  = $("sumExpertExp");
+    const sumExpertMark = $("sumExpertMark");
+    const btnReset = $("btnReset");
+    const btnCalc = $("btnSum");
+    const expertEffect =$("expertEffect");
+
+    const sRef = [1,2,3,4].map(i=>({
+      cur:$(`s${i}Cur`), tgt:$(`s${i}Tgt`),
+      warn:$(`s${i}Warn`), cap:$(`s${i}Cap`),
+      outE:$(`s${i}Exp`), outI:$(`s${i}Item`)
+    }));
+
+    const sumSkillExp = $("sumSkillExp");
+    const sumSkillItem = $("sumSkillItem");
+
+    // ===== UTIL =====
+    const fmt = n => Number(n||0).toLocaleString("ko-KR");
+    const isFilled = v => v !== "" && v !== null && v !== undefined && !Number.isNaN(+v);
+
+    function detectDelim(sample){
+      if (sample.includes("\t")) return "\t";
+      if (sample.includes(";"))  return ";";
+      return ",";
+    }
+
+    // 한 줄 CSV를 'Lv.N' 앞에서 강제 줄바꿈 (본체/스킬 공통)
+    function preprocessByLevel(text){
+      let s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
+      if (!s.includes("\n") && /Lv\.\s*\d+/i.test(s)) {
+        s = s.replace(/(Lv\.\s*\d+)/gi, "\n$1");
+      }
+      return s;
+    }
+
+    // 본체 CSV 파서 (정수 레벨, "구간 비용" 방식 고정: 1→2 = Lv2 값)
+    function parseExpertCSV(text){
+      const pre = preprocessByLevel(text);
+      const lines = pre.split("\n").filter(l=>l.trim()!=="");
+      if (!lines.length) return { levels:[], expSteps:[], markSteps:[] };
+
+      const delim = detectDelim(lines[0]);
+      const hasHeader = /(레벨|lv|level|경험치|exp)/i.test(lines[0]);
+      const start = hasHeader ? 1 : 0;
+
+      const EXP = new Map(), MARK = new Map();
+      const rawLevels = [];
+      const toInt = s => {
+        const m = String(s||"").match(/\d+/);
+        return m ? parseInt(m[0], 10) : NaN;
+      };
+      const toNum = (s) => {
+        const v = String(s ?? "").replace(/,/g, "").trim(); // ✅ 콤마 제거
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+      };
+
+      for (let i=start;i<lines.length;i++){
+        const c  = lines[i].split(delim);
+        const lv = toInt(c[0]);
+        if (!Number.isFinite(lv)) continue;
+        rawLevels.push(lv);
+
+        const ex = toNum(c[1]);
+        const mk = toNum(c[2]);
+        EXP.set(lv, ex);
+        MARK.set(lv, mk);
+      }
+
+      const levels = [...new Set(rawLevels)].sort((a,b)=>a-b);
+      if (levels.length < 2) return { levels, expSteps:[], markSteps:[] };
+
+      // ✅ 핵심: 누적/비누적 자동판별 쓰지 않고, "구간 비용" 방식으로 고정
+      // expSteps[i] = (levels[i] -> levels[i+1]) 비용 = Lv.(levels[i+1])의 값
+      const expSteps = [];
+      const markSteps = [];
+      for (let i=0;i<levels.length-1;i++){
+        const b = levels[i+1];
+        expSteps[i]  = Math.max(0, (EXP.get(b)  || 0));
+        markSteps[i] = Math.max(0, (MARK.get(b) || 0));
+      }
+
+      return { levels, expSteps, markSteps };
+    }
+
+    // 스킬 CSV (2열/3열 자동)
+    function parseSkillCSV(text){
+      const pre = preprocessByLevel(text);
+      const rows = pre.split("\n").filter(l=>l.trim()!=="");
+      if (!rows.length) return { levels:[], expSteps:[], itemSteps:[] };
+      const delim = detectDelim(rows[0]);
+      const headerLooks = /(레벨|lv|level|exp|item|아이템|학습의 책|경험치)/i.test(rows[0]);
+      const start = headerLooks ? 1 : 0;
+
+      const exp=[], item=[], levelsFromFile=[];
+      const toInt = s => { const m = String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+      const toNum = s => { const m = String(s||"").match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : 0; };
+
+      for (let i=start;i<rows.length;i++){
+        const c = rows[i].split(delim);
+        if (c.length >= 3){                 // Level,Exp,Item
+          const lv = toInt(c[0]); if (Number.isFinite(lv)) levelsFromFile.push(lv);
+          exp.push(toNum(c[1])); item.push(toNum(c[2]));
+        }else{                              // Exp,Item
+          exp.push(toNum(c[0])); item.push(toNum(c[1]));
+        }
+      }
+      const L = Math.max(1, exp.length);
+      let levels;
+      if (levelsFromFile.length){
+        const uniq = [...new Set(levelsFromFile)].sort((a,b)=>a-b);
+        levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L}, (_,i)=>i+1);
+      }else{
+        levels = Array.from({length:L}, (_,i)=>i+1); // 0..L
+      }
+      return { levels, expSteps:exp, itemSteps:item };
+    }
+
+    // 옵션 렌더링 (Lv.포맷 지원)
+    function renderOptions(selectEl, levels, useDot=false){
+      const label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
+      const opts = ['<option value=""></option>']
+        .concat(levels.map(lv => `<option value="${lv}">${label(lv)}</option>`))
+        .join("");
+      selectEl.innerHTML = opts;
+    }
+
+    function renderTargetOptions(selectEl, levels, greaterThan, useDot=false){
+      const label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
+      const filtered = levels.filter(lv => lv > greaterThan);
+      const opts = ['<option value=""></option>']
+        .concat(filtered.map(lv => `<option value="${lv}">${label(lv)}</option>`))
+        .join("");
+      selectEl.innerHTML = opts;
+    }
+
+    // CORS 친화 fetch + 디버깅
+    async function fetchText(url){
+      try{
+        const r = await fetch(url, { cache:"no-store", mode:"cors", redirect:"follow", referrerPolicy:"no-referrer" });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return await r.text();
+      }catch(err){
+        console.error("네트워크/CORS 에러:", url, err);
+        throw err;
+      }
+    }
+
+    async function loadDataFor(type){
+      const conf = SETTINGS[type];
+      // 본체
+      if (conf.base?.csv){
+        try{
+          const txt = await fetchText(conf.base.csv);
+          const { levels, expSteps, markSteps } = parseExpertCSV(txt);
+          expertLevels = levels;
+          expertExp    = expSteps;
+          expertMark   = markSteps;
+          renderOptions(expertCur, levels, true);  // 현재: 전체
+          renderTargetOptions(expertTgt, [], 0, true); // 목표: 비워두기
+          if (expertWarn) expertWarn.textContent = "";
+        }catch(e){
+          if (expertWarn) expertWarn.textContent = "데이터를 불러오지 못했습니다. 경로/CORS 확인";
+          expertLevels = []; expertExp=[]; expertMark=[];
+          renderOptions(expertCur, [], true);
+          renderOptions(expertTgt, [], true);
+        }
+      }
+      // 스킬 1~4
+      for (let i=0;i<4;i++){
+        const s = conf.skills?.[i];
+        const ref = sRef[i];
+        if (!ref) continue;
+        if (s && s.csv){
+          try{
+            const txt = await fetchText(s.csv);
+            const { levels, expSteps, itemSteps } = parseSkillCSV(txt);
+            skillLevels[i] = levels;
+            skillExp[i]    = expSteps;
+            skillItem[i]   = itemSteps;
+            ref.cap.textContent = levels.length ? `(최대 Lv.${levels[levels.length-1]})` : "";
+            renderOptions(ref.cur, levels, true);           // 현재: 전체
+            renderTargetOptions(ref.tgt, [], 0, true);      // 목표: 비워두기
+            ref.warn.textContent = "";
+          }catch(e){
+            console.warn("[CSV] 스킬 불러오기 실패", i+1, e);
+            skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
+            ref.cap.textContent = "";
+            renderOptions(ref.cur, [], true);
+            renderOptions(ref.tgt, [], true);
+            ref.warn.textContent = "스킬 로드 실패";
+          }
+        }else{
+          skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
+          ref.cap.textContent = "";
+          renderOptions(ref.cur, [], true);
+          renderOptions(ref.tgt, [], true);
+          ref.warn.textContent = "";
+        }
+        ref.outE.textContent = "0";
+        ref.outI.textContent = "0";
+      }
+      // 총합 초기화
+      if (sumExpertExp)  sumExpertExp.textContent  = "0";
+      if (sumExpertMark) sumExpertMark.textContent = "0";
+      sumSkillExp.textContent  = "0";
+      sumSkillItem.textContent = "0";
+
+      buildFullExpertEffects(type, expertLevels);
+      updateExpertEffect();
+
+      sendHeightToParent();
+    }
+
+    function sumRangeSteps(steps, fromLv, toLv){
+      let s=0; for (let lv=fromLv; lv<toLv; lv++) s += steps[lv]||0; return s;
+    }
+
+    function calc(){
+      // 본체
+      let eExp=0, eMark=0;
+      const curLv = +expertCur.value, tgtLv = +expertTgt.value;
+      if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
+        const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
+        if (expertWarn) {
+          expertWarn.textContent = (ti<=fi) ? "" : "";
+        }
+        if (fi>=0 && ti>fi){
+          for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
+        }
+      } else {
+        if (expertWarn) expertWarn.textContent = "";
+      }
+
+      // 스킬
+      let tExp=0, tItem=0;
+      sRef.forEach((ref,i)=>{
+
+        // ✅ [추가] 체크 안 된 스킬은 계산 제외
+        const on = document.getElementById(`useSkill${i+1}`)?.checked;
+        if (!on) { 
+          ref.warn.textContent = "";
+          ref.outE.textContent = "0";
+          ref.outI.textContent = "0";
+          return;
+        }
+
+        let sE=0, sI=0;
+        const cV = ref.cur.value, tV = ref.tgt.value;
+        if (isFilled(cV) && isFilled(tV) && skillLevels[i].length>1){
+          const c=+cV, t=+tV;
+          ref.warn.textContent = (t<=c) ? "목표 레벨은 현재보다 커야 합니다." : "";
+          if (t>c){ sE = sumRangeSteps(skillExp[i], c, t); sI = sumRangeSteps(skillItem[i], c, t); }
+        } else {
+          ref.warn.textContent = "";
+        }
+        ref.outE.textContent = fmt(sE);
+        ref.outI.textContent = fmt(sI);
+        tExp += sE; tItem += sI;
+      });
+    }
+    function calcSum(){
+      // 본체
+      let eExp=0, eMark=0;
+      const curLv = +expertCur.value, tgtLv = +expertTgt.value;
+      if (isFilled(curLv) && isFilled(tgtLv) && expertLevels.length>1){
+        const fi = expertLevels.indexOf(curLv), ti = expertLevels.indexOf(tgtLv);
+        if (expertWarn) {
+          expertWarn.textContent = (ti<=fi) ? "" : "";
+        }
+        if (fi>=0 && ti>fi){
+          for (let i=fi; i<ti; i++){ eExp += (expertExp[i]||0); eMark += (expertMark[i]||0); }
+        }
+      } else {
+        if (expertWarn) expertWarn.textContent = "";
+      }
+      if (sumExpertExp)  sumExpertExp.textContent  = fmt(eExp);
+      if (sumExpertMark) sumExpertMark.textContent = fmt(eMark);
+
+      // 스킬
+      let tExp=0, tItem=0;
+      sRef.forEach((ref,i)=>{
+        // ✅ [추가] 체크 안 된 스킬은 계산 제외
+        const on = document.getElementById(`useSkill${i+1}`)?.checked;
+        if (!on) { 
+          ref.warn.textContent = "";
+          ref.outE.textContent = "0";
+          ref.outI.textContent = "0";
+          return;
+        }
+
+        let sE=0, sI=0;
+        const cV = ref.cur.value, tV = ref.tgt.value;
+        if (isFilled(cV) && isFilled(tV) && skillLevels[i].length>1){
+          const c=+cV, t=+tV;
+          ref.warn.textContent = (t<=c) ? "목표 레벨은 현재보다 커야 합니다." : "";
+          if (t>c){ sE = sumRangeSteps(skillExp[i], c, t); sI = sumRangeSteps(skillItem[i], c, t); }
+        } else {
+          ref.warn.textContent = "";
+        }
+        ref.outE.textContent = fmt(sE);
+        ref.outI.textContent = fmt(sI);
+        tExp += sE; tItem += sI;
+      });
+      sumSkillExp.textContent  = fmt(tExp);
+      sumSkillItem.textContent = fmt(tItem);
+    }
+
+    function clearAll(){
+      expertCur.value = "";
+      expertTgt.innerHTML = '<option value=""></option>';
+      if (expertWarn) expertWarn.textContent = "";
+      if (sumExpertExp)  sumExpertExp.textContent  = "0";
+      if (sumExpertMark) sumExpertMark.textContent = "0";
+      sRef.forEach(ref=>{
+        ref.cur.value="";
+        ref.tgt.innerHTML = '<option value=""></option>';
+        ref.warn.textContent=""; 
+        ref.outE.textContent="0"; 
+        ref.outI.textContent="0";
+      });
+      sumSkillExp.textContent  = "0";
+      sumSkillItem.textContent = "0";
+      
+      document.querySelectorAll(".skill-effect").forEach(el => { el.textContent = "-"; });
+      expertEffect.textContent = "-";
+    }
+
+    // ====== 자동 목표 = 현재+1 ======
+    expertCur.addEventListener("change", () => {
+      const cur = +expertCur.value;
+      if (!isFilled(cur)) { expertTgt.innerHTML = '<option value=""></option>'; return; }
+      renderTargetOptions(expertTgt, expertLevels, cur, true);
+      // 첫 유효 옵션(=cur+1)이 있으면 자동 선택
+      if (expertTgt.options.length > 1) expertTgt.selectedIndex = 1;
+      updateExpertEffect();
+    });
+
+    sRef.forEach((ref, i) => {
+      ref.cur.addEventListener("change", () => {
+        const cur = +ref.cur.value;
+        if (!isFilled(cur)) { 
+          ref.tgt.innerHTML = '<option value=""></option>'; 
+          ref.warn.textContent=""; 
+          updateSkillEffects();
+          updateSkillConditions();
+          return; 
+        }
+        renderTargetOptions(ref.tgt, skillLevels[i], cur, true);
+        if (ref.tgt.options.length > 1) ref.tgt.selectedIndex = 1;
+        ref.warn.textContent = "";
+        updateSkillEffects();
+        updateSkillConditions();
+      });
+    });
+
+    expertTgt.addEventListener("change", () => {
+      updateExpertEffect();
+    });
+
+    // 변동에 따른 계산
+    [expertTgt].forEach(el=>{ el.addEventListener("change", calc); });
+    sRef.forEach(ref=>{
+      ref.tgt.addEventListener("change", calc);
+    });
+
+    selType.addEventListener("change", async ()=>{ 
+      await loadDataFor(selType.value); 
+      clearAll();
+      buildFullExpertEffects(selType.value, expertLevels);
+      updateSkillTitles();
+      updateSkillEffects();
+      updateSkillConditions();
+      updateExpertEffect();
+    });
+    btnReset.addEventListener("click", clearAll);
+    btnCalc.addEventListener("click", calcSum);
+    (async function init(){ await loadDataFor(selType.value); })();
+  });
+  </script>
+  <script>
+    // ───────── 본체(전문가) 레벨별 효과: 오버라이드 표 ─────────
+    // EXPERT_EFFECTS_OVERRIDE[전문가키][레벨] = "문구"
+    const EXPERT_EFFECTS_OVERRIDE = {
+      Cyrille: {
+        1:  "곰사냥에서 획득하는 자신의 피해포인트 +2%",
+        10: "곰사냥에서 획득하는 자신의 피해포인트 +4%",
+        20: "곰사냥에서 획득하는 자신의 피해포인트 +6%",
+        30: "곰사냥에서 획득하는 자신의 피해포인트 +9%",
+        40: "곰사냥에서 획득하는 자신의 피해포인트 +12%",
+        50: "곰사냥에서 획득하는 자신의 피해포인트 +15%",
+        60: "곰사냥에서 획득하는 자신의 피해포인트 +18%",
+        70: "곰사냥에서 획득하는 자신의 피해포인트 +21%",
+        80: "곰사냥에서 획득하는 자신의 피해포인트 +24%",
+        90: "곰사냥에서 획득하는 자신의 피해포인트 +27%",
+        100: "곰사냥에서 획득하는 자신의 피해포인트 +30%",
+      },
+      Agnes: {
+        1: "120분 채집마다 보물상자 1개 획득 / 일일상한 10개",
+        10: "120분 채집마다 보물상자 1개 획득 / 일일상한 12개",
+        20: "120분 채집마다 보물상자 1개 획득 / 일일상한 14개",
+        30: "120분 채집마다 보물상자 2개 획득 / 일일상한 16개",
+        40: "120분 채집마다 보물상자 2개 획득 / 일일상한 18개",
+        50: "120분 채집마다 보물상자 3개 획득 / 일일상한 20개",
+        60: "120분 채집마다 보물상자 3개 획득 / 일일상한 22개",
+        70: "120분 채집마다 보물상자 4개 획득 / 일일상한 24개",
+        80: "120분 채집마다 보물상자 4개 획득 / 일일상한 26개",
+        90: "120분 채집마다 보물상자 5개 획득 / 일일상한 28개",
+        100: "120분 채집마다 보물상자 5개 획득 / 일일상한 30개",
+      },
+      Holger:  { 
+        1: "경기장 전투 후 50% 확률로 보물상자 1개 획득",
+        10: "경기장 전투 후 55% 확률로 보물상자 1개 획득",
+        20: "경기장 전투 후 60% 확률로 보물상자 1개 획득",
+        30: "경기장 전투 후 65% 확률로 보물상자 1개 획득",
+        40: "경기장 전투 후 70% 확률로 보물상자 1개 획득",
+        50: "경기장 전투 후 75% 확률로 보물상자 2개 획득",
+        60: "경기장 전투 후 80% 확률로 보물상자 2개 획득",
+        70: "경기장 전투 후 85% 확률로 보물상자 2개 획득",
+        80: "경기장 전투 후 90% 확률로 보물상자 2개 획득",
+        90: "경기장 전투 후 95% 확률로 보물상자 2개 획득",
+        100: "경기장 전투 후 100% 확률로 보물상자 3개 획득",
+      },
+      Romulus: { 
+        1: "부대 출정량 300 증가",
+        10: "부대 출정량 600 증가",
+        20: "부대 출정량 1,000 증가",
+        30: "부대 출정량 1,500 증가",
+        40: "부대 출정량 2,000 증가",
+        50: "부대 출정량 3,000 증가",
+        60: "부대 출정량 4,000 증가",
+        70: "부대 출정량 5,500 증가",
+        80: "부대 출정량 7,000 증가",
+        90: "부대 출정량 8,500 증가",
+        100: "부대 출정량 10,000 증가",
+      },
+      Baldur: {
+        1: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 20% 증가",
+        10: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 28% 증가",
+        20: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 36% 증가",
+        30: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 44% 증가",
+        40: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 52% 증가",
+        50: "연맹상점 상품 5% 할인, 개인 격려 보물상자 보상 60% 증가",
+        60: "연맹상점 상품 10% 할인, 개인 격려 보물상자 보상 68% 증가",
+        70: "연맹상점 상품 10% 할인, 개인 격려 보물상자 보상 76% 증가",
+        80: "연맹상점 상품 10% 할인, 개인 격려 보물상자 보상 84% 증가",
+        90: "연맹상점 상품 10% 할인, 개인 격려 보물상자 보상 92% 증가",
+        100: "연맹상점 상품 15% 할인, 개인 격려 보물상자 보상 100% 증가",
+      },
+      Fabian: {
+        1: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 2% 증가",
+        10: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 4% 증가",
+        20: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 6% 증가",
+        30: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 9% 증가",
+        40: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 12% 증가",
+        50: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 15% 증가",
+        60: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 18% 증가",
+        70: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 21% 증가",
+        80: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 24% 증가",
+        90: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 27% 증가",
+        100: "무기공장 및 서리병기리그에서 아군부대의 공격력 및 방어력 30% 증가",
+      },
+      Valeria: {
+        1:"최강왕국의 전쟁단계 중 공격력과 방어력 2% 증가",
+        10:"최강왕국의 전쟁단계 중 공격력과 방어력 4% 증가",
+        20:"최강왕국의 전쟁단계 중 공격력과 방어력 6% 증가",
+        30:"최강왕국의 전쟁단계 중 공격력과 방어력 9% 증가",
+        40:"최강왕국의 전쟁단계 중 공격력과 방어력 12% 증가",
+        50:"최강왕국의 전쟁단계 중 공격력과 방어력 15% 증가",
+        60:"최강왕국의 전쟁단계 중 공격력과 방어력 18% 증가",
+        70:"최강왕국의 전쟁단계 중 공격력과 방어력 21% 증가",
+        80:"최강왕국의 전쟁단계 중 공격력과 방어력 24% 증가",
+        90:"최강왕국의 전쟁단계 중 공격력과 방어력 27% 증가",
+        100:"최강왕국의 전쟁단계 중 공격력과 방어력 30% 증가",
+      },
+    };
+    
+    const EXPERT_RELATIONSHIP = {
+      Cyrille: {
+        1:  "우연한 만남 : 부대공격력 +0.60%",
+        10: "깊지 않은 교제1 : 부대공격력 +1.20%",
+        20: "깊지 않은 교제2 : 부대공격력 +1.80%",
+        30: "깊지 않은 교제3 : 부대공격력 +2.40%",
+        40: "의기투합1 : 부대공격력 +3.00%",
+        50: "의기투합2 : 부대공격력 +3.60%",
+        60: "의기투합3 : 부대공격력 +4.20%",
+        70: "마음 터놓기1 : 부대공격력 +4.80%",
+        80: "마음 터놓기2 : 부대공격력 +5.40%",
+        90: "마음 터놓기3 : 부대공격력 +6.00%",
+        100: "어긋남 없는 마음 : 부대공격력 +6.60%",
+      },
+      Agnes: {
+        1:  "우연한 만남 : 부대방어력 +0.60%",
+        10: "깊지 않은 교제1 : 부대방어력 +1.20%",
+        20: "깊지 않은 교제2 : 부대방어력 +1.80%",
+        30: "깊지 않은 교제3 : 부대방어력 +2.40%",
+        40: "의기투합1 : 부대방어력 +3.00%",
+        50: "의기투합2 : 부대방어력 +3.60%",
+        60: "의기투합3 : 부대방어력 +4.20%",
+        70: "마음 터놓기1 : 부대방어력 +4.80%",
+        80: "마음 터놓기2 : 부대방어력 +5.40%",
+        90: "마음 터놓기3 : 부대방어력 +6.00%",
+        100: "어긋남 없는 마음 : 부대방어력 +6.60%",
+      },
+      Holger:  { 
+        1:  "우연한 만남 : 부대공격력, 방어력 +0.60%",
+        10: "깊지 않은 교제1 : 부대공격력, 방어력 +1.20%",
+        20: "깊지 않은 교제2 : 부대공격력, 방어력 +1.80%",
+        30: "깊지 않은 교제3 : 부대공격력, 방어력 +2.40%",
+        40: "의기투합1 : 부대공격력, 방어력 +3.00%",
+        50: "의기투합2 : 부대공격력, 방어력 +3.60%",
+        60: "의기투합3 : 부대공격력, 방어력 +4.20%",
+        70: "마음 터놓기1 : 부대공격력, 방어력 +4.80%",
+        80: "마음 터놓기2 : 부대공격력, 방어력 +5.40%",
+        90: "마음 터놓기3 : 부대공격력, 방어력 +6.00%",
+        100: "어긋남 없는 마음 : 부대공격력, 방어력 +6.60%",
+      },
+      Romulus: { 
+        1:  "우연한 만남 : 부대 파괴력, 부대 HP +0.80%",
+        10: "깊지 않은 교제1 : 부대 파괴력, 부대 HP +1.60%",
+        20: "깊지 않은 교제2 : 부대 파괴력, 부대 HP +2.40%",
+        30: "깊지 않은 교제3 : 부대 파괴력, 부대 HP +3.20%",
+        40: "의기투합1 : 부대 파괴력, 부대 HP +4.00%",
+        50: "의기투합2 : 부대 파괴력, 부대 HP +4.80%",
+        60: "의기투합3 : 부대 파괴력, 부대 HP +5.60%",
+        70: "마음 터놓기1 : 부대 파괴력, 부대 HP +6.40%",
+        80: "마음 터놓기2 : 부대 파괴력, 부대 HP +7.20%",
+        90: "마음 터놓기3 : 부대 파괴력, 부대 HP +8.00%",
+        100: "어긋남 없는 마음 : 부대 파괴력, 부대 HP +8.80%",
+      },
+      Baldur: {
+        1:  "우연한 만남 : 부대공격력, 방어력 +0.40%",
+        10: "깊지 않은 교제1 : 부대공격력, 방어력 +0.80%",
+        20: "깊지 않은 교제2 : 부대공격력, 방어력 +1.20%",
+        30: "깊지 않은 교제3 : 부대공격력, 방어력 +1.60%",
+        40: "의기투합1 : 부대공격력, 방어력 +2.00%",
+        50: "의기투합2 : 부대공격력, 방어력 +2.40%",
+        60: "의기투합3 : 부대공격력, 방어력 +2.80%",
+        70: "마음 터놓기1 : 부대공격력, 방어력 +3.20%",
+        80: "마음 터놓기2 : 부대공격력, 방어력 +3.60%",
+        90: "마음 터놓기3 : 부대공격력, 방어력 +4.00%",
+        100: "어긋남 없는 마음 : 부대공격력, 방어력 +4.40%",
+      },
+      Fabian: {
+        1:  "우연한 만남 : 부대 파괴력, 부대 HP +0.60%",
+        10: "깊지 않은 교제1 : 부대 파괴력, 부대 HP +1.20%",
+        20: "깊지 않은 교제2 : 부대 파괴력, 부대 HP +1.80%",
+        30: "깊지 않은 교제3 : 부대 파괴력, 부대 HP +2.40%",
+        40: "의기투합1 : 부대 파괴력, 부대 HP +3.00%",
+        50: "의기투합2 : 부대 파괴력, 부대 HP +3.60%",
+        60: "의기투합3 : 부대 파괴력, 부대 HP +4.20%",
+        70: "마음 터놓기1 : 부대 파괴력, 부대 HP +4.80%",
+        80: "마음 터놓기2 : 부대 파괴력, 부대 HP +5.40%",
+        90: "마음 터놓기3 : 부대 파괴력, 부대 HP +6.00%",
+        100: "어긋남 없는 마음 : 부대 파괴력, 부대 HP +6.60%",
+      },
+      Valeria: {
+        1:  "우연한 만남 : 부대 파괴력, 부대 HP +0.80%",
+        10: "깊지 않은 교제1 : 부대 파괴력, 부대 HP +1.60%",
+        20: "깊지 않은 교제2 : 부대 파괴력, 부대 HP +2.40%",
+        30: "깊지 않은 교제3 : 부대 파괴력, 부대 HP +3.20%",
+        40: "의기투합1 : 부대 파괴력, 부대 HP +4.00%",
+        50: "의기투합2 : 부대 파괴력, 부대 HP +4.80%",
+        60: "의기투합3 : 부대 파괴력, 부대 HP +5.60%",
+        70: "마음 터놓기1 : 부대 파괴력, 부대 HP +6.40%",
+        80: "마음 터놓기2 : 부대 파괴력, 부대 HP +7.20%",
+        90: "마음 터놓기3 : 부대 파괴력, 부대 HP +8.00%",
+        100: "어긋남 없는 마음 : 부대 파괴력, 부대 HP +8.80%",
+      },
+    };
+    
+    // 런타임 풀커버리지 보관소
+    const EXPERT_EFFECTS_FULL = { Cyrille:[], Agnes:[], Holger:[], Romulus:[], Baldur:[], Fabian:[] };
+
+    // 현재 로드된 expertLevels를 기준으로 1~최대레벨까지 모두 채움
+    function buildFullExpertEffects(expert, expertLevels) {
+      const maxLv = (expertLevels && expertLevels.length) ? expertLevels[expertLevels.length - 1] : 0;
+      const arr = Array.from({length: maxLv + 1}, (_, lv) => {
+        if (lv === 0) return ""; // Lv0 없음
+        return "-"; // 기본 문구
+      });
+      // 오버라이드 병합
+      const ov = EXPERT_EFFECTS_OVERRIDE[expert] || {};
+      Object.keys(ov).forEach(k => {
+        const lv = Number(k);
+        if (Number.isFinite(lv) && lv >= 1 && lv <= maxLv) arr[lv] = ov[k];
+      });
+      EXPERT_EFFECTS_FULL[expert] = arr;
+    }
+
+    function getExpertEffect(expert, level) {
+      return (EXPERT_EFFECTS_FULL[expert] || [])[level] || "";
+    }
+
+    function updateExpertEffect() {
+      const expert = document.getElementById("selType")?.value;
+      const tgtSel = document.getElementById("expertTgt");
+      const lv = Number(String(tgtSel?.value || "0").replace(/[^0-9]/g, "")) || 0;
+      const out = document.getElementById("expertEffect");
+      if (!out) return;
+      out.textContent = lv ? (getExpertEffect(expert, lv)) : "-";
+      
+      updateExpertRelationship();
+    }
+    
+    function getRelationshipKey(v){
+      v = Number(v) || 0;
+      if (v <= 0) return 0;     // 표시용: 0이면 "-" 처리
+      if (v >= 100) return 100; // 100 이상은 100 고정
+      if (v < 10) return 1;     // 1~9는 1
+      return Math.floor(v/10)*10; // 10~19→10, 20~29→20 ...
+    }
+    
+    function getExpertRelationship(expert, relValue){
+      const map = EXPERT_RELATIONSHIP[expert];
+      if (!map) return "-";
+
+      const key = getRelationshipKey(relValue);
+      if (!key) return "-";
+
+      return map[key] || "-";
+    }
+
+    function updateExpertRelationship(){
+      const expert = document.getElementById("selType")?.value;
+
+      // ✅ "목표값"을 관계에도 같이 쓰는 버전 (원하면 여기만 바꾸면 됨)
+      const tgtSel = document.getElementById("expertTgt");
+      const rel = Number(String(tgtSel?.value || "0").replace(/[^0-9]/g, "")) || 0;
+
+      const out = document.getElementById("expertrelationship");
+      if (!out) return;
+
+      out.textContent = getExpertRelationship(expert, rel);
+    }
+  </script>
+  <script>
+    // ================= 레벨별 효과 데이터 =================
+    // 구조: SKILL_EFFECTS[전문가키][스킬인덱스][레벨] = "표시문구"
+    //  - 전문가키: selType의 <option value="..."> 값과 일치 (Cyrille/Agnes/Holger/Romulus)
+    //  - 스킬인덱스: 0=스킬1, 1=스킬2, 2=스킬3, 3=스킬4
+    //  - 레벨: 정수 (목표 select의 값과 동일)
+    const SKILL_EFFECTS = {
+      Cyrille: [
+        // 스킬1
+        {
+          1:"(곰사냥 한정) 집결 수용량 30,000 증가",
+          2:"(곰사냥 한정) 집결 수용량 60,000 증가",
+          3:"(곰사냥 한정) 집결 수용량 90,000 증가",
+          4:"(곰사냥 한정) 집결 수용량 120,000 증가",
+          5:"(곰사냥 한정) 집결 수용량 150,000 증가",
+          6:"(곰사냥 한정) 집결 수용량 180,000 증가",
+          7:"(곰사냥 한정) 집결 수용량 210,000 증가",
+          8:"(곰사냥 한정) 집결 수용량 240,000 증가",
+          9:"(곰사냥 한정) 집결 수용량 270,000 증가",
+          10:"(곰사냥 한정) 집결 수용량 300,000 증가",
+        },
+        // 스킬2
+        {
+          1:"보라너트 1개 추가 획득",
+          2:"보라너트 2개 추가 획득",
+          3:"보라너트 3개 추가 획득",
+          4:"보라너트 4개 추가 획득",
+          5:"보라너트 5개 추가 획득",
+        },
+        // 스킬3
+        {
+          1:"마스터리 에너지석 1개 추가 획득",
+          2:"마스터리 에너지석 2개 추가 획득",
+          3:"마스터리 에너지석 3개 추가 획득",
+          4:"마스터리 에너지석 4개 추가 획득",
+          5:"마스터리 에너지석 5개 추가 획득",
+        },
+        // 스킬4
+        {
+          1:"(곰사냥 한정) 출정 수용량 3,000 증가",
+          2:"(곰사냥 한정) 출정 수용량 6,000 증가",
+          3:"(곰사냥 한정) 출정 수용량 9,000 증가",
+          4:"(곰사냥 한정) 출정 수용량 12,000 증가",
+          5:"(곰사냥 한정) 출정 수용량 15,000 증가",
+          6:"(곰사냥 한정) 출정 수용량 18,000 증가",
+          7:"(곰사냥 한정) 출정 수용량 21,000 증가",
+          8:"(곰사냥 한정) 출정 수용량 24,000 증가",
+          9:"(곰사냥 한정) 출정 수용량 27,000 증가",
+          10:"(곰사냥 한정) 출정 수용량 30,000 증가",
+        },
+      ],
+      Agnes: [ 
+        // 스킬1
+        {
+          1:"등대 정보수량 2개 추가",
+          2:"등대 정보수량 3개 추가",
+          3:"등대 정보수량 4개 추가",
+          4:"등대 정보수량 6개 추가",
+          5:"등대 정보수량 8개 추가",
+        },
+        // 스킬2
+        {
+          1:"창고 스태미나 10 증가",
+          2:"창고 스태미나 15 증가",
+          3:"창고 스태미나 20 증가",
+          4:"창고 스태미나 30 증가",
+          5:"창고 스태미나 40 증가",
+        },
+        // 스킬3
+        {
+          1:"건설시간 2h 감소",
+          2:"건설시간 3h 감소",
+          3:"건설시간 4h 감소",
+          4:"건설시간 6h 감소",
+          5:"건설시간 8h 감소",
+        },
+        // 스킬4
+        {
+          1:"일일퀘스트 보상 신비한 휘장 20개 추가 획득\n신비한 상점 무료새로고침 1회 증가",
+          2:"일일퀘스트 보상 신비한 휘장 30개 추가 획득\n신비한 상점 무료새로고침 1회 증가",
+          3:"일일퀘스트 보상 신비한 휘장 40개 추가 획득\n신비한 상점 무료새로고침 1회 증가",
+          4:"일일퀘스트 보상 신비한 휘장 50개 추가 획득\n신비한 상점 무료새로고침 2회 증가",
+          5:"일일퀘스트 보상 신비한 휘장 60개 추가 획득\n신비한 상점 무료새로고침 2회 증가",
+          6:"일일퀘스트 보상 신비한 휘장 70개 추가 획득\n신비한 상점 무료새로고침 2회 증가",
+          7:"일일퀘스트 보상 신비한 휘장 80개 추가 획득\n신비한 상점 무료새로고침 3회 증가",
+          8:"일일퀘스트 보상 신비한 휘장 90개 추가 획득\n신비한 상점 무료새로고침 3회 증가",
+          9:"일일퀘스트 보상 신비한 휘장 100개 추가 획득\n신비한 상점 무료새로고침 3회 증가",
+          10:"일일퀘스트 보상 신비한 휘장 120개 추가 획득\n신비한 상점 무료새로고침 4회 증가",
+        },
+      ],  // 전 레벨 채워 넣기
+      Holger: [ 
+        // 스킬1
+        {
+          1:"경기장 병사 공격력 및 HP 2% 증가",
+          2:"경기장 병사 공격력 및 HP 4% 증가",
+          3:"경기장 병사 공격력 및 HP 6% 증가",
+          4:"경기장 병사 공격력 및 HP 8% 증가",
+          5:"경기장 병사 공격력 및 HP 10% 증가",
+          6:"경기장 병사 공격력 및 HP 12% 증가",
+          7:"경기장 병사 공격력 및 HP 14% 증가",
+          8:"경기장 병사 공격력 및 HP 16% 증가",
+          9:"경기장 병사 공격력 및 HP 18% 증가",
+          10:"경기장 병사 공격력 및 HP 20% 증가",
+        },
+        // 스킬2
+        {
+          1:"경기장 코인 5% 추가 획득",
+          2:"경기장 코인 10% 추가 획득",
+          3:"경기장 코인 15% 추가 획득",
+          4:"경기장 코인 20% 추가 획득",
+          5:"경기장 코인 25% 추가 획득",
+          6:"경기장 코인 30% 추가 획득",
+          7:"경기장 코인 35% 추가 획득",
+          8:"경기장 코인 40% 추가 획득",
+          9:"경기장 코인 45% 추가 획득",
+          10:"경기장 코인 50% 추가 획득",
+        },
+        // 스킬3
+        {
+          1:"경기장 상점 아이템 1개 추가\n추가된 아이템 가격할인 5%",
+          2:"경기장 상점 아이템 1개 추가\n추가된 아이템 가격할인 10%",
+          3:"경기장 상점 아이템 1개 추가\n추가된 아이템 가격할인 15%",
+          4:"경기장 상점 아이템 1개 추가\n추가된 아이템 가격할인 20%",
+          5:"경기장 상점 아이템 1개 추가\n추가된 아이템 가격할인 25%",
+          6:"경기장 상점 아이템 2개 추가\n추가된 아이템 가격할인 30%",
+          7:"경기장 상점 아이템 2개 추가\n추가된 아이템 가격할인 35%",
+          8:"경기장 상점 아이템 2개 추가\n추가된 아이템 가격할인 40%",
+          9:"경기장 상점 아이템 2개 추가\n추가된 아이템 가격할인 45%",
+          10:"경기장 상점 아이템 3개 추가\n추가된 아이템 가격할인 50%",
+        },
+        // 스킬4
+        {
+          1:"경기장 영웅 공격력 및 HP 2% 증가",
+          2:"경기장 영웅 공격력 및 HP 4% 증가",
+          3:"경기장 영웅 공격력 및 HP 6% 증가",
+          4:"경기장 영웅 공격력 및 HP 8% 증가",
+          5:"경기장 영웅 공격력 및 HP 10% 증가",
+          6:"경기장 영웅 공격력 및 HP 12% 증가",
+          7:"경기장 영웅 공격력 및 HP 14% 증가",
+          8:"경기장 영웅 공격력 및 HP 16% 증가",
+          9:"경기장 영웅 공격력 및 HP 18% 증가",
+          10:"경기장 영웅 공격력 및 HP 20% 증가",
+        },
+      ],
+      Romulus: [ 
+        // 스킬1
+        {
+          1:"병사 무료모집 150 / 군번줄 1개 획득",
+          2:"병사 무료모집 200 / 군번줄 2개 획득",
+          3:"병사 무료모집 250 / 군번줄 3개 획득",
+          4:"병사 무료모집 300 / 군번줄 4개 획득",
+          5:"병사 무료모집 350 / 군번줄 5개 획득",
+          6:"병사 무료모집 400 / 군번줄 6개 획득",
+          7:"병사 무료모집 450 / 군번줄 7개 획득",
+          8:"병사 무료모집 500 / 군번줄 8개 획득",
+          9:"병사 무료모집 550 / 군번줄 9개 획득",
+          10:"병사 무료모집 600 / 군번줄 10개 획득",
+        },
+        // 스킬2
+        {
+          1:"부대 공격력 및 방어력 0.5% 증가",
+          2:"부대 공격력 및 방어력 1% 증가",
+          3:"부대 공격력 및 방어력 1.5% 증가",
+          4:"부대 공격력 및 방어력 2% 증가",
+          5:"부대 공격력 및 방어력 2.5% 증가",
+          6:"부대 공격력 및 방어력 3% 증가",
+          7:"부대 공격력 및 방어력 3.5% 증가",
+          8:"부대 공격력 및 방어력 4% 증가",
+          9:"부대 공격력 및 방어력 4.5% 증가",
+          10:"부대 공격력 및 방어력 5% 증가",
+          11:"부대 공격력 및 방어력 5.5% 증가",
+          12:"부대 공격력 및 방어력 6% 증가",
+          13:"부대 공격력 및 방어력 6.5% 증가",
+          14:"부대 공격력 및 방어력 7% 증가",
+          15:"부대 공격력 및 방어력 7.5% 증가",
+          16:"부대 공격력 및 방어력 8% 증가",
+          17:"부대 공격력 및 방어력 8.5% 증가",
+          18:"부대 공격력 및 방어력 9% 증가",
+          19:"부대 공격력 및 방어력 0.5% 증가",
+          20:"부대 공격력 및 방어력 10% 증가",
+        },
+        // 스킬3
+        {
+          1:"부대 파괴력 및 HP 0.5% 증가",
+          2:"부대 파괴력 및 HP 1% 증가",
+          3:"부대 파괴력 및 HP 1.5% 증가",
+          4:"부대 파괴력 및 HP 2% 증가",
+          5:"부대 파괴력 및 HP 2.5% 증가",
+          6:"부대 파괴력 및 HP 3% 증가",
+          7:"부대 파괴력 및 HP 3.5% 증가",
+          8:"부대 파괴력 및 HP 4% 증가",
+          9:"부대 파괴력 및 HP 0.5% 증가",
+          10:"부대 파괴력 및 HP 5% 증가",
+          11:"부대 파괴력 및 HP 5.5% 증가",
+          12:"부대 파괴력 및 HP 6% 증가",
+          13:"부대 파괴력 및 HP 6.5% 증가",
+          14:"부대 파괴력 및 HP 7% 증가",
+          15:"부대 파괴력 및 HP 7.5% 증가",
+          16:"부대 파괴력 및 HP 8% 증가",
+          17:"부대 파괴력 및 HP 8.5% 증가",
+          18:"부대 파괴력 및 HP 9% 증가",
+          19:"부대 파괴력 및 HP 0.5% 증가",
+          20:"부대 파괴력 및 HP 10% 증가",
+        },
+        // 스킬4
+        {
+          1:"집결 수용량 5,000 증가",
+          2:"집결 수용량 10,000 증가",
+          3:"집결 수용량 15,000 증가",
+          4:"집결 수용량 20,000 증가",
+          5:"집결 수용량 25,000 증가",
+          6:"집결 수용량 30,000 증가",
+          7:"집결 수용량 35,000 증가",
+          8:"집결 수용량 40,000 증가",
+          9:"집결 수용량 45,000 증가",
+          10:"집결 수용량 50,000 증가",
+          11:"집결 수용량 55,000 증가",
+          12:"집결 수용량 60,000 증가",
+          13:"집결 수용량 65,000 증가",
+          14:"집결 수용량 70,000 증가",
+          15:"집결 수용량 75,000 증가",
+          16:"집결 수용량 80,000 증가",
+          17:"집결 수용량 85,000 증가",
+          18:"집결 수용량 90,000 증가",
+          19:"집결 수용량 95,000 증가",
+          20:"집결 수용량 100,000 증가",
+        },
+      ],
+      Baldur: [
+        //스킬1
+        {
+          1:"연맹총동원 포인트 획득량 2% 증가\n이정표 등급 1개 증가",
+          2:"연맹총동원 포인트 획득량 4% 증가\n이정표 등급 1개 증가",
+          3:"연맹총동원 포인트 획득량 6% 증가\n이정표 등급 1개 증가",
+          4:"연맹총동원 포인트 획득량 8% 증가\n이정표 등급 1개 증가",
+          5:"연맹총동원 포인트 획득량 10% 증가\n이정표 등급 1개 증가",
+          6:"연맹총동원 포인트 획득량 12% 증가\n이정표 등급 2개 증가",
+          7:"연맹총동원 포인트 획득량 14% 증가\n이정표 등급 2개 증가",
+          8:"연맹총동원 포인트 획득량 16% 증가\n이정표 등급 2개 증가",
+          9:"연맹총동원 포인트 획득량 18% 증가\n이정표 등급 2개 증가",
+          10:"연맹총동원 포인트 획득량 20% 증가\n이정표 등급 3개 증가",
+        },
+        //스킬2
+        {
+          1:"연맹챔피언십 배지 획득 수량 5% 증가\n챔피언십 상점 상품 1개 추가",
+          2:"연맹챔피언십 배지 획득 수량 10% 증가\n챔피언십 상점 상품 1개 추가",
+          3:"연맹챔피언십 배지 획득 수량 15% 증가\n챔피언십 상점 상품 1개 추가",
+          4:"연맹챔피언십 배지 획득 수량 20% 증가\n챔피언십 상점 상품 1개 추가",
+          5:"연맹챔피언십 배지 획득 수량 25% 증가\n챔피언십 상점 상품 1개 추가",
+          6:"연맹챔피언십 배지 획득 수량 30% 증가\n챔피언십 상점 상품 2개 추가",
+          7:"연맹챔피언십 배지 획득 수량 35% 증가\n챔피언십 상점 상품 2개 추가",
+          8:"연맹챔피언십 배지 획득 수량 40% 증가\n챔피언십 상점 상품 2개 추가",
+          9:"연맹챔피언십 배지 획득 수량 45% 증가\n챔피언십 상점 상품 2개 추가",
+          10:"연맹챔피언십 배지 획득 수량 50% 증가\n챔피언십 상점 상품 3개 추가",
+        },
+        //스킬3
+        {
+          1:"미치광이 조이 포인트 획득량 5% 증가\n20만 포인트당 보물상자 1개 획득",
+          2:"미치광이 조이 포인트 획득량 10% 증가\n20만 포인트당 보물상자 2개 획득",
+          3:"미치광이 조이 포인트 획득량 15% 증가\n20만 포인트당 보물상자 3개 획득",
+          4:"미치광이 조이 포인트 획득량 20% 증가\n20만 포인트당 보물상자 4개 획득",
+          5:"미치광이 조이 포인트 획득량 25% 증가\n20만 포인트당 보물상자 5개 획득",
+          6:"미치광이 조이 포인트 획득량 30% 증가\n20만 포인트당 보물상자 6개 획득",
+          7:"미치광이 조이 포인트 획득량 35% 증가\n20만 포인트당 보물상자 7개 획득",
+          8:"미치광이 조이 포인트 획득량 40% 증가\n20만 포인트당 보물상자 8개 획득",
+          9:"미치광이 조이 포인트 획득량 45% 증가\n20만 포인트당 보물상자 9개 획득",
+          10:"미치광이 조이 포인트 획득량 50% 증가\n20만 포인트당 보물상자 10개 획득",
+        },
+        //스킬4
+        {
+          1:"연맹 대작전 포인트 획득량 5% 증가\n일일진행도 보상 1등급 증가",
+          2:"연맹 대작전 포인트 획득량 10% 증가\n일일진행도 보상 1등급 증가",
+          3:"연맹 대작전 포인트 획득량 15% 증가\n일일진행도 보상 1등급 증가",
+          4:"연맹 대작전 포인트 획득량 20% 증가\n일일진행도 보상 1등급 증가",
+          5:"연맹 대작전 포인트 획득량 25% 증가\n일일진행도 보상 1등급 증가",
+          6:"연맹 대작전 포인트 획득량 30% 증가\n일일진행도 보상 2등급 증가",
+          7:"연맹 대작전 포인트 획득량 35% 증가\n일일진행도 보상 2등급 증가",
+          8:"연맹 대작전 포인트 획득량 40% 증가\n일일진행도 보상 2등급 증가",
+          9:"연맹 대작전 포인트 획득량 45% 증가\n일일진행도 보상 2등급 증가",
+          10:"연맹 대작전 포인트 획득량 50% 증가\n일일진행도 보상 3등급 증가",
+        },
+      ],
+      Fabian: [
+        //스킬1
+        {
+          1:"무기공장 및 서리병기리그\n빙산코인 증가 10%",
+          2:"무기공장 및 서리병기리그\n빙산코인 증가 20%",
+          3:"무기공장 및 서리병기리그\n빙산코인 증가 30%",
+          4:"무기공장 및 서리병기리그\n빙산코인 증가 40%",
+          5:"무기공장 및 서리병기리그\n빙산코인 증가 50%",
+          6:"무기공장 및 서리병기리그\n빙산코인 증가 60%",
+          7:"무기공장 및 서리병기리그\n빙산코인 증가 70%",
+          8:"무기공장 및 서리병기리그\n빙산코인 증가 80%",
+          9:"무기공장 및 서리병기리그\n빙산코인 증가 90%",
+          10:"무기공장 및 서리병기리그\n빙산코인 증가 100%",
+        },
+        //스킬2
+        {
+          1:"무기공장 및 서리병기리그\n무료치료 병사수 : 100,000",
+          2:"무기공장 및 서리병기리그\n무료치료 병사수 : 200,000",
+          3:"무기공장 및 서리병기리그\n무료치료 병사수 : 300,000",
+          4:"무기공장 및 서리병기리그\n무료치료 병사수 : 400,000",
+          5:"무기공장 및 서리병기리그\n무료치료 병사수 : 500,000",
+          6:"무기공장 및 서리병기리그\n무료치료 병사수 : 600,000",
+          7:"무기공장 및 서리병기리그\n무료치료 병사수 : 700,000",
+          8:"무기공장 및 서리병기리그\n무료치료 병사수 : 800,000",
+          9:"무기공장 및 서리병기리그\n무료치료 병사수 : 900,000",
+          10:"무기공장 및 서리병기리그\n무료치료 병사수 : 1,000,000",
+        },
+        //스킬3
+        {
+          1:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 1.5% 증가",
+          2:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 3.0% 증가",
+          3:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 4.5% 증가",
+          4:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 6.0% 증가",
+          5:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 7.5% 증가",
+          6:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 9.0% 증가",
+          7:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 10.5% 증가",
+          8:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 12.0% 증가",
+          9:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 13.5% 증가",
+          10:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 15.0% 증가",
+          11:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 16.5% 증가",
+          12:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 18.0% 증가",
+          13:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 19.5% 증가",
+          14:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 21.0% 증가",
+          15:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 22.5% 증가",
+          16:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 24.0% 증가",
+          17:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 25.5% 증가",
+          18:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 27.0% 증가",
+          19:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 28.5% 증가",
+          20:"무기공장 및 서리병기리그\n부대 파괴력 및 HP 30.0% 증가",
+        },
+        //스킬4
+        {
+          1:"무기공장 및 서리병기리그\n집결 수용량 7,500 증가",
+          2:"무기공장 및 서리병기리그\n집결 수용량 15,000 증가",
+          3:"무기공장 및 서리병기리그\n집결 수용량 22,500 증가",
+          4:"무기공장 및 서리병기리그\n집결 수용량 30,000 증가",
+          5:"무기공장 및 서리병기리그\n집결 수용량 37,500 증가",
+          6:"무기공장 및 서리병기리그\n집결 수용량 45,000 증가",
+          7:"무기공장 및 서리병기리그\n집결 수용량 52,500 증가",
+          8:"무기공장 및 서리병기리그\n집결 수용량 60,000 증가",
+          9:"무기공장 및 서리병기리그\n집결 수용량 67,500 증가",
+          10:"무기공장 및 서리병기리그\n집결 수용량 75,000 증가",
+          11:"무기공장 및 서리병기리그\n집결 수용량 82,500 증가",
+          12:"무기공장 및 서리병기리그\n집결 수용량 90,000 증가",
+          13:"무기공장 및 서리병기리그\n집결 수용량 97,500 증가",
+          14:"무기공장 및 서리병기리그\n집결 수용량 105,000 증가",
+          15:"무기공장 및 서리병기리그\n집결 수용량 112,500 증가",
+          16:"무기공장 및 서리병기리그\n집결 수용량 120,000 증가",
+          17:"무기공장 및 서리병기리그\n집결 수용량 127,500 증가",
+          18:"무기공장 및 서리병기리그\n집결 수용량 135,000 증가",
+          19:"무기공장 및 서리병기리그\n집결 수용량 142,500 증가",
+          20:"무기공장 및 서리병기리그\n집결 수용량 150,000 증가",
+        },
+      ],
+      Valeria:[
+        //스킬1
+        {
+          1:"최강왕국 준비단계\n포인트 획득량 2%증가, 추가 보상 1개 증가",
+          2:"최강왕국 준비단계\n포인트 획득량 4%증가, 추가 보상 1개 증가",
+          3:"최강왕국 준비단계\n포인트 획득량 6%증가, 추가 보상 1개 증가",
+          4:"최강왕국 준비단계\n포인트 획득량 8%증가, 추가 보상 1개 증가",
+          5:"최강왕국 준비단계\n포인트 획득량 10%증가, 추가 보상 1개 증가",
+          6:"최강왕국 준비단계\n포인트 획득량 12%증가, 추가 보상 2개 증가",
+          7:"최강왕국 준비단계\n포인트 획득량 14%증가, 추가 보상 2개 증가",
+          8:"최강왕국 준비단계\n포인트 획득량 16%증가, 추가 보상 2개 증가",
+          9:"최강왕국 준비단계\n포인트 획득량 18%증가, 추가 보상 2개 증가",
+          10:"최강왕국 준비단계\n포인트 획득량 20%증가, 추가 보상 3개 증가",      
+        },
+        //스킬2
+        {
+          1:"솔라코인 5개 추가 획득\n최강왕국 상점 상품 1개 추가",
+          2:"솔라코인 10개 추가 획득\n최강왕국 상점 상품 1개 추가",
+          3:"솔라코인 15개 추가 획득\n최강왕국 상점 상품 1개 추가",
+          4:"솔라코인 20개 추가 획득\n최강왕국 상점 상품 1개 추가",
+          5:"솔라코인 25개 추가 획득\n최강왕국 상점 상품 1개 추가",
+          6:"솔라코인 30개 추가 획득\n최강왕국 상점 상품 2개 추가",
+          7:"솔라코인 35개 추가 획득\n최강왕국 상점 상품 2개 추가",
+          8:"솔라코인 40개 추가 획득\n최강왕국 상점 상품 2개 추가",
+          9:"솔라코인 45개 추가 획득\n최강왕국 상점 상품 2개 추가",
+          10:"솔라코인 50개 추가 획득\n최강왕국 상점 상품 3개 추가",
+        },
+        //스킬3
+        {
+          1:"최강왕국 전투단계\n부대 파괴력 및 HP 1.5% 증가",
+          2:"최강왕국 전투단계\n부대 파괴력 및 HP 3.0% 증가",
+          3:"최강왕국 전투단계\n부대 파괴력 및 HP 4.5% 증가",
+          4:"최강왕국 전투단계\n부대 파괴력 및 HP 6.0% 증가",
+          5:"최강왕국 전투단계\n부대 파괴력 및 HP 7.5% 증가",
+          6:"최강왕국 전투단계\n부대 파괴력 및 HP 9.0% 증가",
+          7:"최강왕국 전투단계\n부대 파괴력 및 HP 10.5% 증가",
+          8:"최강왕국 전투단계\n부대 파괴력 및 HP 12.0% 증가",
+          9:"최강왕국 전투단계\n부대 파괴력 및 HP 13.5% 증가",
+          10:"최강왕국 전투단계\n부대 파괴력 및 HP 15.0% 증가",
+          11:"최강왕국 전투단계\n부대 파괴력 및 HP 16.5% 증가",
+          12:"최강왕국 전투단계\n부대 파괴력 및 HP 18.0% 증가",
+          13:"최강왕국 전투단계\n부대 파괴력 및 HP 19.5% 증가",
+          14:"최강왕국 전투단계\n부대 파괴력 및 HP 21.0% 증가",
+          15:"최강왕국 전투단계\n부대 파괴력 및 HP 22.5% 증가",
+          16:"최강왕국 전투단계\n부대 파괴력 및 HP 24.0% 증가",
+          17:"최강왕국 전투단계\n부대 파괴력 및 HP 25.5% 증가",
+          18:"최강왕국 전투단계\n부대 파괴력 및 HP 27.0% 증가",
+          19:"최강왕국 전투단계\n부대 파괴력 및 HP 28.5% 증가",
+          20:"최강왕국 전투단계\n부대 파괴력 및 HP 30.0% 증가",
+        },
+        //스킬4
+        {
+          1:"최강왕국 전투단계\n집결 수용량 7,500 증가",
+          2:"최강왕국 전투단계\n집결 수용량 15,000 증가",
+          3:"최강왕국 전투단계\n집결 수용량 22,500 증가",
+          4:"최강왕국 전투단계\n집결 수용량 30,000 증가",
+          5:"최강왕국 전투단계\n집결 수용량 37,500 증가",
+          6:"최강왕국 전투단계\n집결 수용량 45,000 증가",
+          7:"최강왕국 전투단계\n집결 수용량 52,500 증가",
+          8:"최강왕국 전투단계\n집결 수용량 60,000 증가",
+          9:"최강왕국 전투단계\n집결 수용량 67,500 증가",
+          10:"최강왕국 전투단계\n집결 수용량 75,000 증가",
+          11:"최강왕국 전투단계\n집결 수용량 82,500 증가",
+          12:"최강왕국 전투단계\n집결 수용량 90,000 증가",
+          13:"최강왕국 전투단계\n집결 수용량 97,500 증가",
+          14:"최강왕국 전투단계\n집결 수용량 105,000 증가",
+          15:"최강왕국 전투단계\n집결 수용량 112,500 증가",
+          16:"최강왕국 전투단계\n집결 수용량 120,000 증가",
+          17:"최강왕국 전투단계\n집결 수용량 127,500 증가",
+          18:"최강왕국 전투단계\n집결 수용량 135,000 증가",
+          19:"최강왕국 전투단계\n집결 수용량 142,500 증가",
+          20:"최강왕국 전투단계\n집결 수용량 150,000 증가",
+        },
+      ]
+    };
+
+    const SKILL_NAMES = {
+      Cyrille: ["사방포획", "재활용하기", "무기 마스터리", "곰의 천적"],
+      Agnes:   ["고효율 정찰", "스킬 레벨업", "엔지니어링 관리", "비밀지식"],
+      Holger:  ["엘레트 검투사", "빛나는 격투장", "경기장의 스타", "경기장의 용맹함"],
+      Romulus: ["전쟁의 부름", "최후의 방어선", "아이에테스의 위세", "한마음 한뜻"],
+      Baldur: ["새벽빛 영광", "전쟁과 명예", "거액의 현상금", "희망의 노래"],
+      Fabian: ["회수 및 주조", "절망에서 구원", "열화 무장", "군수 거목"],
+      Valeria: ["전투준비", "뜨거운 훈장","전장 협주곡","압도적인 기세"],
+    };
+
+    // ================= 레벨업 조건 데이터(가상) =================
+    // 구조: SKILL_CONDITIONS[전문가키][스킬인덱스][레벨] = "표시문구"
+    const SKILL_CONDITIONS = {
+      Cyrille: [
+        // 스킬1 조건(가상)
+        {
+          4: "깊지 않은 교제3",
+          7: "의기 투합2",
+          10:"마음 터놓기1"
+        },
+        // 스킬2 조건(가상)
+        {
+          3: "의기 투합1",
+          5: "마음 터놓기2"
+        },
+        // 스킬3 조건(가상)
+        {
+          3: "총 스킬 레벨10",
+          5: "총 스킬 레벨15"
+        },
+        // 스킬4 조건(가상)
+        {
+          5: "총 스킬 레벨18",
+          8: "총 스킬 레벨18",
+          10: "총 스킬 레벨18"
+        }
+      ],
+      Agnes: [
+        {
+          3: "깊지 않은 교제3",
+          5: "마음 터놓기2"
+        },
+        {
+          3: "의기 투합1"
+        },
+        {
+          3: "총 스킬 레벨8",
+          5: "총 스킬 레벨12"
+        },
+        {
+          5: "총 스킬 레벨15",
+          8: "총 스킬 레벨20",
+          10: "총 스킬 레벨24"
+        }
+      ],
+      Holger:  [
+        {
+          5: "깊지 않은 교제3"
+        },
+        {
+          5: "의기 투합1",
+          8: "의기 투합3",
+          10: "마음 터놓기2"
+        },
+        {
+          5: "총 스킬 레벨14",
+          8: "총 스킬 레벨20",
+          10: "총 스킬 레벨28"          
+        },
+        {
+          10: "총 스킬 레벨39"
+        }
+      ],
+      Romulus: [
+        {
+          5: "깊지 않은 교제3",
+          10: "마음 터놓기1"
+        },
+        {
+          6: "깊지 않은 교제3",
+          11: "의기 투합3",
+          16: "마음 터놓기1"
+        },
+        {
+          6: "총 스킬 레벨20",
+          16: "총 스킬 레벨40"
+        },
+        {
+          6: "총 스킬 레벨30",
+          16: "총 스킬 레벨55",
+          20: "총 스킬 레벨69"
+        }
+      ],
+      Baldur: [
+        {
+          8: "의기 투합2",
+          10: "마음 터놓기1"
+        },
+        {
+          5: "의기 투합1",
+          8: "의기 투합3",
+          10: "마음 터놓기2"
+        },
+        {
+          5: "총 스킬 레벨14",
+          8: "총 스킬 레벨20",
+          10: "총 스킬 레벨28"
+        },
+        {
+          5: "총 스킬 레벨22",
+          10: "총 스킬 레벨39"
+        }
+      ],
+      Fabian: [
+        {
+          5: "깊지 않은 교제3",
+          8: "의기 투합2",
+          10: "마음 터놓기1"
+        },
+        {
+          5: "의기 투합1",
+          8: "의기 투합3",
+          10: "마음 터놓기2"
+        },
+        {
+          6: "총 스킬 레벨16"
+        },
+        {
+          11: "총 스킬 레벨36"
+        }
+      ],
+      Valeria: [
+        {
+          5: "깊지 않은 교제3",
+          8: "의기 투합2",
+          10: "마음 터놓기1"
+        },
+        {
+          5: "의기 투합1",
+          8: "의기 투합3",
+          10: "마음 터놓기2"
+        },
+        {
+          6: "총 스킬 레벨16"
+        },
+        {
+          6: "총 스킬 레벨24",
+          11: "총 스킬 레벨36"
+        }
+      ],
+    };
+
+    // ================ 표시 함수 ================
+    function getEffectText(expert, skillIdx, level) {
+      const table = (SKILL_EFFECTS[expert] || [])[skillIdx] || {};
+      return table[level] || ""; // 없으면 빈 문자열
+    }
+
+    function getEffectText(expert, skillIdx, level) {
+      const table = (SKILL_EFFECTS[expert] || [])[skillIdx] || {};
+      return table[level] || "";
+    }
+
+    function getConditionText(expert, skillIdx, level) {
+      const table = (SKILL_CONDITIONS[expert] || [])[skillIdx] || {};
+      return table[level] || "";
+    }
+
+    function updateSkillEffects() {
+      const expert = document.getElementById("selType")?.value;
+      if (!expert) return;
+
+      // 각 카드의 목표 select 값 읽어서 표시
+      document.querySelectorAll(".skill-effect").forEach(el => {
+        const idx = Number(el.dataset.index || 0); // 0..3
+        const tgtSel = document.getElementById(`s${idx+1}Tgt`);
+        const lv = Number(String(tgtSel?.value || "0").replace(/[^0-9]/g, "")) || 0;
+        el.textContent = lv ? (getEffectText(expert, idx, lv) || `Lv.${lv} 효과 데이터 없음`) : "-";
+
+        const on = document.getElementById(`useSkill${idx+1}`)?.checked;
+        if (!on) { el.textContent = "-"; return; }
+
+      });
+
+      sendHeightToParent();
+    }
+
+    function updateSkillConditions() {
+      const expert = document.getElementById("selType")?.value;
+      if (!expert) return;
+
+      document.querySelectorAll(".skill-cond").forEach(el => {
+        const idx = Number(el.dataset.index || 0); // 0..3
+        const tgtSel = document.getElementById(`s${idx+1}Tgt`);
+        const lv = Number(String(tgtSel?.value || "0").replace(/[^0-9]/g, "")) || 0;
+
+        el.textContent = lv ? (getConditionText(expert, idx, lv) || "-") : "-";
+
+        const on = document.getElementById(`useSkill${idx+1}`)?.checked;
+        if (!on) { el.textContent = "-"; return; }
+
+      });
+    }
+
+    function updateSkillTitles() {
+      const expert = document.getElementById("selType")?.value;
+      const names = SKILL_NAMES[expert] || [];
+      document.querySelectorAll(".skill-title").forEach(el => {
+        const idx = Number(el.dataset.index || 0);
+        el.textContent = names[idx] || `스킬 ${idx+1}`;
+      });
+    }
+
+    // ================ 이벤트 연결 ================
+    document.addEventListener("DOMContentLoaded", () => {
+      const selType = document.getElementById("selType");
+
+      // 전문가 변경 시: 제목/효과 동기화
+      selType?.addEventListener("change", () => {
+        updateSkillTitles();
+        updateSkillEffects();
+        updateSkillConditions();
+      });
+
+      // 각 스킬 목표 변경 시: 효과 갱신
+      [1,2,3,4].forEach(n => {
+        document.getElementById(`s${n}Tgt`)?.addEventListener("change", () => {
+          updateSkillEffects();
+          updateSkillConditions();
+        });
+      });
+
+      // 초기 1회
+      updateSkillTitles();
+      updateSkillEffects();
+      updateSkillConditions();
+      updateExpertEffect();
+    });
+  </script>
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+    
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+    
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+        window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+  <script>
+    // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+  
+    // 우클릭 방지
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });
+  </script>
+</body>
+</html>
