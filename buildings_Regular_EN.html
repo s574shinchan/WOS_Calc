@@ -128,25 +128,6 @@
     <!-- 건물 카드 그리드 -->
     <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4"></div>
     
-    <!-- 보유 자원 카드
-    <div class="exp-card mt-4">
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-[15px] font-semibold text-gray-800">Owned Items</h3>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="owned-불수정" class="block text-[15px] text-gray-600 mb-1">Owned Fire Crystal</label>
-            <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
-          </div>
-          <div>
-            <label for="owned-정제" class="block text-[15px] text-gray-600 mb-1">Owned Refind Fire Crystals</label>
-            <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <!-- 총합계 패널 (제목 문구 제거) -->
     <div id="summaryPanel" class="mt-4">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
@@ -176,21 +157,6 @@
             <span id="sum-svs" class="svs-score-value tabular-nums font-medium">0</span>
           </div>
         </div>
-
-        <!-- 과부족
-        <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">Surplus</div>
-          <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
-            <div class="flex items-center gap-2 text-gray-600">
-              <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
-              <span id="def-불수정" class="tabular-nums">0</span>
-            </div>
-            <div class="flex items-center gap-2 text-gray-600">
-            <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
-              <span id="def-정제" class="tabular-nums">0</span>
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -200,7 +166,7 @@
     function sendHeightToParent(){ const h=document.body.scrollHeight+10; window.parent?.postMessage({type:"FRAME_CHANGE",height:h},"*"); }
     window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
 
-    const buildingList = ["용광로","대사관","지휘부","방패병","창병","궁병","의무실","아카데미"];
+    const buildingList = ["용광로","대사관","지휘부","방패병","창병","궁병","의무실"];
     const resources = ["불수정","정제","고기","나무","석탄","철광","변환시간"];
     const buildingData = {};
     const nameAliasMap = {
@@ -551,8 +517,6 @@
         });
 
         // 카드 우측 ‘필요 합계’ 갱신 (체크와 무관 / 항상 표시)
-        //document.getElementById(`sub-불수정-${name}`).textContent = sub["불수정"].toLocaleString();
-        //document.getElementById(`sub-정제-${name}`).textContent   = sub["정제"].toLocaleString();
         document.getElementById(`sub-고기-${name}`).textContent    = formatValue(sub["고기"]);
         document.getElementById(`sub-나무-${name}`).textContent    = formatValue(sub["나무"]);
         document.getElementById(`sub-석탄-${name}`).textContent    = formatValue(sub["석탄"]);
