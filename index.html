@@ -276,7 +276,7 @@
   <script>
   (function () {
     // 이미 모바일 페이지면 종료
-    if (location.pathname.includes('/Mobile/index_m.html')) return;
+    if (location.pathname.includes('index_m.html')) return;
 
     const ua = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -294,7 +294,7 @@
 
     if (isMobile) {
       // 뒤로가기 눌렀을 때 PC페이지로 되돌아오는거 방지
-      location.replace('/Mobile/index_m.html');
+      location.replace('index_m.html');
     }
   })();
   </script>
@@ -314,7 +314,7 @@
     if (!isMobile) return;
 
     // 이미 모바일 페이지면 종료
-    if (location.pathname.includes('/Mobile/index_m.html')) return;
+    if (location.pathname.includes('index_m.html')) return;
 
     const TRY_KEY = 'mobile_redirect_try';
     const tryCount = Number(sessionStorage.getItem(TRY_KEY) || 0);
@@ -322,7 +322,7 @@
     if (tryCount < 1) {
       // 1회 강제 캐시 깨기 리다이렉트
       sessionStorage.setItem(TRY_KEY, tryCount + 1);
-      location.replace('/Mobile/index_m.html?v=' + Date.now());
+      location.replace('index_m.html?v=' + Date.now());
       return;
     }
 
@@ -371,7 +371,7 @@
           <li>• 시크릿(비공개) 모드로 접속</li>
           <li>• 브라우저 캐시 삭제 후 재접속</li>
         </ul>
-        <button onclick="location.replace('/Mobile/index_m.html?v=${v}')"
+        <button onclick="location.replace('index_m.html?v=${v}')"
           style="
             width:100%;
             padding:10px;
@@ -544,7 +544,7 @@
           <select id="langSelectPC" class="p-1 border border-gray-300 px-3 py-2 rounded text-sm text-gray-800">
             <option value="index.html">🌐 Language</option>
             <option value="index.html" selected>🇰🇷 한국어</option>
-            <option value="./EN/index_EN.html">🇺🇸 English</option>
+            <option value="index_EN.html">🇺🇸 English</option>
             <option value="index_JP.html">🇯🇵 日本語</option>
           </select>        
         </div>

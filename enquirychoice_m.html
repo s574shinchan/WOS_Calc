@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>건물계산 선택</title>
+  <title>연구계산 선택</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .muted{color:#6b7280}
@@ -96,30 +96,30 @@
   </script>
 </head>
 <body>
-  <h1 class="page-title">건물 계산</h1>
+  <h1 class="page-title">연구 선택</h1>
 
   <!-- ✅ 모바일: 1열(위/아래) / PC: 2열 -->
   <div class="container-wrap">
-    <section onclick="openPage('buildings_Regular_m.html')">
+    <section onclick="openPage('research_m.html')">
       <div class="card">
         <div class="img-wrap" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.05));">
-          <img src="../images/regular-buildings.webp" alt="Regular Buildings">
+          <img src="images/research-center.webp" alt="Research Center" style="border-radius:0.5rem;">
         </div>
         <div id="Regular" style="padding: 1.5rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">일반 건물</h2>
-          <p class="card-desc">불의 수정 이전단계 건물 업그레이드 시 필요 자원 계산</p>
+          <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">일반연구</h2>
+          <p class="card-desc">발전, 경제, 전투 연구</p>
         </div>
       </div>
     </section>
 
-    <section onclick="openPage('buildings_FireCrystal_m.html')">
+    <section onclick="openPage('helios_m.html')">
       <div class="card">
         <div class="img-wrap" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(252, 165, 165, 0.05));">
-          <img src="../images/fc-buildings.webp" alt="FC Buildings" style="border-radius:0.5rem;">
+          <img src="images/war-academy.webp" alt="War Academy" style="border-radius:0.5rem;">
         </div>
         <div id="FireCrystal" style="padding: 1.5rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">불의 수정 건물</h2>
-          <p class="card-desc">불의 수정 단계 건물 업그레이드 시 필요 재료 및 자원 계산</p>
+          <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">헬리오스</h2>
+          <p class="card-desc">방패, 창병, 궁병 11T 연구</p>
         </div>
       </div>
     </section>
