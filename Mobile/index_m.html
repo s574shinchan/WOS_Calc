@@ -397,38 +397,40 @@
                   class="font-bold tracking-wide flex-1 min-w-0 truncate text-right">
               67331703
             </span>
+            <div class="relative shrink-0">
+              <button id="copyBtn"
+                      onclick="copySupportNumber()"
+                      class="ml-1 bg-slate-700 hover:bg-slate-600 text-white p-1.5 rounded-md transition flex items-center shrink-0">
+                <svg id="iconBook" xmlns="http://www.w3.org/2000/svg"
+                     class="w-3.5 h-3.5"
+                     fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+                  <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+                  <path d="M3 6l0 13" />
+                  <path d="M12 6l0 13" />
+                  <path d="M21 6l0 13" />
+                </svg>
 
-            <button id="copyBtn"
-                    onclick="copySupportNumber()"
-                    class="ml-1 bg-slate-700 hover:bg-slate-600 text-white p-1.5 rounded-md transition flex items-center shrink-0">
-              <svg id="iconBook" xmlns="http://www.w3.org/2000/svg"
-                   class="w-3.5 h-3.5"
-                   fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
-                <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
-                <path d="M3 6l0 13" />
-                <path d="M12 6l0 13" />
-                <path d="M21 6l0 13" />
-              </svg>
-
-              <svg id="iconCheck" xmlns="http://www.w3.org/2000/svg"
-                   class="w-3.5 h-3.5 hidden"
-                   fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M5 13l4 4L19 7" />
-              </svg>
-            </button>
+                <svg id="iconCheck" xmlns="http://www.w3.org/2000/svg"
+                     class="w-3.5 h-3.5 hidden"
+                     fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div id="toast"
-               class="absolute left-1/2 top-[110%] -translate-x-1/2
+               class="absolute right-0 top-full mt-2 z-50
                       bg-emerald-500 text-white text-xs font-semibold
                       px-3 py-2 rounded-lg shadow-lg
-                      opacity-0 pointer-events-none whitespace-nowrap
-                      transition-opacity duration-300">
+                      whitespace-nowrap w-max max-w-none
+                      opacity-0 pointer-events-none
+                      transition-opacity duration-200">
             사용자 ID가 복사되었습니다.
           </div>
         </div>
@@ -3074,39 +3076,29 @@
     let copyTimer = null;
 
     function copySupportNumber() {
-      const text = document.getElementById("supportNumber").innerText;
-      const btn = document.getElementById("copyBtn");
+      const text = document.getElementById("supportNumber").innerText.trim();
+      navigator.clipboard.writeText(text);
+
+      const toast = document.getElementById("toast");
       const iconBook = document.getElementById("iconBook");
       const iconCheck = document.getElementById("iconCheck");
-      const toast = document.getElementById("toast");
-      
-      navigator.clipboard.writeText(text).then(() => {
-        // 버튼: 책 → 체크
-        btn.classList.remove("bg-slate-700", "hover:bg-slate-600");
-        btn.classList.add("bg-emerald-500", "hover:bg-emerald-600");
-        iconBook.classList.add("hidden");
-        iconCheck.classList.remove("hidden");
 
-        // 토스트 표시
-        toast.classList.remove("opacity-0");
-        toast.classList.add("opacity-100");
+      iconBook.classList.add("hidden");
+      iconCheck.classList.remove("hidden");
 
-        // 기존 타이머 제거하고 새 타이머 시작
-        if (copyTimer) clearTimeout(copyTimer);
+      toast.classList.remove("opacity-0");
+      toast.classList.add("opacity-100");
 
-        copyTimer = setTimeout(() => {
-          // 버튼 되돌리기
-          btn.classList.remove("bg-emerald-500", "hover:bg-emerald-600");
-          btn.classList.add("bg-slate-700", "hover:bg-slate-600");
-          iconCheck.classList.add("hidden");
-          iconBook.classList.remove("hidden");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.classList.remove("opacity-100");
+        toast.classList.add("opacity-0");
 
-          // 토스트 숨기기
-          toast.classList.remove("opacity-100");
-          toast.classList.add("opacity-0");
-        }, 2500);
-      });
+        iconCheck.classList.add("hidden");
+        iconBook.classList.remove("hidden");
+      }, 1300);
     }
+
   </script>
   <script>
     //다크모드

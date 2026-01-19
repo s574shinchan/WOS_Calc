@@ -274,16 +274,123 @@
     .btn   { height:34px; padding:0 14px; border:0; border-radius:8px; background:#2563eb; color:#fff; cursor:pointer; flex:0 0 auto; }
   </style>
   <script>
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
-    
-    if (isMobile && !location.pathname.includes('index_m')) {
-      window.location.href = "/Mobile/index_m.html";
-    }
-  </script>
-</head>
+  (function () {
+    // 이미 모바일 페이지면 종료
+    if (location.pathname.includes('/Mobile/index_m.html')) return;
 
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+    // 1) 기존 UA 기반 (너가 하던거)
+    const uaMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua);
+
+    // 2) iPadOS/데스크탑UA 보강: Mac처럼 보이는데 터치가 있으면 iPad로 간주하는 꼼수
+    const iPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    // 3) 화면 크기 기반(보험) - 너무 큰 태블릿은 PC로 두고 싶으면 기준 조절
+    const smallScreen = Math.min(screen.width, screen.height) <= 900;
+
+    // 최종 판단
+    const isMobile = uaMobile || iPadOS || smallScreen;
+
+    if (isMobile) {
+      // 뒤로가기 눌렀을 때 PC페이지로 되돌아오는거 방지
+      location.replace('/Mobile/index_m.html');
+    }
+  })();
+  </script>
+
+</head>
 <body>
+  <!-- 모바일로 접속시 PC버전인 경우 캐시삭제 -->
+  <script>
+  (function () {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+    const uaMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua);
+    const iPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const smallScreen = Math.min(screen.width, screen.height) <= 900;
+    const isMobile = uaMobile || iPadOS || smallScreen;
+
+    if (!isMobile) return;
+
+    // 이미 모바일 페이지면 종료
+    if (location.pathname.includes('/Mobile/index_m.html')) return;
+
+    const TRY_KEY = 'mobile_redirect_try';
+    const tryCount = Number(sessionStorage.getItem(TRY_KEY) || 0);
+
+    if (tryCount < 1) {
+      // 1회 강제 캐시 깨기 리다이렉트
+      sessionStorage.setItem(TRY_KEY, tryCount + 1);
+      location.replace('/Mobile/index_m.html?v=' + Date.now());
+      return;
+    }
+
+    // 여기까지 왔다는 건:
+    // - 모바일로 판단됨
+    // - 이미 리다이렉트 시도했는데
+    // - 여전히 index.html을 보고 있음
+    showCacheHelp();
+  })();
+
+  function showCacheHelp() {
+    const v = new Date().toISOString().slice(0,10).replace(/-/g,'');
+    const box = document.createElement('div');
+    box.style.cssText = `
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      background:rgba(0,0,0,.65);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:system-ui, -apple-system, BlinkMacSystemFont;
+    `;
+
+    box.innerHTML = `
+      <div style="
+        background:#fff;
+        color:#111;
+        max-width:360px;
+        width:90%;
+        border-radius:16px;
+        padding:20px;
+        text-align:center;
+        line-height:1.5;
+      ">
+        <h2 style="font-size:18px;margin-bottom:10px;">⚠️ 모바일 접속 문제</h2>
+        <p style="font-size:14px;margin-bottom:14px;">
+          모바일로 접속하셨지만<br>
+          이전 캐시 때문에 화면 전환이 되지 않았습니다.
+        </p>
+        <p style="font-size:13px;color:#555;margin-bottom:16px;">
+          아래 방법 중 하나를 시도해 주세요.
+        </p>
+        <ul style="font-size:13px;text-align:left;margin-bottom:16px;color:#333;">
+          <li>• 모바일 브라우저 새로고침</li>
+          <li>• 시크릿(비공개) 모드로 접속</li>
+          <li>• 브라우저 캐시 삭제 후 재접속</li>
+        </ul>
+        <button onclick="location.replace('/Mobile/index_m.html?v=${v}')"
+          style="
+            width:100%;
+            padding:10px;
+            border-radius:10px;
+            border:none;
+            background:#2563eb;
+            color:#fff;
+            font-size:14px;
+            cursor:pointer;
+          ">
+          다시 시도
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(box);
+  }
+  </script>
+
   <div class="topbar">
     <div class="nav">
       <div class="text-center">
