@@ -453,8 +453,7 @@
     }
     /* 유틸 */
     function sendHeightToParent(){ 
-      const h=document.body.scrollHeight+10; 
-      window.parent?.postMessage({type:"FRAME_CHANGE",height:h},"*"); 
+      window.parent?.postMessage({type:"FRAME_CHANGE",height:730},"*"); 
     }
     
     window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));

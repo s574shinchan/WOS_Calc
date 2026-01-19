@@ -274,7 +274,9 @@
   </script>
   <script>
     /* 유틸 */
-    function sendHeightToParent(){ const h=document.body.scrollHeight+10; window.parent?.postMessage({type:"FRAME_CHANGE",height:h},"*"); }
+    function sendHeightToParent(){ 
+      window.parent?.postMessage({type:"FRAME_CHANGE",height:1350},"*");
+    }
     window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
 
     const buildingList = ["용광로","대사관","지휘부","의무실","방패병","창병","궁병","아카데미"];

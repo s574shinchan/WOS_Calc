@@ -121,65 +121,7 @@
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">전문가 계산기</h1>
         <p class="text-sm muted mt-1">레벨을 선택하면 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
       </div>
-    </header>
-
-    <!--<section class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-      <div class="toolbar text-gray-800"
-           style="display:grid;grid-template-columns:180px 1fr auto;gap:16px;align-items:center;">
-        <div class="space-y-1">
-          <div class="font-semibold">전문가 선택</div>
-          <select id="selType" class="pill w-full hidden">
-            <option value="Cyrille">키릴</option>
-            <option value="Agnes">아그네스</option>
-            <option value="Holger">홀게르</option>
-            <option value="Romulus">로물루스</option>
-            <option value="Baldur">발데</option>
-            <option value="Fabian">파비안</option>
-            <option value="Valeria">발레리아</option>
-          </select>
-          <!-- ✅ 새 UI: 클릭하면 팝업
-          <button id="expertPickBtn"
-            type="button"
-            class="w-full flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50">
-            <img id="expertPickImg" class="w-8 h-8 rounded-lg object-cover bg-gray-200" />
-            <div class="text-left leading-tight">
-              <div id="expertPickName" class="font-semibold text-gray-800"></div>
-              <div class="text-xs text-gray-500">클릭해서 변경</div>
-            </div>
-          </button>
-        </div>
-
-        <div class="space-y-1">
-          <div class="font-semibold">레벨 범위</div>
-          <div class="flex flex-wrap items-center gap-6">
-            <label class="inline-label"><span class="muted">현재</span>
-              <select id="expertCur" class="pill w-28"></select></label>
-            <label class="inline-label"><span class="muted">목표</span>
-              <select id="expertTgt" class="pill w-28"></select></label>
-          </div>
-          <p id="expertWarn" class="text-xs err mt-1"></p>
-        </div>
-
-        <div class="text-right">
-          <button id="btnSum" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">계산하기</button>
-          <button id="btnReset" class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">초기화</button>
-        </div>
-      </div>
-
-      <!-- 전문가 카드(section) 내부 어딘가, 계산 영역 아래에 추가 
-      <div class="exp-divider border-t mt-4"></div>
-      <div class="grid grid-cols-2">
-        <div class="pt-3 text-sm">
-          <div class="font-semibold mb-1 text-gray-700">전문가 효과 (목표 기준)</div>
-          <div id="expertEffect" class="muted">-</div>
-        </div>
-        <div class="pt-3 text-sm">
-          <div class="font-semibold mb-1 text-gray-700">전문가 관계</div>
-          <div id="expertrelationship" class="muted">-</div>
-        </div>        
-      </div>
-    </section>--> 
-    
+    </header>    
     <section class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
       <div class="grid gap-4 md:gap-6 md:grid-cols-[220px_1fr_1.1fr] md:items-stretch">
         <!-- LEFT: 전문가 선택 -->
@@ -1877,22 +1819,11 @@
     });
   </script>
   <script>
-    function sendHeightToParent() {
-      const height = document.body.scrollHeight + 10;
-      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    /* 유틸 */
+    function sendHeightToParent(){ 
+      window.parent?.postMessage({type:"FRAME_CHANGE",height:905},"*");
     }
-    
-    // 페이지 최초 로드 시
-    window.addEventListener("load", () => {
-      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-    });
-    
-    function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-    }
+    window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
   </script>
   <script>
     // F12, Ctrl+Shift+I, Ctrl+U 등 방지

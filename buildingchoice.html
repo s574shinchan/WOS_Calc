@@ -70,12 +70,8 @@
     });
   </script>
   <script>
-    console.log('[a.html] in iframe?', window.self !== window.top);
-    console.log('[a.html] parent === window?', parent === window);
-
     function openPage(url){
       const msg = { type:'NAVIGATE_FRAME', url };
-      console.log('[a.html] postMessage:', msg);
 
       // ✅ 대부분 parent면 충분. 중첩 iframe 대비 top도 같이 쏨.
       window.parent.postMessage(msg, '*');
@@ -84,8 +80,7 @@
 
     // (선택) a.html 자체 높이를 부모에 알려 메뉴 iframe 높이 조절하고 싶으면 사용
     function sendHeightToParent(){
-      const h = document.body.scrollHeight + 50;
-      window.parent.postMessage({type:"FRAME_CHANGE", height:h}, "*");
+      window.parent.postMessage({type:"FRAME_CHANGE", height:720}, "*");
     }
     window.addEventListener("load", () => setTimeout(sendHeightToParent, 50));
   </script>

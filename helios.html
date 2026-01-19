@@ -740,11 +740,12 @@
       if (el) el.addEventListener("input", scheduleCalc);
     });
 
-    function sendHeightToParent() {
-      const height = document.body.scrollHeight + 10;
-      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    /* 유틸 */
+    function sendHeightToParent(){ 
+      window.parent?.postMessage({type:"FRAME_CHANGE",height:2030},"*");
     }
-    window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
+    
+    window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
   </script>
   <script>
     // F12, Ctrl+Shift+I, Ctrl+U 등 방지

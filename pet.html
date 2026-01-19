@@ -454,12 +454,13 @@
     // 시작
     loadAll();
 
-    function sendHeightToParent() {
-      const height = document.body.scrollHeight + 160;
-      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    /* 유틸 */
+    function sendHeightToParent(){ 
+      window.parent?.postMessage({type:"FRAME_CHANGE",height:1920},"*");
     }
+    window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
+
     document.getElementById("btn-calc-total")?.addEventListener("click", () => { renderSummary(); });
-    window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
   </script>
 
   <script>

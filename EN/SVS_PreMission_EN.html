@@ -2067,8 +2067,7 @@
     <!-- (선택) 프레임 통신/보안키 차단 (원본 유지) -->
     <script>
       function sendHeightToParent() {
-        const height = document.body.scrollHeight + 10;
-        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+        window.parent.postMessage({ type: "FRAME_CHANGE", height:1450 }, "*");
       }
       window.addEventListener("load", () => { setTimeout(sendHeightToParent, 100); });
       function loadPage(page) {
