@@ -89,8 +89,8 @@
   </script>
 </head>
 
-<body class="bg-gray-100 p-3 font-sans text-sm">
-  <div class="max-w-[1500px] mx-auto bg-white p-4 rounded-xl shadow-md">
+<body class="bg-gray-100 p-2 font-sans text-sm">
+  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md">
     <!-- 헤더 -->
     <div class="flex items-center justify-between gap-3 mb-4">
       <div>
@@ -132,7 +132,12 @@
                   </span>
                   <span class="opacity-60">•</span>
                   <span id="hdrType" class="inline-flex items-center gap-1">
-                    <span class="w-4 h-4 rounded bg-white/20 inline-flex items-center justify-center">⚔️</span>
+                    <span class="w-4 h-4 rounded bg-white/20 inline-flex items-center justify-center">
+                      <img id="expeditionIcon"
+                           src="images/hero/construction.webp"
+                           class="w-3.5 h-3.5 object-contain"
+                           onerror="this.style.display='none'"/>
+                    </span>
                     <span>EXPEDITION TYPE: -</span>
                   </span>
                 </div>
@@ -141,7 +146,7 @@
                   <div id="hdrName" class="text-3xl md:text-4xl font-black title-grit uppercase">
                     HERO
                   </div>
-                  <div id="hdrGen" class="mt-1 text-[11px] md:text-xs opacity-90">Gen -</div>
+                  <div id="hdrGen" class="mt-1 text-xs opacity-90">Gen -</div>
                 </div>
               </div>
 
@@ -156,7 +161,7 @@
 
           <!-- 본문: 좌/중앙/우 -->
           <div class="relative p-4 md:p-3">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+            <div class="grid grid-cols-12 gap-3">
 
               <!-- 좌: Exploration (✅ 막대 제거, 바로 표시) -->
               <div class="lg:col-span-4">
@@ -175,7 +180,7 @@
 
                   <div class="mt-3 flex-1 flex items-center justify-center">
                     <!-- ✅ 이미지 박스도 살짝 축소 -->
-                    <div class="w-full max-w-[300px] aspect-[3/4] rounded-2xl border overflow-hidden flex items-center justify-center">
+                    <div class="w-full max-w-[300px] aspect-[3/4] overflow-hidden flex items-center justify-center">
                       <img id="heroImg"
                            src="/images/hero/thumb/jeronimo.webp"
                            alt="hero"
@@ -188,25 +193,33 @@
                       </div>
                     </div>
                   </div>
-
-                  <div id="exclusiveWrap" class="mt-3 rounded-xl border p-3 text-sm">
-                    <div class="font-bold">특성버프</div>
-                    <div id="exclusiveSkill" class="mt-2"></div>
-                  </div>
                 </div>
               </div>
 
               <!-- 우: Expedition (✅ 막대 제거, 바로 표시) -->
               <div class="lg:col-span-4">
-                <div class="rounded-2xl border bg-white p-3 md:p-4 h-full">
+                <div class="rounded-2xl border p-3 md:p-4 h-full">
                   <h3 class="text-base md:text-lg font-extrabold">원정 스킬</h3>
                   <div id="expeditionSkills" class="mt-3 space-y-3"></div>
                 </div>
               </div>
+				
+              <!-- ✅ 특성버프 카드 -->
+              <div id="traitCard" class="col-span-6 rounded-2xl border p-3 md:p-4">
+                <div class="font-extrabold text-base whitespace-nowrap">특성버프</div>
+                <div id="traitBuffArea" class="mt-3 space-y-3"></div>
+              </div>
 
+              <!-- ✅ 전용무기 카드 -->
+              <div id="weapon" class="col-span-6 rounded-2xl border bg-white p-3 md:p-4">
+                <div id="weaponFx" class="font-extrabold text-base whitespace-nowrap">전용무기</div>
+                <!-- 전용무기 스킬은 추후 추가할 영역 -->
+                <div id="weaponSkills" class="mt-3 space-y-3"></div>
+              </div>
+                
               <!-- 하단 스탯 (✅ 패딩 살짝 다운) -->
-              <div class="lg:col-span-12">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="col-span-12">
+                <div class="grid grid-cols-2 gap-3">
                   <div class="rounded-2xl border bg-white p-3 md:p-4">
                     <div class="font-extrabold">전용무기속성 (+10 기준)</div>
                     <div id="statExplore" class="mt-2 grid grid-cols-2 gap-2 text-sm"></div>
@@ -241,7 +254,18 @@
       source: "VIP팩/최강영주",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/jeronimo.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/jeronimo.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/jeronimo.webp",      // 모달용(전신/큰거)
+      weaponFx: "공격력 15% [공성]",
+      weaponSkills: [
+        {
+          key:"ws1", title: "검방패", desc: "공격 진행 시 검기가 방패를 형성하여 자신이 받는 피해가 30% 감소합니다.",
+          icon: "images/hero/skills/jeronimo/ws1.webp"
+        },
+        {
+          key:"ws2", title: "진실의 술법", desc: "검진을 펼쳐 공격하며, 집결 부대의 공격력이 15% 상승한다.",
+          icon: "images/hero/skills/jeronimo/ws2.webp"          
+        }
+      ],
       exclusiveSkill: [
         { key:"Special", title: "타고난 지도자", desc: "카리스마가 전체 군에 영향을 미쳐 제로니모의 출정 여부와 상관없이 전체 아군 부대의 파괴력과 HP가 3%/6%/9%/12%/15% 증가합니다.",
           icon: "images/hero/skills/jeronimo/Special.webp"}
@@ -275,15 +299,26 @@
       source: "VIP팩",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      weaponFx: "파괴력 15% [공성]",
+      weaponSkills: [
+        {
+          key:"ws1", title: "한마음", desc: "나탈리아와 백곰이 교감하고 입히는 피해가 30% 상승한다.",
+          icon: "images/hero/skills/natalia/ws1.webp"
+        },
+        {
+          key:"ws2", title: "불패의 군대", desc: "야수떼를 소환한 나탈리아가 집결에 참여해서 집결 부대 파괴력이 15% 상승한다.",
+          icon: "images/hero/skills/natalia/ws2.webp"          
+        }
+      ],      
       exclusiveSkill: [
-        { key:"Special", title: "타고난 지도자", desc: "카리스마가 전체 군에 영향을 미쳐 제로니모의 출정 여부와 상관없이 전체 아군 부대의 파괴력과 HP가 3%/6%/9%/12%/15% 증가합니다.",
+        { key:"Special", title: "백곰의 힘", desc: "전군에 백곰과 같은 용기와 힘을 줍니다. 나탈리아의 출정 여부와 상관없이 전체 아군 부대의 공격력, 방어력 2%/4%/6%/8%/10% 증가합니다.",
           icon: "images/hero/skills/natalia/Special.webp"}
       ],
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -306,22 +341,36 @@
       heroClass: "LANCER",
       heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
-      source: "VIP팩",
+      source: "영웅의 홀",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
-      explorationSkills: [
-        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
-          icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
-          icon:"images/hero/skills/natalia/L2.webp" },
-        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
-          icon:"images/hero/skills/natalia/L3.webp" }
+      thumb: "images/hero/thumb/molly.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/molly.webp",      // 모달용(전신/큰거)
+      weaponFx: "파괴력 15% [수성]",
+      weaponSkills: [
+        {
+          key:"ws1", title: "개조된 발사기", desc: "송신기를 개량하여 자신이 가하는 피해가 30% 증가한다.",
+          icon: "images/hero/skills/molly/ws1.webp"
+        },
+        {
+          key:"ws2", title: "눈의 가호", desc: "눈의 가호를 받아 수성 부대의 파괴력이 15% 증가합니다.",
+          icon: "images/hero/skills/molly/ws2.webp"          
+        }
+      ],      
+      explorationSkills: [//탐험
+        { key:"L1", title:"초대형 눈덩이", desc:"거대한 눈덩이를 발사해서 원형 범위 내 목표물에 공격력*180%/198%/216%/234%/252%의 피해를 입히고 1.5초 동안 얼려버린다." ,
+          icon:"images/hero/skills/molly/L1.webp"},
+        { key:"L2", title:"눈속매복", desc:"눈밭에 숨어 기습 공격을 행하고 목표물에 공격력*150%/165%/180%/195%/210%의 피해를 입힌다.",
+          icon:"images/hero/skills/molly/L2.webp" },
+        { key:"L3", title:"소녀의 집착", desc:"역경을 통해 몰리의 무한한 잠재력을 이끌어내 HP가 50% 미만일 때 공격 속도가 20%/30%/40%/50%/60% 향상된다.",
+          icon:"images/hero/skills/molly/L3.webp" }
       ],
-      expeditionSkills: [
-        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
-        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
-        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      expeditionSkills: [//원정
+        { key:"R1", title:"눈안개 비호", desc:"온 하늘에 눈안개를 일으켜 적의 시야를 가린다. 40%의 확률로 전체 아군 부대가 받는 피해가 50% 감소한다.", 
+         icon:"images/hero/skills/molly/R1.webp" },
+        { key:"R2", title:"빙설의 영역", desc:"몰리가 가장 실력 발휘할 수 있는 눈밭에서 아군 전체 부대가 공격할 때 50%확률로 이번 피해를 10%/20%/30%/40%/50% 향상시킨다.", 
+         icon:"images/hero/skills/molly/R2.webp" },
+        { key:"R3", title:"소녀의 분노", desc:"몰리가 사람들의 전의를 불태워서 아군 전체 부대가 입히는 피해가 5%/10%/15%/20%/25% 향상된다.",
+         icon:"images/hero/skills/molly/R3.webp" }
       ],
       stats: {
         exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
@@ -329,29 +378,131 @@
       }
     },
     { 
-      key: "molly",
+      key: "zinman",
       gen: 1,
-      name: "Molly",
-      nameKo: "몰리",
+      name: "Zinman",
+      nameKo: "진먼",
+      heroClass: "MARKSMAN",
+      heroClassicon: "images/hero/icon_marksman.webp",
+      expeditionType: "CONSTRUCTION",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/zinman.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/zinman.webp",      // 모달용(전신/큰거)
+      weaponFx: "공력력 15% [수성]",
+      weaponSkills: [
+        {
+          key:"ws1", title: "과부하 스테이플 건", desc: "압력 스테이플 건이 과부하 모드가 되어 공격력이 24% 증가합니다.",
+          icon: "images/hero/skills/zinman/ws1.webp"
+        },
+        {
+          key:"ws2", title: "반격 개시", desc: "공격형 화살탑을 구축하여 수성 부대의 공격력이 15% 증가합니다",
+          icon: "images/hero/skills/zinman/ws2.webp"          
+        }
+      ],       
+      explorationSkills: [
+        { key:"L1", title:"개틀링건", desc:"목표물에 못을 여러 개 연속 발사해서 못 1개마다 공격력*55%/60%/65%/70%/75%의 피해를 입히고, 목표물을 2초 동안 스턴시킨다.",
+          icon:"images/hero/skills/zinman/L1.webp"},
+        { key:"L2", title:"퀵 디펜스", desc:"HP가 50% 미만일 때, 간단한 방어 공사를 빠르게 세워서 자신의 방어력을 50%/75%/100%/125%/150% 향상시킨다.",
+          icon:"images/hero/skills/zinman/L2.webp" },
+        { key:"L3", title:"열의", desc:"넘치는 열정으로 공격 속도가 10%/15%/20%/25%/30% 상승한다.",
+          icon:"images/hero/skills/zinman/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"난공불락", desc:"진먼이 구축한 방어선은 견고하고 믿을만합니다. 전체 아군의 방어력이 2%/4%/6%/8%/10% 증가하고, HP가 2%/4%/6%/8%/10% 증가합니다.",
+         icon:"images/hero/skills/zinman/R1.webp" },
+        { key:"R2", title:"건축 예술", desc:"진먼의 합리적인 공사 프로세스 관리로 건설에 소모되는 자원이 3%/6%/9%/12%/15% 감소하고, 건물 업그레이드 속도가 3%/6%/9%/12%/15% 증가합니다.",
+         icon:"images/hero/skills/zinman/R2.webp" },
+        { key:"R3", title:"진지전의 강자", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).",
+         icon:"images/hero/skills/zinman/R3.webp" }
+      ],
+      stats: {
+        exploration: { "효과": "공격력 15%", "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "flint",
+      gen: 2,
+      name: "Flint",
+      nameKo: "플린트",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_lancer.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/flint.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/flint.webp",      // 모달용(전신/큰거)
+      weaponFx: "공력력 15% [수성]",
+      weaponSkills: [
+        {
+          key:"ws1", title: "복수의 열기", desc: "복수는 전의를 불태우는데 최고의 연료. “분노의 화염” 발동 후 전투 종료까지 공격력이 24% 향상된다.",
+          icon: "images/hero/skills/flint/ws1.webp"
+        },
+        {
+          key:"ws2", title: "드래곤 브레스", desc: "수성에 쓰이는 화염방사기를 개조하여 수성 부대 공격력이 15% 향상된다.",
+          icon: "images/hero/skills/flint/ws2.webp"          
+        }
+      ],        
+      explorationSkills: [
+        { key:"L1", title:"복수의 불꽃", desc:"뜨겁게 불타오르는 불꽃을 뿜어내 적을 태워버리며 0.5초마다 공격력*60%/66%/72%/78%/84%의 피해를 입히고, 목표물이 받는 피해를 10%/15%/20%/25%/30% 향상시킨다. 지속시간 2초." ,
+          icon:"images/hero/skills/flint/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/flint/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/flint/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", 
+         icon:"images/hero/skills/flint/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", 
+         icon:"images/hero/skills/flint/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", 
+         icon:"images/hero/skills/flint/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+60.0%", 방패병HP:"+60.0%" },
+        expedition: { "방패병 공격력": "+240.20%", "방패병 방어력": "+240.20%" }
+      }
+    },
+    { 
+      key: "philly",
+      gen: 2,
+      name: "Philly",
+      nameKo: "필리",
       heroClass: "LANCER",
       heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
-      source: "VIP팩",
+      source: "최강영주",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      thumb: "images/hero/thumb/philly.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/philly.webp",      // 모달용(전신/큰거)
+      weaponFx: "HP 15% [수성]",
+      weaponSkills: [
+        {
+          key:"ws1", title: "에센스 추출", desc: "필리가 약물을 정제하고 치료 효과를 강화하여 HP 회복 스킬의 효과를 70% 향상시킨다.",
+          icon: "images/hero/skills/philly/ws1.webp"
+        },
+        {
+          key:"ws2", title: "응급처치 훈련", desc: "필리가 간단한 응급처치와 간호 기술을 전수해 방어 부대의 HP를 15% 향상시킨다.",
+          icon: "images/hero/skills/philly/ws2.webp"          
+        }
+      ],       
       explorationSkills: [
-        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
-          icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
-          icon:"images/hero/skills/natalia/L2.webp" },
-        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
-          icon:"images/hero/skills/natalia/L3.webp" }
+        { key:"L1", title:"응급 치료", desc:"필리의 뛰어난 의술로 아군 모든 영웅에게 필리의 공격력*200/220%/240%/260%/280%의 HP를 회복시킨다." ,
+          icon:"images/hero/skills/philly/L1.webp"},
+        { key:"L2", title:"탁월한 의술 ", desc:"죽음의 신과 겨룰만한 필리의 기교로 HP 백분율이 가장 낮은 아군 영웅에게 필리의 공격력*100%/110%/120%/130%/140%의 HP를 회복시킨다.",
+          icon:"images/hero/skills/philly/L2.webp" },
+        { key:"L3", title:"마비 독소", desc:"목표물을 중독시켜서 필리의 공격력*140%/154%/168%/182%/196%의 피해를 입히고, 상대가 1초 동안 움직일 수 없도록 한다.",
+          icon:"images/hero/skills/philly/L3.webp" }
       ],
       expeditionSkills: [
-        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
-        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
-        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+        { key:"R1", title:"강건의 비결", desc:"필리의 요리가 병사들을 강화해 아군 부대 공격력이 3%/6%/9%/12%/15%, 방어력이 2%/4%/6%/8%/10% 증가한다.",
+         icon:"images/hero/skills/philly/R1.webp" },
+        { key:"R2", title:"강화 약물", desc:"필리가 비법으로 제조한 물약으로 전사들의 신체 기능을 강화시켜서, 아군 전체 부대가 공격할 때 25% 확률로 120%/140%/160%/180%/200%의 피해를 입힌다.",
+         icon:"images/hero/skills/philly/R2.webp" },
+        { key:"R3", title:"각성 주사", desc:"필리의 비밀 조제약이 병사들의 전투 집중력을 끌어올린다. 40%의 확률로 전체 아군 부대가 받는 피해가 10%/20%/30%/40%/50% 감소한다.",
+         icon:"images/hero/skills/philly/R3.webp" }
       ],
       stats: {
         exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
@@ -359,81 +510,109 @@
       }
     },
     { 
-      key: "molly",
+      key: "alonso",
       gen: 2,
-      name: "Molly",
-      nameKo: "플린트",
-      heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_lancer.webp",
-      expeditionType: "COMBAT",
-      source: "행운의 룰렛",
-      headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
-      explorationSkills: [
-        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
-          icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
-          icon:"images/hero/skills/natalia/L2.webp" },
-        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
-          icon:"images/hero/skills/natalia/L3.webp" }
-      ],
-      expeditionSkills: [
-        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
-        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
-        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
-      ],
-      stats: {
-        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
-        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
-      }
-    },
-    { 
-      key: "molly",
-      gen: 2,
-      name: "Molly",
-      nameKo: "플린트",
-      heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_lancer.webp",
-      expeditionType: "COMBAT",
-      source: "행운의 룰렛",
-      headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
-      explorationSkills: [
-        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
-          icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
-          icon:"images/hero/skills/natalia/L2.webp" },
-        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
-          icon:"images/hero/skills/natalia/L3.webp" }
-      ],
-      expeditionSkills: [
-        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
-        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
-        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
-      ],
-      stats: {
-        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
-        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
-      }
-    },
-    { 
-      key: "molly",
-      gen: 2,
-      name: "Molly",
+      name: "Alonso",
       nameKo: "알론소",
       heroClass: "MARKSMAN",
       heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
+      source: "영웅의 전당",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/alonso.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/alonso.webp",      // 모달용(전신/큰거)
+      weaponFx: "파괴력 15% [공성]",
+      weaponSkills: [
+        {
+          key:"ws1", title: "바다의 향연", desc: "전리품을 후하게 나누는 알론소가 일반 공격을 할 때마다 HP가 가장 낮은 아군 영웅에게 맛있는 생선을 나눠주어 알론소의 공격력*15%의 HP를 회복시킨다.",
+          icon: "images/hero/skills/alonso/ws1.webp"
+        },
+        {
+          key:"ws2", title: "작살 강화", desc: "알론소가 무기를 업그레이드해서 집결 부대 파괴력을 15% 향상시킨다.",
+          icon: "images/hero/skills/alonso/ws2.webp"          
+        }
+      ],
+      explorationSkills: [
+        { key:"L1", title:"강력한 그물", desc:"목표 구역에 그물망을 던져서 공격력* 200%/220%/240%/260%/280% 의 범위 피해를 입히고, 적을 1.5초 동안 움직일 수 없도록 만든다." ,
+          icon:"images/hero/skills/alonso/L1.webp"},
+        { key:"L2", title:"기조력", desc:"목표물에 막강한 위력을 자랑하는 파도와 같은 기세의 작살을 던져서 공격력* 50%/55%/60%/65%/70%의 범위 피해를 입힌다.",
+          icon:"images/hero/skills/alonso/L2.webp" },
+        { key:"L3", title:"작살 크러쉬", desc:"알론소가 무거운 작살로 적을 가격한다. 매 8/7/7/6/5 회 일반 공격 후 다음 공격은 목표물을 0.2/0.2/0.4/0.4/0.5초 동안 기절시킨다.",
+          icon:"images/hero/skills/alonso/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"거센파도", desc:"알론소의 공세가 거센 파도처럼 몰아쳐, 보는 이들을 압도한다. 40%의 확률로 전체 아군 부대 파괴력이 10%/20%/30%/40%/50% 상승한다.", 
+         icon:"images/hero/skills/alonso/R1.webp" },
+        { key:"R2", title:"굳센 의지", desc:"알론소가 굽힐 수 없는 의지로 사람들을 격려해서 아군 전체 부대가 공격할 때 10%/20%/30%/40%/50% 확률로 적이 가하는 피해를 40% 감소시킨다. 2라운드 지속.", 
+         icon:"images/hero/skills/alonso/R2.webp" },
+        { key:"R3", title:"극독의 작살", desc:"알론소가 무기에 극독을 발라 아군 전체 부대가 공격할 때 50% 확률로 이번 피해를 10%/20%/30%/40%/50% 향상시킨다.",
+         icon:"images/hero/skills/alonso/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "logan",
+      gen: 3,
+      name: "Logan",
+      nameKo: "로건",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "영웅의 전당",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/logan.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/logan.webp",      // 모달용(전신/큰거)
+      weaponFx: "방어력 15% [수성]",
+      weaponSkills: [
+        {
+          key:"ws1", title: "바다의 향연", desc: "전리품을 후하게 나누는 알론소가 일반 공격을 할 때마다 HP가 가장 낮은 아군 영웅에게 맛있는 생선을 나눠주어 알론소의 공격력*15%의 HP를 회복시킨다.",
+          icon: "images/hero/skills/philly/ws1.webp"
+        },
+        {
+          key:"ws2", title: "응급처치 훈련", desc: "필리가 간단한 응급처치와 간호 기술을 전수해 방어 부대의 HP를 15% 향상시킨다.",
+          icon: "images/hero/skills/philly/ws2.webp"          
+        }
+      ],           
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/logan/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/logan/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/logan/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.",
+         icon:"images/hero/skills/logan/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", 
+         icon:"images/hero/skills/logan/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).",
+         icon:"images/hero/skills/logan/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "mia",
+      gen: 3,
+      name: "Mia",
+      nameKo: "미야",
+      heroClass: "LENCER",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      thumb: "images/hero/thumb/mia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -459,71 +638,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
-          icon:"images/hero/skills/natalia/L2.webp" },
-        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
-          icon:"images/hero/skills/natalia/L3.webp" }
-      ],
-      expeditionSkills: [
-        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
-        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
-        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
-      ],
-      stats: {
-        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
-        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
-      }
-    },
-    { 
-      key: "molly",
-      gen: 3,
-      name: "Molly",
-      nameKo: "로건",
-      heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
-      expeditionType: "COMBAT",
-      source: "행운의 룰렛",
-      headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
-      explorationSkills: [
-        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
-          icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
-          icon:"images/hero/skills/natalia/L2.webp" },
-        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
-          icon:"images/hero/skills/natalia/L3.webp" }
-      ],
-      expeditionSkills: [
-        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
-        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
-        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
-      ],
-      stats: {
-        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
-        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
-      }
-    },
-    { 
-      key: "molly",
-      gen: 3,
-      name: "Molly",
-      nameKo: "로건",
-      heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
-      expeditionType: "COMBAT",
-      source: "행운의 룰렛",
-      headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
-      explorationSkills: [
-        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
-          icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -549,11 +668,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -579,11 +698,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -609,11 +728,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -639,11 +758,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -669,11 +788,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -699,11 +818,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -729,11 +848,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -759,11 +878,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -789,11 +908,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -819,11 +938,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -849,11 +968,11 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -879,11 +998,731 @@
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/natalia.webp",      // 모달용(전신/큰거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
       explorationSkills: [
         { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
           icon:"images/hero/skills/natalia/L1.webp"},
-        { key:"L2", title:"채찍질 ", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 8,
+      name: "Molly",
+      nameKo: "가토",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 8,
+      name: "Molly",
+      nameKo: "소냐",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 8,
+      name: "Molly",
+      nameKo: "핸드릭",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 9,
+      name: "Molly",
+      nameKo: "마그누스",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 9,
+      name: "Molly",
+      nameKo: "프레드",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 9,
+      name: "Molly",
+      nameKo: "쇠라",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 10,
+      name: "Molly",
+      nameKo: "그레고리",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 10,
+      name: "Molly",
+      nameKo: "프레야",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 10,
+      name: "Molly",
+      nameKo: "블랑쉬",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 11,
+      name: "Molly",
+      nameKo: "그레고리",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 11,
+      name: "Molly",
+      nameKo: "프레야",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 11,
+      name: "Molly",
+      nameKo: "블랑쉬",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 12,
+      name: "Molly",
+      nameKo: "그레고리",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 12,
+      name: "Molly",
+      nameKo: "프레야",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 12,
+      name: "Molly",
+      nameKo: "블랑쉬",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 13,
+      name: "Molly",
+      nameKo: "그레고리",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 13,
+      name: "Molly",
+      nameKo: "프레야",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 13,
+      name: "Molly",
+      nameKo: "블랑쉬",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 14,
+      name: "Molly",
+      nameKo: "그레고리",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 14,
+      name: "Molly",
+      nameKo: "프레야",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 14,
+      name: "Molly",
+      nameKo: "블랑쉬",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 15,
+      name: "Molly",
+      nameKo: "그레고리",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 15,
+      name: "Molly",
+      nameKo: "프레야",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
+          icon:"images/hero/skills/natalia/L2.webp" },
+        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
+          icon:"images/hero/skills/natalia/L3.webp" }
+      ],
+      expeditionSkills: [
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", icon:"images/hero/skills/natalia/R1.webp" },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", icon:"images/hero/skills/natalia/R2.webp" },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
+      ],
+      stats: {
+        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
+        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+      }
+    },
+    { 
+      key: "molly",
+      gen: 15,
+      name: "Molly",
+      nameKo: "블랑쉬",
+      heroClass: "INFANTRY",
+      heroClassicon: "images/hero/icon_infantry.webp",
+      expeditionType: "COMBAT",
+      source: "행운의 룰렛",
+      headerGradient: ["#0891b2", "#1d4ed8"],
+      thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
+      portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
+      explorationSkills: [
+        { key:"L1", title:"비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
+          icon:"images/hero/skills/natalia/L1.webp"},
+        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
           icon:"images/hero/skills/natalia/L2.webp" },
         { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
           icon:"images/hero/skills/natalia/L3.webp" }
@@ -1054,7 +1893,6 @@
       wrap.innerHTML = `<div class="text-sm">표시할 영웅이 없습니다.</div>`;
     }
   }
-
   
   function renderHeroGrid2(){
     const wrap = $("heroGrid");
@@ -1155,19 +1993,66 @@
     `).join("");
   }
 
+  // ✅ 특성버프(= hero.exclusiveSkill) 렌더 + 12컬럼 레이아웃 토글 (최종)
+  // 레이아웃 규칙:
+  // - traitCard: col-span-6 (0~5)
+  // - weapon   : col-span-6 (6~11)
+  // - traitCard가 숨겨지면 weapon은 col-span-12 (0~11)
   function renderExclusiveSkill(skills){
-    const wrap = $("exclusiveWrap");
-    const body = $("exclusiveSkill");
+    const traitCard = $("traitCard");      // ✅ 특성버프 카드
+    const body      = $("traitBuffArea");  // ✅ 특성버프 내용 영역
+    const weapon    = $("weapon");         // ✅ 전용무기 카드
 
-    // ✅ 없으면 카드(테두리 포함) 통째로 숨김
-    if(!Array.isArray(skills) || skills.length === 0){
-      wrap.classList.add("hidden");
-      body.innerHTML = "";
+    // ✅ 안전장치
+    if(!traitCard || !body || !weapon) return;
+
+    const hasTrait = Array.isArray(skills) && skills.length > 0;
+
+    // ✅ 공통: weapon span 클래스 정리 함수
+    const setWeaponSpan = (span12) => {
+      // 기존 span 제거
+      weapon.classList.remove("col-span-6", "col-span-12");
+      // 새 span 적용
+      weapon.classList.add(span12 ? "col-span-12" : "col-span-6");
+    };
+
+    // ✅ 추가: traitCard 숨김일 때 전용무기 스킬을 2컬럼으로
+    const weaponSkills = $("weaponSkills");
+    const setWeaponSkillsLayout = (twoCol) => {
+      if(!weaponSkills) return;
+
+      // 기존 레이아웃 클래스 정리
+      weaponSkills.classList.remove("space-y-3", "grid", "grid-cols-2", "gap-3");
+
+      if(twoCol){
+        // [이미지]설명 [이미지]설명
+        weaponSkills.classList.add("grid", "grid-cols-2", "gap-3");
+      }else{
+        // 기존 세로
+        weaponSkills.classList.add("space-y-3");
+      }
+    };
+
+    // ✅ 1) 특성버프가 없으면: traitCard 숨김 + weapon 12칸
+    if(!hasTrait){
+      traitCard.classList.add("hidden"); // 카드 숨김
+      setWeaponSpan(true);               // weapon = 12칸
+      setWeaponSkillsLayout(true);
+      body.innerHTML = "";               // 내용 비움
       return;
     }
 
-    // ✅ 있으면 표시
-    wrap.classList.remove("hidden");
+    // ✅ 2) 특성버프가 있으면: traitCard 표시 + weapon 6칸 + traitCard도 6칸 보장
+    traitCard.classList.remove("hidden");
+
+    // traitCard는 기본이 col-span-6이지만 혹시 다른 처리로 꼬였을 때 대비해 재보장
+    traitCard.classList.remove("col-span-12");
+    traitCard.classList.add("col-span-6");
+
+    setWeaponSpan(false); // weapon = 6칸
+    setWeaponSkillsLayout(false); // ✅ trait 있으면 세로
+
+    // ✅ 3) 특성버프 렌더
     body.innerHTML = "";
 
     skills.forEach(sk => {
@@ -1175,6 +2060,7 @@
       el.className = "flex items-start gap-3";
 
       el.innerHTML = `
+        <!-- 아이콘 -->
         <div class="w-12 h-12 rounded-xl border overflow-hidden
                     flex items-center justify-center shrink-0">
           <img src="${escapeHtml(sk.icon || "")}"
@@ -1183,8 +2069,9 @@
                onerror="this.onerror=null; this.style.display='none';" />
         </div>
 
+        <!-- 텍스트 -->
         <div class="min-w-0 flex-1">
-          <div class="font-bold text-xs mb-1">${escapeHtml(sk.title || "")}</div>
+          <div class="font-bold text-sm mb-1">${escapeHtml(sk.title || "")}</div>
           <div class="text-xs leading-relaxed text-gray-700">
             ${escapeHtml(sk.desc || "")}
           </div>
@@ -1192,6 +2079,85 @@
       `;
       body.appendChild(el);
     });
+  }
+
+  // ✅ 전용무기 스킬(weaponSkill) 렌더: ws1 (줄바꿈) ws2
+  function renderWeaponSkills(weaponSkill, weaponFx){
+    const fxEl = $("weaponFx");
+    const area = $("weaponSkills");
+    if(!fxEl || !area) return;
+
+    // 1) weaponFx 표시 (없으면 숨김)
+    if(weaponFx && String(weaponFx).trim()){
+      fxEl.textContent = "전용무기 효과: " + String(weaponFx).trim();
+      fxEl.classList.remove("hidden");
+    }else{
+      fxEl.textContent = "";
+      fxEl.classList.add("hidden");
+    }
+
+    // 2) 스킬 렌더
+    area.innerHTML = "";
+    const skills = Array.isArray(weaponSkill) ? weaponSkill : [];
+
+    // ✅ ws1 -> ws2 순서 강제 (없으면 제외)
+    const order = ["ws1", "ws2"];
+    const ordered = order
+      .map(k => skills.find(s => (s?.key || "").toLowerCase() === k))
+      .filter(Boolean);
+
+    // 스킬이 없으면 영역 비움
+    if(ordered.length === 0) return;
+
+    ordered.forEach(sk => {
+      const el = document.createElement("div");
+      el.className = "flex items-start gap-3";
+
+      el.innerHTML = `
+        <!-- 아이콘 -->
+        <div class="w-12 h-12 rounded-xl border overflow-hidden
+                    flex items-center justify-center shrink-0">
+          <img src="${escapeHtml(sk.icon || "")}"
+               class="w-full h-full object-contain"
+               loading="lazy"
+               onerror="this.onerror=null; this.style.display='none';" />
+        </div>
+
+        <!-- 텍스트 -->
+        <div class="min-w-0 flex-1">
+          <div class="font-bold text-sm mb-1">${escapeHtml(sk.title || "")}</div>
+          <div class="text-xs leading-relaxed text-gray-700">
+            ${escapeHtml(sk.desc || "")}
+          </div>
+        </div>
+      `;
+      area.appendChild(el);
+    });
+  }
+
+  const EXPEDITION_TYPE_ICON = {
+    COMBAT: "images/hero/combat.webp",
+    GATHER: "images/hero/gather.webp",
+    CONSTRUCTION: "images/hero/construction.webp",
+    SUPPORT: "images/hero/support.webp"
+  };
+
+  function renderExpeditionType(type){
+    const iconEl = document.getElementById("expeditionIcon");
+    const textEl = document.querySelector("#hdrType span:last-child");
+    if(!iconEl || !textEl) return;
+
+    const t = (type || "").toUpperCase();
+    const icon = EXPEDITION_TYPE_ICON[t];
+
+    if(icon){
+      iconEl.src = icon;
+      iconEl.style.display = "";
+    }else{
+      iconEl.style.display = "none";
+    }
+
+    textEl.textContent = `영웅타입: ${t || "-"}`;
   }
 
   // =========================
@@ -1203,7 +2169,7 @@
     $("hdrName").textContent = (hero.nameKo || "").toUpperCase();
     $("hdrGen").textContent = `Gen ${hero.gen} • ${hero.nameKo || ""}`;
     $("hdrClass").lastElementChild.textContent = `병종구분: ${hero.heroClass || "-"}`;
-    $("hdrType").lastElementChild.textContent = `영웅타입: ${hero.expeditionType || "-"}`;
+    $("hdrType").lastElementChild.textContent = `${hero.expeditionType || "-"}`;
     $("sourceText").textContent = hero.source ? `획득처: ${hero.source}` : "";
 
     const g = hero.headerGradient || ["#0ea5e9","#2563eb"];
@@ -1214,7 +2180,9 @@
     $("heroImgFallback").classList.add("hidden");
     imgEl.src = hero.portrait || hero.thumb || "";
 
+    renderExpeditionType(hero.expeditionType);
     renderExclusiveSkill(hero.exclusiveSkill);
+    renderWeaponSkills(hero.weaponSkills, hero.weaponFx);
 
     renderSkills("exploreSkills", hero.explorationSkills);
     renderSkills("expeditionSkills", hero.expeditionSkills);
