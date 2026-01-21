@@ -384,105 +384,116 @@
     </div>
   </div>
 
-  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
-    <!-- guideDetails: 처음에만 표시됨 -->
-    <div id="guideDetails" class="flex-1 bg-white rounded p-2 space-y-4 shadow">
-      <div class="bg-gray-100 p-2 font-sans text-sm">
-        <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
-          <h1 class="text-2xl font-bold text-gray-800 mb-4">📘 Data Collection</h1>
-          <div class="space-y-4">              
-            <details class="border border-blue-300 rounded-md p-4 shadow">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">👑 Fort＆SH weekly Rewards</summary>
-              <div id="요새보상" class="mt-3 space-y-4 text-sm text-gray-800">
-                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-              </div>
-            </details>
+  <div class="relative max-w-[1500px] mx-auto">
+  
+    <div class="bg-white rounded shadow p-2 gap-2">
+      <!-- guideDetails: 처음에만 표시됨 -->
+      <div id="guideDetails" class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+        <div class="bg-gray-100 p-2 font-sans text-sm">
+          <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-10">
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">📘 Data Collection</h1>
+            <div class="space-y-4">              
+              <details class="border border-blue-300 rounded-md p-4 shadow">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">👑 Fort＆SH weekly Rewards</summary>
+                <div id="요새보상" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+                </div>
+              </details>
 
-            <details class="border border-blue-300 rounded-md p-4 shadow">
-              <summary class="cursor-pointer text-lg font-semibold text-blue-700">🧬 Generational Hero Traits</summary>
-              <div id="영웅특성" class="mt-3 space-y-4 text-sm text-gray-800">
-                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-              </div>
-            </details>
+              <details class="border border-blue-300 rounded-md p-4 shadow">
+                <summary class="cursor-pointer text-lg font-semibold text-blue-700">🧬 Generational Hero Traits</summary>
+                <div id="영웅특성" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+                </div>
+              </details>
 
-            <!-- ⚔️ SVS_Event -->
-            <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS Preparation</summary>
-              <div id="준비단계" class="mt-3 space-y-4 text-sm text-gray-800">
-                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-              </div>
-            </details>
+              <!-- ⚔️ SVS_Event -->
+              <details class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">⚔️ SVS Preparation</summary>
+                <div id="준비단계" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+                </div>
+              </details>
 
-            <!-- 🛫 이민 시스템 안내 -->
-            <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 Transfer State</summary>
-              <div id="서버이민" class="mt-3 space-y-4 text-sm text-gray-800">
-                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-              </div>
-            </details>
+              <!-- 🛫 이민 시스템 안내 -->
+              <details class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🛫 Transfer State</summary>
+                <div id="서버이민" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+                </div>
+              </details>
 
-            <!-- 단어번역 -->
-            <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 Any Word</summary>
-              <div id="용어안내" class="mt-3 space-y-4 text-sm text-gray-800">
-                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-              </div>
-            </details>
+              <!-- 단어번역 -->
+              <details class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">💬 Any Word</summary>
+                <div id="용어안내" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+                </div>
+              </details>
 
-            <!-- 영웅 성급업 -->
-            <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 Hero Tier</summary>
-              <div id="영웅성급" class="mt-3 space-y-4 text-sm text-gray-800">
-                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-              </div>
-            </details>
+              <!-- 영웅 성급업 -->
+              <details class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🌟 Hero Tier</summary>
+                <div id="영웅성급" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+                </div>
+              </details>
 
-            <!-- 햇살섬 -->
-            <details class="bg-white border border-blue-300 rounded-md p-4">
-              <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🏝 Daybreak Island</summary>
-              <div id="햇살섬" class="mt-3 space-y-4 text-sm text-gray-800">
-                <p class="text-gray-500 text-sm">📦 Data Loding...</p>
-              </div>
-            </details>
+              <!-- 햇살섬 -->
+              <details class="bg-white border border-blue-300 rounded-md p-4">
+                <summary class="cursor-pointer text-lg font-bold text-blue-700 mb-2">🏝 Daybreak Island</summary>
+                <div id="햇살섬" class="mt-3 space-y-4 text-sm text-gray-800">
+                  <p class="text-gray-500 text-sm">📦 Data Loding...</p>
+                </div>
+              </details>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- iframe 영역 -->
+      <div id="frameWrapper" class="max-w-[1500px] w-full hidden bg-white rounded shadow gap-2">
+        <iframe id="mainFrame" class="w-full bg-white rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
+      </div>
+
+      <!-- Scroll to Top Button -->
+      <button id="scrollToTopBtn"
+        class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
+        aria-label="Scroll to top">
+
+        <!-- Up arrow SVG icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
+    
     </div>
     
-    <!-- iframe 영역 -->
-    <div id="frameWrapper" class="max-w-[1500px] w-full hidden bg-white rounded shadow gap-2">
-      <iframe id="mainFrame" class="w-full bg-white rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
-    </div>
+    <!-- ✅ Right Outside Ad Rail -->
+    <div id="rightAdRail" class="hidden xl:block absolute top-0 left-full ml-6 w-[170px]">
 
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTopBtn"
-      class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded-full shadow-lg hover:bg-gray-800/90 transition"
-      aria-label="Scroll to top">
+        <!-- Adsterra 300x600 -->
+        <script>
+          atOptions = {
+            'key' : '9e27a30061674a39069e730a54691c6a',
+            'format' : 'iframe',
+            'height' : 300,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/9e27a30061674a39069e730a54691c6a/invoke.js"></script>
 
-      <!-- Up arrow SVG icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-      </svg>
-    </button>
+    </div>    
     
-    <aside class="hidden lg:block w-[300px]">
-      <!-- 사이드 광고 코드 -->
-      <script>
-        atOptions = {
-          'key' : '9e27a30061674a39069e730a54691c6a',
-          'format' : 'iframe',
-          'height' : 300,
-          'width' : 160,
-          'params' : {}
-        };
-      </script>
-      <script src="https://www.highperformanceformat.com/9e27a30061674a39069e730a54691c6a/invoke.js"></script>
-    </aside>
-  </div>
-	
-	<!-- ✅ PC ONLY: Bottom Ad -->
-	<div id="pcBottomAd" class="hidden lg:block max-w-[1500px] mx-auto px-4 mt-8">
-	  <div class="rounded-2xl border bg-white p-3 flex justify-center dark:bg-[#2c2c2c]">
+    <!-- 카피라이트 -->
+    <footer class="text-center text-xs font-bold text-white mt-5 mb-4">
+    ⛔ Unauthorized copying prohibited | © Made By S645 ShinChan(uuid: 67331703)
+  </footer>
+    
+    <!-- ✅ PC ONLY: Bottom Ad -->
+    <div id="pcBottomAd" class="hidden lg:block max-w-[1500px] mx-auto px-4 mt-8">
+	  <div class="p-3 flex justify-center">
 	    <!-- ✅ Adsterra Bottom code here -->
 	    <script>
 			  atOptions = {
@@ -496,133 +507,8 @@
 			<script src="https://www.highperformanceformat.com/d555f753b8b61046e620961f70527942/invoke.js"></script>
 	  </div>
 	</div>  
-	
-	<!-- 카피라이트 -->
-  <footer class="text-center text-xs font-bold text-white mt-5 mb-4">
-    ⛔ Unauthorized copying prohibited | © Made By S645 ShinChan(uuid: 67331703)
-  </footer>
-	
-  <script>
-  (function () {
-    const MIN_INTERVAL = 3000;
-    const now = Date.now();
-    const last = Number(sessionStorage.getItem("lastLoad") || 0);
-
-    window.DISABLE_ADS = false;
-
-    if (last && now - last < MIN_INTERVAL) window.DISABLE_ADS = true;
-    sessionStorage.setItem("lastLoad", now);
-
-    // iframe 안이면 차단
-    if (window.top !== window.self) window.DISABLE_ADS = true;
-
-    // file://만 차단 (referrer 없음은 허용 권장)
-    if (document.referrer && document.referrer.startsWith("file://")) window.DISABLE_ADS = true;
-
-    if (location.search.length > 200) window.DISABLE_ADS = true;
-    if (location.hash.length > 200) window.DISABLE_ADS = true;
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden && !window.__ADS_LOADED) {
-        window.DISABLE_ADS = true;
-      }
-    });
-  })();
-  </script>
-
-  <!-- 콘텐츠 전체 폭 제한 -->
-  <div class="max-w-[1200px] mx-auto p-2">
-    <div class="grid grid-cols-2 lg:grid-cols-2 gap-2"> 
-      <!-- 광고1 -->
-      <div class="flex justify-center">
-        <ins id="ad1" class="adsbygoogle"
-          style="display:inline-block; width:100%; max-width:300px; height:250px"
-          data-ad-client="ca-pub-8205102847358210"
-          data-ad-slot="8804962791"></ins>
-      </div>
-  
-      <!-- 광고2 -->
-      <div class="flex justify-center">
-        <ins id="ad2" class="adsbygoogle"
-          style="display:inline-block; width:100%; max-width:300px; height:250px"
-          data-ad-client="ca-pub-8205102847358210"
-          data-ad-slot="9326856916"></ins>
-      </div>
-    </div>
+    
   </div>
-	<script>
-  (function(){
-    if (window.DISABLE_ADS) return;
-
-    let active = false;
-    const activate = () => { active = true; };
-    ["scroll","click","touchstart","keydown"].forEach(ev =>
-      window.addEventListener(ev, activate, { once:true, passive:true })
-    );
-
-    function ensureAdsenseLoaded(){
-      if (window.__ADS_LOADED) return;
-      window.__ADS_LOADED = true;
-
-      const s = document.createElement("script");
-      s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8205102847358210";
-      s.async = true;
-      s.crossOrigin = "anonymous";
-      document.head.appendChild(s);
-    }
-
-    setTimeout(() => {
-      if (!active) return;
-      ensureAdsenseLoaded();
-    }, 5000);
-  })();
-  </script>
-  <script>
-  (function(){
-    if (window.DISABLE_ADS) return;
-
-    const ids = ["ad1","ad2"];
-    const filled = new Set();
-
-    function safePush(){
-      try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch {}
-    }
-
-    function pushWhenReady(){
-      // adsense.js(adsbygoogle)가 아직 준비 안 됐으면, 준비될 때까지 짧게 폴링
-      if (!window.adsbygoogle) {
-        const t = setInterval(() => {
-          if (window.adsbygoogle) {
-            clearInterval(t);
-            safePush();
-          }
-        }, 200);
-
-        // 혹시 영원히 안 뜨는 상황 대비(네트워크/차단 등) 안전장치
-        setTimeout(() => clearInterval(t), 8000);
-        return;
-      }
-      safePush();
-    }
-
-    const obs = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if (!e.isIntersecting) return;
-        const el = e.target;
-        if (filled.has(el)) return;
-        filled.add(el);
-
-        pushWhenReady();
-        obs.unobserve(el);
-      });
-    }, { threshold: 0.25 });
-
-    ids.forEach(id=>{
-      const el = document.getElementById(id);
-      if (el) obs.observe(el);
-    });
-  })();
-  </script> 
   <script>
     //메뉴동작
     const dropdowns = [...document.querySelectorAll('[data-dd]')];
