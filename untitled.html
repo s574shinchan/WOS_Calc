@@ -1524,8 +1524,8 @@
       gen: 10,
       name: "Freya",
       nameKo: "프레야",
-      heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
+      heroClass: "LANCER",
+      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
@@ -2291,7 +2291,7 @@
     };
 
     wrap.appendChild(makeBtn("전체", "ALL"));
-    gens.forEach(g => wrap.appendChild(makeBtn(`Gen ${g}`, g)));
+    gens.forEach(g => wrap.appendChild(makeBtn(`${g}세대`, g)));
   }
 
   // =========================
@@ -2344,8 +2344,7 @@
         section.className = "space-y-3";
         section.innerHTML = `
           <div class="flex items-center justify-between">
-            <div class="text-lg font-extrabold">Gen ${gen}</div>
-            <div class="text-xs">${heroes.length}명</div>
+            <div class="text-lg font-extrabold">${gen}세대 영웅 (${heroes.length}명)</div>
           </div>
           <div class="gen-grid grid gap-3"></div>
         `;
@@ -2365,7 +2364,7 @@
         const img = hero.thumb || hero.portrait || "";
         card.innerHTML = `
           <div class="flex items-center gap-3">
-            <div class="w-14 h-14 rounded-2xl border overflow-hidden flex items-center justify-center shrink-0">
+            <div class="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shrink-0">
               <img src="${escapeHtml(img)}" class="w-full h-full object-contain"
                    onerror="this.onerror=null; this.style.display='none';" />
             </div>
@@ -2590,14 +2589,26 @@
     });
   }
 
-  // ✅ 전용무기 스킬(weaponSkill) 렌더: ws1 (줄바꿈) ws2
+  // ✅ 전용무기 스킬(weaponSkill) 렌더: ws1 ws2
   function renderWeaponSkills(weaponSkill, weaponFx){
     const fxEl = $("weaponFx");
     const area = $("weaponSkills");
     if(!fxEl || !area) return;
 
     // 1) weaponFx 표시
-    fxEl.textContent = "공수구분: " + String(weaponFx).trim();
+//    // ✅ 기본 세팅 (한 번만)
+//    fxEl.classList.add("border-4");
+//
+//    // ✅ 기존 색 제거
+//    fxEl.classList.remove("border-red-500", "border-blue-500");
+//
+//    // ✅ weaponFx 값에 따라 색 지정
+//    if (String(weaponFx).trim() === "공성") {
+//      fxEl.classList.add("border-red-700");
+//    } else {
+//      fxEl.classList.add("border-blue-700");
+//    }
+    fxEl.textContent = String(weaponFx).trim();
     fxEl.classList.remove("hidden");
 
     // 2) 스킬 렌더
@@ -2619,7 +2630,7 @@
 
       el.innerHTML = `
         <!-- 아이콘 -->
-        <div class="w-12 h-12 rounded-xl border overflow-hidden
+        <div class="w-12 h-12 rounded-xl overflow-hidden
                     flex items-center justify-center shrink-0">
           <img src="${escapeHtml(sk.icon || "")}"
                class="w-full h-full object-contain"
@@ -2695,7 +2706,8 @@
     currentHero = hero;
 
     $("hdrName").textContent = (hero.nameKo || "").toUpperCase();
-    $("hdrGen").textContent = `Gen ${hero.gen} • ${hero.nameKo || ""}`;
+    //$("hdrGen").textContent = `Gen ${hero.gen} • ${hero.nameKo || ""}`;
+    $("hdrGen").textContent = `${hero.gen}세대`;
     $("hdrClass").lastElementChild.textContent = `${hero.heroClass || "-"}`;
     $("hdrType").lastElementChild.textContent = `${hero.expeditionType || "-"}`;
     $("sourceText").textContent = hero.source ? `획득처: ${hero.source}` : "";
