@@ -193,6 +193,7 @@
                       </div>
                     </div>
                   </div>
+                  <label id="weaponFx" class="text-center text-sm"></label>
                 </div>
               </div>
 
@@ -212,7 +213,7 @@
 
               <!-- ✅ 전용무기 카드 -->
               <div id="weapon" class="col-span-6 rounded-2xl border bg-white p-3 md:p-4">
-                <div id="weaponFx" class="font-extrabold text-base whitespace-nowrap">전용무기</div>
+                <div class="font-extrabold text-base whitespace-nowrap">전용무기</div>
                 <!-- 전용무기 스킬은 추후 추가할 영역 -->
                 <div id="weaponSkills" class="mt-3 space-y-3"></div>
               </div>
@@ -221,7 +222,10 @@
               <div class="col-span-12">
                 <div class="grid grid-cols-2 gap-3">
                   <div class="rounded-2xl border bg-white p-3 md:p-4">
-                    <div class="font-extrabold">전용무기속성 (+10 기준)</div>
+                    <div class="flex flex-col grid grid-cols-2">
+                      <div class="font-extrabold">전용무기속성</div> 
+                      <div class="text-[11px] text-right text-gray-500">+10강 기준/해당 병종에 적용</div> 
+                    </div>
                     <div id="statExplore" class="mt-2 grid grid-cols-2 gap-2 text-sm"></div>
                   </div>
                   <div class="rounded-2xl border bg-white p-3 md:p-4">
@@ -255,7 +259,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/jeronimo.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/jeronimo.webp",      // 모달용(전신/큰거)
-      weaponFx: "공격력 15% [공성]",
+      weaponFx: "공성",
       weaponSkills: [
         {
           key:"ws1", title: "검방패", desc: "공격 진행 시 검기가 방패를 형성하여 자신이 받는 피해가 30% 감소합니다.",
@@ -284,8 +288,8 @@
         { key:"R3", title:"정밀 검술", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/jeronimo/R3.webp" }
       ],
       stats: {
-        exploration: { "방패병 파괴력": "+62.50%", 방패병HP:"+62.50%" },
-        expedition: { "방패병 공격력": "+260.20%", "방패병 방어력": "+260.20%" }
+        exploration: { "파괴력": "+62.50%", "HP":"+62.50%" },
+        expedition: { "공격력": "+260.20%", "방어력": "+260.20%" }
       }
     },
     { 
@@ -300,7 +304,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
-      weaponFx: "파괴력 15% [공성]",
+      weaponFx: "공성",
       weaponSkills: [
         {
           key:"ws1", title: "한마음", desc: "나탈리아와 백곰이 교감하고 입히는 피해가 30% 상승한다.",
@@ -329,8 +333,8 @@
         { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", icon:"images/hero/skills/natalia/R3.webp" }
       ],
       stats: {
-        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
-        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+50.0%", "방패병HP":"+50.0%" },
+        expedition: { "공격력": "+200.20%", "방어력": "+200.20%" }
       }
     },
     { 
@@ -345,7 +349,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/molly.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/molly.webp",      // 모달용(전신/큰거)
-      weaponFx: "파괴력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "개조된 발사기", desc: "송신기를 개량하여 자신이 가하는 피해가 30% 증가한다.",
@@ -373,8 +377,8 @@
          icon:"images/hero/skills/molly/R3.webp" }
       ],
       stats: {
-        exploration: { "창병 파괴력": "+50.0%", 창병HP:"+50.0%" },
-        expedition: { "창병 공격력": "+200.20%", "창병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
+        expedition: { "공격력": "+200.20%", "방어력": "+200.20%" }
       }
     },
     { 
@@ -389,7 +393,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/zinman.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/zinman.webp",      // 모달용(전신/큰거)
-      weaponFx: "공력력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "과부하 스테이플 건", desc: "압력 스테이플 건이 과부하 모드가 되어 공격력이 24% 증가합니다.",
@@ -417,8 +421,8 @@
          icon:"images/hero/skills/zinman/R3.webp" }
       ],
       stats: {
-        exploration: { "궁병 파괴력": "+50.0%", 궁병HP:"+50.0%" },
-        expedition: { "궁병 공격력": "+200.20%", "궁병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
+        expedition: { "공격력": "+200.20%", "방어력": "+200.20%" }
       }
     },
     { 
@@ -433,7 +437,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/flint.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/flint.webp",      // 모달용(전신/큰거)
-      weaponFx: "공력력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "복수의 열기", desc: "복수는 전의를 불태우는데 최고의 연료. “분노의 화염” 발동 후 전투 종료까지 공격력이 24% 향상된다.",
@@ -461,8 +465,8 @@
          icon:"images/hero/skills/flint/R3.webp" }
       ],
       stats: {
-        exploration: { "방패병 파괴력": "+60.0%", 방패병HP:"+60.0%" },
-        expedition: { "방패병 공격력": "+240.20%", "방패병 방어력": "+240.20%" }
+        exploration: { "파괴력": "+60.0%", "HP":"+60.0%" },
+        expedition: { "공격력": "+240.20%", "방어력": "+240.20%" }
       }
     },
     { 
@@ -477,7 +481,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/philly.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/philly.webp",      // 모달용(전신/큰거)
-      weaponFx: "HP 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "에센스 추출", desc: "필리가 약물을 정제하고 치료 효과를 강화하여 HP 회복 스킬의 효과를 70% 향상시킨다.",
@@ -505,8 +509,8 @@
          icon:"images/hero/skills/philly/R3.webp" }
       ],
       stats: {
-        exploration: { "창병 파괴력": "+50.0%", 창병HP:"+50.0%" },
-        expedition: { "창병 공격력": "+200.20%", "창병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+60.0%", "HP":"+60.0%" },
+        expedition: { "공격력": "+240.20%", "방어력": "+240.20%" }
       }
     },
     { 
@@ -521,7 +525,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/alonso.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/alonso.webp",      // 모달용(전신/큰거)
-      weaponFx: "파괴력 15% [공성]",
+      weaponFx: "공성",
       weaponSkills: [
         {
           key:"ws1", title: "바다의 향연", desc: "전리품을 후하게 나누는 알론소가 일반 공격을 할 때마다 HP가 가장 낮은 아군 영웅에게 맛있는 생선을 나눠주어 알론소의 공격력*15%의 HP를 회복시킨다.",
@@ -549,8 +553,8 @@
          icon:"images/hero/skills/alonso/R3.webp" }
       ],
       stats: {
-        exploration: { "궁병 파괴력": "+50.0%", 궁병HP:"+50.0%" },
-        expedition: { "궁병 공격력": "+200.20%", "궁병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+60.0%", "HP":"+60.0%" },
+        expedition: { "공격력": "+240.20%", "방어력": "+240.20%" }
       }
     },
     { 
@@ -565,7 +569,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/logan.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/logan.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -593,8 +597,8 @@
          icon:"images/hero/skills/logan/R3.webp" }
       ],
       stats: {
-        exploration: { "방패병 파괴력": "+70.0%", 방패병HP:"+70.0%" },
-        expedition: { "방패병 공격력": "+290.20%", "방패병 방어력": "+290.20%" }
+        exploration: { "파괴력": "+70.0%", "HP":"+70.0%" },
+        expedition: { "공격력": "+290.20%", "방어력": "+290.20%" }
       }
     },
     { 
@@ -609,7 +613,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/mia.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/mia.webp",      // 모달용(전신/큰거)
-      weaponFx: "공격력 15% [공성]",
+      weaponFx: "공성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -637,8 +641,8 @@
          icon:"images/hero/skills/mia/R3.webp" }
       ],
       stats: {
-        exploration: { "창병 파괴력": "+50.0%", 창병HP:"+50.0%" },
-        expedition: { "창병 공격력": "+200.20%", "창병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+70.0%", "HP":"+70.0%" },
+        expedition: { "공격력": "+290.20%", "방어력": "+290.20%" }
       }
     },
     { 
@@ -653,7 +657,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/greg.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/greg.webp",      // 모달용(전신/큰거)
-      weaponFx: "HP 15% [공성]",
+      weaponFx: "공성",
       weaponSkills: [
         {
           key:"ws1", title: "법정 질서", desc: "목표물을 정숙시켜 5초 동안 스킬을 사용할 수 없게 만든다(이미 시전된 스킬은 적용 불가). 목표물에게 공격력*300%의 피해를 입힌다.",
@@ -681,8 +685,8 @@
          icon:"images/hero/skills/greg/R3.webp" }
       ],
       stats: {
-        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
-        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+70.0%", "HP":"+70.0%" },
+        expedition: { "공격력": "+290.20%", "방어력": "+290.20%" }
       }
     },
     { 
@@ -693,40 +697,40 @@
       heroClass: "INFANTRY",
       heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
-      source: "행운의 룰렛",
+      source: "빙원의 왕",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/ahmose.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/ahmose.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
+          key:"ws1", title: "불굴의 신념", desc: "아모세가 불굴의 신념으로 전투를 강화한다. “크투게아의 가호”의 가호를 받은 아군의 공격력이 2.5초간 42% 증가한다.",
           icon: "images/hero/skills/ahmose/ws1.webp"
         },
         {
-          key:"ws2", title: "", desc: "",
+          key:"ws2", title: "수호자의 맹세", desc: "수호자의 맹세로 성지를 지켜, 수성 부대의 HP를 15% 증가한다.",
           icon: "images/hero/skills/ahmose/ws2.webp"          
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
+        { key:"L1", title: "크투게아의 가호", desc: "견고한 방패를 설치하여 적의 매서운 공격을 방어하고, 자신이 무적 상태에 돌입한다. (해당 상태 동안 이동 및 스킬 시전 불가, 제어 면역.) 2초간 주변 아군이 받는 피해를 30%/40%/50%/60%/70% 감소한다.",
           icon:"images/hero/skills/ahmose/L1.webp"},
-        { key:"L2", title: "", desc: "",
+        { key:"L2", title: "새벽의 검", desc: "날카로운 검으로 전방의 적을 관통하여 공격력*70%/77%/84%/91%/98%의 피해를 입히고 방어선을 무너뜨려 이후 2초 동안 적이 받는 피해를 20% 증가시킨다.",
           icon:"images/hero/skills/ahmose/L2.webp" },
-        { key:"L3", title: "", desc: "",
+        { key:"L3", title: "선대의 축복", desc: "불의 수정의 에너지는 선대의 축복처럼 아모세의 상처를 치유해준다. “크투게아의 가호”를 시전하면 5초간 초당 공격력*30%/33%/36%/39%/42%의 HP를 회복한다.",
           icon:"images/hero/skills/ahmose/L3.webp" }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "",
+        { key:"R1", title: "살모사 진형", desc: "부대가 고대 수호자의 방어 진형을 펼치도록 하여 방패병이 4번 공격을 때마다 다음 공격을 포기하고 창병과 궁병이 받는 피해를 10%/15%/20%/25%/30% 감소시키며, 방패병이 받는 피해를 10%/25%/40%/55%/70% 감소시킨다. 2라운드 지속.",
          icon:"images/hero/skills/ahmose/R1.webp" },
-        { key:"R2", title: "", desc: "",
+        { key:"R2", title: "불의 축복", desc: "불의 수정의 힘으로 아군 방패병의 투지를 불태워 이들이 입히는 피해를 20%/40%/60%/80%/100% 증가한다.",
          icon:"images/hero/skills/ahmose/R2.webp" },
-        { key:"R3", title: "", desc: "",
+        { key:"R3", title: "빛나는 칼날", desc: "불의 수정의 정수를 방패병의 무기에 주입하여 공격 시마다 타깃에 12%/24%/36%/48%/60%의 추가 피해를 주도록 하며, 타깃이 받는 피해를 5%/10%/15%/20%/25%씩 증가시킨다. 1라운드 지속.",
          icon:"images/hero/skills/ahmose/R3.webp" }
       ],
       stats: {
-        exploration: { "방패병 파괴력": "+50.0%", 방패병HP:"+50.0%" },
-        expedition: { "방패병 공격력": "+200.20%", "방패병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+92.5%", "HP":"+92.5%" },
+        expedition: { "공격력": "+370.30%", "방어력": "+370.30%" }
       }
     },
     { 
@@ -735,42 +739,42 @@
       name: "Reina",
       nameKo: "레이나",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_Lancer.webp",
+      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
-      source: "행운의 룰렛",
+      source: "영웅의 전당",
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/reina.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/reina.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "공성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
+          key:"ws1", title: "그림자 발걸음", desc: "레이나는 영리한 지휘 기술을 발휘해서 전체 아군 부대가 일반 공격을 받으면 4%/8%/12%/16%/20%의 확률로 피해를 회피시킨다.",
           icon: "images/hero/skills/reina/ws1.webp"
         },
         {
-          key:"ws2", title: "", desc: "",
+          key:"ws2", title: "그림자 칼날", desc: "변화무쌍한 레이나의 전술로 창병이 25%의 확률로 한 번 더 공격하여 120%/140%/160%/180%/200%의 피해를 준다.",
           icon: "images/hero/skills/reina/ws2.webp"          
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
+        { key:"L1", title: "그림자 기습", desc: "소환된 분신이 적 뒤로 순간이동하여 기습 공격하고 공격력*300%/330%/360%/390%/420%의 범위 피해를 입힌다.",
           icon:"images/hero/skills/reina/L1.webp"},
-        { key:"L2", title: "", desc: "",
+        { key:"L2", title: "은둔의 비술", desc: "일반 공격을 받으면 5%/10%/15%/20%/25% 확률로 환술을 시전해서 상대를 속이고 아무 피해도 받지 않는다.",
           icon:"images/hero/skills/reina/L2.webp" },
-        { key:"L3", title: "", desc: "",
+        { key:"L3", title: "요괴의 독", desc: "적군 타깃(영웅 우선)에 마술을 시전하여 공격력*100%/110%/120%/130%/140%의 피해를 주고, 1.5초 동안 움직이지 못하게 한다.",
           icon:"images/hero/skills/reina/L3.webp" }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "",
+        { key:"R1", title: "잔영의 일격", desc: "일반 공격을 하면 40%의 확률로 쿠나이 하나를 추가로 투척해, 공격력*45%의 피해를 가한다.",
          icon:"images/hero/skills/reina/R1.webp" },
-        { key:"R2", title: "", desc: "",
+        { key:"R2", title: "불같은 침착", desc: "레이나의 뛰어난 기회 포착 능력으로 집결 부대의 파괴력을 15% 증가한다.",
          icon:"images/hero/skills/reina/R2.webp" },
-        { key:"R3", title: "", desc: "",
+        { key:"R3", title: "자객의 본능", desc: "적의 약점을 가장 효과적으로 공격할 줄 아는 레이나가 아군 전체 부대의 일반 공격 피해를 10%/15%/20%/25%/30% 향상시킨다.",
          icon:"images/hero/skills/reina/R3.webp" }
       ],
       stats: {
-        exploration: { "창병 파괴력": "+50.0%", 창병HP:"+50.0%" },
-        expedition: { "창병 공격력": "+200.20%", "창병 방어력": "+200.20%" }
+        exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
+        expedition: { "공격력": "+200.20%", "방어력": "+200.20%" }
       }
     },
     { 
@@ -785,7 +789,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Lynn.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Lynn.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -829,7 +833,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Hector.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Hector.webp",      // 모달용(전신/큰거)
-      weaponFx: "공격력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -873,7 +877,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Norah.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Norah.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -917,7 +921,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Gwen.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Gwen.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -961,7 +965,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/wuming.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/wuming.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1005,7 +1009,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/rene.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/rene.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1049,7 +1053,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/wayne.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/wayne.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1093,7 +1097,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Edith.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Edith.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1137,7 +1141,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Gordon.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Gordon.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1181,7 +1185,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Bradley.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Bradley.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1225,7 +1229,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Gatot.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Gatot.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1269,7 +1273,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Sonya.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Sonya.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1310,7 +1314,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Hendrik.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Hendrik.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1354,7 +1358,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/magnus.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/magnus.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1395,7 +1399,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/fred.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/fred.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1439,7 +1443,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/xura.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/xura.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1483,7 +1487,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Gregory.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Gregory.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1527,7 +1531,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Freya.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Freya.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1571,7 +1575,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/blanchette.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/blanchette.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1615,7 +1619,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Eleonora.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Eleonora.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1659,7 +1663,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Lloyd.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Lloyd.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1703,7 +1707,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Rufus.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Rufus.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1747,7 +1751,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Hervor.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Hervor.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1788,7 +1792,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Karol.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Karol.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1829,7 +1833,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Ligeia.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Ligeia.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1873,7 +1877,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Gisela.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Gisela.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1917,7 +1921,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Flora.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Flora.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -1961,7 +1965,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Vulcanus.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Vulcanus.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -2005,7 +2009,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/Elif.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/Elif.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -2049,7 +2053,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -2090,7 +2094,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -2131,7 +2135,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -2172,7 +2176,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -2213,7 +2217,7 @@
       headerGradient: ["#0891b2", "#1d4ed8"],
       thumb: "images/hero/thumb/natalia.webp",   // 리스트용(작은거/크롭된거)
       portrait: "images/hero/body/natalia.webp",      // 모달용(전신/큰거)
-      weaponFx: "방어력 15% [수성]",
+      weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
@@ -2592,14 +2596,9 @@
     const area = $("weaponSkills");
     if(!fxEl || !area) return;
 
-    // 1) weaponFx 표시 (없으면 숨김)
-    if(weaponFx && String(weaponFx).trim()){
-      fxEl.textContent = "전용무기 효과: " + String(weaponFx).trim();
-      fxEl.classList.remove("hidden");
-    }else{
-      fxEl.textContent = "";
-      fxEl.classList.add("hidden");
-    }
+    // 1) weaponFx 표시
+    fxEl.textContent = "공수구분: " + String(weaponFx).trim();
+    fxEl.classList.remove("hidden");
 
     // 2) 스킬 렌더
     area.innerHTML = "";
