@@ -494,7 +494,7 @@
             <a class="dd-item" href="#" data-frame="beartrap.html">부대계산</a>
             <a class="dd-item" href="#" data-frame="troop.html">병사생산</a>
             <a class="dd-item" href="#" data-frame="SVS_PreMission.html">SVS점수</a>
-            <!--<a class="dd-item" href="#" data-frame="SVS_PreMission.html">세대별영웅정보</a>-->
+            <a class="dd-item" href="#" data-frame="untitled.html">세대별영웅정보</a>
           </div>
         </div>
         <div class="dd" data-dd>
@@ -2034,7 +2034,7 @@
       </svg>
     </button>
   </div>
-  
+    
   <!-- 카피라이트 -->
   <footer class="text-center text-xs font-bold text-white mt-5 mb-4">⛔ 무단 복제 금지 | © Made By S645 ShinChan(67331703)
     <span id="updateLink"  class="underline cursor-pointer hover:text-white-100 ml-2">업데이트내역</span>
@@ -2997,6 +2997,39 @@
     })();
   </script>
   <script>
+    const PARENT_MODAL_WRAPPER_ID = "PARENT_MODAL_WRAPPER";
+
+    window.addEventListener("message", (e) => {
+      if (!e?.data || e.data.type !== "OPEN_HERO_MODAL") return;
+
+      // 기존 모달 제거
+      document.getElementById(PARENT_MODAL_WRAPPER_ID)?.remove();
+
+      // 받은 HTML 붙이기
+      const wrap = document.createElement("div");
+      wrap.id = PARENT_MODAL_WRAPPER_ID;
+      wrap.innerHTML = e.data.html;
+
+      const modal = wrap.querySelector("#modalBackdrop");
+      if (!modal) return;
+
+      // 부모에서 보이게
+      modal.classList.remove("hidden");
+      modal.classList.remove("z-[2000]");
+      modal.classList.add("z-[99999]");
+
+      // 닫기/배경닫기
+      const closeBtn = wrap.querySelector("#closeModal");
+      const backdrop = wrap.querySelector(".absolute.inset-0.bg-black\\/60");
+      const close = () => wrap.remove();
+
+      closeBtn?.addEventListener("click", close);
+      backdrop?.addEventListener("click", close);
+
+      document.body.appendChild(wrap);
+    });
+
+    
     window.addEventListener("message", function (event) {
       console.log("받음:", event.data);
 

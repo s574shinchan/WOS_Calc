@@ -241,8 +241,7 @@
       </div>
     </div>
   </div>
-
-<script>
+  <script>
   // =========================
   // ✅ 데이터 (샘플)
   // =========================
@@ -2402,52 +2401,6 @@
     }
   }
   
-  function renderHeroGrid2(){
-    const wrap = $("heroGrid");
-    wrap.innerHTML = "";
-
-    const list = HEROES.filter(h => currentGen==="ALL" ? true : h.gen===currentGen);
-    list.forEach(hero=>{
-      const card = document.createElement("button");
-      card.className = "text-left rounded-2xl border bg-white p-3 hover:shadow-md transition";
-      card.onclick = () => openHeroModal(hero);
-
-      const img = hero.thumb || hero.portrait || "";
-      card.innerHTML = `
-        <div class="flex items-center gap-3">
-          <div class="w-14 h-14 rounded-2xl border overflow-hidden flex items-center justify-center shrink-0">
-            <img src="${escapeHtml(img)}" class="w-full h-full object-contain"
-                 onerror="this.onerror=null; this.style.display='none';" />
-            <div class="text-[10px]"></div>
-          </div>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2">
-              <div class="text-lg font-extrabold truncate">${escapeHtml(hero.nameKo || hero.name)}</div>
-              <div class="shrink-0">
-                ${CLASS_ICON_MAP[hero.heroClass] ? `
-                  <img src="${escapeHtml(CLASS_ICON_MAP[hero.heroClass])}"
-                       class="w-5 h-5 object-contain opacity-90"
-                       alt="${escapeHtml(hero.heroClass)}"
-                       loading="lazy"
-                       onerror="this.onerror=null; this.style.display='none';" />
-                ` : ``}
-              </div>
-            </div>
-            <div class="mt-0.5 text-xs">
-              Gen ${hero.gen} • ${escapeHtml(hero.heroClass)} • ${escapeHtml(hero.expeditionType)}
-            </div>
-            <div class="mt-1 text-[11px] truncate">${escapeHtml(hero.source||"")}</div>
-          </div>
-        </div>
-      `;
-      wrap.appendChild(card);
-    });
-
-    if(list.length===0){
-      wrap.innerHTML = `<div class="text-sm text-slate-500">표시할 영웅이 없습니다.</div>`;
-    }
-  }
-
   // =========================
   // 렌더: 스킬 카드(✅ 막대 없이, 바로 표시)
   // =========================
@@ -2683,7 +2636,7 @@
 
   function renderHeroClassType(type){
     const iconEl = document.getElementById("hdrClassIcon");
-    const textEl = document.querySelector("#hdrType span:last-child");
+    const textEl = document.querySelector("#hdrClass  span:last-child");
     if(!iconEl || !textEl) return;
 
     const t = (type || "").toUpperCase();
@@ -2729,8 +2682,20 @@
     renderSkills("expeditionSkills", hero.expeditionSkills);
     renderStats();
 
-    $("modalBackdrop").classList.remove("hidden");
-    document.body.style.overflow = "hidden";
+    //$("modalBackdrop").classList.remove("hidden");
+    //document.body.style.overflow = "hidden";
+
+    const modal = document.getElementById("modalBackdrop");
+      if(!modal) return;
+
+      // ❌ 기존: 자식에서 띄우기
+      // modal.classList.remove("hidden");
+
+      // ✅ 변경: "완성된 모달 HTML"을 부모로 보냄 (통째로)
+      window.parent?.postMessage({
+        type: "OPEN_HERO_MODAL",
+        html: modal.outerHTML
+      }, "*");
   }
 
   function closeHeroModal(){
@@ -2780,5 +2745,48 @@
     renderHeroGrid();
   })();
 </script>
-</body>
+  <script>
+  /* 유틸 */
+  function sendHeightToParent(){ 
+    window.parent?.postMessage({type:"FRAME_CHANGE",height:document.body.scrollHeight+100},"*"); 
+  }
+
+  window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
+</script>
+  <script>
+  // F12, Ctrl+Shift+I, Ctrl+U 등 방지
+  document.onkeydown = function (e) {
+    if (
+      e.keyCode === 123 || // F12
+      (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+      (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+      (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  };
+
+  // 우클릭 방지
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+  window.addEventListener('message', (e) => {
+    if (e.data?.type === 'DARK_MODE') {
+      document.body.classList.toggle('dark-mode', e.data.value);
+    }
+  });
+  </script> 
+  <script>
+    function openHeroModalInParent() {
+      const el = document.getElementById("modalBackdrop");
+      if (!el) return;
+
+      // ✅ 자식에서 만든 모달 통째로 HTML로 보냄
+      window.parent?.postMessage({
+        type: "OPEN_HERO_MODAL",
+        html: el.outerHTML
+      }, "*");
+    }
+  </script>
+  </body>
 </html>
