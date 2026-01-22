@@ -124,7 +124,7 @@
                   <span id="hdrClass" class="inline-flex items-center gap-1">
                     <span class="w-4 h-4 rounded bg-white/20 inline-flex items-center justify-center">
                       <img id="hdrClassIcon"
-                           src="images/hero/icon_infantry.webp"
+                           src=""
                            class="w-3.5 h-3.5 object-contain"
                            onerror="this.style.display='none'"/>
                     </span>
@@ -134,7 +134,7 @@
                   <span id="hdrType" class="inline-flex items-center gap-1">
                     <span class="w-4 h-4 rounded bg-white/20 inline-flex items-center justify-center">
                       <img id="expeditionIcon"
-                           src="images/hero/construction.webp"
+                           src=""
                            class="w-3.5 h-3.5 object-contain"
                            onerror="this.style.display='none'"/>
                     </span>
@@ -251,42 +251,33 @@
       name: "Jeronimo",
       nameKo: "제로니모",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "VIP팩/최강영주",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen01/thumb/Jeronimo.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen01/body/Jeronimo.webp",      // 모달용(전신/큰거)
       weaponFx: "공성",
       weaponSkills: [
-        {
-          key:"ws1", title: "검방패", desc: "공격 진행 시 검기가 방패를 형성하여 자신이 받는 피해가 30% 감소합니다.",
-          icon: "images/hero/Gen01/skills/Jeronimo/ws1.webp"
-        },
-        {
-          key:"ws2", title: "진실의 술법", desc: "검진을 펼쳐 공격하며, 집결 부대의 공격력이 15% 상승한다.",
-          icon: "images/hero/Gen01/skills/Jeronimo/ws2.webp"          
-        }
+        { key:"ws1", title: "검방패", 
+         desc: "공격 진행 시 검기가 방패를 형성하여 자신이 받는 피해가 30% 감소합니다." },
+        { key:"ws2", title: "진실의 술법", 
+         desc: "검진을 펼쳐 공격하며, 집결 부대의 공격력이 15% 상승한다." }
       ],
       exclusiveSkill: [
-        { key:"Special", title: "타고난 지도자", desc: "카리스마가 전체 군에 영향을 미쳐 제로니모의 출정 여부와 상관없이 전체 아군 부대의 파괴력과 HP가 3%/6%/9%/12%/15% 증가합니다.",
-          icon: "images/hero/Gen01/skills/Jeronimo/Special.webp"}
+        { key:"Special", title: "타고난 지도자", 
+         desc: "카리스마가 전체 군에 영향을 미쳐 제로니모의 출정 여부와 상관없이 전체 아군 부대의 파괴력과 HP가 3%/6%/9%/12%/15% 증가합니다." }
       ],
       explorationSkills: [
-        { key:"L1", title:"삼단 베기", desc:"일정 범위 안의 적을 들어올려 3차례 베고, 매번 공격력 160%/176%/192%/208%/224%의 피해를 입힌다.", 
-          icon:"images/hero/Gen01/skills/Jeronimo/L1.webp"},
-        { key:"L2", title:"검기", desc:"일반 공격마다 검기를 시전해서 전방 직사각형 범위 내 적에게 공격력 15%/17%/19%/21%/23%의 피해를 입힌다.",
-          icon:"images/hero/Gen01/skills/Jeronimo/L2.webp" },
-        { key:"L3", title:"거만함", desc:"도도한 제로니모는 순풍이 불 때 더욱 강해진다. HP가 50% 이상일 때 공격력이 16%/24%/32%/40%/48% 향상된다.",
-          icon:"images/hero/Gen01/skills/Jeronimo/L3.webp" }
+        { key:"L1", title:"삼단 베기", 
+         desc:"일정 범위 안의 적을 들어올려 3차례 베고, 매번 공격력 160%/176%/192%/208%/224%의 피해를 입힌다." },
+        { key:"L2", title:"검기", 
+         desc:"일반 공격마다 검기를 시전해서 전방 직사각형 범위 내 적에게 공격력 15%/17%/19%/21%/23%의 피해를 입힌다." }
       ],
       expeditionSkills: [
-        { key:"R1", title:"전쟁 선언", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", 
-         icon:"images/hero/Gen01/skills/Jeronimo/R1.webp" },
-        { key:"R2", title:"검술 지도", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", 
-         icon:"images/hero/Gen01/skills/Jeronimo/R2.webp" },
-        { key:"R3", title:"정밀 검술", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", 
-         icon:"images/hero/Gen01/skills/Jeronimo/R3.webp" }
+        { key:"R1", title:"전쟁 선언", 
+         desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다." },
+        { key:"R2", title:"검술 지도", 
+         desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다." },
+        { key:"R3", title:"정밀 검술", 
+         desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속)." }
       ],
       stats: {
         exploration: { "파괴력": "+62.50%", "HP":"+62.50%" },
@@ -299,42 +290,38 @@
       name: "Natalia",
       nameKo: "나탈리아",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "VIP팩",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen01/thumb/Natalia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen01/body/Natalia.webp",      // 모달용(전신/큰거)
       weaponFx: "공성",
       weaponSkills: [
-        {
-          key:"ws1", title: "한마음", desc: "나탈리아와 백곰이 교감하고 입히는 피해가 30% 상승한다.",
-          icon: "images/hero/Gen01/skills/Natalia/ws1.webp"
+        { key:"ws1", title: "한마음", 
+         desc: "나탈리아와 백곰이 교감하고 입히는 피해가 30% 상승한다."
         },
-        {
-          key:"ws2", title: "불패의 군대", desc: "야수떼를 소환한 나탈리아가 집결에 참여해서 집결 부대 파괴력이 15% 상승한다.",
-          icon: "images/hero/Gen01/skills/Natalia/ws2.webp"          
+        { key:"ws2", title: "불패의 군대", 
+         desc: "야수떼를 소환한 나탈리아가 집결에 참여해서 집결 부대 파괴력이 15% 상승한다."
         }
       ],      
       exclusiveSkill: [
-        { key:"Special", title: "백곰의 힘", desc: "전군에 백곰과 같은 용기와 힘을 줍니다. 나탈리아의 출정 여부와 상관없이 전체 아군 부대의 공격력, 방어력 2%/4%/6%/8%/10% 증가합니다.",
-          icon: "images/hero/Gen01/skills/Natalia/Special.webp"}
+        { key:"Special", title: "백곰의 힘", 
+         desc: "전군에 백곰과 같은 용기와 힘을 줍니다. 나탈리아의 출정 여부와 상관없이 전체 아군 부대의 공격력, 방어력 2%/4%/6%/8%/10% 증가합니다."
+        }
       ],
       explorationSkills: [
-        { key:"L1", title: "비스트 어택", desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다." ,
-          icon:"images/hero/Gen01/skills/Natalia/L1.webp"},
-        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
-          icon:"images/hero/Gen01/skills/Natalia/L2.webp" },
-        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
-          icon:"images/hero/Gen01/skills/Natalia/L3.webp" }
+        { key:"L1", title: "비스트 어택", 
+         desc:"북극곰이 몸을 일으켰다가 강하게 땅을 내리쳐 공격력 160%/176%/192%/208%/224% 의 범위 피해를 입히고, 범위 내 모든 적을 넉백시켜 1초간 스턴시킨다."
+        },
+        { key:"L2", title:"채찍질", 
+         desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다."
+        },
+        { key:"L3", title:"레인지 리스폰", 
+         desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩)."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.",
-         icon:"images/hero/Gen01/skills/Natalia/R1.webp" },
-        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", 
-         icon:"images/hero/Gen01/skills/Natalia/R2.webp" },
-        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", 
-         icon:"images/hero/Gen01/skills/Natalia/R3.webp" }
+        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다." },
+        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다." },
+        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속)." }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -347,38 +334,39 @@
       name: "Molly",
       nameKo: "몰리",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "영웅의 홀",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen01/thumb/Molly.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen01/body/Molly.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "개조된 발사기", desc: "송신기를 개량하여 자신이 가하는 피해가 30% 증가한다.",
-          icon: "images/hero/Gen01/skills/Molly/ws1.webp"
+          key:"ws1", title: "개조된 발사기", desc: "송신기를 개량하여 자신이 가하는 피해가 30% 증가한다."
         },
         {
-          key:"ws2", title: "눈의 가호", desc: "눈의 가호를 받아 수성 부대의 파괴력이 15% 증가합니다.",
-          icon: "images/hero/Gen01/skills/Molly/ws2.webp"          
+          key:"ws2", title: "눈의 가호", desc: "눈의 가호를 받아 수성 부대의 파괴력이 15% 증가합니다."
         }
       ],      
       explorationSkills: [//탐험
-        { key:"L1", title:"초대형 눈덩이", desc:"거대한 눈덩이를 발사해서 원형 범위 내 목표물에 공격력*180%/198%/216%/234%/252%의 피해를 입히고 1.5초 동안 얼려버린다." ,
-          icon:"images/hero/Gen01/skills/Molly/L1.webp"},
-        { key:"L2", title:"눈속매복", desc:"눈밭에 숨어 기습 공격을 행하고 목표물에 공격력*150%/165%/180%/195%/210%의 피해를 입힌다.",
-          icon:"images/hero/Gen01/skills/Molly/L2.webp" },
-        { key:"L3", title:"소녀의 집착", desc:"역경을 통해 몰리의 무한한 잠재력을 이끌어내 HP가 50% 미만일 때 공격 속도가 20%/30%/40%/50%/60% 향상된다.",
-          icon:"images/hero/Gen01/skills/Molly/L3.webp" }
+        { key:"L1", title:"초대형 눈덩이", 
+         desc:"거대한 눈덩이를 발사해서 원형 범위 내 목표물에 공격력*180%/198%/216%/234%/252%의 피해를 입히고 1.5초 동안 얼려버린다." 
+        },
+        { key:"L2", title:"눈속매복", 
+         desc:"눈밭에 숨어 기습 공격을 행하고 목표물에 공격력*150%/165%/180%/195%/210%의 피해를 입힌다."
+        },
+        { key:"L3", title:"소녀의 집착", 
+         desc:"역경을 통해 몰리의 무한한 잠재력을 이끌어내 HP가 50% 미만일 때 공격 속도가 20%/30%/40%/50%/60% 향상된다."
+        }
       ],
       expeditionSkills: [//원정
-        { key:"R1", title:"눈안개 비호", desc:"온 하늘에 눈안개를 일으켜 적의 시야를 가린다. 40%의 확률로 전체 아군 부대가 받는 피해가 50% 감소한다.", 
-         icon:"images/hero/Gen01/skills/Molly/R1.webp" },
-        { key:"R2", title:"빙설의 영역", desc:"몰리가 가장 실력 발휘할 수 있는 눈밭에서 아군 전체 부대가 공격할 때 50%확률로 이번 피해를 10%/20%/30%/40%/50% 향상시킨다.", 
-         icon:"images/hero/Gen01/skills/Molly/R2.webp" },
-        { key:"R3", title:"소녀의 분노", desc:"몰리가 사람들의 전의를 불태워서 아군 전체 부대가 입히는 피해가 5%/10%/15%/20%/25% 향상된다.",
-         icon:"images/hero/Gen01/skills/Molly/R3.webp" }
+        { key:"R1", title:"눈안개 비호", 
+         desc:"온 하늘에 눈안개를 일으켜 적의 시야를 가린다. 40%의 확률로 전체 아군 부대가 받는 피해가 50% 감소한다."
+        },
+        { key:"R2", title:"빙설의 영역", 
+         desc:"몰리가 가장 실력 발휘할 수 있는 눈밭에서 아군 전체 부대가 공격할 때 50%확률로 이번 피해를 10%/20%/30%/40%/50% 향상시킨다."
+        },
+        { key:"R3", title:"소녀의 분노", 
+         desc:"몰리가 사람들의 전의를 불태워서 아군 전체 부대가 입히는 피해가 5%/10%/15%/20%/25% 향상된다."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -391,38 +379,41 @@
       name: "Zinman",
       nameKo: "진먼",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "CONSTRUCTION",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen01/thumb/Zinman.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen01/body/Zinman.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "과부하 스테이플 건", desc: "압력 스테이플 건이 과부하 모드가 되어 공격력이 24% 증가합니다.",
-          icon: "images/hero/Gen01/skills/Zinman/ws1.webp"
+          key:"ws1", title: "과부하 스테이플 건", 
+          desc: "압력 스테이플 건이 과부하 모드가 되어 공격력이 24% 증가합니다.",
         },
         {
-          key:"ws2", title: "반격 개시", desc: "공격형 화살탑을 구축하여 수성 부대의 공격력이 15% 증가합니다",
-          icon: "images/hero/Gen01/skills/Zinman/ws2.webp"          
+          key:"ws2", title: "반격 개시", 
+          desc: "공격형 화살탑을 구축하여 수성 부대의 공격력이 15% 증가합니다",
         }
       ],       
       explorationSkills: [
-        { key:"L1", title:"개틀링건", desc:"목표물에 못을 여러 개 연속 발사해서 못 1개마다 공격력*55%/60%/65%/70%/75%의 피해를 입히고, 목표물을 2초 동안 스턴시킨다.",
-          icon:"images/hero/Gen01/skills/Zinman/L1.webp"},
-        { key:"L2", title:"퀵 디펜스", desc:"HP가 50% 미만일 때, 간단한 방어 공사를 빠르게 세워서 자신의 방어력을 50%/75%/100%/125%/150% 향상시킨다.",
-          icon:"images/hero/Gen01/skills/Zinman/L2.webp" },
-        { key:"L3", title:"열의", desc:"넘치는 열정으로 공격 속도가 10%/15%/20%/25%/30% 상승한다.",
-          icon:"images/hero/Gen01/skills/Zinman/L3.webp" }
+        { key:"L1", title:"개틀링건", 
+         desc:"목표물에 못을 여러 개 연속 발사해서 못 1개마다 공격력*55%/60%/65%/70%/75%의 피해를 입히고, 목표물을 2초 동안 스턴시킨다."
+        },
+        { key:"L2", title:"퀵 디펜스", 
+         desc:"HP가 50% 미만일 때, 간단한 방어 공사를 빠르게 세워서 자신의 방어력을 50%/75%/100%/125%/150% 향상시킨다."
+        },
+        { key:"L3", title:"열의", 
+         desc:"넘치는 열정으로 공격 속도가 10%/15%/20%/25%/30% 상승한다."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title:"난공불락", desc:"진먼이 구축한 방어선은 견고하고 믿을만합니다. 전체 아군의 방어력이 2%/4%/6%/8%/10% 증가하고, HP가 2%/4%/6%/8%/10% 증가합니다.",
-         icon:"images/hero/Gen01/skills/Zinman/R1.webp" },
-        { key:"R2", title:"건축 예술", desc:"진먼의 합리적인 공사 프로세스 관리로 건설에 소모되는 자원이 3%/6%/9%/12%/15% 감소하고, 건물 업그레이드 속도가 3%/6%/9%/12%/15% 증가합니다.",
-         icon:"images/hero/Gen01/skills/Zinman/R2.webp" },
-        { key:"R3", title:"진지전의 강자", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).",
-         icon:"images/hero/Gen01/skills/Zinman/R3.webp" }
+        { key:"R1", title:"난공불락", 
+         desc:"진먼이 구축한 방어선은 견고하고 믿을만합니다. 전체 아군의 방어력이 2%/4%/6%/8%/10% 증가하고, HP가 2%/4%/6%/8%/10% 증가합니다."
+        },
+        { key:"R2", title:"건축 예술", 
+         desc:"진먼의 합리적인 공사 프로세스 관리로 건설에 소모되는 자원이 3%/6%/9%/12%/15% 감소하고, 건물 업그레이드 속도가 3%/6%/9%/12%/15% 증가합니다."
+        },
+        { key:"R3", title:"진지전의 강자", 
+         desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속)."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -435,38 +426,41 @@
       name: "Flint",
       nameKo: "플린트",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen02/thumb/Flint.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen02/body/Flint.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "복수의 열기", desc: "복수는 전의를 불태우는데 최고의 연료. “분노의 화염” 발동 후 전투 종료까지 공격력이 24% 향상된다.",
-          icon: "images/hero/Gen02/skills/Flint/ws1.webp"
+          key:"ws1", title: "복수의 열기", 
+          desc: "복수는 전의를 불태우는데 최고의 연료. “분노의 화염” 발동 후 전투 종료까지 공격력이 24% 향상된다.",
         },
         {
-          key:"ws2", title: "드래곤 브레스", desc: "수성에 쓰이는 화염방사기를 개조하여 수성 부대 공격력이 15% 향상된다.",
-          icon: "images/hero/Gen02/skills/Flint/ws2.webp"          
+          key:"ws2", title: "드래곤 브레스", 
+          desc: "수성에 쓰이는 화염방사기를 개조하여 수성 부대 공격력이 15% 향상된다.",
         }
       ],        
       explorationSkills: [
-        { key:"L1", title:"복수의 불꽃", desc:"뜨겁게 불타오르는 불꽃을 뿜어내 적을 태워버리며 0.5초마다 공격력*60%/66%/72%/78%/84%의 피해를 입히고, 목표물이 받는 피해를 10%/15%/20%/25%/30% 향상시킨다. 지속시간 2초." ,
-          icon:"images/hero/Gen02/skills/Flint/L1.webp"},
-        { key:"L2", title:"채찍질", desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다.",
-          icon:"images/hero/Gen02/skills/Flint/L2.webp" },
-        { key:"L3", title:"레인지 리스폰", desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩).",
-          icon:"images/hero/Gen02/skills/Flint/L3.webp" }
+        { key:"L1", title:"복수의 불꽃", 
+         desc:"뜨겁게 불타오르는 불꽃을 뿜어내 적을 태워버리며 0.5초마다 공격력*60%/66%/72%/78%/84%의 피해를 입히고, 목표물이 받는 피해를 10%/15%/20%/25%/30% 향상시킨다. 지속시간 2초."
+        },
+        { key:"L2", title:"채찍질", 
+         desc:"채찍을 휘둘러서 목표물에게 공격력 150%/165%/180%/195%/210% 의 피해를 입힌다."
+        },
+        { key:"L3", title:"레인지 리스폰", 
+         desc:"상대하기 어려운 백곰과 그의 짝. 피해를 입을 때 나탈리아의 공격력이 10% 확률로 + 4%/6%/8%/10%/12% 향상된다. 지속시간 3초(최대 5개 중첩)."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title:"야성 수호", desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다.", 
-         icon:"images/hero/Gen02/skills/Flint/R1.webp" },
-        { key:"R2", title:"비스트 로드", desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다.", 
-         icon:"images/hero/Gen02/skills/Flint/R2.webp" },
-        { key:"R3", title:"야성의 부름", desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속).", 
-         icon:"images/hero/Gen02/skills/Flint/R3.webp" }
+        { key:"R1", title:"야성 수호", 
+         desc:"전투 전 선혈로 전체 아군 부대가 입히는 피해가 5%/10%/15%/20%/25% 증가한다."
+        },
+        { key:"R2", title:"비스트 로드", 
+         desc:"검술의 이치를 전수해 전체 아군 부대의 공격력이 5%/10%/15%/20%/25% 상승한다."
+        },
+        { key:"R3", title:"야성의 부름", 
+         desc:"4라운드마다 전체 아군 부대가 주는 피해를 6%/12%/18%/24%/30% 증가(2라운드 지속)."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+60.0%", "HP":"+60.0%" },
@@ -479,38 +473,41 @@
       name: "Philly",
       nameKo: "필리",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "최강영주",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen02/thumb/Philly.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen02/body/Philly.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "에센스 추출", desc: "필리가 약물을 정제하고 치료 효과를 강화하여 HP 회복 스킬의 효과를 70% 향상시킨다.",
-          icon: "images/hero/Gen02/skills/Philly/ws1.webp"
+          key:"ws1", title: "에센스 추출", 
+          desc: "필리가 약물을 정제하고 치료 효과를 강화하여 HP 회복 스킬의 효과를 70% 향상시킨다.",
         },
         {
-          key:"ws2", title: "응급처치 훈련", desc: "필리가 간단한 응급처치와 간호 기술을 전수해 방어 부대의 HP를 15% 향상시킨다.",
-          icon: "images/hero/Gen02/skills/Philly/ws2.webp"          
+          key:"ws2", title: "응급처치 훈련", 
+          desc: "필리가 간단한 응급처치와 간호 기술을 전수해 방어 부대의 HP를 15% 향상시킨다.",
         }
       ],       
       explorationSkills: [
-        { key:"L1", title:"응급 치료", desc:"필리의 뛰어난 의술로 아군 모든 영웅에게 필리의 공격력*200/220%/240%/260%/280%의 HP를 회복시킨다." ,
-          icon:"images/hero/Gen02/skills/Philly/L1.webp"},
-        { key:"L2", title:"탁월한 의술 ", desc:"죽음의 신과 겨룰만한 필리의 기교로 HP 백분율이 가장 낮은 아군 영웅에게 필리의 공격력*100%/110%/120%/130%/140%의 HP를 회복시킨다.",
-          icon:"images/hero/Gen02/skills/Philly/L2.webp" },
-        { key:"L3", title:"마비 독소", desc:"목표물을 중독시켜서 필리의 공격력*140%/154%/168%/182%/196%의 피해를 입히고, 상대가 1초 동안 움직일 수 없도록 한다.",
-          icon:"images/hero/Gen02/skills/Philly/L3.webp" }
+        { key:"L1", title:"응급 치료", 
+         desc:"필리의 뛰어난 의술로 아군 모든 영웅에게 필리의 공격력*200/220%/240%/260%/280%의 HP를 회복시킨다."
+        },
+        { key:"L2", title:"탁월한 의술 ", 
+         desc:"죽음의 신과 겨룰만한 필리의 기교로 HP 백분율이 가장 낮은 아군 영웅에게 필리의 공격력*100%/110%/120%/130%/140%의 HP를 회복시킨다."
+        },
+        { key:"L3", title:"마비 독소", 
+         desc:"목표물을 중독시켜서 필리의 공격력*140%/154%/168%/182%/196%의 피해를 입히고, 상대가 1초 동안 움직일 수 없도록 한다."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title:"강건의 비결", desc:"필리의 요리가 병사들을 강화해 아군 부대 공격력이 3%/6%/9%/12%/15%, 방어력이 2%/4%/6%/8%/10% 증가한다.",
-         icon:"images/hero/Gen02/skills/Philly/R1.webp" },
-        { key:"R2", title:"강화 약물", desc:"필리가 비법으로 제조한 물약으로 전사들의 신체 기능을 강화시켜서, 아군 전체 부대가 공격할 때 25% 확률로 120%/140%/160%/180%/200%의 피해를 입힌다.",
-         icon:"images/hero/Gen02/skills/Philly/R2.webp" },
-        { key:"R3", title:"각성 주사", desc:"필리의 비밀 조제약이 병사들의 전투 집중력을 끌어올린다. 40%의 확률로 전체 아군 부대가 받는 피해가 10%/20%/30%/40%/50% 감소한다.",
-         icon:"images/hero/Gen02/skills/Philly/R3.webp" }
+        { key:"R1", title:"강건의 비결", 
+         desc:"필리의 요리가 병사들을 강화해 아군 부대 공격력이 3%/6%/9%/12%/15%, 방어력이 2%/4%/6%/8%/10% 증가한다."
+        },
+        { key:"R2", title:"강화 약물", 
+         desc:"필리가 비법으로 제조한 물약으로 전사들의 신체 기능을 강화시켜서, 아군 전체 부대가 공격할 때 25% 확률로 120%/140%/160%/180%/200%의 피해를 입힌다."
+        },
+        { key:"R3", title:"각성 주사", 
+         desc:"필리의 비밀 조제약이 병사들의 전투 집중력을 끌어올린다. 40%의 확률로 전체 아군 부대가 받는 피해가 10%/20%/30%/40%/50% 감소한다."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+60.0%", "HP":"+60.0%" },
@@ -523,38 +520,41 @@
       name: "Alonso",
       nameKo: "알론소",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "영웅의 전당",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen02/thumb/Alonso.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen02/body/Alonso.webp",      // 모달용(전신/큰거)
       weaponFx: "공성",
       weaponSkills: [
         {
-          key:"ws1", title: "바다의 향연", desc: "전리품을 후하게 나누는 알론소가 일반 공격을 할 때마다 HP가 가장 낮은 아군 영웅에게 맛있는 생선을 나눠주어 알론소의 공격력*15%의 HP를 회복시킨다.",
-          icon: "images/hero/Gen02/skills/Alonso/ws1.webp"
+          key:"ws1", title: "바다의 향연", 
+          desc: "전리품을 후하게 나누는 알론소가 일반 공격을 할 때마다 HP가 가장 낮은 아군 영웅에게 맛있는 생선을 나눠주어 알론소의 공격력*15%의 HP를 회복시킨다."
         },
         {
-          key:"ws2", title: "작살 강화", desc: "알론소가 무기를 업그레이드해서 집결 부대 파괴력을 15% 향상시킨다.",
-          icon: "images/hero/Gen02/skills/Alonso/ws2.webp"          
+          key:"ws2", title: "작살 강화", 
+          desc: "알론소가 무기를 업그레이드해서 집결 부대 파괴력을 15% 향상시킨다."
         }
       ],
       explorationSkills: [
-        { key:"L1", title:"강력한 그물", desc:"목표 구역에 그물망을 던져서 공격력* 200%/220%/240%/260%/280% 의 범위 피해를 입히고, 적을 1.5초 동안 움직일 수 없도록 만든다." ,
-          icon:"images/hero/Gen02/skills/Alonso/L1.webp"},
-        { key:"L2", title:"기조력", desc:"목표물에 막강한 위력을 자랑하는 파도와 같은 기세의 작살을 던져서 공격력* 50%/55%/60%/65%/70%의 범위 피해를 입힌다.",
-          icon:"images/hero/Gen02/skills/Alonso/L2.webp" },
-        { key:"L3", title:"작살 크러쉬", desc:"알론소가 무거운 작살로 적을 가격한다. 매 8/7/7/6/5 회 일반 공격 후 다음 공격은 목표물을 0.2/0.2/0.4/0.4/0.5초 동안 기절시킨다.",
-          icon:"images/hero/Gen02/skills/Alonso/L3.webp" }
+        { key:"L1", title:"강력한 그물", 
+         desc:"목표 구역에 그물망을 던져서 공격력* 200%/220%/240%/260%/280% 의 범위 피해를 입히고, 적을 1.5초 동안 움직일 수 없도록 만든다." 
+        },
+        { key:"L2", title:"기조력", 
+         desc:"목표물에 막강한 위력을 자랑하는 파도와 같은 기세의 작살을 던져서 공격력* 50%/55%/60%/65%/70%의 범위 피해를 입힌다."
+        },
+        { key:"L3", title:"작살 크러쉬", 
+         desc:"알론소가 무거운 작살로 적을 가격한다. 매 8/7/7/6/5 회 일반 공격 후 다음 공격은 목표물을 0.2/0.2/0.4/0.4/0.5초 동안 기절시킨다."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title:"거센파도", desc:"알론소의 공세가 거센 파도처럼 몰아쳐, 보는 이들을 압도한다. 40%의 확률로 전체 아군 부대 파괴력이 10%/20%/30%/40%/50% 상승한다.", 
-         icon:"images/hero/Gen02/skills/Alonso/R1.webp" },
-        { key:"R2", title:"굳센 의지", desc:"알론소가 굽힐 수 없는 의지로 사람들을 격려해서 아군 전체 부대가 공격할 때 10%/20%/30%/40%/50% 확률로 적이 가하는 피해를 40% 감소시킨다. 2라운드 지속.", 
-         icon:"images/hero/Gen02/skills/Alonso/R2.webp" },
-        { key:"R3", title:"극독의 작살", desc:"알론소가 무기에 극독을 발라 아군 전체 부대가 공격할 때 50% 확률로 이번 피해를 10%/20%/30%/40%/50% 향상시킨다.",
-         icon:"images/hero/Gen02/skills/Alonso/R3.webp" }
+        { key:"R1", title:"거센파도", 
+         desc:"알론소의 공세가 거센 파도처럼 몰아쳐, 보는 이들을 압도한다. 40%의 확률로 전체 아군 부대 파괴력이 10%/20%/30%/40%/50% 상승한다."
+        },
+        { key:"R2", title:"굳센 의지", 
+         desc:"알론소가 굽힐 수 없는 의지로 사람들을 격려해서 아군 전체 부대가 공격할 때 10%/20%/30%/40%/50% 확률로 적이 가하는 피해를 40% 감소시킨다. 2라운드 지속."
+        },
+        { key:"R3", title:"극독의 작살", 
+         desc:"알론소가 무기에 극독을 발라 아군 전체 부대가 공격할 때 50% 확률로 이번 피해를 10%/20%/30%/40%/50% 향상시킨다."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+60.0%", "HP":"+60.0%" },
@@ -567,38 +567,41 @@
       name: "Logan",
       nameKo: "로건",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "영웅의 전당",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen03/thumb/Logan.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen03/body/Logan.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "주먹 강화", desc: "업그레이드된 강철 주먹이 더욱 큰 위력을 발휘해서 데미지가 30% 상승한다.",
-          icon: "images/hero/Gen03/skills/Logan/ws1.webp"
+          key:"ws1", title: "주먹 강화", 
+          desc: "업그레이드된 강철 주먹이 더욱 큰 위력을 발휘해서 데미지가 30% 상승한다."
         },
         {
-          key:"ws2", title: "아이언 가드", desc: "강력한 철권으로 성을 방어하여 수성 부대 방어력을 15% 향상시킨다.",
-          icon: "images/hero/Gen03/skills/Logan/ws2.webp"          
+          key:"ws2", title: "아이언 가드", 
+          desc: "강력한 철권으로 성을 방어하여 수성 부대 방어력을 15% 향상시킨다."
         }
       ],           
       explorationSkills: [
-        { key:"L1", title: "파멸의 주먹", desc: "거대한 힘이 실린 강철 주먹이 지면을 강타해 발생하는 충격파가 전방 목표물에 공격력*120%/132%/144%/156%/168%의 데미지를 입히고 목표물의 공격 속도를 50% 하락시킨다. 지속 시간 4초.",
-          icon:"images/hero/Gen03/skills/Logan/L1.webp"},
-        { key:"L2", title: "동력 갑옷", desc: "놀라운 방어력을 지닌 로건의 동력 갑옷이 공격을 받을 때 8%/10%/12%/14%/16%의 확률로 방어력을 8%/11%/13%/17%/20% 향상시킨다. 지속 시간 2초, 최대 5회 중첩.",
-          icon:"images/hero/Gen03/skills/Logan/L2.webp" },
-        { key:"L3", title: "거센 타격", desc: "매서운 바람의 펀치를 날려서 부채꼴 범위 내 목표물에 공격력*80%/88%/96%/104%/112%의 데미지를 입히고 30% 확률도 목표물 1초간 스턴시킨다.",
-          icon:"images/hero/Gen03/skills/Logan/L3.webp" }
+        { key:"L1", title: "파멸의 주먹", 
+         desc: "거대한 힘이 실린 강철 주먹이 지면을 강타해 발생하는 충격파가 전방 목표물에 공격력*120%/132%/144%/156%/168%의 데미지를 입히고 목표물의 공격 속도를 50% 하락시킨다. 지속 시간 4초."
+        },
+        { key:"L2", title: "동력 갑옷", 
+         desc: "놀라운 방어력을 지닌 로건의 동력 갑옷이 공격을 받을 때 8%/10%/12%/14%/16%의 확률로 방어력을 8%/11%/13%/17%/20% 향상시킨다. 지속 시간 2초, 최대 5회 중첩."
+        },
+        { key:"L3", title: "거센 타격", 
+         desc: "매서운 바람의 펀치를 날려서 부채꼴 범위 내 목표물에 공격력*80%/88%/96%/104%/112%의 데미지를 입히고 30% 확률도 목표물 1초간 스턴시킨다."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "사자의 위엄", desc: "로건이 압도적인 기세로 적을 제압하자, 전체 적군 부대의 공격력이 4%/8%/12%/16%/20% 감소한다.",
-         icon:"images/hero/Gen03/skills/Logan/R1.webp" },
-        { key:"R2", title: "라이언 피어스", desc: "로건이 사자 같은 기세로 상대를위협해서 전체 아군 부대가 받는 피해를 4%/8%/12%/16%/20% 감소시킨다.",
-         icon:"images/hero/Gen03/skills/Logan/R2.webp" },
-        { key:"R3", title: "리더십", desc: "로건이 타고난 카리스마로 모두를 고무시키고, 아군 전체 부대 HP를 5%/10%/15%/20%/25% 향상시킨다.",
-         icon:"images/hero/Gen03/skills/Logan/R3.webp" }
+        { key:"R1", title: "사자의 위엄", 
+         desc: "로건이 압도적인 기세로 적을 제압하자, 전체 적군 부대의 공격력이 4%/8%/12%/16%/20% 감소한다."
+        },
+        { key:"R2", title: "라이언 피어스", 
+         desc: "로건이 사자 같은 기세로 상대를위협해서 전체 아군 부대가 받는 피해를 4%/8%/12%/16%/20% 감소시킨다."
+        },
+        { key:"R3", title: "리더십", 
+         desc: "로건이 타고난 카리스마로 모두를 고무시키고, 아군 전체 부대 HP를 5%/10%/15%/20%/25% 향상시킨다."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+70.0%", "HP":"+70.0%" },
@@ -611,38 +614,41 @@
       name: "Mia",
       nameKo: "미야",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen03/thumb/Mia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen03/body/Mia.webp",      // 모달용(전신/큰거)
       weaponFx: "공성",
       weaponSkills: [
         {
-          key:"ws1", title: "진실의 눈", desc: "수정구를 통해 운명의 신비를 꿰뚫어 보고 공중 부양 효과가 있는 미야의 모든 스킬의 공중 부양 최대치 및 최소치를 150% 향상한다.",
-          icon: "images/hero/Gen03/skills/Mia/ws1.webp"
+          key:"ws1", title: "진실의 눈", 
+          desc: "수정구를 통해 운명의 신비를 꿰뚫어 보고 공중 부양 효과가 있는 미야의 모든 스킬의 공중 부양 최대치 및 최소치를 150% 향상한다."
         },
         {
-          key:"ws2", title: "운명의 집결", desc: "미야는 점괘를 통해 진군하기 가장 좋은 타이밍을 계산해서 집결 부대의 공격력을 15% 향상시킨다.",
-          icon: "images/hero/Gen03/skills/Mia/ws2.webp"          
+          key:"ws2", title: "운명의 집결", 
+          desc: "미야는 점괘를 통해 진군하기 가장 좋은 타이밍을 계산해서 집결 부대의 공격력을 15% 향상시킨다."
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "운명의 노래", desc: "타로 카드를 던져 적을 공격하여 목표물에 공격력*270%/297%/324%/351%/378% 피해를 입히고, 목표물의 공격력을 2초간 20% 감소시키거나 목표물을 1.5초간 스턴시키는 두 가지 효과 중 하나를 랜덤으로 발생시킨다.",
-          icon:"images/hero/Gen03/skills/Mia/L1.webp"},
-        { key:"L2", title: "재앙의 징조", desc: "적 1명을 불운에 맞닥뜨리게 해서 미야의 공격력*50%/55%/60%/65%/70%를 기본값으로 하여 유동적인 피해를 입힌다. 최종 피해량은 기본값의 5~600% 사이의 랜덤 수.",
-          icon:"images/hero/Gen03/skills/Mia/L2.webp" },
-        { key:"L3", title: "운명의 수호", desc: "아군 중 HP 백분율이 가장 낮은 영웅을 보호하며 미야의 공격력*100%/110%/120%/130%/140%를 기본값으로 하여 HP를 회복시킨다. 최종 회복량은 기본값의 5~400% 사이의 랜덤 수.",
-          icon:"images/hero/Gen03/skills/Mia/L3.webp" }
+        { key:"L1", title: "운명의 노래", 
+         desc: "타로 카드를 던져 적을 공격하여 목표물에 공격력*270%/297%/324%/351%/378% 피해를 입히고, 목표물의 공격력을 2초간 20% 감소시키거나 목표물을 1.5초간 스턴시키는 두 가지 효과 중 하나를 랜덤으로 발생시킨다."
+        },
+        { key:"L2", title: "재앙의 징조", 
+         desc: "적 1명을 불운에 맞닥뜨리게 해서 미야의 공격력*50%/55%/60%/65%/70%를 기본값으로 하여 유동적인 피해를 입힌다. 최종 피해량은 기본값의 5~600% 사이의 랜덤 수."
+        },
+        { key:"L3", title: "운명의 수호",
+         desc: "아군 중 HP 백분율이 가장 낮은 영웅을 보호하며 미야의 공격력*100%/110%/120%/130%/140%를 기본값으로 하여 HP를 회복시킨다. 최종 회복량은 기본값의 5~400% 사이의 랜덤 수."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "액운", desc: "전체 아군 부대가 공격하면 50% 확률로 적을 불운에 묶어넣어 적군이 받는 피해를 10%/20%/30%/40%/50% 증가시킨다.",
-         icon:"images/hero/Gen03/skills/Mia/R1.webp" },
-        { key:"R2", title: "행운의 가호", desc: "미야는 아군에게 행운을 가져다줘 전체 아군 부대가 공격할 때 10%/20%/30%/40%/50% 확률로 해당 피해를 20% 증가시킨다.",
-         icon:"images/hero/Gen03/skills/Mia/R2.webp" },
-        { key:"R3", title: "신비로운 해독", desc: "전투 전에 점을 쳐서 미야가 잠재적인 위험을 미리 알아차리고, 미야의 안내로 40% 확률로 아군 전체 부대가 받는 피해가 10%/20%/30%/40%/50% 하락한다.",
-         icon:"images/hero/Gen03/skills/Mia/R3.webp" }
+        { key:"R1", title: "액운", 
+         desc: "전체 아군 부대가 공격하면 50% 확률로 적을 불운에 묶어넣어 적군이 받는 피해를 10%/20%/30%/40%/50% 증가시킨다."
+        },
+        { key:"R2", title: "행운의 가호", 
+         desc: "미야는 아군에게 행운을 가져다줘 전체 아군 부대가 공격할 때 10%/20%/30%/40%/50% 확률로 해당 피해를 20% 증가시킨다."
+        },
+        { key:"R3", title: "신비로운 해독", 
+         desc: "전투 전에 점을 쳐서 미야가 잠재적인 위험을 미리 알아차리고, 미야의 안내로 40% 확률로 아군 전체 부대가 받는 피해가 10%/20%/30%/40%/50% 하락한다."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+70.0%", "HP":"+70.0%" },
@@ -655,38 +661,41 @@
       name: "Greg",
       nameKo: "그렉",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "빙원의 왕",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen03/thumb/Greg.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen03/body/Greg.webp",      // 모달용(전신/큰거)
       weaponFx: "공성",
       weaponSkills: [
         {
-          key:"ws1", title: "법정 질서", desc: "목표물을 정숙시켜 5초 동안 스킬을 사용할 수 없게 만든다(이미 시전된 스킬은 적용 불가). 목표물에게 공격력*300%의 피해를 입힌다.",
-          icon: "images/hero/Gen03/skills/Greg/ws1.webp"
+          key:"ws1", title: "법정 질서", 
+          desc: "목표물을 정숙시켜 5초 동안 스킬을 사용할 수 없게 만든다(이미 시전된 스킬은 적용 불가). 목표물에게 공격력*300%의 피해를 입힌다.",
         },
         {
-          key:"ws2", title: "정의의 나팔", desc: "정의와 신념의 이름으로 대군을 소집하고, 집결 부대의 HP를 15% 향상시킨다.",
-          icon: "images/hero/Gen03/skills/Greg/ws2.webp"          
+          key:"ws2", title: "정의의 나팔", 
+          desc: "정의와 신념의 이름으로 대군을 소집하고, 집결 부대의 HP를 15% 향상시킨다.",
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "하늘의 정의", desc: "하늘에서 떨어진 새장을 소환하여 범위 내의 적에게 공격력의 *160%/176%/192%/208%/224%에 해당하는 데미지를 입히고 2초간 스턴시킨다.",
-          icon:"images/hero/Gen03/skills/Greg/L1.webp"},
-        { key:"L2", title: "권선징악", desc: "적을 심판해서 징벌 또는 포상을 내린다. 징벌은 목표물에 그렉 공격력*220%/240%/260%/280%/300%에 해당하는 피해를 입히고, 포상은 목표물에 그렉 공격력*50%에 해당하는 HP를 회복시킨다.",
-          icon:"images/hero/Gen03/skills/Greg/L2.webp" },
-        { key:"L3", title: "공정한 심판", desc: "적이 저지른 죄에 대해 엄중한 처벌을 받게 해서 적이 받는 피해가 3초 동안 10%/15%/20%/25%/30% 증가한다.",
-          icon:"images/hero/Gen03/skills/Greg/L3.webp" }
+        { key:"L1", title: "하늘의 정의", 
+         desc: "하늘에서 떨어진 새장을 소환하여 범위 내의 적에게 공격력의 *160%/176%/192%/208%/224%에 해당하는 데미지를 입히고 2초간 스턴시킨다."
+        },
+        { key:"L2", title: "권선징악", 
+         desc: "적을 심판해서 징벌 또는 포상을 내린다. 징벌은 목표물에 그렉 공격력*220%/240%/260%/280%/300%에 해당하는 피해를 입히고, 포상은 목표물에 그렉 공격력*50%에 해당하는 HP를 회복시킨다."
+        },
+        { key:"L3", title: "공정한 심판", 
+         desc: "적이 저지른 죄에 대해 엄중한 처벌을 받게 해서 적이 받는 피해가 3초 동안 10%/15%/20%/25%/30% 증가한다."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "정의의 검", desc: "병사들을 천하무적 정의의 검으로 변모시켜 20% 확률로 전체 아군 부대의 피해를 8%/16%/24%/32%/40% 증가시킨다. 3라운드 지속.",
-         icon:"images/hero/Gen03/skills/Greg/R1.webp" },
-        { key:"R2", title: "율법", desc: "율법의 위엄으로 악당을 겁줘서 전체 아군 부대가 공격할 때 20% 확률로 적의 피해를 10%/20%/30%/40%/50% 감소시킨다. 2라운드 지속.",
-         icon:"images/hero/Gen03/skills/Greg/R2.webp" },
-        { key:"R3", title: "질서의 비호", desc: "질서와 율법에 대한 신념이 모두를 고무시켜서 아군 전체 부대의 HP가 5%/10%/15%/20%/25% 향상된다.",
-         icon:"images/hero/Gen03/skills/Greg/R3.webp" }
+        { key:"R1", title: "정의의 검", 
+         desc: "병사들을 천하무적 정의의 검으로 변모시켜 20% 확률로 전체 아군 부대의 피해를 8%/16%/24%/32%/40% 증가시킨다. 3라운드 지속."
+        },
+        { key:"R2", title: "율법",
+         desc: "율법의 위엄으로 악당을 겁줘서 전체 아군 부대가 공격할 때 20% 확률로 적의 피해를 10%/20%/30%/40%/50% 감소시킨다. 2라운드 지속."
+        },
+        { key:"R3", title: "질서의 비호", 
+         desc: "질서와 율법에 대한 신념이 모두를 고무시켜서 아군 전체 부대의 HP가 5%/10%/15%/20%/25% 향상된다."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+70.0%", "HP":"+70.0%" },
@@ -699,38 +708,39 @@
       name: "Ahmose",
       nameKo: "아모세",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "빙원의 왕",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/Gen04/thumb/Ahmose.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/Gen04/body/Ahmose.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "불굴의 신념", desc: "아모세가 불굴의 신념으로 전투를 강화한다. “크투게아의 가호”의 가호를 받은 아군의 공격력이 2.5초간 42% 증가한다.",
-          icon: "images/hero/Gen04/skills/Ahmose/ws1.webp"
         },
         {
           key:"ws2", title: "수호자의 맹세", desc: "수호자의 맹세로 성지를 지켜, 수성 부대의 HP를 15% 증가한다.",
-          icon: "images/hero/Gen04/skills/Ahmose/ws2.webp"          
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "크투게아의 가호", desc: "견고한 방패를 설치하여 적의 매서운 공격을 방어하고, 자신이 무적 상태에 돌입한다. (해당 상태 동안 이동 및 스킬 시전 불가, 제어 면역.) 2초간 주변 아군이 받는 피해를 30%/40%/50%/60%/70% 감소한다.",
-          icon:"images/hero/Gen04/skills/Ahmose/L1.webp"},
-        { key:"L2", title: "새벽의 검", desc: "날카로운 검으로 전방의 적을 관통하여 공격력*70%/77%/84%/91%/98%의 피해를 입히고 방어선을 무너뜨려 이후 2초 동안 적이 받는 피해를 20% 증가시킨다.",
-          icon:"images/hero/Gen04/skills/Ahmose/L2.webp" },
-        { key:"L3", title: "선대의 축복", desc: "불의 수정의 에너지는 선대의 축복처럼 아모세의 상처를 치유해준다. “크투게아의 가호”를 시전하면 5초간 초당 공격력*30%/33%/36%/39%/42%의 HP를 회복한다.",
-          icon:"images/hero/Gen04/skills/Ahmose/L3.webp" }
+        { key:"L1", title: "크투게아의 가호", 
+         desc: "견고한 방패를 설치하여 적의 매서운 공격을 방어하고, 자신이 무적 상태에 돌입한다. (해당 상태 동안 이동 및 스킬 시전 불가, 제어 면역.) 2초간 주변 아군이 받는 피해를 30%/40%/50%/60%/70% 감소한다."
+        },
+        { key:"L2", title: "새벽의 검", 
+         desc: "날카로운 검으로 전방의 적을 관통하여 공격력*70%/77%/84%/91%/98%의 피해를 입히고 방어선을 무너뜨려 이후 2초 동안 적이 받는 피해를 20% 증가시킨다."
+        },
+        { key:"L3", title: "선대의 축복", 
+         desc: "불의 수정의 에너지는 선대의 축복처럼 아모세의 상처를 치유해준다. “크투게아의 가호”를 시전하면 5초간 초당 공격력*30%/33%/36%/39%/42%의 HP를 회복한다."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "살모사 진형", desc: "부대가 고대 수호자의 방어 진형을 펼치도록 하여 방패병이 4번 공격을 때마다 다음 공격을 포기하고 창병과 궁병이 받는 피해를 10%/15%/20%/25%/30% 감소시키며, 방패병이 받는 피해를 10%/25%/40%/55%/70% 감소시킨다. 2라운드 지속.",
-         icon:"images/hero/Gen04/skills/Ahmose/R1.webp" },
-        { key:"R2", title: "불의 축복", desc: "불의 수정의 힘으로 아군 방패병의 투지를 불태워 이들이 입히는 피해를 20%/40%/60%/80%/100% 증가한다.",
-         icon:"images/hero/Gen04/skills/Ahmose/R2.webp" },
-        { key:"R3", title: "빛나는 칼날", desc: "불의 수정의 정수를 방패병의 무기에 주입하여 공격 시마다 타깃에 12%/24%/36%/48%/60%의 추가 피해를 주도록 하며, 타깃이 받는 피해를 5%/10%/15%/20%/25%씩 증가시킨다. 1라운드 지속.",
-         icon:"images/hero/Gen04/skills/Ahmose/R3.webp" }
+        { key:"R1", title: "살모사 진형", 
+         desc: "부대가 고대 수호자의 방어 진형을 펼치도록 하여 방패병이 4번 공격을 때마다 다음 공격을 포기하고 창병과 궁병이 받는 피해를 10%/15%/20%/25%/30% 감소시키며, 방패병이 받는 피해를 10%/25%/40%/55%/70% 감소시킨다. 2라운드 지속."
+        },
+        { key:"R2", title: "불의 축복", 
+         desc: "불의 수정의 힘으로 아군 방패병의 투지를 불태워 이들이 입히는 피해를 20%/40%/60%/80%/100% 증가한다."
+        },
+        { key:"R3", title: "빛나는 칼날", 
+         desc: "불의 수정의 정수를 방패병의 무기에 주입하여 공격 시마다 타깃에 12%/24%/36%/48%/60%의 추가 피해를 주도록 하며, 타깃이 받는 피해를 5%/10%/15%/20%/25%씩 증가시킨다. 1라운드 지속."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+92.5%", "HP":"+92.5%" },
@@ -738,43 +748,46 @@
       }
     },
     { 
-      key: "reina",
+      key: "Reina",
       gen: 4,
       name: "Reina",
       nameKo: "레이나",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "영웅의 전당",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen4/reina.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen4/reina.webp",      // 모달용(전신/큰거)
       weaponFx: "공성",
       weaponSkills: [
         {
-          key:"ws1", title: "그림자 발걸음", desc: "레이나는 영리한 지휘 기술을 발휘해서 전체 아군 부대가 일반 공격을 받으면 4%/8%/12%/16%/20%의 확률로 피해를 회피시킨다.",
-          icon: "images/hero/skills/reina/ws1.webp"
+          key:"ws1", title: "그림자 발걸음", 
+          desc: "레이나는 영리한 지휘 기술을 발휘해서 전체 아군 부대가 일반 공격을 받으면 4%/8%/12%/16%/20%의 확률로 피해를 회피시킨다.",
         },
         {
-          key:"ws2", title: "그림자 칼날", desc: "변화무쌍한 레이나의 전술로 창병이 25%의 확률로 한 번 더 공격하여 120%/140%/160%/180%/200%의 피해를 준다.",
-          icon: "images/hero/skills/reina/ws2.webp"          
+          key:"ws2", title: "그림자 칼날", 
+          desc: "변화무쌍한 레이나의 전술로 창병이 25%의 확률로 한 번 더 공격하여 120%/140%/160%/180%/200%의 피해를 준다.",
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "그림자 기습", desc: "소환된 분신이 적 뒤로 순간이동하여 기습 공격하고 공격력*300%/330%/360%/390%/420%의 범위 피해를 입힌다.",
-          icon:"images/hero/skills/reina/L1.webp"},
-        { key:"L2", title: "은둔의 비술", desc: "일반 공격을 받으면 5%/10%/15%/20%/25% 확률로 환술을 시전해서 상대를 속이고 아무 피해도 받지 않는다.",
-          icon:"images/hero/skills/reina/L2.webp" },
-        { key:"L3", title: "요괴의 독", desc: "적군 타깃(영웅 우선)에 마술을 시전하여 공격력*100%/110%/120%/130%/140%의 피해를 주고, 1.5초 동안 움직이지 못하게 한다.",
-          icon:"images/hero/skills/reina/L3.webp" }
+        { key:"L1", title: "그림자 기습", 
+         desc: "소환된 분신이 적 뒤로 순간이동하여 기습 공격하고 공격력*300%/330%/360%/390%/420%의 범위 피해를 입힌다."
+        },
+        { key:"L2", title: "은둔의 비술", 
+         desc: "일반 공격을 받으면 5%/10%/15%/20%/25% 확률로 환술을 시전해서 상대를 속이고 아무 피해도 받지 않는다."
+        },
+        { key:"L3", title: "요괴의 독", 
+         desc: "적군 타깃(영웅 우선)에 마술을 시전하여 공격력*100%/110%/120%/130%/140%의 피해를 주고, 1.5초 동안 움직이지 못하게 한다."
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "잔영의 일격", desc: "일반 공격을 하면 40%의 확률로 쿠나이 하나를 추가로 투척해, 공격력*45%의 피해를 가한다.",
-         icon:"images/hero/skills/reina/R1.webp" },
-        { key:"R2", title: "불같은 침착", desc: "레이나의 뛰어난 기회 포착 능력으로 집결 부대의 파괴력을 15% 증가한다.",
-         icon:"images/hero/skills/reina/R2.webp" },
-        { key:"R3", title: "자객의 본능", desc: "적의 약점을 가장 효과적으로 공격할 줄 아는 레이나가 아군 전체 부대의 일반 공격 피해를 10%/15%/20%/25%/30% 향상시킨다.",
-         icon:"images/hero/skills/reina/R3.webp" }
+        { key:"R1", title: "잔영의 일격", 
+         desc: "일반 공격을 하면 40%의 확률로 쿠나이 하나를 추가로 투척해, 공격력*45%의 피해를 가한다."
+        },
+        { key:"R2", title: "불같은 침착", 
+         desc: "레이나의 뛰어난 기회 포착 능력으로 집결 부대의 파괴력을 15% 증가한다."
+        },
+        { key:"R3", title: "자객의 본능", 
+         desc: "적의 약점을 가장 효과적으로 공격할 줄 아는 레이나가 아군 전체 부대의 일반 공격 피해를 10%/15%/20%/25%/30% 향상시킨다."
+        }
       ],
       stats: {
         exploration: { "파괴력": "+92.5%", "HP":"+92.5%" },
@@ -787,38 +800,36 @@
       name: "Lynn",
       nameKo: "린",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen4/Lynn.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen4/Lynn.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
           key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Lynn/ws1.webp"
         },
         {
-          key:"ws2", title: "", desc: ".",
-          icon: "images/hero/skills/Lynn/ws2.webp"          
+          key:"ws2", title: "", desc: "",
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "시드라의 노래", desc: "투쟁의 선율로 사람의 마음을 고무시켜 아군 전체를 상태이상 빙결, 기절 등에서 벗어나게 하고, 3/3.5/4/4.5/5초간 공격력을 3%/4%/5%/6%/7% 증가시킨다. 해당 상태 동안 어떠한 상태이상의 영향도 받지 않는다.",
-          icon:"images/hero/skills/Lynn/L1.webp"},
-        { key:"L2", title: "죽음의 피날레", desc: "순식간에 기회를 포착하고 관통력이 강한 총알을 발사해 경로상의 적에게 공격력* 220%/240%/260%/280%/300%의 피해를 준다.",
-          icon:"images/hero/skills/Lynn/L2.webp" },
-        { key:"L3", title: "불협화음", desc: "신비롭고 기이한 멜로디로 상대를 현혹시켜 적군 전체 공격 속도를 1%/1.5%/2%/2.5%/3% 감소하고 치료 효과를 40%/45%/50%/55%/60% 감소한다.",
-          icon:"images/hero/skills/Lynn/L3.webp" }
+        { key:"L1", title: "시드라의 노래", 
+         desc: "투쟁의 선율로 사람의 마음을 고무시켜 아군 전체를 상태이상 빙결, 기절 등에서 벗어나게 하고, 3/3.5/4/4.5/5초간 공격력을 3%/4%/5%/6%/7% 증가시킨다. 해당 상태 동안 어떠한 상태이상의 영향도 받지 않는다."
+        },
+        { key:"L2", title: "죽음의 피날레", 
+         desc: "순식간에 기회를 포착하고 관통력이 강한 총알을 발사해 경로상의 적에게 공격력* 220%/240%/260%/280%/300%의 피해를 준다."
+        },
+        { key:"L3", title: "불협화음", 
+         desc: "신비롭고 기이한 멜로디로 상대를 현혹시켜 적군 전체 공격 속도를 1%/1.5%/2%/2.5%/3% 감소하고 치료 효과를 40%/45%/50%/55%/60% 감소한다." 
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "사자의 노래", desc: "린은 고조된 박자와 멜로디로 사람들을 고무시켜 40%의 확률로 전체 아군 부대의 피해를 10%/20%/30%/40%/50% 증가시킨다.",
-         icon:"images/hero/skills/Lynn/R1.webp" },
-        { key:"R2", title: "슬픈 발라드", desc: "린이 슬프게 가라앉은 멜로디로 적의 전의를 무너뜨려 적군 전체 부대의 피해를 4%/8%/12%/16%/20% 감소시킨다.",
-         icon:"images/hero/skills/Lynn/R2.webp" },
-        { key:"R3", title: "카덴차", desc: "린은 음악의 힘으로 사기를 끌어 올려 병사들이 전투를 거듭할수록 더 용감해지도록 한다. 궁병이 3번 공격할 때마다 자신의 공격력이 1%/2%/3%/4%/5% 향상된다. 이 효과는 중첩되며, 전투가 끝날 때까지 지속된다.",
-         icon:"images/hero/skills/Lynn/R3.webp" }
+        { key:"R1", title: "사자의 노래", 
+         desc: "린은 고조된 박자와 멜로디로 사람들을 고무시켜 40%의 확률로 전체 아군 부대의 피해를 10%/20%/30%/40%/50% 증가시킨다." },
+        { key:"R2", title: "슬픈 발라드", 
+         desc: "린이 슬프게 가라앉은 멜로디로 적의 전의를 무너뜨려 적군 전체 부대의 피해를 4%/8%/12%/16%/20% 감소시킨다." },
+        { key:"R3", title: "카덴차", 
+         desc: "린은 음악의 힘으로 사기를 끌어 올려 병사들이 전투를 거듭할수록 더 용감해지도록 한다. 궁병이 3번 공격할 때마다 자신의 공격력이 1%/2%/3%/4%/5% 향상된다. 이 효과는 중첩되며, 전투가 끝날 때까지 지속된다." }
       ],
       stats: {
         exploration: { "파괴력": "+92.5%", "HP":"+92.5%" },
@@ -831,38 +842,41 @@
       name: "Hector",
       nameKo: "헥터",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen5/Hector.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen5/Hector.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Hector/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Hector/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Hector/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Hector/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Hector/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "",
-         icon:"images/hero/skills/Hector/R1.webp" },
-        { key:"R2", title: "", desc: "",
-         icon:"images/hero/skills/Hector/R2.webp" },
-        { key:"R3", title: "", desc: "",
-         icon:"images/hero/skills/Hector/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -875,38 +889,41 @@
       name: "Norah",
       nameKo: "노라",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_Lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen5/Norah.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen5/Norah.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Norah/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Norah/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Norah/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Norah/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Norah/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "",
-         icon:"images/hero/skills/Norah/R1.webp" },
-        { key:"R2", title: "", desc: "",
-         icon:"images/hero/skills/Norah/R2.webp" },
-        { key:"R3", title: "", desc: "",
-         icon:"images/hero/skills/Norah/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -919,38 +936,41 @@
       name: "Gwen",
       nameKo: "그웬",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen5/Gwen.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen5/Gwen.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Gwen/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Gwen/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Gwen/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Gwen/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Gwen/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "",
-         icon:"images/hero/skills/Gwen/R1.webp" },
-        { key:"R2", title: "", desc: "",
-         icon:"images/hero/skills/Gwen/R2.webp" },
-        { key:"R3", title: "", desc: "",
-         icon:"images/hero/skills/Gwen/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -958,43 +978,46 @@
       }
     },
     { 
-      key: "wuming",
+      key: "Wuming",
       gen: 6,
       name: "Wuming",
       nameKo: "무명",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen6/wuming.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen6/wuming.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/wuming/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/wuming/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/wuming/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/wuming/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/wuming/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "",
-         icon:"images/hero/skills/wuming/R1.webp" },
-        { key:"R2", title: "", desc: "",
-         icon:"images/hero/skills/wuming/R2.webp" },
-        { key:"R3", title: "", desc: "",
-         icon:"images/hero/skills/wuming/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1002,43 +1025,46 @@
       }
     },
     { 
-      key: "rene",
+      key: "Rene",
       gen: 6,
       name: "Rene",
       nameKo: "레니",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen6/rene.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen6/rene.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/philly/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/philly/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/rene/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/rene/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/rene/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/rene/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/rene/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/rene/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1046,43 +1072,46 @@
       }
     },
     { 
-      key: "wayne",
+      key: "Wayne",
       gen: 6,
       name: "Wayne",
       nameKo: "웨인",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen6/wayne.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen6/wayne.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/wayne/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/wayne/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/wayne/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/wayne/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/wayne/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/wayne/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/wayne/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/wayne/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1090,43 +1119,46 @@
       }
     },
     { 
-      key: "molly",
+      key: "Edith",
       gen: 7,
-      name: "Molly",
+      name: "Edith",
       nameKo: "에디스",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen7/Edith.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen7/Edith.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Edith/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Edith/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Edith/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Edith/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Edith/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Edith/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Edith/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Edith/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1139,38 +1171,41 @@
       name: "Gordon",
       nameKo: "고든",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen7/Gordon.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen7/Gordon.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Gordon/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Gordon/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Gordon/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Gordon/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Gordon/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Gordon/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Gordon/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Gordon/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1183,38 +1218,41 @@
       name: "Bradley",
       nameKo: "브레들리",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen7/Bradley.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen7/Bradley.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Bradley/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Bradley/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Bradley/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Bradley/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Bradley/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Bradley/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Bradley/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Bradley/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1227,38 +1265,41 @@
       name: "Gatot",
       nameKo: "가토",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen8/Gatot.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen8/Gatot.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Gatot/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Gatot/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Gatot/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Gatot/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Gatot/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Gatot/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Gatot/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Gatot/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1271,35 +1312,41 @@
       name: "Sonya",
       nameKo: "소냐",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen8/Sonya.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen8/Sonya.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Sonya/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Sonya/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Sonya/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Sonya/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Sonya/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/Sonya/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/Sonya/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/Sonya/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1312,38 +1359,41 @@
       name: "Hendrik",
       nameKo: "핸드릭",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen8/Hendrik.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen8/Hendrik.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Hendrik/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Hendrik/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Hendrik/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Hendrik/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Hendrik/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Hendrik/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Hendrik/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Hendrik/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1351,40 +1401,46 @@
       }
     },
     { 
-      key: "magnus",
+      key: "Magnus",
       gen: 9,
       name: "Magnus",
       nameKo: "마그누스",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen9/magnus.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen9/magnus.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
-      weaponSkills: [
+      wweaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/magnus/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/magnus/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/magnus/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/magnus/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/magnus/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/magnus/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/magnus/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/magnus/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1392,43 +1448,46 @@
       }
     },
     { 
-      key: "fred",
+      key: "Fred",
       gen: 9,
-      name: "fred",
+      name: "Fred",
       nameKo: "프레드",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen9/fred.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen9/fred.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/fred/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/fred/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/fred/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/fred/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/fred/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/fred/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/fred/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/fred/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1436,43 +1495,46 @@
       }
     },
     { 
-      key: "xura",
+      key: "Xura",
       gen: 9,
       name: "Xura",
       nameKo: "쇠라",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen9/xura.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen9/xura.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/xura/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/xura/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/xura/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/xura/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/xura/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         con:"images/hero/skills/xura/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/xura/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/xura/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1485,38 +1547,41 @@
       name: "Gregory",
       nameKo: "그레고리",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen10/Gregory.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen10/Gregory.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Gregory/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Gregory/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Gregory/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Gregory/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Gregory/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Gregory/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Gregory/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Gregory/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1529,38 +1594,41 @@
       name: "Freya",
       nameKo: "프레야",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen10/Freya.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen10/Freya.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Freya/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Freya/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Freya/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Freya/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Freya/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Freya/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Freya/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Freya/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1568,43 +1636,46 @@
       }
     },
     { 
-      key: "blanchette",
+      key: "Blanchette",
       gen: 10,
       name: "Blanchette",
       nameKo: "블랑쉬",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen10/blanchette.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen10/blanchette.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/blanchette/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/blanchette/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/blanchette/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/blanchette/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/blanchette/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/blanchette/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/blanchette/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/blanchette/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1617,38 +1688,41 @@
       name: "Eleonora",
       nameKo: "엘레오노라",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen11/Eleonora.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen11/Eleonora.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Eleonora/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Eleonora/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Eleonora/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Eleonora/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Eleonora/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Eleonora/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Eleonora/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Eleonora/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1665,34 +1739,38 @@
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen11/Lloyd.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen11/Lloyd.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Lloyd/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Lloyd/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Lloyd/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Lloyd/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Lloyd/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Lloyd/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Lloyd/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Lloyd/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1705,38 +1783,41 @@
       name: "Rufus",
       nameKo: "루퍼스",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen11/Rufus.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen11/Rufus.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Rufus/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Rufus/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Rufus/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Rufus/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Rufus/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Rufus/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Rufus/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Rufus/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1749,35 +1830,41 @@
       name: "Hervor",
       nameKo: "헤르보르",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen12/Hervor.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen12/Hervor.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Hervor/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Hervor/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Hervor/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Hervor/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Hervor/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/Hervor/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/Hervor/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/Hervor/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1790,35 +1877,41 @@
       name: "Karol",
       nameKo: "가로얼",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen12/Karol.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen12/Karol.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Karol/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Karol/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Karol/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Karol/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Karol/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/Karol/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/Karol/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/Karol/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1831,38 +1924,41 @@
       name: "Ligeia",
       nameKo: "리지아",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen12/Ligeia.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen12/Ligeia.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Ligeia/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Ligeia/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Ligeia/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Ligeia/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Ligeia/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Ligeia/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Ligeia/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Ligeia/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1875,38 +1971,41 @@
       name: "Gisela",
       nameKo: "가젤라",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen13/Gisela.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen13/Gisela.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Gisela/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Gisela/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Gisela/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Gisela/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Gisela/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Gisela/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Gisela/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Gisela/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1919,38 +2018,41 @@
       name: "Flora",
       nameKo: "플로라",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen13/Flora.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen13/Flora.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Flora/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Flora/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Flora/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Flora/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Flora/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Flora/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Flora/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Flora/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -1963,38 +2065,41 @@
       name: "Vulcanus",
       nameKo: "올카누스",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen13/Vulcanus.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen13/Vulcanus.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Vulcanus/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Vulcanus/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Vulcanus/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Vulcanus/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Vulcanus/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Vulcanus/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Vulcanus/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Vulcanus/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -2007,35 +2112,41 @@
       name: "Elif",
       nameKo: "엘리프",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen14/Elif.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen14/Elif.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Elif/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Elif/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Elif/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Elif/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Elif/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/Elif/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/Elif/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/Elif/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -2048,35 +2159,41 @@
       name: "Dominic",
       nameKo: "도미니카",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen14/Dominic.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen14/Dominic.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Dominic/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Dominic/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Dominic/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Dominic/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Dominic/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/Dominic/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/Dominic/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/Dominic/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -2089,35 +2206,41 @@
       name: "Cara",
       nameKo: "카라",
       heroClass: "MARKSMAN",
-      heroClassicon: "images/hero/icon_marksman.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen14/Cara.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen14/Cara.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Cara/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Cara/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Cara/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Cara/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Cara/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/Cara/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/Cara/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/Cara/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -2130,38 +2253,41 @@
       name: "Hank",
       nameKo: "행크",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen15/Hank.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen15/Hank.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Hank/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Hank/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Hank/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Hank/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Hank/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", 
-         icon:"images/hero/skills/Hank/R1.webp" },
-        { key:"R2", title: "", desc: "", 
-         icon:"images/hero/skills/Hank/R2.webp" },
-        { key:"R3", title: "", desc: "", 
-         icon:"images/hero/skills/Hank/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -2174,35 +2300,41 @@
       name: "Estrella",
       nameKo: "에스텔라",
       heroClass: "LANCER",
-      heroClassicon: "images/hero/icon_lancer.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen15/Estrella.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen15/Estrella.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Estrella/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Estrella/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Estrella/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Estrella/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Estrella/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/Estrella/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/Estrella/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/Estrella/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -2215,35 +2347,41 @@
       name: "Viveca",
       nameKo: "비비카",
       heroClass: "INFANTRY",
-      heroClassicon: "images/hero/icon_infantry.webp",
       expeditionType: "COMBAT",
       source: "행운의 룰렛",
       headerGradient: ["#0891b2", "#1d4ed8"],
-      thumb: "images/hero/thumb/Gen15/Viveca.webp",   // 리스트용(작은거/크롭된거)
-      portrait: "images/hero/body/Gen15/Viveca.webp",      // 모달용(전신/큰거)
       weaponFx: "수성",
       weaponSkills: [
         {
-          key:"ws1", title: "", desc: "",
-          icon: "images/hero/skills/Viveca/ws1.webp"
+          key:"ws1", title: "", 
+          desc: ""
         },
         {
-          key:"ws2", title: "", desc: "",
-          icon: "images/hero/skills/Viveca/ws2.webp"          
+          key:"ws2", title: "", 
+          desc: ""
         }
       ], 
       explorationSkills: [
-        { key:"L1", title: "", desc: "",
-          icon:"images/hero/skills/Viveca/L1.webp"},
-        { key:"L2", title: "", desc: "",
-          icon:"images/hero/skills/Viveca/L2.webp" },
-        { key:"L3", title: "", desc: "",
-          icon:"images/hero/skills/Viveca/L3.webp" }
+        { key:"L1", title: "", 
+         desc: ""
+        },
+        { key:"L2", title: "", 
+         desc: ""
+        },
+        { key:"L3", title: "", 
+         desc: ""
+        }
       ],
       expeditionSkills: [
-        { key:"R1", title: "", desc: "", icon:"images/hero/skills/Viveca/R1.webp" },
-        { key:"R2", title: "", desc: "", icon:"images/hero/skills/Viveca/R2.webp" },
-        { key:"R3", title: "", desc: "", icon:"images/hero/skills/Viveca/R3.webp" }
+        { key:"R1", title: "", 
+         desc: ""
+        },
+        { key:"R2", title: "", 
+         desc: ""
+        },
+        { key:"R3", title: "", 
+         desc: ""
+        }
       ],
       stats: {
         exploration: { "파괴력": "+50.0%", "HP":"+50.0%" },
@@ -2365,7 +2503,7 @@
         card.className = "text-left rounded-2xl border p-3 hover:shadow-md transition";
         card.onclick = () => openHeroModal(hero);
 
-        const img = hero.thumb || hero.portrait || "";
+        const img = renderHeroThumb(hero) || renderPortrait(hero) || "";
         card.innerHTML = `
           <div class="flex items-center gap-3">
             <div class="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shrink-0">
@@ -2409,7 +2547,7 @@
   // =========================
   // 렌더: 스킬 카드(✅ 막대 없이, 바로 표시)
   // =========================
-  function renderSkills(targetEl, skills){
+  function renderSkills(targetEl, hero, skills){
     const wrap = $(targetEl);
     wrap.innerHTML = "";
 
@@ -2417,12 +2555,15 @@
       const lv = sk.level ?? 5;
       const val = sk.value ?? "-";
 
+      // ✅ hero/gen/key + skill.key 로 자동 아이콘 생성
+      const iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
+      
       const el = document.createElement("div");
       el.className = "rounded-xl border p-3";
       el.innerHTML = `
         <div class="flex gap-3">
           <div class="w-12 h-12 overflow-hidden flex items-center justify-center shrink-0">
-            <img src="${escapeHtml(sk.icon||"")}"
+            <img src="${escapeHtml(iconSrc)}"
                  class="w-full h-full object-contain"
                  loading="lazy"
                  onerror="this.onerror=null; this.style.display='none';" />
@@ -2464,7 +2605,7 @@
   // - traitCard: col-span-6 (0~5)
   // - weapon   : col-span-6 (6~11)
   // - traitCard가 숨겨지면 weapon은 col-span-12 (0~11)
-  function renderExclusiveSkill(skills){
+  function renderExclusiveSkill(hero, skills){
     const traitCard = $("traitCard");      // ✅ 특성버프 카드
     const body      = $("traitBuffArea");  // ✅ 특성버프 내용 영역
     const weapon    = $("weapon");         // ✅ 전용무기 카드
@@ -2525,11 +2666,14 @@
       const el = document.createElement("div");
       el.className = "flex items-start gap-3";
 
+      // ✅ hero/gen/key + sk.key 로 자동 아이콘 생성
+      const iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
+
       el.innerHTML = `
         <!-- 아이콘 -->
         <div class="w-12 h-12 rounded-xl border overflow-hidden
                     flex items-center justify-center shrink-0">
-          <img src="${escapeHtml(sk.icon || "")}"
+          <img src="${escapeHtml(iconSrc)}"
                class="w-full h-full object-contain"
                loading="lazy"
                onerror="this.onerror=null; this.style.display='none';" />
@@ -2548,7 +2692,7 @@
   }
 
   // ✅ 전용무기 스킬(weaponSkill) 렌더: ws1 ws2
-  function renderWeaponSkills(weaponSkill){
+  function renderWeaponSkills(hero, weaponSkill){
     const area = $("weaponSkills");
 
     // 스킬 렌더
@@ -2568,11 +2712,14 @@
       const el = document.createElement("div");
       el.className = "flex items-start gap-3";
 
+      // ✅ hero/gen/key + sk.key(ws1/ws2) 로 자동 아이콘 생성
+      const iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
+
       el.innerHTML = `
         <!-- 아이콘 -->
         <div class="w-12 h-12 rounded-xl overflow-hidden
                     flex items-center justify-center shrink-0">
-          <img src="${escapeHtml(sk.icon || "")}"
+          <img src="${escapeHtml(iconSrc)}"
                class="w-full h-full object-contain"
                loading="lazy"
                onerror="this.onerror=null; this.style.display='none';" />
@@ -2590,11 +2737,29 @@
     });
   }
 
+  function heroGen(hero){
+    return String(hero.gen).padStart(2, "0");
+  }
+
+  function heroKey(hero){
+    return hero.key;
+  }
+
+  function renderHeroThumb(hero){
+    return `images/hero/Gen${heroGen(hero)}/thumb/${heroKey(hero)}.webp`;
+  }
+  
+  function renderPortrait(hero){
+    return `images/hero/Gen${heroGen(hero)}/body/${heroKey(hero)}.webp`;
+  }
+
+  function heroSkillIcon(hero, skillKey){
+    return `images/hero/Gen${heroGen(hero)}/skills/${heroKey(hero)}/${skillKey}.webp`;
+  }
+      
   const EXPEDITION_TYPE_ICON = {
     COMBAT: "images/hero/combat.webp",
-    GATHER: "images/hero/gather.webp",
     CONSTRUCTION: "images/hero/construction.webp",
-    SUPPORT: "images/hero/support.webp"
   };
 
   function renderExpeditionType(type){
@@ -2658,15 +2823,15 @@
     const imgEl = $("heroImg");
     imgEl.style.display = "";
     $("heroImgFallback").classList.add("hidden");
-    imgEl.src = hero.portrait || hero.thumb || "";
+    imgEl.src = renderPortrait(hero) || renderHeroThumb(hero) || "";
 
     renderHeroClassType(hero.heroClass);
     renderExpeditionType(hero.expeditionType);
-    renderExclusiveSkill(hero.exclusiveSkill);
-    renderWeaponSkills(hero.weaponSkills);
+    renderExclusiveSkill(hero, hero.exclusiveSkill);
+    renderWeaponSkills(hero, hero.weaponSkills);
 
-    renderSkills("exploreSkills", hero.explorationSkills);
-    renderSkills("expeditionSkills", hero.expeditionSkills);
+    renderSkills("exploreSkills", hero, hero.explorationSkills);
+    renderSkills("expeditionSkills", hero, hero.expeditionSkills);
     renderStats();
 
     $("modalBackdrop").classList.remove("hidden");
