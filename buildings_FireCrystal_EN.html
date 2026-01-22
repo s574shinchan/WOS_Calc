@@ -475,7 +475,7 @@
       buildingList.forEach(name=>{
         const displayName = nameAliasMap[name] || name;                          
         const levelsFull = buildingData[name].map(d=> d["레벨"]); // 원본 모든 라벨
-        const filtered = filterLevelsWithIndex(levelsFull, useFireCrystal); // [{idx,label}] (외부 정의 가정)
+        const filtered = filterLevelsWithIndex(levelsFull); // [{idx,label}] (외부 정의 가정)
 
         // ✅ 옵션은 "화면 라벨은 filtered.label" / "value는 원본 idx"
         const options = filtered
@@ -786,11 +786,8 @@
     fetchBuildingData();
   </script>
 	<script>
-		// 토글 상태 기억
-		let useFireCrystal = localStorage.getItem('useFireCrystal') === '1';
-
 		// 레벨 라벨 필터 → 원본 인덱스/라벨 쌍 반환
-		function filterLevelsWithIndex(levelLabels, useFire) {
+		function filterLevelsWithIndex(levelLabels) {
 			// CSV 라벨 정제
 			const labels = levelLabels.map(v => String(v ?? '').trim());
 			const out = [];
@@ -808,73 +805,32 @@
 				return out;
 			};
 
-			if (useFire) {
-				// 1) 이상적: CSV에 30-1 ~ FC10 모두 있는 경우
-				const s1 = findIdx('30');
-				const e1 = findIdx('FC10');
-				if (s1 !== -1 && e1 !== -1 && s1 <= e1) {
-					const arr = [];
-					for (let i = s1; i <= e1; i++) arr.push({ idx: i, label: labels[i] });
-					return arr;
-				}
 
-				// 2) 아카데미 같은 케이스: FC1 ~ FC10만 있는 경우
-				const s2 = labels.findIndex(lv => /^FC\s*0*1$/i.test(lv));
-				const e2 = labels.findIndex(lv => /^FC\s*0*10$/i.test(lv));
-				if (s2 !== -1 && e2 !== -1 && s2 <= e2) {
-					const arr = [];
-					for (let i = s2; i <= e2; i++) arr.push({ idx: i, label: labels[i] });
-					return arr;
-				}
+      // 1) 이상적: CSV에 30-1 ~ FC10 모두 있는 경우
+      const s1 = findIdx('30');
+      const e1 = findIdx('FC10');
+      if (s1 !== -1 && e1 !== -1 && s1 <= e1) {
+        const arr = [];
+        for (let i = s1; i <= e1; i++) arr.push({ idx: i, label: labels[i] });
+        return arr;
+      }
 
-				// 3) 백업: 30-x 또는 FC1~FC10 패턴만 모아서(원본 순서 유지)
-				out.length = 0;
-				collectBy(/^(30-\d|FC0*[1-9]|FC0*10)$/i);
-				return out;
-			}
+      // 2) 아카데미 같은 케이스: FC1 ~ FC10만 있는 경우
+      const s2 = labels.findIndex(lv => /^FC\s*0*1$/i.test(lv));
+      const e2 = labels.findIndex(lv => /^FC\s*0*10$/i.test(lv));
+      if (s2 !== -1 && e2 !== -1 && s2 <= e2) {
+        const arr = [];
+        for (let i = s2; i <= e2; i++) arr.push({ idx: i, label: labels[i] });
+        return arr;
+      }
 
-			// 일반 모드: 1~30이 있으면 그 범위, 없으면 FC1~FC10 범위
-			const numeric = [];
-			labels.forEach((lv, i) => {
-				const m = lv.match(/^\s*(\d+)\s*$/);
-				if (m) {
-					const n = parseInt(m[1], 10);
-					if (n >= 1 && n <= 30) numeric.push({ idx: i, label: lv });
-				}
-			});
-			if (numeric.length) return numeric;
-
-			// 숫자 1~30이 없다면 FC1~FC10 시도
-			const s3 = labels.findIndex(lv => /^FC\s*0*1$/i.test(lv));
-			const e3 = labels.findIndex(lv => /^FC\s*0*10$/i.test(lv));
-			if (s3 !== -1 && e3 !== -1 && s3 <= e3) {
-				const arr = [];
-				for (let i = s3; i <= e3; i++) arr.push({ idx: i, label: labels[i] });
-				return arr;
-			}
+      // 3) 백업: 30-x 또는 FC1~FC10 패턴만 모아서(원본 순서 유지)
+      out.length = 0;
+      collectBy(/^(30-\d|FC0*[1-9]|FC0*10)$/i);
+      return out;
 
 			// 최후: 원본 전체(어떤 CSV든 최소한 전부 노출)
 			return labels.map((lv, i) => ({ idx: i, label: lv }));
-		}
-
-		// 토글 핸들러
-		function hookFireCrystalToggle() {
-			const el = document.getElementById('fireCrystalToggle');
-			if (!el) return;
-
-			// ✅ 항상 체크 상태로 시작
-			useFireCrystal = true;
-			el.checked = true;
-
-			// ✅ localStorage에 즉시 저장해서 새로고침 후에도 유지
-			localStorage.setItem('useFireCrystal', '1');
-
-			el.addEventListener('change', () => {
-				useFireCrystal = el.checked;
-				localStorage.setItem('useFireCrystal', useFireCrystal ? '1' : '0');
-				renderBuildingSelectors();
-				//calculateCard();
-			});
 		}
 
 		// 페이지 로드 시 1번만 호출
