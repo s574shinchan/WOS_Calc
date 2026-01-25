@@ -255,7 +255,7 @@ const MAX_LV = 16;
 const UNITS = ["Infantry", "Lancer", "Marksman"];
 const UNIT_KO = { Infantry:"방패", Lancer:"창병", Marksman:"궁병" };
 const IMAGE_BY_UNIT = Object.fromEntries(
-  UNITS.map(u => [u, Array.from({length: MAX_LV}, (_,i)=> `images/${u}/${u}_${i+1}.png`)])
+  UNITS.map(u => [u, Array.from({length: MAX_LV}, (_,i)=> `images/${u}/${u}_${i+1}webp`)])
 );
 
 function levelFromUrl(url){

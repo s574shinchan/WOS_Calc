@@ -772,15 +772,6 @@
           break;
       }
     });
-    //["buildSpeed","owned-불수정","owned-정제"].forEach(id=>{
-//      const el=document.getElementById(id);
-//      if (el) el.addEventListener("input", scheduleCalc);
-//    });
-//
-//    // 🔷 버튼(토글/VP) 클릭 시에도 즉시 계산 반영
-//    document.querySelectorAll('.toggle-btn, .vp-btn').forEach(b=>{
-//      b.addEventListener('click', scheduleCalc);
-//    });
 
     // 데이터 로드 & 초기 렌더
     fetchBuildingData();
@@ -804,7 +795,6 @@
 				});
 				return out;
 			};
-
 
       // 1) 이상적: CSV에 30-1 ~ FC10 모두 있는 경우
       const s1 = findIdx('30');
