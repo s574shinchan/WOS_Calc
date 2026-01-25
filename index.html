@@ -494,7 +494,7 @@
             <a class="dd-item" href="#" data-frame="beartrap.html">부대계산</a>
             <a class="dd-item" href="#" data-frame="troop.html">병사생산</a>
             <a class="dd-item" href="#" data-frame="SVS_PreMission.html">SVS점수</a>
-            <!--<a class="dd-item" href="#" data-frame="HeroInfo.html">영웅정보</a>-->
+            <a class="dd-item" href="#" data-frame="hero_info.html">영웅정보</a>
           </div>
         </div>
         <div class="dd" data-dd>
@@ -1938,11 +1938,6 @@
     
     window.addEventListener("message", function (event) {
       
-      if (event.data.type === "SET_FRAME_SIZE") {
-        const frame = document.getElementById("mainFrame");
-        frame.style.height = event.data.height;
-      }
-
       if (event.data.type === "FRAME_CHANGE") {
         const frame = document.getElementById("mainFrame");
         frame.style.height = `${event.data.height + 10}px`;
