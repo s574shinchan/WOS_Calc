@@ -281,7 +281,7 @@
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     const uaMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua);
     const iPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const smallScreen = Math.min(screen.width, screen.height) <= 900;
+    const smallScreen = Math.min(screen.innerWidth, screen.innerHeight) <= 900;
 
     const isMobile = uaMobile || iPadOS || smallScreen;
     if (!isMobile) return;

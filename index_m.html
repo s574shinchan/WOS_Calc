@@ -352,6 +352,26 @@
       .whitespace-nowrap{ white-space:normal !important; }
     }
   </style>
+  <script>
+  (function () {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const uaMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua);
+    const iPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const smallScreen = Math.min(screen.innerWidth, screen.innerheight) <= 900;
+
+    const isMobile = uaMobile || iPadOS || smallScreen;
+    if (isMobile) return;
+
+    // ✅ 1회만 캐시 깨기 (세션당 1번)
+    const KEY = "m_redirect_once";
+    if (!sessionStorage.getItem(KEY)) {
+      sessionStorage.setItem(KEY, "1");
+      location.replace('index.html?v=' + Date.now());
+    } else {
+      location.replace('index.html');
+    }
+  })();
+  </script>  
 </head>
 
 <body>
