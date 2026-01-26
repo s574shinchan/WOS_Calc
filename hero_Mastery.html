@@ -135,7 +135,8 @@
   <!-- ========== 공통 유틸 & 프레임 통신 ========== -->
   <script>
     function sendHeightToParent() {
-      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height:730 }, "*");
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
     }
     window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
   </script>

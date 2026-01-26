@@ -143,8 +143,8 @@
 
     // (선택) a.html 자체 높이를 부모에 알려 메뉴 iframe 높이 조절하고 싶으면 사용
     function sendHeightToParent(){
-      const h = document.body.scrollHeight + 50;
-      window.parent.postMessage({type:"FRAME_CHANGE", height:h}, "*");
+      const height = document.body.scrollHeight + 50;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
     }
     window.addEventListener("load", () => setTimeout(sendHeightToParent, 50));
   </script>

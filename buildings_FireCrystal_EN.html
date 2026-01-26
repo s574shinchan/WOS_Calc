@@ -275,7 +275,8 @@
   <script>
     /* 유틸 */
     function sendHeightToParent(){ 
-      window.parent?.postMessage({type:"FRAME_CHANGE",height:1350},"*");
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
     }
     window.addEventListener("load", ()=> setTimeout(sendHeightToParent,100));
 
