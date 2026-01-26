@@ -283,13 +283,11 @@
     const iPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
     const isMobile = uaMobile || iPadOS
-    if (!isMobile) {
-      return;
-    }
-    else {
-      location.replace("/index_m.html");
-      sessionStorage.clear();
-    }
+    if (!isMobile) return;
+    
+    // ✅ 먼저 지우고 이동 (순서 중요)
+    try { sessionStorage.clear(); } catch(e) {}
+    location.replace("/index_m.html");
 
     // ✅ 1회만 캐시 깨기 (세션당 1번)
     //const KEY = "m_redirect_once";
