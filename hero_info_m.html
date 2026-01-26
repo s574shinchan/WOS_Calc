@@ -395,7 +395,7 @@
       // ✅ (추가) 전체세대 + 병종 선택 시: Gen 섹션 없이 3컬럼으로 "쭉" 표시
       if(currentGen === "ALL" && currentType !== "ALL"){
         // heroGrid를 3컬럼으로
-        wrap.className = "grid grid-cols-3 gap-3";
+        wrap.className = "grid gap-3";
 
         // 정렬(세대→이름)
         list.sort((a,b)=> (a.gen - b.gen) || String(a.nameKo||a.name).localeCompare(String(b.nameKo||b.name), "ko"));
@@ -440,7 +440,7 @@
         });
 
         if(list.length === 0){
-          wrap.className = "grid grid-cols-1 gap-3";
+          wrap.className = "grid gap-3";
           wrap.innerHTML = `<div class="text-sm">표시할 영웅이 없습니다.</div>`;
         }
         return; // ✅ 여기서 끝내고 아래 Gen 그룹핑 로직은 안 탐
@@ -449,7 +449,6 @@
       // 병종선택했다가 전체 병종할때 UX 깨져서 클래스네임 삭제
       wrap.classList.remove("grid-cols-3");
       wrap.classList.remove("grid-cols-2");
-
 
       // ✅ Gen 그룹핑
       const byGen = new Map();
