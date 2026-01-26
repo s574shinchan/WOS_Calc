@@ -3182,6 +3182,49 @@
       const langPC = document.getElementById('langSelectPC');
     })();
   </script>
+  <script>
+    const PARENT_MODAL_WRAPPER_ID = "PARENT_MODAL_WRAPPER";
 
+    window.addEventListener("message", (e) => {
+      if (!e?.data || e.data.type !== "OPEN_HERO_MODAL") return;
+
+      // 기존 모달 제거
+      document.getElementById(PARENT_MODAL_WRAPPER_ID)?.remove();
+
+      // 받은 HTML 붙이기
+      const wrap = document.createElement("div");
+      wrap.id = PARENT_MODAL_WRAPPER_ID;
+      wrap.innerHTML = e.data.html;
+
+      const modal = wrap.querySelector("#modalBackdrop");
+      if (!modal) return;
+
+      // 부모에서 보이게
+      modal.classList.remove("hidden");
+      modal.classList.remove("z-[2000]");
+      modal.classList.add("z-[99999]");
+
+      // 닫기/배경닫기
+      const closeBtn = wrap.querySelector("#closeModal");
+      const backdrop = wrap.querySelector(".absolute.inset-0.bg-black\\/60");
+      const close = () => wrap.remove();
+
+      closeBtn?.addEventListener("click", close);
+      backdrop?.addEventListener("click", close);
+
+      document.body.appendChild(wrap);
+    });
+
+    
+    window.addEventListener("message", function (event) {
+      console.log("받음:", event.data);
+
+      if (event.data.type === "History") {        
+        const frame = document.getElementById("mainFrame");
+        console.log("frame", frame);
+        frame.style.height = `${event.data.height + 10}px`;
+      }
+    });
+  </script>
 </body>
 </html>
