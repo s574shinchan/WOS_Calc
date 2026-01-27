@@ -4,134 +4,122 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🐾 펫 계산기</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* ===== 다크모드 ===== */
-    body.dark-mode { background:#121212; color:#f0f0f0; }
-    .dark-mode .border{ border-color:#444 !important; }
-    .dark-mode .bg-white{ background:#2c2c2c !important; color:#f0f0f0 !important; }
-    .dark-mode .bg-gray-100{ background:#1e1e1e !important; }
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#dddddd !important; }
-    .dark-mode select,.dark-mode input{ color:#000 !important; }
-    .dark-mode table{ background:#2c2c2c; color:#f0f0f0; }
-    .dark-mode th,.dark-mode td{ border-color:#444 !important; }
-
-    /* ===== experts 카드 ===== */
-    .exp-card{
-      border:1px solid rgba(0,0,0,.08);
-      border-radius:16px;
-      background:#fff;
-      box-shadow:0 6px 18px rgba(15,23,42,.06);
-      transition: box-shadow .2s ease;
-      overflow:hidden; /* ✅ 제목바가 카드 테두리/라운드에 딱 붙도록 */
-    }
-    .exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
-    .muted{ font-size:12px; color:#6b7280; }
-
-    body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
-    body.dark-mode .muted{ color:#b7b7b7 !important; }
-    .dark-mode .bg-gray-100 { background-color:#1e1e1e !important;}
-    .exp-card img { transition: transform .2s ease; }
-    .exp-card:hover img { transform: scale(1.05); }
-
-    /* ✅ 카드 내부 제목바(스샷처럼) - 좌/우 테두리 이질감 제거 */
-    .card-head{
-      padding:10px 14px;
-      border-bottom:1px solid rgba(0,0,0,.08);
-      display:flex;
-      align-items:center;
-      gap:.5rem;
-    }
-    body.dark-mode .card-head{ border-color:#444 !important; }
-  </style>
-
-  <!-- 다크모드 상태 유지 -->
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/pets.css">
+  <script src="js/common.js"></script> 
 </head>
-<body class="bg-gray-100 p-2 font-sans text-sm">
-  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md space-y-5">
-    <h1 class="text-2xl font-bold text-gray-800">🐾 펫 계산기</h1>
+<body>
+  <div id="navMount"></div>
+    
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          
+          <h1 class="text-2xl font-bold text-gray-800">🐾 펫 계산기</h1>
+          <p>펫(등급/이름)별로 <b>현재 → 목표</b>를 지정하면, 필요한 <b>펫먹이/조련매뉴얼/활력의약/강화혈청</b>이 자동 합산됩니다.</p>
 
-    <p class="text-gray-600 text-sm">
-      펫(등급/이름)별로 <b>현재 → 목표</b>를 지정하면, 필요한 <b>펫먹이/조련매뉴얼/활력의약/강화혈청</b>이 자동 합산됩니다.
-    </p>
+          <!-- 보유량 -->
+          <div class="rounded-xl border border-black/10 p-3">
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-semibold">보유량</div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div class="flex items-center gap-2">
+                <label class="text-[12px] text-gray-600 w-24">보유 펫먹이</label>
+                <input type="number" id="own-펫먹이"
+                  class="flex-1 border rounded-lg px-3 py-2 text-sm"
+                  placeholder="0" min="0" />
+              </div>
 
-    <!-- 보유량 -->
-    <div class="rounded-xl border border-black/10 p-3">
-      <div class="flex items-center justify-between mb-2">
-        <div class="font-semibold">보유량</div>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-        <div class="flex items-center gap-2">
-          <label class="text-[12px] text-gray-600 w-24">보유 펫먹이</label>
-          <input type="number" id="own-펫먹이"
-            class="flex-1 border rounded-lg px-3 py-2 text-sm"
-            placeholder="0" min="0" />
-        </div>
+              <div class="flex items-center gap-2">
+                <label class="text-[12px] text-gray-600 w-24">보유 조련매뉴얼</label>
+                <input type="number" id="own-조련매뉴얼"
+                  class="flex-1 border rounded-lg px-3 py-2 text-sm"
+                  placeholder="0" min="0" />
+              </div>
 
-        <div class="flex items-center gap-2">
-          <label class="text-[12px] text-gray-600 w-24">보유 조련매뉴얼</label>
-          <input type="number" id="own-조련매뉴얼"
-            class="flex-1 border rounded-lg px-3 py-2 text-sm"
-            placeholder="0" min="0" />
-        </div>
+              <div class="flex items-center gap-2">
+                <label class="text-[12px] text-gray-600 w-24">보유 활력의약</label>
+                <input type="number" id="own-활력의약"
+                  class="flex-1 border rounded-lg px-3 py-2 text-sm"
+                  placeholder="0" min="0" />
+              </div>
 
-        <div class="flex items-center gap-2">
-          <label class="text-[12px] text-gray-600 w-24">보유 활력의약</label>
-          <input type="number" id="own-활력의약"
-            class="flex-1 border rounded-lg px-3 py-2 text-sm"
-            placeholder="0" min="0" />
-        </div>
-
-        <div class="flex items-center gap-2">
-          <label class="text-[12px] text-gray-600 w-24">보유 강화혈청</label>
-          <input type="number" id="own-강화혈청"
-            class="flex-1 border rounded-lg px-3 py-2 text-sm"
-            placeholder="0" min="0" />
-        </div>
-      </div>
-    </div>
-
-    <!-- 섹션별 카드 컨테이너 -->
-    <div id="petSections" class="space-y-4"></div>
-
-    <!-- 하단 총합 패널 -->
-    <div id="summaryPanel">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <!-- 총합 -->
-        <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">총합</div>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span id="sum-펫먹이">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span id="sum-조련매뉴얼">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span id="sum-활력의약">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span id="sum-강화혈청">0</span></div>
+              <div class="flex items-center gap-2">
+                <label class="text-[12px] text-gray-600 w-24">보유 강화혈청</label>
+                <input type="number" id="own-강화혈청"
+                  class="flex-1 border rounded-lg px-3 py-2 text-sm"
+                  placeholder="0" min="0" />
+              </div>
+            </div>
           </div>
-        </div>
-        <!-- 과부족 -->
-        <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">과부족</div>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span id="def-펫먹이">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span id="def-조련매뉴얼">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span id="def-활력의약">0</span></div>
-            <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span id="def-강화혈청">0</span></div>
+
+          <!-- 섹션별 카드 컨테이너 -->
+          <div id="petSections" class="space-y-4"></div>
+
+          <!-- 하단 총합 패널 -->
+          <div id="summaryPanel">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <!-- 총합 -->
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold mb-2">총합</div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span id="sum-펫먹이">0</span></div>
+                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span id="sum-조련매뉴얼">0</span></div>
+                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span id="sum-활력의약">0</span></div>
+                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span id="sum-강화혈청">0</span></div>
+                </div>
+              </div>
+              <!-- 과부족 -->
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold mb-2">과부족</div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span id="def-펫먹이">0</span></div>
+                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span id="def-조련매뉴얼">0</span></div>
+                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span id="def-활력의약">0</span></div>
+                  <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span id="def-강화혈청">0</span></div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <div class="flex justify-end mt-2">
+            <button id="btn-calc-total" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">총합계산</button>
+          </div>
+          
         </div>
       </div>
-    </div>
-
-    <div class="flex justify-end mt-2">
-      <button id="btn-calc-total" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">총합계산</button>
     </div>
   </div>
-
+  
+  <div id="footerMount"></div>
+	
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>   
   <!-- ===== 데이터 & 로직 ===== -->
   <script>
     // ===============================

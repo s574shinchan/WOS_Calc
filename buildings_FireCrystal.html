@@ -4,247 +4,226 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>건물 계산기</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* 다크모드 */
-    body.dark-mode { background:#121212; color:#f0f0f0; }
-    .dark-mode .border { border-color:#444 !important; }
-    .dark-mode .bg-white { background:#2c2c2c !important; color:#f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background:#1e1e1e !important; }
-    .dark-mode .text-gray-800, 
-    .dark-mode .text-gray-700, 
-    .dark-mode .text-gray-600 { color:#dddddd !important; }
-    .dark-mode table { background:#2c2c2c; color:#f0f0f0; }
-    .dark-mode th, 
-    .dark-mode td { border-color:#444 !important; }
-    .dark-mode select, 
-    .dark-mode select option,     
-    .dark-mode input,
-    .dark-mode #chkExpertA,
-    .dark-mode #chkExpertV,
-    .dark-mode #buffSelect,
-    .dark-mode #buffSelect option,
-    .dark-mode #buffSelect:disabled {
-      color:#fff !important; background:#2c2c2c !important;
-    }
-    
-    .dark-mode .svs-score-label,
-    .dark-mode .svs-score-value {
-      font-weight: 700;
-      color: #16AC7A !important;
-    }
-    /* experts 스타일 카드 */
-    .exp-card{
-      border:1px solid rgba(0,0,0,.08);
-      border-radius:16px;
-      background:#fff;
-      box-shadow:0 6px 18px rgba(15,23,42,.06);
-      transition: box-shadow .2s ease;
-    }
-    .exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
-    .muted{ font-size:12px; color:#6b7280; }
-    body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
-    body.dark-mode .muted{ color:#b7b7b7 !important; }
-    .building-imgbox{
-      background: transparent !important;
-      outline: 1px solid rgba(0,0,0,.12);
-    }
-
-    /* 다크모드 */
-    body.dark-mode .building-imgbox{
-      background: transparent !important;
-      outline: 1px solid rgba(255,255,255,.18);
-    }
-  </style>
   <script>
-    /* 다크모드 유지 */
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/building.css">
+  <script src="js/common.js"></script>  
 </head>
-<body class="bg-gray-100 p-2 font-sans text-sm">
-  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ 불의 수정 건물 계산기</h1>
-
-    <!-- 설명 -->
-    <div class="text-gray-600 mb-4 text-sm">
-      <div class="mb-4">
-        <p>각 건물 업그레이드에 필요한 자원(불수정, 정제, 고기, 나무, 석탄, 철광)과 건설시간을 계산합니다.</p>
-        <p>건물별로 현재/목표 레벨을 지정하면 자동 합산됩니다.</p>
-        <p>하단에 총합계에 건물의 필요합계들을 합산하여 표시합니다.</p>
-        <p>각 건물별 SVS 점수는 <span class="font-semibold text-blue-300">[불수정 소모점수 + 정제불수 소모점수 + 소요시간만큼 가속아이템을 사용할 경우]</span> 계산된 점수입니다.</p>
-      </div>
-			
-      <!-- 상단 그리드 -->
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-4">
-        <div>
-          <label class="block text-sm mb-1">건설속도(%)</label>
-          <input type="number" id="buildSpeed" min="0"
-                 class="border rounded p-2 text-sm w-full text-right"
-                 placeholder="0" />
-        </div>
-
-        <div>
-          <label class="block text-sm mb-1">펫 스킬</label>
-          <select id="buffSelect" class="w-full border rounded p-1 px-3 py-2">
-            <option>None</option>
-            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-sm mb-1">아그네스</label>
-          <select id="chkExpertA" class="w-full rounded-md border px-3 py-2">
-            <option>None</option>
-            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">발레리아</label>
-          <select id="chkExpertV" class="w-full rounded-md border px-2 py-2">
-            <option>None</option>
-            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
-            <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
-          </select>
-        </div>
-
-        <!-- 부집행관 -->
-        <div>
-          <div class="text-sm font-medium mb-1">부집행관 관직 버프</div>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" data-group="vp" data-vp="10"
-                    class="w-[85px] vp-btn px-4 py-2 rounded-md border">
-              10%
-            </button>
-            <button type="button" data-group="vp" data-vp="15"
-                    class="w-[85px] vp-btn px-4 py-2 rounded-md border">
-              15%
-            </button>
-          </div>
-        </div>
-
-        <!-- 서버버프 -->
-        <div>
-          <div class="text-sm font-medium mb-1">서버버프 (10%)</div>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" id="chkServerBuff"
-                    class="w-full toggle-btn px-4 py-2 rounded-md border"
-                    aria-pressed="false">
-              활성화
-            </button>
-          </div>
-        </div>
-
-        <!-- 시청버프 -->
-        <div>
-          <div class="inline-flex items-center font-semibold mb-1">시청버프</div>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" id="chkCityBuff"
-                    class="w-full toggle-btn px-4 py-2 rounded-md border"
-                    aria-pressed="false">
-              건설시간 20% 단축
-            </button>
-          </div>
-        </div>       
-      </div>
-    </div>
-
-    <!-- 건물 카드 그리드 -->    
-    <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4"></div>
-
-    <!-- 총합계 패널 (정적 DOM) -->
-    <div id="summaryPanel" class="mt-4">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          <!-- 총합 -->
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">총합</div>
-
-            <!-- 🔹 1줄: 불수정 | 정제불수 -->
-            <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
-              <div class="flex items-center gap-2 text-gray-600">
-                <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
-                <span id="sum-불수정" class="tabular-nums">0</span>
-              </div>
-              <div class="flex items-center gap-2 text-gray-600">
-              <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
-                <span id="sum-정제" class="tabular-nums">0</span>
-              </div>
-            </div>
-
-            <!-- 🔹 2줄: 고기 | 나무 | 석탄 | 철광 -->
-            <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
-              <div class="flex items-center gap-2 text-gray-600">
-              <img src="images/icon_Meet.webp" class="w-5 h-5" alt="불수정">
-                <span id="sum-고기" class="tabular-nums">0</span>
-              </div>
-              <div class="flex items-center gap-2 text-gray-600">
-              <img src="images/icon_Wood.webp" class="w-5 h-5" alt="불수정">
-                <span id="sum-나무" class="tabular-nums">0</span>
-              </div>
-              <div class="flex items-center gap-2 text-gray-600">
-              <img src="images/icon_Coal.webp" class="w-5 h-5" alt="불수정">
-                <span id="sum-석탄" class="tabular-nums">0</span>
-              </div>
-              <div class="flex items-center gap-2 text-gray-600 mb-2">
-              <img src="images/icon_Iron.webp" class="w-5 h-5" alt="불수정">
-                <span id="sum-철광" class="tabular-nums">0</span>
-              </div>
-            </div>
-
-            <!-- 🔹 구분선 -->
-            <div class="border-t border-gray-200 my-1"></div>
-            <div class="flex justify-between text-[13px] pt-1">
-              <span class="text-gray-600">건설시간</span>
-              <span id="sum-시간">0분</span>
-            </div>
-            <!-- 🔹 SVS 점수 -->
-            <div class="flex justify-between text-[13px] pt-1">
-              <span class="svs-score-label font-semibold">SVS 점수</span>
-              <span id="sum-svs" class="svs-score-value tabular-nums font-medium">0</span>
-              <span id="sum-svs-short" class="svs-score-value tabular-nums font-medium">0</span>
-            </div>
-          </div>
-
-          <!-- 보유량 -->
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="flex items-center justify-between mb-2">
-              <div class="font-semibold">보유량</div>
-            </div>
-            <div class="space-y-3">
-              <div>
-                <label for="owned-불수정" class="block text-[13px] text-gray-600 mb-1">보유 불수정</label>
-                <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
-              </div>
-              <div>
-                <label for="owned-정제" class="block text-[13px] text-gray-600 mb-1">보유 정제</label>
-                <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
-              </div>
-            </div>
-          </div>
+<body>
+  <div id="navMount"></div>
     
-          <!-- 과부족 -->
-          <div class="rounded-xl border border-black/10 p-3">
-            <div class="font-semibold mb-2">과부족</div>
-            <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
-              <div class="flex items-center gap-2 text-gray-600">
-                <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
-                <span id="def-불수정" class="tabular-nums">0</span>
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-2xl font-bold text-gray-800 mb-4">🏗️ 불의 수정 건물 계산기</h1>
+          <!-- 설명 -->
+          <div class="text-gray-600 mb-4 text-sm">
+            <div class="mb-4">
+              <p>각 건물 업그레이드에 필요한 자원(불수정, 정제, 고기, 나무, 석탄, 철광)과 건설시간을 계산합니다.</p>
+              <p>건물별로 현재/목표 레벨을 지정하면 자동 합산됩니다.</p>
+              <p>하단에 총합계에 건물의 필요합계들을 합산하여 표시합니다.</p>
+              <p>각 건물별 SVS 점수는 <span class="font-semibold text-blue-300">[불수정 소모점수 + 정제불수 소모점수 + 소요시간만큼 가속아이템을 사용할 경우]</span> 계산된 점수입니다.</p>
+            </div>
+
+            <!-- 상단 그리드 -->
+            <div class="text-gray-600 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-4">
+              <div>
+                <label class="block text-sm mb-1">건설속도(%)</label>
+                <input type="number" id="buildSpeed" min="0"
+                       class="border rounded p-2 text-sm w-full text-right"
+                       placeholder="0" />
               </div>
-              <div class="flex items-center gap-2 text-gray-600">
-              <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
-                <span id="def-정제" class="tabular-nums">0</span>
+
+              <div>
+                <label class="block text-sm mb-1">펫 스킬</label>
+                <select id="buffSelect" class="w-full border rounded p-1 px-3 py-2">
+                  <option>None</option>
+                  <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+                </select>
               </div>
+
+              <div>
+                <label class="block text-sm mb-1">아그네스</label>
+                <select id="chkExpertA" class="w-full rounded-md border px-3 py-2">
+                  <option>None</option>
+                  <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm mb-1">발레리아</label>
+                <select id="chkExpertV" class="w-full rounded-md border px-2 py-2">
+                  <option>None</option>
+                  <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+                  <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+                </select>
+              </div>
+
+              <!-- 부집행관 -->
+              <div>
+                <div class="text-sm font-medium mb-1">부집행관 관직 버프</div>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" data-group="vp" data-vp="10"
+                          class="w-[85px] vp-btn px-4 py-2 rounded-md border">
+                    10%
+                  </button>
+                  <button type="button" data-group="vp" data-vp="15"
+                          class="w-[85px] vp-btn px-4 py-2 rounded-md border">
+                    15%
+                  </button>
+                </div>
+              </div>
+
+              <!-- 서버버프 -->
+              <div>
+                <div class="text-sm font-medium mb-1">서버버프 (10%)</div>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" id="chkServerBuff"
+                          class="w-full toggle-btn px-4 py-2 rounded-md border"
+                          aria-pressed="false">
+                    활성화
+                  </button>
+                </div>
+              </div>
+
+              <!-- 시청버프 -->
+              <div>
+                <div class="inline-flex items-center font-semibold mb-1">시청버프</div>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" id="chkCityBuff"
+                          class="w-full toggle-btn px-4 py-2 rounded-md border"
+                          aria-pressed="false">
+                    건설시간 20% 단축
+                  </button>
+                </div>
+              </div>       
             </div>
           </div>
+
+          <!-- 건물 카드 그리드 -->    
+          <div id="buildingGridBody" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4"></div>
+
+          <!-- 총합계 패널 (정적 DOM) -->
+          <div id="summaryPanel" class="mt-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                <!-- 총합 -->
+                <div class="rounded-xl border border-black/10 p-3">
+                  <div class="font-semibold mb-2">총합</div>
+
+                  <!-- 🔹 1줄: 불수정 | 정제불수 -->
+                  <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+                    <div class="flex items-center gap-2 text-gray-600">
+                      <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
+                      <span id="sum-불수정" class="tabular-nums">0</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+                      <span id="sum-정제" class="tabular-nums">0</span>
+                    </div>
+                  </div>
+
+                  <!-- 🔹 2줄: 고기 | 나무 | 석탄 | 철광 -->
+                  <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+                    <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Meet.webp" class="w-5 h-5" alt="불수정">
+                      <span id="sum-고기" class="tabular-nums">0</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Wood.webp" class="w-5 h-5" alt="불수정">
+                      <span id="sum-나무" class="tabular-nums">0</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_Coal.webp" class="w-5 h-5" alt="불수정">
+                      <span id="sum-석탄" class="tabular-nums">0</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600 mb-2">
+                    <img src="images/icon_Iron.webp" class="w-5 h-5" alt="불수정">
+                      <span id="sum-철광" class="tabular-nums">0</span>
+                    </div>
+                  </div>
+
+                  <!-- 🔹 구분선 -->
+                  <div class="border-t border-gray-200 my-1"></div>
+                  <div class="flex justify-between text-[13px] pt-1">
+                    <span class="text-gray-600">건설시간</span>
+                    <span id="sum-시간">0분</span>
+                  </div>
+                  <!-- 🔹 SVS 점수 -->
+                  <div class="flex justify-between text-[13px] pt-1">
+                    <span class="svs-score-label font-semibold">SVS 점수</span>
+                    <span id="sum-svs" class="svs-score-value tabular-nums font-medium">0</span>
+                    <span id="sum-svs-short" class="svs-score-value tabular-nums font-medium">0</span>
+                  </div>
+                </div>
+
+                <!-- 보유량 -->
+                <div class="rounded-xl border border-black/10 p-3">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="font-semibold">보유량</div>
+                  </div>
+                  <div class="space-y-3">
+                    <div>
+                      <label for="owned-불수정" class="block text-[13px] text-gray-600 mb-1">보유 불수정</label>
+                      <input type="number" id="owned-불수정" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+                    </div>
+                    <div>
+                      <label for="owned-정제" class="block text-[13px] text-gray-600 mb-1">보유 정제</label>
+                      <input type="number" id="owned-정제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 과부족 -->
+                <div class="rounded-xl border border-black/10 p-3">
+                  <div class="font-semibold mb-2">과부족</div>
+                  <div class="grid grid-cols-2 gap-x-4 text-[13px] mb-1">
+                    <div class="flex items-center gap-2 text-gray-600">
+                      <img src="images/icon_fc.webp" class="w-5 h-5" alt="불수정">              
+                      <span id="def-불수정" class="tabular-nums">0</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                    <img src="images/icon_RefindFC.webp" class="w-5 h-5" alt="정제불수">
+                      <span id="def-정제" class="tabular-nums">0</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="flex justify-end mt-2">
+            <button id="btnCalc" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">총합계산</button>
+          </div>
         </div>
+      </div>
     </div>
-    <div class="flex justify-end mt-2">
-      <button id="btnCalc" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">총합계산</button>
-    </div>
+
   </div>	
+
+  <div id="footerMount"></div>
+	
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>  
   <script>
     // ✅ 활성/비활성 스타일 클래스(기본 테마 유지)
     const ACTIVE = ['bg-blue-500','text-white','border-blue-500'];

@@ -4,134 +4,127 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>영웅장비[마스터리]</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* ========== 다크모드 ========== */
-    body.dark-mode { background-color:#121212; color:#f0f0f0; }
-    .dark-mode .border{ border-color:#444 !important; }
-    .dark-mode .bg-white{ background-color:#2c2c2c !important; color:#f0f0f0 !important; }
-    .dark-mode .bg-gray-100{ background-color:#1e1e1e !important; }
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#dddddd !important; }
-    .dark-mode select,.dark-mode input{ color:#000 !important; }
-    .dark-mode table{ background:#2c2c2c; color:#f0f0f0; }
-    .dark-mode th,.dark-mode td{ border-color:#444 !important; }
-    .dark-mode .text-red-600 {
-      color: #f87171 !important; /* Tailwind의 red-600 색상 */
-    }
-    
-    /* ========== experts 카드 스타일 ========== */
-    .exp-card{
-      border:1px solid rgba(0,0,0,.08);
-      border-radius:16px;
-      background:#fff;
-      box-shadow:0 6px 18px rgba(15,23,42,.06);
-      transition: box-shadow .2s ease;
-    }
-    .exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
-    .muted{ font-size:12px; color:#6b7280; }
-
-    body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
-    body.dark-mode .muted{ color:#b7b7b7 !important; }
-    .tabular-nums{ font-variant-numeric: tabular-nums; }
-    body.dark-mode .svs-score-label,
-    body.dark-mode .svs-score-value {
-      font-weight: 700;
-      color: #16AC7A !important;
-    }    
-  </style>
-
-  <!-- 다크모드 상태 유지 -->
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/heroes.css">
+  <script src="js/common.js"></script> 
 </head>
-<body class="bg-gray-100 p-2 font-sans text-sm">
-  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md space-y-6">
-    <h1 class="text-2xl font-bold text-gray-800">🧝 영웅장비[마스터리]</h1>
+<body>
+  <div id="navMount"></div>
+    
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-2xl font-bold text-gray-800">🧝 영웅장비[마스터리]</h1>
 
-    <div class="text-gray-600 text-sm">
-      <p>현재레벨과 목표레벨을 선택하면, 업그레이드에 필요한 자원(마스터리석/레전드 장비)을 계산합니다.</p>
-      <p>각 항목의 ‘필요 합계’는 레벨 선택 시 자동 갱신됩니다. </p>
-      <p>각 항목별로 체크를 하면 체크항목별 필요합계를 더하여 총합계에 표시됩니다.</p>
-    </div>
+          <div class="text-gray-600 text-sm">
+            <p>현재레벨과 목표레벨을 선택하면, 업그레이드에 필요한 자원(마스터리석/레전드 장비)을 계산합니다.</p>
+            <p>각 항목의 ‘필요 합계’는 레벨 선택 시 자동 갱신됩니다. </p>
+            <p>각 항목별로 체크를 하면 체크항목별 필요합계를 더하여 총합계에 표시됩니다.</p>
+          </div>
 
-    <!-- ===================== 📙 마스터리 ===================== -->
-    <div class="p-4">
-      <form id="masteryForm" class="space-y-3">
-        <div class="mb-4 flex items-center justify-start gap-2 w-full">
-          <label class="text-sm font-medium whitespace-nowrap">발레리아</label>
-          <select id="chkExpertV" class="w-[120px] border rounded-md px-2 py-1.5">
-            <option>None</option>
-            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
-            <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
-          </select>
-          <!-- ✅ 레벨 설명 표시 영역 -->
-          <span id="expertDesc" class="svs-score-value text-sm font-semibold hidden px-4"></span>          
-        </div>
-        <div id="masteryGrid" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
-
-        <!-- 📙 마스터리 총합계 -->
-        <div id="masteryTotals">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div class="rounded-xl border border-black/10 p-3">
-              <div class="font-semibold mb-2">필요 총합</div>
-
-              <!-- 사전형 4컬럼: 라벨/값 | 라벨/값 -->
-              <div class="grid items-center text-[12px]
-                          gap-x-3 gap-y-1
-                          grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)] w-full">
-
-                <!-- 1행 -->
-                <div class="text-gray-600">마스터리석</div>
-                <div id="ms-tot-stone" class="tabular-nums font-medium text-right">0</div>
-                <div class="text-gray-600">레전드장비</div>
-                <div id="ms-tot-leg" class="tabular-nums font-medium text-right">0</div>
-
-                <!-- 구분선(전체 폭) -->
-                <div class="col-span-4 border-t border-gray-200 mt-1"></div>
-
-                <!-- SVS 줄: 왼쪽 3칸(라벨 폭) + 마지막 칸 값 우측정렬 -->
-                <div class="svs-score-label pt-1">SVS 점수</div>                            
-                <span id="svs-long"  class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>                
-                <div></div>
-                <span id="svs-short" class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>
+          <!-- ===================== 📙 마스터리 ===================== -->
+          <div class="p-4">
+            <form id="masteryForm" class="space-y-3">
+              <div class="mb-4 flex items-center justify-start gap-2 w-full">
+                <label class="text-sm font-medium whitespace-nowrap">발레리아</label>
+                <select id="chkExpertV" class="w-[120px] border rounded-md px-2 py-1.5">
+                  <option>None</option>
+                  <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+                  <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+                </select>
+                <!-- ✅ 레벨 설명 표시 영역 -->
+                <span id="expertDesc" class="svs-score-value text-sm font-semibold hidden px-4"></span>          
               </div>
-            </div>
+              <div id="masteryGrid" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
 
-            <div class="rounded-xl border border-black/10 p-3">
-              <div class="font-semibold mb-2">보유량</div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-[12px] text-gray-600 mb-1">마스터리석</label>
-                  <input type="number" id="owned-마스터리석" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+              <!-- 📙 마스터리 총합계 -->
+              <div id="masteryTotals">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div class="rounded-xl border border-black/10 p-3">
+                    <div class="font-semibold mb-2">필요 총합</div>
+
+                    <!-- 사전형 4컬럼: 라벨/값 | 라벨/값 -->
+                    <div class="grid items-center text-[12px]
+                                gap-x-3 gap-y-1
+                                grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)] w-full">
+
+                      <!-- 1행 -->
+                      <div class="text-gray-600">마스터리석</div>
+                      <div id="ms-tot-stone" class="tabular-nums font-medium text-right">0</div>
+                      <div class="text-gray-600">레전드장비</div>
+                      <div id="ms-tot-leg" class="tabular-nums font-medium text-right">0</div>
+
+                      <!-- 구분선(전체 폭) -->
+                      <div class="col-span-4 border-t border-gray-200 mt-1"></div>
+
+                      <!-- SVS 줄: 왼쪽 3칸(라벨 폭) + 마지막 칸 값 우측정렬 -->
+                      <div class="svs-score-label pt-1">SVS 점수</div>                            
+                      <span id="svs-long"  class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>                
+                      <div></div>
+                      <span id="svs-short" class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>
+                    </div>
+                  </div>
+
+                  <div class="rounded-xl border border-black/10 p-3">
+                    <div class="font-semibold mb-2">보유량</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label class="block text-[12px] text-gray-600 mb-1">마스터리석</label>
+                        <input type="number" id="owned-마스터리석" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                      </div>
+                      <div>
+                        <label class="block text-[12px] text-gray-600 mb-1">레전드장비</label>
+                        <input type="number" id="owned-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="rounded-xl border border-black/10 p-3">
+                    <div class="font-semibold mb-2">과부족</div>
+                    <div class="flex justify-between text-[12px]">
+                      <span class="text-gray-600">마스터리석</span>
+                      <span id="ms-def-stone" class="tabular-nums">0</span>
+                    </div>
+                    <div class="flex justify-between text-[12px]">
+                      <span class="text-gray-600">레전드장비</span>
+                      <span id="ms-def-leg" class="tabular-nums">0</span>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label class="block text-[12px] text-gray-600 mb-1">레전드장비</label>
-                  <input type="number" id="owned-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-                </div>
               </div>
-            </div>
-            <div class="rounded-xl border border-black/10 p-3">
-              <div class="font-semibold mb-2">과부족</div>
-              <div class="flex justify-between text-[12px]">
-                <span class="text-gray-600">마스터리석</span>
-                <span id="ms-def-stone" class="tabular-nums">0</span>
-              </div>
-              <div class="flex justify-between text-[12px]">
-                <span class="text-gray-600">레전드장비</span>
-                <span id="ms-def-leg" class="tabular-nums">0</span>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
-
+  <div id="footerMount"></div>
+	
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>   
   <!-- ========== 공통 유틸 & 프레임 통신 ========== -->
   <script>
     function sendHeightToParent() {

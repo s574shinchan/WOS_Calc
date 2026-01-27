@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WOS 재료모음</title>
+  <script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>    
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* 이미지 확대 시 커서 변경 */
@@ -13,93 +21,115 @@
       -webkit-user-drag: none;
     }
   </style>
+  <link rel="stylesheet" href="css/common.css">
+  <script src="js/common.js"></script>    
+</head>
+<body>
+  <div id="navMount"></div>  
+  
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-2xl font-bold text-gray-800">📘 각종재료수 이미지 자료</h1>
+
+          <!-- 이미지 섹션 -->
+          <!-- FC 1 ~ 10 -->
+          <details class="bg-white border border-blue-300 rounded-md p-4">
+            <summary class="text-lg font-bold text-blue-700 mb-2">🏤 FC1 ~ 10 재료</summary>
+            <div id="불의수정" class="mt-3">
+              <img src="images/FC1-10.webp" alt="FC1~10"
+                   data.full="images/FC1-10.webp"
+                   loading="lazy"
+                   class="w.full h-auto rounded shadow cursor-pointer"
+                   onclick="openImage(this)" />
+            </div>
+          </details>
+
+          <!-- 영주장비 -->
+          <details class="bg-white border border-blue-300 rounded-md p-4">
+            <summary class="text-lg font-bold text-blue-700 mb-2">🛡 영주장비재료</summary>
+            <div id="영주장비재료" class="mt-3">
+              <img src="images/영주장비.webp" alt="영주장비재료"
+                   data.full="images/영주장비.webp"
+                   loading="lazy"
+                   class="w.full h-auto rounded shadow cursor-pointer"
+                   onclick="openImage(this)" />
+            </div>
+          </details>
+
+          <!-- 영주보석 -->
+          <details class="bg-white border border-blue-300 rounded-md p-4">
+            <summary class="text-lg font-bold text-blue-700 mb-3">💎 영주보석재료</summary>
+            <div class="overflow-hidden">
+              <img src="images/영주보석.webp" alt="영주보석재료"
+                   data.full="images/영주보석.webp"
+                   loading="lazy"
+                   class="w.full h-auto rounded shadow cursor-pointer"
+                   onclick="openImage(this)" />
+            </div>
+          </details>
+
+          <!-- 영웅장비 -->
+          <details class="bg-white border border-blue-300 rounded-md p-4">
+            <summary class="text-lg font-bold text-blue-700 mb-3">🦸 영웅장비재료</summary>
+            <div class="overflow-hidden">
+              <img src="images/영웅장비단련_상세.webp" alt="영웅장비재료"
+                   data.full="images/영웅장비재료.webp"
+                   loading="lazy"
+                   class="w.full h-auto rounded shadow cursor-pointer"
+                   onclick="openImage(this)" />
+            </div>
+          </details>
+
+          <!-- 연총미션 -->
+          <details class="bg-white border border-blue-300 rounded-md p-4">
+            <summary class="text-lg font-bold text-blue-700 mb-3">🎯 연총미션목록</summary>
+            <div class="overflow-hidden">
+              <img src="images/연총미션.webp" alt="연총미션"
+                   data.full="images/연총미션.webp"
+                   loading="lazy"
+                   class="w.full h-auto rounded shadow cursor-pointer"
+                   onclick="openImage(this)" />
+            </div>
+          </details>
+
+          <!-- 프로스트 드래곤 엠페러 -->
+          <details class="bg-white border border-blue-300 rounded-md p-4">
+            <summary class="text-lg font-bold text-blue-700 mb-3">🐉 프로스트 드래곤 엠페러</summary>
+            <div class="overflow-hidden">
+              <img src="images/Tyrant.webp" alt="Tyrant"
+                   data.full="images/Tyrant.webp"
+                   loading="lazy"
+                   class="w.full h-auto rounded shadow cursor-pointer"
+                   onclick="openImage(this)" />
+            </div>
+          </details>
+    
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="footerMount"></div>
+	
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
     });
   </script>
-</head>
-<body class="bg-gray-100 p-2 font-sans text-sm">
-  <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-6">
-    <h1 class="text-2xl font-bold text-gray-800">📘 각종재료수 이미지 자료</h1>
-
-    <!-- 이미지 섹션 -->
-    <!-- FC 1 ~ 10 -->
-    <details class="bg-white border border-blue-300 rounded-md p-4">
-      <summary class="text-lg font-bold text-blue-700 mb-2">🏤 FC1 ~ 10 재료</summary>
-      <div id="불의수정" class="mt-3">
-        <img src="images/FC1-10.webp" alt="FC1~10"
-             data.full="images/FC1-10.webp"
-             loading="lazy"
-             class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this)" />
-      </div>
-    </details>
-
-    <!-- 영주장비 -->
-    <details class="bg-white border border-blue-300 rounded-md p-4">
-      <summary class="text-lg font-bold text-blue-700 mb-2">🛡 영주장비재료</summary>
-      <div id="영주장비재료" class="mt-3">
-        <img src="images/영주장비.webp" alt="영주장비재료"
-             data.full="images/영주장비.webp"
-             loading="lazy"
-             class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this)" />
-      </div>
-    </details>
-
-    <!-- 영주보석 -->
-    <details class="bg-white border border-blue-300 rounded-md p-4">
-      <summary class="text-lg font-bold text-blue-700 mb-3">💎 영주보석재료</summary>
-      <div class="overflow-hidden">
-        <img src="images/영주보석.webp" alt="영주보석재료"
-             data.full="images/영주보석.webp"
-             loading="lazy"
-             class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this)" />
-      </div>
-    </details>
-
-    <!-- 영웅장비 -->
-    <details class="bg-white border border-blue-300 rounded-md p-4">
-      <summary class="text-lg font-bold text-blue-700 mb-3">🦸 영웅장비재료</summary>
-      <div class="overflow-hidden">
-        <img src="images/영웅장비단련_상세.webp" alt="영웅장비재료"
-             data.full="images/영웅장비재료.webp"
-             loading="lazy"
-             class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this)" />
-      </div>
-    </details>
-
-    <!-- 연총미션 -->
-    <details class="bg-white border border-blue-300 rounded-md p-4">
-      <summary class="text-lg font-bold text-blue-700 mb-3">🎯 연총미션목록</summary>
-      <div class="overflow-hidden">
-        <img src="images/연총미션.webp" alt="연총미션"
-             data.full="images/연총미션.webp"
-             loading="lazy"
-             class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this)" />
-      </div>
-    </details>
-    
-    <!-- 프로스트 드래곤 엠페러 -->
-    <details class="bg-white border border-blue-300 rounded-md p-4">
-      <summary class="text-lg font-bold text-blue-700 mb-3">🐉 프로스트 드래곤 엠페러</summary>
-      <div class="overflow-hidden">
-        <img src="images/Tyrant.webp" alt="Tyrant"
-             data.full="images/Tyrant.webp"
-             loading="lazy"
-             class="w.full h-auto rounded shadow cursor-pointer"
-             onclick="openImage(this)" />
-      </div>
-    </details>
-    
-  </div>
-
+  
   <!-- 🔍 이미지 뷰어 모달 -->
   <div id="imageViewer"
        class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">

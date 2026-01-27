@@ -1,0 +1,30 @@
+/* CSS Document */
+.dark-mode table { background-color:#2c2c2c; color:#f0f0f0; }
+.dark-mode th, .dark-mode td { border-color:#444 !important; }
+.dark-mode thead th { color:#000 !important; }
+.dark-mode summary { background-color:#333 !important; color:#fff !important; }
+.dark-mode ul li { color:#ddd; }
+.dark-mode select option { color:#000 !important; }
+.dark-mode select { color:#000 !important; }
+.dark-mode input { color:#000 !important; }
+/* ========== experts 스타일 카드 ========== */
+.exp-card{
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+  transition: box-shadow .2s ease;
+}
+.exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
+.exp-divider{ border-color:rgba(0,0,0,.08); }
+.muted{ font-size:12px; color:#6b7280; }
+
+/* 다크모드 카드 보정 */
+body.dark-mode .exp-card{ background-color:#2c2c2c !important; border-color:#444 !important; }
+body.dark-mode .exp-divider{ border-color:#444 !important; }
+body.dark-mode .muted{ color:#b7b7b7 !important; }
+body.dark-mode .svs-score-label,
+body.dark-mode .svs-score-value {
+  font-weight: 700;
+  color: #16AC7A !important;
+}

@@ -1,0 +1,41 @@
+.dark-mode table { background:#2c2c2c; color:#f0f0f0; }
+.dark-mode th, 
+.dark-mode td { border-color:#444 !important; }
+.dark-mode select, 
+.dark-mode select option,     
+.dark-mode input,
+.dark-mode #chkExpertA,
+.dark-mode #chkExpertV,
+.dark-mode #buffSelect,
+.dark-mode #buffSelect option,
+.dark-mode #buffSelect:disabled {
+  color:#fff !important; background:#2c2c2c !important;
+}
+
+.dark-mode .svs-score-label,
+.dark-mode .svs-score-value {
+  font-weight: 700;
+  color: #16AC7A !important;
+}
+/* experts 스타일 카드 */
+.exp-card{
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+  transition: box-shadow .2s ease;
+}
+.exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
+.muted{ font-size:12px; color:#6b7280; }
+body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
+body.dark-mode .muted{ color:#b7b7b7 !important; }
+.building-imgbox{
+  background: transparent !important;
+  outline: 1px solid rgba(0,0,0,.12);
+}
+
+/* 다크모드 */
+body.dark-mode .building-imgbox{
+  background: transparent !important;
+  outline: 1px solid rgba(255,255,255,.18);
+}

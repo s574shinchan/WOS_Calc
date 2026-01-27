@@ -4,116 +4,118 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>장비 계산기</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* ========== 다크모드 ========== */
-    body.dark-mode { background-color:#121212; color:#f0f0f0; }
-    .dark-mode .border{ border-color:#444 !important; }
-    .dark-mode .bg-white{ background-color:#2c2c2c !important; color:#f0f0f0 !important; }
-    .dark-mode .bg-gray-100{ background-color:#1e1e1e !important; }
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#dddddd !important; }
-    .dark-mode select,.dark-mode input{ color:#000 !important; }
-    .dark-mode table{ background:#2c2c2c; color:#f0f0f0; }
-    .dark-mode th,.dark-mode td{ border-color:#444 !important; }
-
-    /* ========== experts 카드 스타일 ========== */
-    .exp-card{
-      border:1px solid rgba(0,0,0,.08);
-      border-radius:16px;
-      background:#fff;
-      box-shadow:0 6px 18px rgba(15,23,42,.06);
-      transition: box-shadow .2s ease;
-    }
-    .exp-card:hover{ box-shadow:0 10px 26px rgba(15,23,42,.12); }
-    .muted{ font-size:12px; color:#6b7280; }
-
-    body.dark-mode .exp-card{ background:#2c2c2c !important; border-color:#444 !important; }
-    body.dark-mode .muted{ color:#b7b7b7 !important; }
-  </style>
-
-  <!-- 다크모드 상태 유지 -->
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/heroes.css">  
+  <script src="js/common.js"></script>   
 </head>
-<body class="bg-gray-100 p-2 font-sans text-sm">
-  <div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md space-y-6">
-    <h1 class="text-2xl font-bold text-gray-800">🛡️ 장비 계산기</h1>
+<body>
+  <div id="navMount"></div>
+    
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-2xl font-bold text-gray-800">🛡️ 장비 계산기</h1>
 
-    <div class="text-gray-600 text-sm">
-      <p>현재 등급과 목표 등급을 선택하면, 업그레이드에 필요한 자원(합금/설계도면/광택제/달빛앰버)을 계산합니다.</p>
-      <p>각 항목 우측의 ‘필요 합계’는 현재 등급과 목표 등급을 선택 시 자동 갱신됩니다.</p>
-      <p>각 항목을 체크할 경우 하단에 총합계에 각 항목 필요합계들을 합산하여 표시합니다.</p>
-    </div>
-
-    <!-- 장비 카드 그리드 -->
-    <div id="gearGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-
-    <!-- 하단 총합 패널 -->
-    <div id="summaryPanel" class="mt-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        
-        <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">총합</div>
-          <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="sum-합금">0</span></div>
-          <div class="font-semibold mb-2"></div>
-          <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="sum-설계도면">0</span></div>
-          <div class="font-semibold mb-2"></div>
-          <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="sum-광택제">0</span></div>
-          <div class="font-semibold mb-2"></div>
-          <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="sum-달빛앰버">0</span></div>                 
-        </div>
-
-        <div class="rounded-xl border border-black/10 p-3">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
-            <span class="muted">입력 시 자동 반영</span>              
+          <div class="text-gray-600 text-sm">
+            <p>현재 등급과 목표 등급을 선택하면, 업그레이드에 필요한 자원(합금/설계도면/광택제/달빛앰버)을 계산합니다.</p>
+            <p>각 항목 우측의 ‘필요 합계’는 현재 등급과 목표 등급을 선택 시 자동 갱신됩니다.</p>
+            <p>각 항목을 체크할 경우 하단에 총합계에 각 항목 필요합계들을 합산하여 표시합니다.</p>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <div>
-                <label class="block text-[13px] text-gray-600 mb-1">보유 합금</label>
-                <input type="number" id="owned-합금" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+          <!-- 장비 카드 그리드 -->
+          <div id="gearGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+
+          <!-- 하단 총합 패널 -->
+          <div id="summaryPanel" class="mt-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold mb-2">총합</div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="sum-합금">0</span></div>
+                <div class="font-semibold mb-2"></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="sum-설계도면">0</span></div>
+                <div class="font-semibold mb-2"></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="sum-광택제">0</span></div>
+                <div class="font-semibold mb-2"></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="sum-달빛앰버">0</span></div>                 
               </div>
-              <div>
-                <label class="block text-[13px] text-gray-600 mb-1">보유 설계도면</label>
-                <input type="number" id="owned-설계도면" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
+                  <span class="muted">입력 시 자동 반영</span>              
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <div>
+                      <label class="block text-[13px] text-gray-600 mb-1">보유 합금</label>
+                      <input type="number" id="owned-합금" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                    </div>
+                    <div>
+                      <label class="block text-[13px] text-gray-600 mb-1">보유 설계도면</label>
+                      <input type="number" id="owned-설계도면" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                    </div>
+                  </div>
+                  <div>
+                    <div>
+                      <label class="block text-[13px] text-gray-600 mb-1">보유 광택제</label>
+                      <input type="number" id="owned-광택제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                    </div>
+                    <div>
+                      <label class="block text-[13px] text-gray-600 mb-1">보유 달빛앰버</label>
+                      <input type="number" id="owned-앰버" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div>
-              <div>
-                <label class="block text-[13px] text-gray-600 mb-1">보유 광택제</label>
-                <input type="number" id="owned-광택제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold mb-2">과부족</div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="def-합금">0</span></div>
+                <div class="font-semibold mb-2"></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="def-설계도면">0</span></div>
+                <div class="font-semibold mb-2"></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="def-광택제">0</span></div>
+                <div class="font-semibold mb-2"></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="def-달빛앰버">0</span></div>
               </div>
-              <div>
-                <label class="block text-[13px] text-gray-600 mb-1">보유 달빛앰버</label>
-                <input type="number" id="owned-앰버" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
-              </div>
+
             </div>
           </div>
         </div>
-        
-        <div class="rounded-xl border border-black/10 p-3">
-          <div class="font-semibold mb-2">과부족</div>
-          <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="def-합금">0</span></div>
-          <div class="font-semibold mb-2"></div>
-          <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="def-설계도면">0</span></div>
-          <div class="font-semibold mb-2"></div>
-          <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="def-광택제">0</span></div>
-          <div class="font-semibold mb-2"></div>
-          <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="def-달빛앰버">0</span></div>
-        </div>
-        
       </div>
     </div>
-    
   </div>
+  
+  <div id="footerMount"></div>
 
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>
   <!-- ========== 데이터 & 로직 ========== -->
   <script>
     const gearSlots = ["장비1(창)", "장비2(창)", "장비3(방)", "장비4(방)", "장비5(궁)", "장비6(궁)"];

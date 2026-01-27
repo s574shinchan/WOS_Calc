@@ -2,7 +2,17 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>이민예측</title>
+    <script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: sans-serif;
@@ -37,32 +47,53 @@
       text-align: center;
     }
   </style>
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+  <link rel="stylesheet" href="css/transfer.css">
+  <script src="js/common.js"></script>   
 </head>
 <body>
-  <div class="card">
-    <h2>📊 이민예상범위</h2>
-    <div class="text-gray-700 text-sm text-center mb-4">
-      <p>26년 2월 이후 이민 예측 정보는 12T관련 이슈가 있어, 당장에 예측할 수 없습니다.</p>
-      <p>12T가 출시되어도 서버 진행도가 어디까지 오픈될지도 미지수 입니다.</p>
-      <p>차후 두번째 12T가 포함될 서버들의 진행도 또한 알 수 없습니다.</p>
-      <p>즉, 2월은 12T를 배제하고 예측했지만, 3월이민의 경우 예측불허 상태입니다.</p>
-      <p>　</p>
-      <p>기준일자 : 이민 채팅이 열리는 일요일</p>
-      <p>다음 세대 영웅이 적혀있는 경우 : 기준일 다음날인 월요일에 해당 세대 시작</p>
-      <p>└ 월요일에 일일혜택 보상 영웅이 변경되었는지 확인가능</p>
-      <p>이전까지의 데이터를 기반으로 예측한 정보이므로 100% 정확하지 않습니다.</p>
-      <p>이웃왕국 범위가 잘못된 부분이나 누락된 부분이 있다면, 우측상단 오픈카톡으로 알려주시면 반영하겠습니다.</p>
+  <div id="navMount"></div>
+  
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-xl md:text-2xl font-bold text-gray-700">📊 이민예상범위</h1>
+          <div class="text-gray-700 text-sm mb-4">
+            <p>26년 2월 이후 이민 예측 정보는 12T관련 이슈가 있어, 당장에 예측할 수 없습니다.</p>
+            <p>12T가 출시되어도 서버 진행도가 어디까지 오픈될지도 미지수 입니다.</p>
+            <p>차후 두번째 12T가 포함될 서버들의 진행도 또한 알 수 없습니다.</p>
+            <p>즉, 2월은 12T를 배제하고 예측했지만, 3월이민의 경우 예측불허 상태입니다.</p>
+            <p>　</p>
+            <p>기준일자 : 이민 채팅이 열리는 일요일</p>
+            <p>다음 세대 영웅이 적혀있는 경우 : 기준일 다음날인 월요일에 해당 세대 시작</p>
+            <p>└ 월요일에 일일혜택 보상 영웅이 변경되었는지 확인가능</p>
+            <p>이전까지의 데이터를 기반으로 예측한 정보이므로 100% 정확하지 않습니다.</p>
+            <p>이웃왕국 범위가 잘못된 부분이나 누락된 부분이 있다면, 우측상단 오픈카톡으로 알려주시면 반영하겠습니다.</p>
+          </div>
+          <div id="sheet-table">⏳ 데이터를 불러오는 중...</div>
+        </div>
+      </div>
     </div>
-    <div id="sheet-table">⏳ 데이터를 불러오는 중...</div>
   </div>
 
+  <div id="footerMount"></div>
+
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>   
   <script>
     function sendHeightToParent() {
       const height = document.body.scrollHeight + 10;

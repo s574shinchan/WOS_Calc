@@ -4,227 +4,196 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>영주보석 계산기</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .muted{color:#6b7280}
-    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
-    .inline-label{display:flex;align-items:center;gap:.5rem}
-    .tabular-nums{font-variant-numeric: tabular-nums}
-    select.pill{height:32px}
-    .err{color:#b45309}
-
-    /* ✅ 다크모드 */
-    body.dark-mode { background-color:#121212; color:#f0f0f0; }
-    .dark-mode .border{ border-color:#444 !important; }
-    .dark-mode .bg-white{ background-color:#2c2c2c !important; color:#f0f0f0 !important; }
-    .dark-mode .bg-gray-100{ background-color:#1e1e1e !important; }
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{ color:#f0f0f0 !important; }
-    .dark-mode .text-blue-700{ color:#66b0ff !important; }
-    .dark-mode .text-green-700{ color:#79e68c !important; }
-    .dark-mode .text-purple-700{ color:#bfa6ff !important; }
-    .dark-mode table{ background-color:#2c2c2c; color:#f0f0f0; }
-    .dark-mode th,.dark-mode td{ border-color:#444 !important; }
-    .dark-mode thead th{ color:#f0f0f0 !important; }
-    .dark-mode .bg-blue-100,.dark-mode .bg-gray-50{ background-color:#2e2e2e !important; }
-    .dark-mode select option,.dark-mode select,.dark-mode input{ color:#000 !important; }
-  
-    /* ✅ 패널/카드/모달 기본(이 파일에서 누락된 클래스 보완) */
-    .panel{ background:#fff; border:1px solid #e5e7eb; }
-    .card { background:#fff; border:1px solid #e5e7eb; }
-    .modal{ background:#ffffff; border:1px solid #e5e7eb; box-shadow: 0 18px 60px rgba(0,0,0,.45); }
-    /* 이미지 타일/빈칸 배경(모달/카드 공통) */
-    .tile-bg{ background: rgba(0,0,0,.06); }
-    .dark-mode .tile-bg{ background: rgba(0,0,0,.35) !important; } /* ✅ 다크에서 더 진하게 */
-
-    /* ✅ 다크모드: 모달 배경 불투명/명확 */
-    .dark-mode .panel{ background:#2b2b2b !important; border-color:#3f3f3f !important; }
-    .dark-mode .card { background:#2f2f2f !important; border-color:#3f3f3f !important; }
-    .dark-mode .modal{ background:#1a1a1a !important; border-color:#4b5563 !important; }
-    .dark-mode #imgModal{ background: rgba(0,0,0,.70) !important; } /* 오버레이 더 진하게 */
-
-  </style>
   <script>
-    // 다크모드 유지
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/gem.css">
+  <script src="js/common.js"></script>
 </head>
-<body class="bg-gray-100 p-3 font-sans text-sm">
-  <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
-    <header class="flex items-center justify-between">
-      <div class="p-4">
-        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">💎 영주보석 계산기</h1>
-        <p class="text-sm muted mt-1">보석 업그레이드에 필요한 <b>매뉴얼 / 도면 / 비전</b> 합계를 계산합니다.</p>
-        <p class="text-xs muted mt-1">※ 항목을 추가한 뒤 <b>[📊 계산하기]</b> 버튼을 눌렀을 때만 총합이 계산됩니다.</p>
+<body>  
+  <div id="navMount"></div>
+
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">💎 영주보석 계산기</h1>
+          <p class="text-sm muted mt-1">보석 업그레이드에 필요한 <b>매뉴얼 / 도면 / 비전</b> 합계를 계산합니다.</p>
+          <p class="text-xs muted mt-1">※ 항목을 추가한 뒤 <b>[📊 계산하기]</b> 버튼을 눌렀을 때만 총합이 계산됩니다.</p>
+
+          <!-- 상단 3섹션: 이미지 선택 카드 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+
+            <div class="card border rounded-xl p-4" data-card data-unit="Infantry">
+              <div class="flex items-center justify-between mb-3">
+                <div class="text-base font-bold text-blue-400">[방패]</div>
+                <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
+                  <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
+                  <div data-empty="left" class="w-full h-28 tile-bg"></div>
+                  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+                    <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+                  </div>
+                </button>
+                <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
+                  <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
+                  <div data-empty="right" class="w-full h-28 tile-bg"></div>
+                  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+                    <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+                  </div>
+                </button>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 mt-3">
+                <div>
+                  <div class="muted text-xs mb-1">현재 레벨</div>
+                  <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+                </div>
+                <div>
+                  <div class="muted text-xs mb-1">목표 레벨</div>
+                  <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+                </div>
+              </div>
+
+              <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
+            </div>
+
+            <div class="card border rounded-xl p-4" data-card data-unit="Lancer">
+              <div class="flex items-center justify-between mb-3">
+                <div class="text-base font-bold text-green-400">[창병]</div>
+                <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
+                  <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
+                  <div data-empty="left" class="w-full h-28 tile-bg"></div>
+                  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+                    <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+                  </div>
+                </button>
+                <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
+                  <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
+                  <div data-empty="right" class="w-full h-28 tile-bg"></div>
+                  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+                    <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+                  </div>
+                </button>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 mt-3">
+                <div>
+                  <div class="muted text-xs mb-1">현재 레벨</div>
+                  <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+                </div>
+                <div>
+                  <div class="muted text-xs mb-1">목표 레벨</div>
+                  <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+                </div>
+              </div>
+              <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
+            </div>
+
+            <div class="card border rounded-xl p-4" data-card data-unit="Marksman">
+              <div class="flex items-center justify-between mb-3">
+                <div class="text-base font-bold text-purple-400">[궁병]</div>
+                <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
+                  <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
+                  <div data-empty="left" class="w-full h-28 tile-bg"></div>
+                  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+                    <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+                  </div>
+                </button>
+                <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
+                  <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
+                  <div data-empty="right" class="w-full h-28 tile-bg"></div>
+                  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
+                    <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
+                  </div>
+                </button>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 mt-3">
+                <div>
+                  <div class="muted text-xs mb-1">현재 레벨</div>
+                  <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+                </div>
+                <div>
+                  <div class="muted text-xs mb-1">목표 레벨</div>
+                  <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
+                </div>
+              </div>
+              <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
+            </div>
+
+          </div>
+
+          <!-- 하단 2패널 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div class="panel border rounded-xl p-4">
+              <div class="flex items-center justify-between gap-3">
+                <div class="text-base font-bold">📄 선택된 목록</div>
+                <div class="flex items-center gap-3 text-sm">
+                  <button id="btnCalc" class="text-blue-500 text-sm hover:underline">📊 계산하기</button>
+                  <button id="btnClearAll" class="text-sm text-red-600 hover:underline">🧹 목록 초기화</button>
+                </div>
+              </div>
+              <div id="listWrap" class="mt-3 space-y-2"></div>
+            </div>
+
+            <div class="panel border rounded-xl p-4">
+              <div class="text-base font-bold flex items-center gap-2">
+                <span>🧾</span><span>계산 결과</span>
+              </div>
+              <div id="resultHint" class="muted text-sm mt-2">
+                <div class="text-sm text-gray-600">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>
+              </div>
+
+
+              <div id="resultBox" class="mt-3 hidden">
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm table-fixed">
+                    <thead>
+                      <tr class="bg-black/20">
+                        <th class="border border-gray-700 p-2 text-center">구분</th>
+                        <th class="border border-gray-700 p-2 text-center">레벨</th>
+                        <th class="border border-gray-700 p-2 text-center">매뉴얼</th>
+                        <th class="border border-gray-700 p-2 text-center">도면</th>
+                        <th class="border border-gray-700 p-2 text-center">비전</th>
+                      </tr>
+                    </thead>
+                    <tbody id="resultRows"></tbody>
+                    <tfoot>
+                      <tr class="bg-black/20 font-bold">
+                        <td class="border border-gray-700 p-2 text-center" colspan="2">총합</td>
+                        <td id="sumM" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
+                        <td id="sumB" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
+                        <td id="sumV" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
       </div>
-    </header>
-
-    <!-- 상단 3섹션: 이미지 선택 카드 -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-
-      <div class="card border rounded-xl p-4" data-card data-unit="Infantry">
-        <div class="flex items-center justify-between mb-3">
-          <div class="text-base font-bold text-blue-400">[방패]</div>
-          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
-            <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
-            <div data-empty="left" class="w-full h-28 tile-bg"></div>
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
-              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
-            </div>
-          </button>
-          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
-            <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
-            <div data-empty="right" class="w-full h-28 tile-bg"></div>
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
-              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
-            </div>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mt-3">
-          <div>
-            <div class="muted text-xs mb-1">현재 레벨</div>
-            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
-          </div>
-          <div>
-            <div class="muted text-xs mb-1">목표 레벨</div>
-            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
-          </div>
-        </div>
-
-        <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
-      </div>
-
-      <div class="card border rounded-xl p-4" data-card data-unit="Lancer">
-        <div class="flex items-center justify-between mb-3">
-          <div class="text-base font-bold text-green-400">[창병]</div>
-          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
-            <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
-            <div data-empty="left" class="w-full h-28 tile-bg"></div>
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
-              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
-            </div>
-          </button>
-          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
-            <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
-            <div data-empty="right" class="w-full h-28 tile-bg"></div>
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
-              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
-            </div>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mt-3">
-          <div>
-            <div class="muted text-xs mb-1">현재 레벨</div>
-            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
-          </div>
-          <div>
-            <div class="muted text-xs mb-1">목표 레벨</div>
-            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
-          </div>
-        </div>
-        <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
-      </div>
-
-      <div class="card border rounded-xl p-4" data-card data-unit="Marksman">
-        <div class="flex items-center justify-between mb-3">
-          <div class="text-base font-bold text-purple-400">[궁병]</div>
-          <div class="muted text-xs">레벨 범위: 최대 Lv.16</div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="left">
-            <img data-slot-img="left" class="hidden w-full h-28 object-contain tile-bg"/>
-            <div data-empty="left" class="w-full h-28 tile-bg"></div>
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
-              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
-            </div>
-          </button>
-          <button type="button" class="group relative rounded-lg overflow-hidden border border-gray-600" data-pick-image data-slot="right">
-            <img data-slot-img="right" class="hidden w-full h-28 object-contain tile-bg"/>
-            <div data-empty="right" class="w-full h-28 tile-bg"></div>
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 flex items-center justify-center">
-              <span class="text-xs px-3 py-1 rounded-full border border-white/40">클릭</span>
-            </div>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mt-3">
-          <div>
-            <div class="muted text-xs mb-1">현재 레벨</div>
-            <div data-lbl="current" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
-          </div>
-          <div>
-            <div class="muted text-xs mb-1">목표 레벨</div>
-            <div data-lbl="target" class="pill px-3 py-2 rounded-lg border text-sm w-full text-center tabular-nums">-</div>
-          </div>
-        </div>
-        <button type="button" class="w-full mt-4 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black add-btn" data-add>추가</button>
-      </div>
-
     </div>
-
-    <!-- 하단 2패널 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-      <div class="panel border rounded-xl p-4">
-        <div class="flex items-center justify-between gap-3">
-          <div class="text-base font-bold">📄 선택된 목록</div>
-          <div class="flex items-center gap-3 text-sm">
-            <button id="btnCalc" class="text-blue-500 text-sm hover:underline">📊 계산하기</button>
-            <button id="btnClearAll" class="text-sm text-red-600 hover:underline">🧹 목록 초기화</button>
-          </div>
-        </div>
-        <div id="listWrap" class="mt-3 space-y-2"></div>
-      </div>
-
-      <div class="panel border rounded-xl p-4">
-        <div class="text-base font-bold flex items-center gap-2">
-          <span>🧾</span><span>계산 결과</span>
-        </div>
-        <div id="resultHint" class="muted text-sm mt-2">
-          <div class="text-sm text-gray-600">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>
-        </div>
-
-        
-        <div id="resultBox" class="mt-3 hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm table-fixed">
-              <thead>
-                <tr class="bg-black/20">
-                  <th class="border border-gray-700 p-2 text-center">구분</th>
-                  <th class="border border-gray-700 p-2 text-center">레벨</th>
-                  <th class="border border-gray-700 p-2 text-center">매뉴얼</th>
-                  <th class="border border-gray-700 p-2 text-center">도면</th>
-                  <th class="border border-gray-700 p-2 text-center">비전</th>
-                </tr>
-              </thead>
-              <tbody id="resultRows"></tbody>
-              <tfoot>
-                <tr class="bg-black/20 font-bold">
-                  <td class="border border-gray-700 p-2 text-center" colspan="2">총합</td>
-                  <td id="sumM" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
-                  <td id="sumB" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
-                  <td id="sumV" class="border border-gray-700 p-2 text-center tabular-nums">0</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <!-- 이미지 선택 모달 -->
@@ -237,371 +206,387 @@
       <div id="imgGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 max-h-[80vh] overflow-auto pr-1"></div>
     </div>
   </div>
+  
+  <div id="footerMount"></div>
 
-<script>
-  // ====== 임베드 높이 보고 ======
-  function sendHeightToParent() {
-    const height = document.body.scrollHeight + 10;
-    window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
-  }
-  window.addEventListener("load", () => setTimeout(sendHeightToParent, 120));
-</script>
-<script>
-/* ====== 데이터 소스: gem.html과 동일 ====== */
-const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>
+  <script>
+    // ====== 임베드 높이 보고 ======
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 120));
+  </script>
+  <script>
+    /* ====== 데이터 소스: gem.html과 동일 ====== */
+    const csvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/chief/Gem.csv";
 
-/* ====== 이미지 소스 ====== */
-const MAX_LV = 16;
-const UNITS = ["Infantry", "Lancer", "Marksman"];
-const UNIT_KO = { Infantry:"방패", Lancer:"창병", Marksman:"궁병" };
-const IMAGE_BY_UNIT = Object.fromEntries(
-  UNITS.map(u => [u, Array.from({length: MAX_LV}, (_,i)=> `images/${u}/${u}_${i+1}webp`)])
-);
+    /* ====== 이미지 소스 ====== */
+    const MAX_LV = 16;
+    const UNITS = ["Infantry", "Lancer", "Marksman"];
+    const UNIT_KO = { Infantry:"방패", Lancer:"창병", Marksman:"궁병" };
+    const IMAGE_BY_UNIT = Object.fromEntries(
+      UNITS.map(u => [u, Array.from({length: MAX_LV}, (_,i)=> `images/${u}/${u}_${i+1}.webp`)])
+    );
 
-function levelFromUrl(url){
-  const name = (String(url||"").split("/").pop() || "");
-  const m = name.match(/_(\d+)(?:\.[a-zA-Z0-9]+)?$/);
-  return m ? Number(m[1]) : null;
-}
-const fmt = (n) => Number(n || 0).toLocaleString("ko-KR");
-const num = (s) => {
-  const m = String(s ?? "").replace(/,/g,"").match(/-?\d+(\.\d+)?/);
-  return m ? Number(m[0]) : 0;
-};
-const detectDelim = (sample) => (sample.includes("\t") ? "\t" : ",");
+    function levelFromUrl(url){
+      const name = (String(url||"").split("/").pop() || "");
+      const m = name.match(/_(\d+)(?:\.[a-zA-Z0-9]+)?$/);
+      return m ? Number(m[1]) : null;
+    }
+    const fmt = (n) => Number(n || 0).toLocaleString("ko-KR");
+    const num = (s) => {
+      const m = String(s ?? "").replace(/,/g,"").match(/-?\d+(\.\d+)?/);
+      return m ? Number(m[0]) : 0;
+    };
+    const detectDelim = (sample) => (sample.includes("\t") ? "\t" : ",");
 
-/* ====== CSV 로드/파싱: gem.html 방식(레벨별 비용 배열) ====== */
-let stepM = [];
-let stepB = [];
-let stepV = [];
-let csvReady = false;
+    /* ====== CSV 로드/파싱: gem.html 방식(레벨별 비용 배열) ====== */
+    let stepM = [];
+    let stepB = [];
+    let stepV = [];
+    let csvReady = false;
 
-async function loadCsv(){
-  const res = await fetch(csvUrl, { cache:"no-store" });
-  if(!res.ok) throw new Error("CSV fetch 실패: " + res.status);
-  const text = await res.text();
+    async function loadCsv(){
+      const res = await fetch(csvUrl, { cache:"no-store" });
+      if(!res.ok) throw new Error("CSV fetch 실패: " + res.status);
+      const text = await res.text();
 
-  const lines = text.replace(/\r/g,"").split("\n").filter(x=>x.trim().length>0);
-  const delim = detectDelim(lines[0]);
-  const headers = lines[0].split(delim).map(h=>h.trim());
+      const lines = text.replace(/\r/g,"").split("\n").filter(x=>x.trim().length>0);
+      const delim = detectDelim(lines[0]);
+      const headers = lines[0].split(delim).map(h=>h.trim());
 
-  // gem.csv는 보통: Level, Manual, Blueprint, Vision
-  const idxLv = headers.findIndex(h => /lv|level|레벨/i.test(h));
-  const idxM  = headers.findIndex(h => /manual|매뉴얼/i.test(h));
-  const idxB  = headers.findIndex(h => /blue|도면/i.test(h));
-  const idxV  = headers.findIndex(h => /vision|비전/i.test(h));
+      // gem.csv는 보통: Level, Manual, Blueprint, Vision
+      const idxLv = headers.findIndex(h => /lv|level|레벨/i.test(h));
+      const idxM  = headers.findIndex(h => /manual|매뉴얼/i.test(h));
+      const idxB  = headers.findIndex(h => /blue|도면/i.test(h));
+      const idxV  = headers.findIndex(h => /vision|비전/i.test(h));
 
-  if(idxLv === -1 || idxM === -1 || idxB === -1 || idxV === -1){
-    throw new Error("CSV 헤더에서 레벨/매뉴얼/도면/비전을 찾지 못했습니다.");
-  }
+      if(idxLv === -1 || idxM === -1 || idxB === -1 || idxV === -1){
+        throw new Error("CSV 헤더에서 레벨/매뉴얼/도면/비전을 찾지 못했습니다.");
+      }
 
-  const maxLv = MAX_LV;
-  stepM = Array(maxLv + 1).fill(0);
-  stepB = Array(maxLv + 1).fill(0);
-  stepV = Array(maxLv + 1).fill(0);
+      const maxLv = MAX_LV;
+      stepM = Array(maxLv + 1).fill(0);
+      stepB = Array(maxLv + 1).fill(0);
+      stepV = Array(maxLv + 1).fill(0);
 
-  for(let i=1; i<lines.length; i++){
-    const cols = lines[i].split(delim);
-    const lv = num(cols[idxLv]);
-    if(!lv || lv<1 || lv>maxLv) continue;
-    stepM[lv] = num(cols[idxM]);
-    stepB[lv] = num(cols[idxB]);
-    stepV[lv] = num(cols[idxV]);
-  }
+      for(let i=1; i<lines.length; i++){
+        const cols = lines[i].split(delim);
+        const lv = num(cols[idxLv]);
+        if(!lv || lv<1 || lv>maxLv) continue;
+        stepM[lv] = num(cols[idxM]);
+        stepB[lv] = num(cols[idxB]);
+        stepV[lv] = num(cols[idxV]);
+      }
 
-  csvReady = true;
-}
+      csvReady = true;
+    }
 
-function sumRange(stepArr, fromLv, toLv){
-  let s = 0;
-  for(let lv = fromLv + 1; lv <= toLv; lv++) s += (stepArr[lv] || 0);
-  return s;
-}
+    function sumRange(stepArr, fromLv, toLv){
+      let s = 0;
+      for(let lv = fromLv + 1; lv <= toLv; lv++) s += (stepArr[lv] || 0);
+      return s;
+    }
 
-/* ====== 목록(추가된 항목): item { section, from, to } ====== */
-let addedItems = [];
+    /* ====== 목록(추가된 항목): item { section, from, to } ====== */
+    let addedItems = [];
 
-/* ====== UI 요소 ====== */
-const listWrap = document.getElementById("listWrap");
-const btnCalc = document.getElementById("btnCalc");
-const btnClearAll = document.getElementById("btnClearAll");
+    /* ====== UI 요소 ====== */
+    const listWrap = document.getElementById("listWrap");
+    const btnCalc = document.getElementById("btnCalc");
+    const btnClearAll = document.getElementById("btnClearAll");
 
-const resultHint = document.getElementById("resultHint");
-const resultBox = document.getElementById("resultBox");
-const resultRows = document.getElementById("resultRows");
-const sumM = document.getElementById("sumM");
-const sumB = document.getElementById("sumB");
-const sumV = document.getElementById("sumV");
+    const resultHint = document.getElementById("resultHint");
+    const resultBox = document.getElementById("resultBox");
+    const resultRows = document.getElementById("resultRows");
+    const sumM = document.getElementById("sumM");
+    const sumB = document.getElementById("sumB");
+    const sumV = document.getElementById("sumV");
 
 
-/* ====== 목록 렌더 ====== */
-function renderList(){
-  listWrap.innerHTML = "";
-  if(!addedItems.length){
-    const empty = document.createElement("div");
-    empty.className = "muted text-sm px-3 py-3 border border-gray-700 rounded-lg bg-black/10";
-    empty.textContent = "선택된 항목이 없습니다.";
-    listWrap.appendChild(empty);
-    sendHeightToParent();
-    return;
-  }
+    /* ====== 목록 렌더 ====== */
+    function renderList(){
+      listWrap.innerHTML = "";
+      if(!addedItems.length){
+        const empty = document.createElement("div");
+        empty.className = "muted text-sm px-3 py-3 border border-gray-700 rounded-lg bg-black/10";
+        empty.textContent = "선택된 항목이 없습니다.";
+        listWrap.appendChild(empty);
+        sendHeightToParent();
+        return;
+      }
 
-  addedItems.forEach((item, idx)=>{
-    const row = document.createElement("div");
-    row.className = "flex items-center justify-between gap-3 px-3 py-2 border border-gray-700 rounded-lg bg-black/10";
-    row.innerHTML = `
-      <div class="text-sm tabular-nums">
-        <span class="font-semibold">[${item.section}]</span>
-        <span class="ml-1">Lv.${item.from} → Lv.${item.to}</span>
-      </div>
-      <button class="text-xs text-red-500 hover:underline" data-del="${idx}">삭제</button>
-    `;
-    listWrap.appendChild(row);
-  });
+      addedItems.forEach((item, idx)=>{
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between gap-3 px-3 py-2 border border-gray-700 rounded-lg bg-black/10";
+        row.innerHTML = `
+          <div class="text-sm tabular-nums">
+            <span class="font-semibold">[${item.section}]</span>
+            <span class="ml-1">Lv.${item.from} → Lv.${item.to}</span>
+          </div>
+          <button class="text-xs text-red-500 hover:underline" data-del="${idx}">삭제</button>
+        `;
+        listWrap.appendChild(row);
+      });
 
-  listWrap.querySelectorAll("[data-del]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const i = Number(btn.getAttribute("data-del"));
-      if(Number.isFinite(i)) {
-        addedItems.splice(i, 1);
+      listWrap.querySelectorAll("[data-del]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const i = Number(btn.getAttribute("data-del"));
+          if(Number.isFinite(i)) {
+            addedItems.splice(i, 1);
+            renderList();
+          }
+        });
+      });
+
+      sendHeightToParent();
+    }
+
+    /* ====== 계산: 목록 기준으로만 계산(버튼 클릭) ====== */
+    async function calculateFromList(){
+      if(!addedItems.length) {
+        alert("계산할 항목이 없습니다.");
+        return;
+      }
+      if(!csvReady) {
+        try{ await loadCsv(); } catch(e){ alert("CSV 로드 실패: " + (e.message||e)); return; }
+      }
+
+      let total = { m:0, b:0, v:0 };
+      const rowsHtml = [];
+
+      addedItems.forEach((item) => {
+        const sM = sumRange(stepM, item.from, item.to);
+        const sB = sumRange(stepB, item.from, item.to);
+        const sV = sumRange(stepV, item.from, item.to);
+
+        total.m += sM;
+        total.b += sB;
+        total.v += sV;
+
+        rowsHtml.push(`
+          <tr class="bg-black/10">
+            <td class="border border-gray-700 p-2 font-medium text-center">${item.section}</td>
+            <td class="border border-gray-700 p-2 text-center tabular-nums">Lv.${item.from} → Lv.${item.to}</td>
+            <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sM)}</td>
+            <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sB)}</td>
+            <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sV)}</td>
+          </tr>
+        `);
+        });
+
+      // 결과 반영
+      resultRows.innerHTML = rowsHtml.join("");
+      sumM.textContent = fmt(total.m);
+      sumB.textContent = fmt(total.b);
+      sumV.textContent = fmt(total.v);
+
+
+      resultHint.classList.add("hidden");
+      resultBox.classList.remove("hidden");
+
+      sendHeightToParent();
+    }
+
+    btnCalc.addEventListener("click", calculateFromList);
+    btnClearAll.addEventListener("click", ()=>{
+      addedItems = [];
+      renderList();
+      resultBox.classList.add("hidden");
+      resultHint.classList.remove("hidden");
+      resultHint.innerHTML = '항목을 추가하고 <span class="link">📊 계산하기</span>를 눌러주세요.';
+      });
+
+    /* ====== 이미지 선택 모달 ====== */
+    const modal = document.getElementById("imgModal");
+    const imgGrid = document.getElementById("imgGrid");
+    const btnCloseModal = document.getElementById("btnCloseModal");
+    const modalTitle = document.getElementById("modalTitle");
+
+    let activeCardEl = null;
+    let activeSlot = "left";
+
+    function openModal(cardEl, slot, unit){
+      activeCardEl = cardEl;
+      activeSlot = slot;
+
+      modalTitle.textContent = `${UNIT_KO[unit] ?? unit} - 이미지 선택`;
+      renderGrid(unit);
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+    function closeModal(){
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+    btnCloseModal.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+
+    function setCardLevelLabel(cardEl, kind, lv){
+      const el = cardEl.querySelector(`[data-lbl="${kind}"]`);
+      el.textContent = (lv === "-" ? "-" : `Lv.${lv}`);
+    }
+
+    function applySelectedImage(url){
+      if(!activeCardEl) return;
+
+      const imgEl = activeCardEl.querySelector(`[data-slot-img="${activeSlot}"]`);
+      const emptyEl = activeCardEl.querySelector(`[data-empty="${activeSlot}"]`);
+
+      if (emptyEl) emptyEl.classList.add("hidden");
+      imgEl.classList.remove("hidden");
+
+      imgEl.src = url;
+      imgEl.alt = url;
+
+      const lv = levelFromUrl(url);
+      if(lv != null){
+        const clamped = Math.min(Math.max(lv, 1), MAX_LV);
+        if(activeSlot === "left") setCardLevelLabel(activeCardEl, "current", clamped);
+        else setCardLevelLabel(activeCardEl, "target", clamped);
+      }
+    }
+
+    function clearSelectedImage(){
+      if(!activeCardEl) return;
+
+      const imgEl   = activeCardEl.querySelector(`[data-slot-img="${activeSlot}"]`);
+      const emptyEl = activeCardEl.querySelector(`[data-empty="${activeSlot}"]`);
+
+      imgEl.classList.add("hidden");
+      imgEl.src = "";
+      imgEl.alt = "empty";
+
+      if (emptyEl) emptyEl.classList.remove("hidden");
+
+      if(activeSlot === "left") setCardLevelLabel(activeCardEl, "current", "-");
+      else setCardLevelLabel(activeCardEl, "target", "-");
+    }
+
+    function renderGrid(unit){
+      imgGrid.innerHTML = "";
+
+      // 선택 취소
+      {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "group border border-gray-600 rounded-lg overflow-hidden hover:bg-white/5";
+        btn.innerHTML = `
+          <div class="aspect-square tile-bg flex items-center justify-center">
+            <div class="w-full h-full"></div>
+          </div>
+          <div class="px-2 py-2 text-[13px] muted text-center">선택 취소</div>
+        `;
+        btn.addEventListener("click", ()=>{ clearSelectedImage(); closeModal(); });
+        imgGrid.appendChild(btn);
+      }
+
+      (IMAGE_BY_UNIT[unit] || []).forEach(url=>{
+        const lv = levelFromUrl(url);
+        const caption = (lv != null) ? `Lv.${lv}` : "Lv.?";
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "group border border-gray-600 rounded-lg overflow-hidden hover:bg-white/5";
+        btn.innerHTML = `
+          <div class="aspect-square tile-bg flex items-center justify-center">
+            <img src="${url}" alt="${caption}" class="max-w-full max-h-full object-contain p-2" />
+          </div>
+          <div class="px-2 py-2 text-[13px] muted text-center">${caption}</div>
+        `;
+        btn.addEventListener("click", ()=>{ applySelectedImage(url); closeModal(); });
+        imgGrid.appendChild(btn);
+      });
+    }
+
+    /* ====== 카드 이벤트: 추가 ====== */
+    function getCardLevels(cardEl){
+      const leftSrc = cardEl.querySelector('[data-slot-img="left"]')?.getAttribute("src") || "";
+      const rightSrc = cardEl.querySelector('[data-slot-img="right"]')?.getAttribute("src") || "";
+      const fromLv = levelFromUrl(leftSrc);
+      const toLv = levelFromUrl(rightSrc);
+      return { fromLv, toLv };
+    }
+
+    document.querySelectorAll("[data-card]").forEach(cardEl=>{
+      cardEl.querySelectorAll("[data-pick-image]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const slot = btn.getAttribute("data-slot");
+          const unit = cardEl.getAttribute("data-unit");
+          openModal(cardEl, slot, unit);
+        });
+      });
+
+      cardEl.querySelector("[data-add]").addEventListener("click", ()=>{
+        const unit = cardEl.getAttribute("data-unit");
+        const section = UNIT_KO[unit] ?? unit;
+        const { fromLv, toLv } = getCardLevels(cardEl);
+
+        if(!fromLv || !toLv){
+          alert("현재/목표 이미지를 모두 선택하세요.");
+          return;
+        }
+        if(fromLv >= toLv){
+          alert("목표 레벨은 현재 레벨보다 높아야 합니다.");
+          return;
+        }
+
+        addedItems.push({ section, from: fromLv, to: toLv });
         renderList();
+      });
+
+      cardEl.querySelectorAll("img[data-slot-img]").forEach(img=>{
+        img.addEventListener("error", ()=>{
+          const slot = img.getAttribute("data-slot-img");
+          const emptyEl = cardEl.querySelector(`[data-empty="${slot}"]`);
+          img.classList.add("hidden");
+          if (emptyEl) emptyEl.classList.remove("hidden");
+        });
+      });
+    });
+
+    // 초기
+    renderList();
+  </script>
+  <!-- 선택: 개발자도구/우클릭 방지 (원 코드 유지) -->
+  <script>
+    document.onkeydown = function (e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+  </script>
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
       }
     });
-  });
-
-  sendHeightToParent();
-}
-
-/* ====== 계산: 목록 기준으로만 계산(버튼 클릭) ====== */
-async function calculateFromList(){
-  if(!addedItems.length) {
-    alert("계산할 항목이 없습니다.");
-    return;
-  }
-  if(!csvReady) {
-    try{ await loadCsv(); } catch(e){ alert("CSV 로드 실패: " + (e.message||e)); return; }
-  }
-
-  let total = { m:0, b:0, v:0 };
-  const rowsHtml = [];
-
-  addedItems.forEach((item) => {
-    const sM = sumRange(stepM, item.from, item.to);
-    const sB = sumRange(stepB, item.from, item.to);
-    const sV = sumRange(stepV, item.from, item.to);
-
-    total.m += sM;
-    total.b += sB;
-    total.v += sV;
-
-    rowsHtml.push(`
-      <tr class="bg-black/10">
-        <td class="border border-gray-700 p-2 font-medium text-center">${item.section}</td>
-        <td class="border border-gray-700 p-2 text-center tabular-nums">Lv.${item.from} → Lv.${item.to}</td>
-        <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sM)}</td>
-        <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sB)}</td>
-        <td class="border border-gray-700 p-2 text-center tabular-nums">${fmt(sV)}</td>
-      </tr>
-    `);
-    });
-
-  // 결과 반영
-  resultRows.innerHTML = rowsHtml.join("");
-  sumM.textContent = fmt(total.m);
-  sumB.textContent = fmt(total.b);
-  sumV.textContent = fmt(total.v);
-
-  
-  resultHint.classList.add("hidden");
-  resultBox.classList.remove("hidden");
-
-  sendHeightToParent();
-}
-
-btnCalc.addEventListener("click", calculateFromList);
-btnClearAll.addEventListener("click", ()=>{
-  addedItems = [];
-  renderList();
-  resultBox.classList.add("hidden");
-  resultHint.classList.remove("hidden");
-  resultHint.innerHTML = '항목을 추가하고 <span class="link">📊 계산하기</span>를 눌러주세요.';
-  });
-
-/* ====== 이미지 선택 모달 ====== */
-const modal = document.getElementById("imgModal");
-const imgGrid = document.getElementById("imgGrid");
-const btnCloseModal = document.getElementById("btnCloseModal");
-const modalTitle = document.getElementById("modalTitle");
-
-let activeCardEl = null;
-let activeSlot = "left";
-
-function openModal(cardEl, slot, unit){
-  activeCardEl = cardEl;
-  activeSlot = slot;
-
-  modalTitle.textContent = `${UNIT_KO[unit] ?? unit} - 이미지 선택`;
-  renderGrid(unit);
-
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-}
-function closeModal(){
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
-}
-btnCloseModal.addEventListener("click", closeModal);
-modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
-
-function setCardLevelLabel(cardEl, kind, lv){
-  const el = cardEl.querySelector(`[data-lbl="${kind}"]`);
-  el.textContent = (lv === "-" ? "-" : `Lv.${lv}`);
-}
-
-function applySelectedImage(url){
-  if(!activeCardEl) return;
-
-  const imgEl = activeCardEl.querySelector(`[data-slot-img="${activeSlot}"]`);
-  const emptyEl = activeCardEl.querySelector(`[data-empty="${activeSlot}"]`);
-
-  if (emptyEl) emptyEl.classList.add("hidden");
-  imgEl.classList.remove("hidden");
-
-  imgEl.src = url;
-  imgEl.alt = url;
-
-  const lv = levelFromUrl(url);
-  if(lv != null){
-    const clamped = Math.min(Math.max(lv, 1), MAX_LV);
-    if(activeSlot === "left") setCardLevelLabel(activeCardEl, "current", clamped);
-    else setCardLevelLabel(activeCardEl, "target", clamped);
-  }
-}
-
-function clearSelectedImage(){
-  if(!activeCardEl) return;
-
-  const imgEl   = activeCardEl.querySelector(`[data-slot-img="${activeSlot}"]`);
-  const emptyEl = activeCardEl.querySelector(`[data-empty="${activeSlot}"]`);
-
-  imgEl.classList.add("hidden");
-  imgEl.src = "";
-  imgEl.alt = "empty";
-
-  if (emptyEl) emptyEl.classList.remove("hidden");
-
-  if(activeSlot === "left") setCardLevelLabel(activeCardEl, "current", "-");
-  else setCardLevelLabel(activeCardEl, "target", "-");
-}
-
-function renderGrid(unit){
-  imgGrid.innerHTML = "";
-
-  // 선택 취소
-  {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "group border border-gray-600 rounded-lg overflow-hidden hover:bg-white/5";
-    btn.innerHTML = `
-      <div class="aspect-square tile-bg flex items-center justify-center">
-        <div class="w-full h-full"></div>
-      </div>
-      <div class="px-2 py-2 text-[13px] muted text-center">선택 취소</div>
-    `;
-    btn.addEventListener("click", ()=>{ clearSelectedImage(); closeModal(); });
-    imgGrid.appendChild(btn);
-  }
-
-  (IMAGE_BY_UNIT[unit] || []).forEach(url=>{
-    const lv = levelFromUrl(url);
-    const caption = (lv != null) ? `Lv.${lv}` : "Lv.?";
-
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "group border border-gray-600 rounded-lg overflow-hidden hover:bg-white/5";
-    btn.innerHTML = `
-      <div class="aspect-square tile-bg flex items-center justify-center">
-        <img src="${url}" alt="${caption}" class="max-w-full max-h-full object-contain p-2" />
-      </div>
-      <div class="px-2 py-2 text-[13px] muted text-center">${caption}</div>
-    `;
-    btn.addEventListener("click", ()=>{ applySelectedImage(url); closeModal(); });
-    imgGrid.appendChild(btn);
-  });
-}
-
-/* ====== 카드 이벤트: 추가 ====== */
-function getCardLevels(cardEl){
-  const leftSrc = cardEl.querySelector('[data-slot-img="left"]')?.getAttribute("src") || "";
-  const rightSrc = cardEl.querySelector('[data-slot-img="right"]')?.getAttribute("src") || "";
-  const fromLv = levelFromUrl(leftSrc);
-  const toLv = levelFromUrl(rightSrc);
-  return { fromLv, toLv };
-}
-
-document.querySelectorAll("[data-card]").forEach(cardEl=>{
-  cardEl.querySelectorAll("[data-pick-image]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const slot = btn.getAttribute("data-slot");
-      const unit = cardEl.getAttribute("data-unit");
-      openModal(cardEl, slot, unit);
-    });
-  });
-
-  cardEl.querySelector("[data-add]").addEventListener("click", ()=>{
-    const unit = cardEl.getAttribute("data-unit");
-    const section = UNIT_KO[unit] ?? unit;
-    const { fromLv, toLv } = getCardLevels(cardEl);
-
-    if(!fromLv || !toLv){
-      alert("현재/목표 이미지를 모두 선택하세요.");
-      return;
-    }
-    if(fromLv >= toLv){
-      alert("목표 레벨은 현재 레벨보다 높아야 합니다.");
-      return;
-    }
-
-    addedItems.push({ section, from: fromLv, to: toLv });
-    renderList();
-  });
-
-  cardEl.querySelectorAll("img[data-slot-img]").forEach(img=>{
-    img.addEventListener("error", ()=>{
-      const slot = img.getAttribute("data-slot-img");
-      const emptyEl = cardEl.querySelector(`[data-empty="${slot}"]`);
-      img.classList.add("hidden");
-      if (emptyEl) emptyEl.classList.remove("hidden");
-    });
-  });
-});
-
-// 초기
-renderList();
-
-</script>
-<!-- 선택: 개발자도구/우클릭 방지 (원 코드 유지) -->
-<script>
-  document.onkeydown = function (e) {
-    if (
-      e.keyCode === 123 || // F12
-      (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
-      (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
-      (e.ctrlKey && e.keyCode === 85) // Ctrl+U
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  };
-  document.addEventListener("contextmenu", (e) => e.preventDefault());
-</script>
-
-<script>
-  window.addEventListener('message', (e) => {
-    if (e.data?.type === 'DARK_MODE') {
-      document.body.classList.toggle('dark-mode', e.data.value);
-    }
-  });
-</script>
-</body>
+  </script>
+  </body>
 </html>

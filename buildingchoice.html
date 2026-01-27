@@ -4,64 +4,76 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>건물계산 선택</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .muted{color:#6b7280}
-    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
-    .inline-label{display:flex;align-items:center;gap:.5rem}
-    .tabular-nums{font-variant-numeric: tabular-nums}
-    select.pill{height:32px}
-    .err{color:#b45309}
-    /* ✅ 다크모드 */
-    body.dark-mode{background-color:#121212;color:#f0f0f0}
-    .dark-mode .border{border-color:#444!important}
-    .dark-mode .bg-white{background-color:#2c2c2c!important;color:#f0f0f0!important}
-    .dark-mode .bg-gray-100{background-color:#1e1e1e!important}
-    .dark-mode .text-gray-800,.dark-mode .text-gray-700,.dark-mode .text-gray-600{color:#dddddd!important}
-    .dark-mode .bg-purple-50,.dark-mode .bg-orange-50,.dark-mode .bg-red-50{background-color:#2e2e2e!important}
-    .dark-mode select option{color:#000!important}
-    .dark-mode select{color:#000!important}
-    .dark-mode input{color:#000!important}
-  </style>
   <script>
-    // 다크모드 유지
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <script src="js/common.js"></script>
 </head>
 <body>
-  <h1 style="font-size: 4rem; font-weight: 800; text-align: center; margin-bottom: 5rem;">건물 계산</h1>
+  <div id="navMount"></div>
   
-  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; width: 100%; max-width: 1600px; margin: 0px auto;">
-    <section onclick="openPage('buildings_Regular.html')">
-      <div style="position: relative; border-radius: 1.25rem;overflow: hidden; cursor: pointer; transition: 0.3s; box-shadow: rgba(0,0,0,0.15) 0px 12px 24px;">             
-        <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.05));">
-          <img src="images/regular-buildings.webp" alt="Regular Buildings" 
-               style="width: 100%; height: clamp(260px, 32vw, 300px); object-fit: contain; border-radius: 0.75rem;">
-        </div>
-        <div id="Regular" style="padding: 1.5rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">일반 건물</h2>
-          <p style="font-size: 1rem; line-height: 1.6;">불의 수정 이전단계 건물 업그레이드 시 필요 자원 계산</p>
-        </div>
-      </div>
-    </section>
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-6xl text-center font-bold text-gray-800 mb-4">건물 계산</h1>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; width: 100%; max-width: 1500px; margin: 0px auto;">
+            <section onclick="openPage('buildings_Regular.html')">
+              <div style="position: relative; border-radius: 1.25rem;overflow: hidden; cursor: pointer; transition: 0.3s; box-shadow: rgba(0,0,0,0.15) 0px 12px 24px;">             
+                <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.05));">
+                  <img src="images/regular-buildings.webp" alt="Regular Buildings" 
+                       style="width: 100%; height: clamp(260px, 32vw, 300px); object-fit: contain; border-radius: 0.75rem;">
+                </div>
+                <div id="Regular" style="padding: 1.5rem;">
+                  <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">일반 건물</h2>
+                  <p style="font-size: 1rem; line-height: 1.6;">불의 수정 이전단계 건물 업그레이드 시 필요 자원 계산</p>
+                </div>
+              </div>
+            </section>
 
-    <section onclick="openPage('buildings_FireCrystal.html')">
-      <div style="position: relative; border-radius: 1.25rem;overflow: hidden; cursor: pointer; transition: 0.3s; box-shadow: rgba(0,0,0,0.15) 0px 12px 24px;">
-        <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(252, 165, 165, 0.05));">
-          <img src="images/fc-buildings.webp" alt="FC Buildings"
-               style="width: 100%; height: clamp(260px, 32vw, 300px); object-fit: contain; border-radius: 0.5rem;">
-        </div>
-        <div id="FireCrystal" style="padding: 1.5rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">불의 수정 건물</h2>
-          <p style="font-size: 1rem; line-height: 1.6;">불의 수정 단계 건물 업그레이드 시 필요 재료 및 자원 계산</p>
+            <section onclick="openPage('buildings_FireCrystal.html')">
+              <div style="position: relative; border-radius: 1.25rem;overflow: hidden; cursor: pointer; transition: 0.3s; box-shadow: rgba(0,0,0,0.15) 0px 12px 24px;">
+                <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(252, 165, 165, 0.05));">
+                  <img src="images/fc-buildings.webp" alt="FC Buildings"
+                       style="width: 100%; height: clamp(260px, 32vw, 300px); object-fit: contain; border-radius: 0.5rem;">
+                </div>
+                <div id="FireCrystal" style="padding: 1.5rem;">
+                  <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">불의 수정 건물</h2>
+                  <p style="font-size: 1rem; line-height: 1.6;">불의 수정 단계 건물 업그레이드 시 필요 재료 및 자원 계산</p>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
+  
+  <div id="footerMount"></div>
+
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>  
   <script>
     window.addEventListener('message', (e) => {
       if (e.data?.type === 'DARK_MODE') {
@@ -71,11 +83,12 @@
   </script>
   <script>
     function openPage(url){
-      const msg = { type:'NAVIGATE_FRAME', url };
+      location.href = url;
+      //const msg = { type:'NAVIGATE_FRAME', url };
 
-      // ✅ 대부분 parent면 충분. 중첩 iframe 대비 top도 같이 쏨.
-      window.parent.postMessage(msg, '*');
-      window.top.postMessage(msg, '*');
+      //// ✅ 대부분 parent면 충분. 중첩 iframe 대비 top도 같이 쏨.
+      //window.parent.postMessage(msg, '*');
+      //window.top.postMessage(msg, '*');
     }
 
     // (선택) a.html 자체 높이를 부모에 알려 메뉴 iframe 높이 조절하고 싶으면 사용

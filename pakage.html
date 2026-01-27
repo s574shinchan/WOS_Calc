@@ -4,655 +4,631 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🎫 패키지구성 | WOS 계산기</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-     /* ✅ 다크모드 전용 */
-    body.dark-mode {
-      background-color: #121212;
-      color: #f0f0f0;
-    }
-    
-    .dark-mode .border { border-color: #444 !important; }
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-  
-    .dark-mode .text-gray-800,
-    .dark-mode .text-gray-700,
-    .dark-mode .text-gray-600 { color: #dddddd !important; }
-  
-    .dark-mode .text-blue-700 { color: #66b0ff !important; }
-    .dark-mode .text-blue-600 { color: #80caff !important; }
-    .dark-mode .text-orange-500 { color: #ffa94d !important; }
-    .dark-mode .text-green-600 { color: #79e68c !important; }
-    .dark-mode .text-red-500 { color: #ff8080 !important; }
-    .dark-mode .text-gray-500 { color: #aaa !important; }    
-    
-    .dark-mode .text-gray-800, 
-    .dark-mode .text-gray-600 { color: #e0e0e0 !important; }
-    
-    .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
-    .dark-mode th, .dark-mode td { border-color: #444 !important; }
-    .dark-mode thead th { color: #000 !important; }
-    
-    .dark-mode .bg-amber-100,    
-    .dark-mode .bg-green-100,
-    .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
-    
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-    
-    .dark-mode .bg-amber-50,
-    .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
-
-    .dark-mode .bg-blue-100,
-    .dark-mode .bg-blue-50,
-    .dark-mode .bg-orange-50,
-    .dark-mode .bg-purple-50,
-    .dark-mode .bg-yellow-50,
-    .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
-    
-    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
-    .dark-mode ul li { color: #ddd; }
-    
-    .dark-mode select option { color: #000 !important; }
-    .dark-mode select { color: #000 !important; }
-    .dark-mode input { color: #000 !important; }
-  </style>
-
-  <!-- ✅ 다크모드 상태 유지 스크립트 -->
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <script src="js/common.js"></script>    
+</head>
+<body>
+  
+  <div id="navMount"></div>
+
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-2xl font-bold text-gray-800 mb-4">📦 각종 패키지 구성</h1>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- 패키지 요일구성 -->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">📅 패키지등장 요일</summary>
+              <section>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 커스텀 패키지</h3>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li>불의수정 : 월 ~ 수 [2주텀]</li>
+                  <li>영웅장비 : 목 ~ 금 [매 주]</li>
+                  <li>영주보석 : 일 ~ 월 [2주텀]</li>
+                </ul>
+              </section>
+              <section>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 장인의 보물창고</h3>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li>영주보석 : 수 ~ 목 [매 주]</li>
+                  <li>영주장비 : 금 ~ 일 [매 주]</li>
+                </ul>
+              </section>
+              <section>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 희망시장</h3>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li>불의수정 : 금 ~ 일 [2주텀]</li>
+                </ul>
+              </section>
+              <section>
+                <h3 class="font-semibold text-blue-600 mb-1">🔹 최강영주 기간 패키지</h3>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li>불의수정 : 월 ~ 토 [2주텀]</li>
+                  <li>스태미너 : 화 ~ 수 [2주텀]</li>
+                  <li>부대훈련 : 수 ~ 목 [2주텀]</li>
+                  <li>과학기술 : 목 ~ 금 [2주텀]</li>
+                  <li>공용가속 : 금 ~ 일 [2주텀]</li>
+                </ul>
+              </section>
+            </details>
+
+            <!-- 전용무기패키지 -->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🗡 전용무기 패키지</summary>
+              <div id="전용무기" class="space-y-4 text-sm text-gray-800 mt-2">
+                <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+              </div>
+            </details>
+
+            <!-- 미스릴패키지 -->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">⛓ 미스릴 패키지</summary>
+              <div id="미스릴" class="space-y-4 text-sm text-gray-800 mt-2">
+                <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+              </div>
+            </details>
+          </div>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- 커스텀상자 패키지-->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">📦 커스텀상자 패키지</summary>
+              <div id="커스텀상자" class="space-y-6 mt-2">
+                <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+              </div>
+            </details>
+
+            <!-- 🛠️ 커스텀 무기상자 패키지 -->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🛠️ 커스텀 무기상자 패키지</summary>
+              <div id="커스텀무기" class="space-y-6 mt-2">
+                <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+              </div>
+            </details>
+
+            <!-- 💎 보석마스터 패키지 구성 -->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">💎 보석마스터 패키지</summary>
+              <div id="보석마스터" class="space-y-4 text-sm text-gray-800 mt-2">
+                <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+              </div>
+            </details>
+
+            <!-- 💠 보석비전 패키지 -->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">💠 보석비전 패키지</summary>
+              <div id="보석비전" class="mt-2">
+                <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+              </div>
+            </details>
+
+            <!-- 🧰 장인의 보물창고(보석) 패키지 구성 -->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🧰 장인의 보물창고(보석)</summary>
+              <div id="장인보물창고보석" class="mt-2">
+                <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+              </div>
+            </details>
+
+            <!-- 🧰 장인의 보물창고(장비) 패키지 구성 -->
+            <details class="bg-white border border-orange-300 rounded-md p-4">
+              <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🧰 장인의 보물창고(장비)</summary>
+              <div id="장인보물창고장비" class="mt-2">
+                <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+              </div>
+            </details>
+
+            <!-- 여기에추가해야함 -->
+
+            <!--종점-->
+          </div>
+          
+          <!-- 🚄 여행자 패키지 구성 -->
+          <details class="bg-white border border-orange-300 rounded-md p-4">
+            <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🚄 여행자 패키지</summary>
+            <div id="여행자팩" class="mt-2">
+              <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+            </div>
+          </details>
+
+          <!-- 만물잡화점 -->
+          <details class="bg-white border border-orange-300 rounded-md p-4">
+            <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🛒 만물잡화점 [불의수정]</summary>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div class="text-lg font-semibold mb-2">🔹 만물잡화점(불수) - 6세대
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center bg-white shadow">
+                    <thead class="bg-orange-100">
+                      <tr>
+                        <th class="border p-1">금액</th>
+                        <th class="border p-1" colspan="5">구성품</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1">1,500</td>
+                        <td class="border p-1">불의수정 12개</td>
+                        <td class="border p-1">공용가속 6h</td>
+                        <td class="border p-1">마스터리석 3개</td>
+                        <td class="border p-1">영웅장비상자 6개</td>
+                        <td class="border p-1">100pt너트 2개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">4,400</td>
+                        <td class="border p-1">불의수정 36개</td>
+                        <td class="border p-1">공용가속 17h</td>
+                        <td class="border p-1">마스터리석 6개</td>
+                        <td class="border p-1">영웅장비상자 18개</td>
+                        <td class="border p-1">100pt너트 5개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">7,500</td>
+                        <td class="border p-1">불의수정 60개</td>
+                        <td class="border p-1">공용가속 28h</td>
+                        <td class="border p-1">마스터리석 10개</td>
+                        <td class="border p-1">영웅장비상자 24개</td>
+                        <td class="border p-1">100pt너트 8개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">15,000</td>
+                        <td class="border p-1">불의수정 120</td>
+                        <td class="border p-1">공용가속 52h</td>
+                        <td class="border p-1">마스터리석 20개</td>
+                        <td class="border p-1">영웅장비상자 48개</td>
+                        <td class="border p-1">100pt너트 12개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">30,000</td>
+                        <td class="border p-1">불의수정 240</td>
+                        <td class="border p-1">공용가속 100h</td>
+                        <td class="border p-1">마스터리석 30개</td>
+                        <td class="border p-1">영웅장비상자 70개</td>
+                        <td class="border p-1">100pt너트 20개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">79,000</td>
+                        <td class="border p-1">불의수정 600</td>
+                        <td class="border p-1">공용가속 240h</td>
+                        <td class="border p-1">마스터리석 60개</td>
+                        <td class="border p-1">영웅장비상자 140개</td>
+                        <td class="border p-1">100pt너트 40개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">불의수정 1200</td>
+                        <td class="border p-1">공용가속 460h</td>
+                        <td class="border p-1">마스터리석 100개</td>
+                        <td class="border p-1">영웅장비상자 280개</td>
+                        <td class="border p-1">100pt너트 60개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">불의수정 450</td>
+                        <td class="border p-1">공용가속 80h</td>
+                        <td class="border p-1">공용섬조각 60개</td>
+                        <td class="border p-1">영웅장비상자 200개</td>
+                        <td class="border p-1">100pt너트 60개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">불의수정 700</td>
+                        <td class="border p-1">공용가속 80h</td>
+                        <td class="border p-1">공용섬조각 40개</td>
+                        <td class="border p-1">영웅장비상자 200개</td>
+                        <td class="border p-1">100pt너트 60개</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="text-lg font-semibold mb-2">🔹 만물잡화점(불수) - 7세대
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center bg-white shadow">
+                    <thead class="bg-orange-100">
+                      <tr>
+                        <th class="border p-1">금액</th>
+                        <th class="border p-1" colspan="5">구성품</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1">1,500</td>
+                        <td class="border p-1">불의수정 14개</td>
+                        <td class="border p-1">공용가속 6h</td>
+                        <td class="border p-1">마스터리석 3개</td>
+                        <td class="border p-1">영웅장비상자 7개</td>
+                        <td class="border p-1">100pt너트 2개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">4,400</td>
+                        <td class="border p-1">불의수정 42개</td>
+                        <td class="border p-1">공용가속 17h</td>
+                        <td class="border p-1">마스터리석 6개</td>
+                        <td class="border p-1">영웅장비상자 21개</td>
+                        <td class="border p-1">100pt너트 5개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">7,500</td>
+                        <td class="border p-1">불의수정 70</td>
+                        <td class="border p-1">공용가속 28h</td>
+                        <td class="border p-1">마스터리석 10개</td>
+                        <td class="border p-1">영웅장비상자 30개</td>
+                        <td class="border p-1">100pt너트 8개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">15,000</td>
+                        <td class="border p-1">불의수정 140</td>
+                        <td class="border p-1">공용가속 52h</td>
+                        <td class="border p-1">마스터리석 20개</td>
+                        <td class="border p-1">영웅장비상자 60개</td>
+                        <td class="border p-1">100pt너트 12개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">30,000</td>
+                        <td class="border p-1">불의수정 280</td>
+                        <td class="border p-1">공용가속 100h</td>
+                        <td class="border p-1">마스터리석 30개</td>
+                        <td class="border p-1">영웅장비상자 90개</td>
+                        <td class="border p-1">100pt너트 20개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">79,000</td>
+                        <td class="border p-1">불의수정 700</td>
+                        <td class="border p-1">공용가속 240h</td>
+                        <td class="border p-1">마스터리석 60개</td>
+                        <td class="border p-1">영웅장비상자 180개</td>
+                        <td class="border p-1">100pt너트 40개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">불의수정 1400</td>
+                        <td class="border p-1">공용가속 460h</td>
+                        <td class="border p-1">마스터리석 100개</td>
+                        <td class="border p-1">영웅장비상자 360개</td>
+                        <td class="border p-1">100pt너트 60개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">불의수정 450</td>
+                        <td class="border p-1">공용가속 80h</td>
+                        <td class="border p-1">공용섬조각 60개</td>
+                        <td class="border p-1">영웅장비상자 200개</td>
+                        <td class="border p-1">100pt너트 60개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">불의수정 900</td>
+                        <td class="border p-1">공용가속 80h</td>
+                        <td class="border p-1">공용섬조각 40개</td>
+                        <td class="border p-1">영웅장비상자 200개</td>
+                        <td class="border p-1">100pt너트 60개</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="bg-white border border-orange-300 rounded-md p-4">
+            <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🛒 만물잡화점 [영주장비, 보석]</summary>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div class="text-lg font-semibold mb-2">🔹 만물잡화점(영주장비, 보석) - 6세대
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center bg-white shadow">
+                    <thead class="bg-orange-100">
+                      <tr>
+                        <th class="border p-1">금액</th>
+                        <th class="border p-1" colspan="6">구성품</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1">1,500</td>
+                        <td class="border p-1">설계도면 8개</td>
+                        <td class="border p-1">영주장비 재료상자 3개</td>
+                        <td class="border p-1">광택제 40개</td>
+                        <td class="border p-1">합금 4,000개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">4,400</td>
+                        <td class="border p-1">설계도면 24개</td>
+                        <td class="border p-1">영주장비 재료상자 9개</td>
+                        <td class="border p-1">광택제 90개</td>
+                        <td class="border p-1">합금 9,000개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">7,500</td>
+                        <td class="border p-1">설계도면 35개</td>
+                        <td class="border p-1">영주장비 재료상자 12개</td>
+                        <td class="border p-1">광택제 140개</td>
+                        <td class="border p-1">합금 14,000개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">15,000</td>
+                        <td class="border p-1">설계도면 70개</td>
+                        <td class="border p-1">영주장비 재료상자 24개</td>
+                        <td class="border p-1">광택제 80개</td>
+                        <td class="border p-1">합금 8,000개</td>
+                        <td class="border p-1">보석도면 40개</td>
+                        <td class="border p-1">보석매뉴얼 40개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">30,000</td>
+                        <td class="border p-1">설계도면 140개</td>
+                        <td class="border p-1">영주장비 재료상자 48개</td>
+                        <td class="border p-1">광택제 100개</td>
+                        <td class="border p-1">합금 10,000개</td>
+                        <td class="border p-1">보석도면 50개</td>
+                        <td class="border p-1">보석매뉴얼 50개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">79,000</td>
+                        <td class="border p-1">설계도면 350개</td>
+                        <td class="border p-1">영주장비 재료상자 120개</td>
+                        <td class="border p-1">광택제 200개</td>
+                        <td class="border p-1">합금 20,000개</td>
+                        <td class="border p-1">보석도면 100개</td>
+                        <td class="border p-1">보석매뉴얼 100개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">설계도면 700개</td>
+                        <td class="border p-1">영주장비 재료상자 24개</td>
+                        <td class="border p-1">광택제 300개</td>
+                        <td class="border p-1">합금 30,000개</td>
+                        <td class="border p-1">보석도면 200개</td>
+                        <td class="border p-1">보석매뉴얼 200개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">공용섬조각 60개</td>
+                        <td class="border p-1">불의수정 250개</td>
+                        <td class="border p-1">광택제 300개</td>
+                        <td class="border p-1">합금 30,000개</td>
+                        <td class="border p-1">보석도면 200개</td>
+                        <td class="border p-1">보석매뉴얼 200개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">공용섬조각 40개</td>
+                        <td class="border p-1">불의수정 500개</td>
+                        <td class="border p-1">광택제 300개</td>
+                        <td class="border p-1">합금 3,000개</td>
+                        <td class="border p-1">보석도면 200개</td>
+                        <td class="border p-1">보석매뉴얼 200개</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="text-lg font-semibold mb-2">🔹 만물잡화점(영주장비, 보석) - 7세대
+                <div class="overflow-x-auto">
+                  <table class="table-auto border w-full text-xs text-center bg-white shadow">
+                    <thead class="bg-orange-100">
+                      <tr>
+                        <th class="border p-1">금액</th>
+                        <th class="border p-1" colspan="6">구성품</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border p-1">1,500</td>
+                        <td class="border p-1">설계도면 10개</td>
+                        <td class="border p-1">영주장비 재료상자 3개</td>
+                        <td class="border p-1">광택제 40개</td>
+                        <td class="border p-1">합금 4,000개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">4,400</td>
+                        <td class="border p-1">설계도면 30개</td>
+                        <td class="border p-1">영주장비 재료상자 9개</td>
+                        <td class="border p-1">광택제 100개</td>
+                        <td class="border p-1">합금 10,000개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">7,500</td>
+                        <td class="border p-1">설계도면 40개</td>
+                        <td class="border p-1">영주장비 재료상자 12개</td>
+                        <td class="border p-1">광택제 180개</td>
+                        <td class="border p-1">합금 18,000개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">15,000</td>
+                        <td class="border p-1">설계도면 80개</td>
+                        <td class="border p-1">영주장비 재료상자 24개</td>
+                        <td class="border p-1">광택제 80개</td>
+                        <td class="border p-1">합금 8,000개</td>
+                        <td class="border p-1">보석도면 55개</td>
+                        <td class="border p-1">보석매뉴얼 55개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">30,000</td>
+                        <td class="border p-1">설계도면 160개</td>
+                        <td class="border p-1">영주장비 재료상자 48개</td>
+                        <td class="border p-1">광택제 100개</td>
+                        <td class="border p-1">합금 10,000개</td>
+                        <td class="border p-1">보석도면 80개</td>
+                        <td class="border p-1">보석매뉴얼 80개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">79,000</td>
+                        <td class="border p-1">설계도면 400개</td>
+                        <td class="border p-1">영주장비 재료상자 120개</td>
+                        <td class="border p-1">광택제 200개</td>
+                        <td class="border p-1">합금 20,000개</td>
+                        <td class="border p-1">보석도면 140개</td>
+                        <td class="border p-1">보석매뉴얼 140개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">설계도면 800개</td>
+                        <td class="border p-1">영주장비 재료상자 240개</td>
+                        <td class="border p-1">광택제 300개</td>
+                        <td class="border p-1">합금 30,000개</td>
+                        <td class="border p-1">보석도면 280개</td>
+                        <td class="border p-1">보석매뉴얼 280개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">공용섬조각 60개</td>
+                        <td class="border p-1">불의수정 300개</td>
+                        <td class="border p-1">광택제 300개</td>
+                        <td class="border p-1">합금 30,000개</td>
+                        <td class="border p-1">보석도면 200개</td>
+                        <td class="border p-1">보석매뉴얼 200개</td>
+                      </tr>
+                      <tr>
+                        <td class="border p-1">149,000</td>
+                        <td class="border p-1">공용섬조각 40개</td>
+                        <td class="border p-1">불의수정 600개</td>
+                        <td class="border p-1">광택제 300개</td>
+                        <td class="border p-1">합금 3,000개</td>
+                        <td class="border p-1">보석도면 200개</td>
+                        <td class="border p-1">보석매뉴얼 200개</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </details>      
+
+          <!-- 희망지혜 -->
+          <details class="bg-white border border-orange-300 rounded-md p-4">
+            <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🕵️‍ 희망지혜 </summary>
+            <div id="희망지혜" class="mt-2">
+              <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="footerMount"></div>
+	
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>
+  
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight;
+      console.log(height);
+      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+    }
+
+    // 페이지 최초 로드 시
+    window.addEventListener("load", () => {
+      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
+    });
+
+    // 각 details 토글 시 높이 재전송
+    document.querySelectorAll("details").forEach(detail => {
+      detail.addEventListener("toggle", () => {
+        // 약간 딜레이 후 정확한 높이 측정
+        setTimeout(sendHeightToParent, 300);
+      });
+    });
+
+    function loadPage(page) {
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? "550px" : "345px"
+      window.location.href = page;
+      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
+    }
+  </script>
+
+  <script>
+    const baseUrl = 'data/';
+
+    // [ID] => [파일명] 매핑
+    const fileMap = {
+      용어안내: 'ward.html',
+      영웅성급: '영웅성급업.html',
+      제련불수: 'refinde.html',
+      전용무기: '전용무기.html',
+      미스릴: '미스릴.html',
+      커스텀상자: 'custompakage.html',
+      커스텀무기: '커스텀무기.html',            
+      보석마스터: 'gempakage.html',
+      보석비전: 'visionpakage.html',
+      장인보물창고보석: '보물창고_보석.html',
+      장인보물창고장비: '보불창고_장비.html',
+      여행자팩 : '여행자팩.html',
+      깃발해금 : '깃발해금.html',
+      만물잡화 : '만물잡화점.html',
+      연맹대작전 : '연맹대작전.html',
+      희망지혜 : '전문가희망지혜.html'
+    };
+
+    // [ID] => 로딩 여부 저장
+    const loadState = {};
+    Object.keys(fileMap).forEach(id => loadState[id] = false);
+
+    // 모든 <details> 요소에 toggle 이벤트 바인딩
+    document.querySelectorAll('details').forEach(detail => {
+      detail.addEventListener('toggle', async () => {
+        for (const id in fileMap) {
+          const target = detail.querySelector(`#${id}`);
+          if (target && !loadState[id] && detail.open) {
+            try {
+              const res = await fetch(`${baseUrl}${fileMap[id]}`);
+              if (!res.ok) throw new Error('파일 요청 실패');
+              const html = await res.text();
+              target.innerHTML = html;
+              loadState[id] = true;
+            } catch (e) {
+              target.innerHTML = `<p class="text-red-500">⚠️ 테이블 데이터를 불러오는 데 실패했습니다.</p>`;
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener("contextmenu", event => event.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S")))
+      {
+        e.preventDefault();
       }
     });
   </script>
-</head>
-  <body class="bg-gray-100 p-2 font-sans text-sm">
-    <div class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md space-y-5"> 
-      <h1 class="text-2xl font-bold text-gray-800 mb-4">📦 각종 패키지 구성</h1>
-    
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <!-- 패키지 요일구성 -->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">📅 패키지등장 요일</summary>
-          <section>
-            <h3 class="font-semibold text-blue-600 mb-1">🔹 커스텀 패키지</h3>
-            <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-              <li>불의수정 : 월 ~ 수 [2주텀]</li>
-              <li>영웅장비 : 목 ~ 금 [매 주]</li>
-              <li>영주보석 : 일 ~ 월 [2주텀]</li>
-            </ul>
-          </section>
-          <section>
-            <h3 class="font-semibold text-blue-600 mb-1">🔹 장인의 보물창고</h3>
-            <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-              <li>영주보석 : 수 ~ 목 [매 주]</li>
-              <li>영주장비 : 금 ~ 일 [매 주]</li>
-            </ul>
-          </section>
-          <section>
-            <h3 class="font-semibold text-blue-600 mb-1">🔹 희망시장</h3>
-            <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-              <li>불의수정 : 금 ~ 일 [2주텀]</li>
-            </ul>
-          </section>
-          <section>
-            <h3 class="font-semibold text-blue-600 mb-1">🔹 최강영주 기간 패키지</h3>
-            <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-              <li>불의수정 : 월 ~ 토 [2주텀]</li>
-              <li>스태미너 : 화 ~ 수 [2주텀]</li>
-              <li>부대훈련 : 수 ~ 목 [2주텀]</li>
-              <li>과학기술 : 목 ~ 금 [2주텀]</li>
-              <li>공용가속 : 금 ~ 일 [2주텀]</li>
-            </ul>
-          </section>
-        </details>
-      
-        <!-- 전용무기패키지 -->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🗡 전용무기 패키지</summary>
-          <div id="전용무기" class="space-y-4 text-sm text-gray-800 mt-2">
-            <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-          </div>
-        </details>
-
-        <!-- 미스릴패키지 -->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">⛓ 미스릴 패키지</summary>
-          <div id="미스릴" class="space-y-4 text-sm text-gray-800 mt-2">
-            <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-          </div>
-        </details>
-      </div>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- 커스텀상자 패키지-->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">📦 커스텀상자 패키지</summary>
-          <div id="커스텀상자" class="space-y-6 mt-2">
-            <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-          </div>
-        </details>
-
-        <!-- 🛠️ 커스텀 무기상자 패키지 -->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🛠️ 커스텀 무기상자 패키지</summary>
-          <div id="커스텀무기" class="space-y-6 mt-2">
-            <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-          </div>
-        </details>
-
-        <!-- 💎 보석마스터 패키지 구성 -->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">💎 보석마스터 패키지</summary>
-          <div id="보석마스터" class="space-y-4 text-sm text-gray-800 mt-2">
-            <p class="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-          </div>
-        </details>
-
-        <!-- 💠 보석비전 패키지 -->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">💠 보석비전 패키지</summary>
-          <div id="보석비전" class="mt-2">
-            <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-          </div>
-        </details>
-
-        <!-- 🧰 장인의 보물창고(보석) 패키지 구성 -->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🧰 장인의 보물창고(보석)</summary>
-          <div id="장인보물창고보석" class="mt-2">
-            <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-          </div>
-        </details>
-
-        <!-- 🧰 장인의 보물창고(장비) 패키지 구성 -->
-        <details class="bg-white border border-orange-300 rounded-md p-4">
-          <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🧰 장인의 보물창고(장비)</summary>
-          <div id="장인보물창고장비" class="mt-2">
-            <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-          </div>
-        </details>
-
-        <!-- 여기에추가해야함 -->
-
-        <!--종점-->
-      </div>
-
-      <!-- 🚄 여행자 패키지 구성 -->
-      <details class="bg-white border border-orange-300 rounded-md p-4">
-        <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🚄 여행자 패키지</summary>
-        <div id="여행자팩" class="mt-2">
-          <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-        </div>
-      </details>
-      
-      <!-- 만물잡화점 -->
-      <details class="bg-white border border-orange-300 rounded-md p-4">
-        <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🛒 만물잡화점 [불의수정]</summary>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div class="text-lg font-semibold mb-2">🔹 만물잡화점(불수) - 6세대
-            <div class="overflow-x-auto">
-              <table class="table-auto border w-full text-xs text-center bg-white shadow">
-                <thead class="bg-orange-100">
-                  <tr>
-                    <th class="border p-1">금액</th>
-                    <th class="border p-1" colspan="5">구성품</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border p-1">1,500</td>
-                    <td class="border p-1">불의수정 12개</td>
-                    <td class="border p-1">공용가속 6h</td>
-                    <td class="border p-1">마스터리석 3개</td>
-                    <td class="border p-1">영웅장비상자 6개</td>
-                    <td class="border p-1">100pt너트 2개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">4,400</td>
-                    <td class="border p-1">불의수정 36개</td>
-                    <td class="border p-1">공용가속 17h</td>
-                    <td class="border p-1">마스터리석 6개</td>
-                    <td class="border p-1">영웅장비상자 18개</td>
-                    <td class="border p-1">100pt너트 5개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">7,500</td>
-                    <td class="border p-1">불의수정 60개</td>
-                    <td class="border p-1">공용가속 28h</td>
-                    <td class="border p-1">마스터리석 10개</td>
-                    <td class="border p-1">영웅장비상자 24개</td>
-                    <td class="border p-1">100pt너트 8개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">15,000</td>
-                    <td class="border p-1">불의수정 120</td>
-                    <td class="border p-1">공용가속 52h</td>
-                    <td class="border p-1">마스터리석 20개</td>
-                    <td class="border p-1">영웅장비상자 48개</td>
-                    <td class="border p-1">100pt너트 12개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">30,000</td>
-                    <td class="border p-1">불의수정 240</td>
-                    <td class="border p-1">공용가속 100h</td>
-                    <td class="border p-1">마스터리석 30개</td>
-                    <td class="border p-1">영웅장비상자 70개</td>
-                    <td class="border p-1">100pt너트 20개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">79,000</td>
-                    <td class="border p-1">불의수정 600</td>
-                    <td class="border p-1">공용가속 240h</td>
-                    <td class="border p-1">마스터리석 60개</td>
-                    <td class="border p-1">영웅장비상자 140개</td>
-                    <td class="border p-1">100pt너트 40개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">불의수정 1200</td>
-                    <td class="border p-1">공용가속 460h</td>
-                    <td class="border p-1">마스터리석 100개</td>
-                    <td class="border p-1">영웅장비상자 280개</td>
-                    <td class="border p-1">100pt너트 60개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">불의수정 450</td>
-                    <td class="border p-1">공용가속 80h</td>
-                    <td class="border p-1">공용섬조각 60개</td>
-                    <td class="border p-1">영웅장비상자 200개</td>
-                    <td class="border p-1">100pt너트 60개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">불의수정 700</td>
-                    <td class="border p-1">공용가속 80h</td>
-                    <td class="border p-1">공용섬조각 40개</td>
-                    <td class="border p-1">영웅장비상자 200개</td>
-                    <td class="border p-1">100pt너트 60개</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="text-lg font-semibold mb-2">🔹 만물잡화점(불수) - 7세대
-            <div class="overflow-x-auto">
-              <table class="table-auto border w-full text-xs text-center bg-white shadow">
-                <thead class="bg-orange-100">
-                  <tr>
-                    <th class="border p-1">금액</th>
-                    <th class="border p-1" colspan="5">구성품</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border p-1">1,500</td>
-                    <td class="border p-1">불의수정 14개</td>
-                    <td class="border p-1">공용가속 6h</td>
-                    <td class="border p-1">마스터리석 3개</td>
-                    <td class="border p-1">영웅장비상자 7개</td>
-                    <td class="border p-1">100pt너트 2개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">4,400</td>
-                    <td class="border p-1">불의수정 42개</td>
-                    <td class="border p-1">공용가속 17h</td>
-                    <td class="border p-1">마스터리석 6개</td>
-                    <td class="border p-1">영웅장비상자 21개</td>
-                    <td class="border p-1">100pt너트 5개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">7,500</td>
-                    <td class="border p-1">불의수정 70</td>
-                    <td class="border p-1">공용가속 28h</td>
-                    <td class="border p-1">마스터리석 10개</td>
-                    <td class="border p-1">영웅장비상자 30개</td>
-                    <td class="border p-1">100pt너트 8개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">15,000</td>
-                    <td class="border p-1">불의수정 140</td>
-                    <td class="border p-1">공용가속 52h</td>
-                    <td class="border p-1">마스터리석 20개</td>
-                    <td class="border p-1">영웅장비상자 60개</td>
-                    <td class="border p-1">100pt너트 12개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">30,000</td>
-                    <td class="border p-1">불의수정 280</td>
-                    <td class="border p-1">공용가속 100h</td>
-                    <td class="border p-1">마스터리석 30개</td>
-                    <td class="border p-1">영웅장비상자 90개</td>
-                    <td class="border p-1">100pt너트 20개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">79,000</td>
-                    <td class="border p-1">불의수정 700</td>
-                    <td class="border p-1">공용가속 240h</td>
-                    <td class="border p-1">마스터리석 60개</td>
-                    <td class="border p-1">영웅장비상자 180개</td>
-                    <td class="border p-1">100pt너트 40개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">불의수정 1400</td>
-                    <td class="border p-1">공용가속 460h</td>
-                    <td class="border p-1">마스터리석 100개</td>
-                    <td class="border p-1">영웅장비상자 360개</td>
-                    <td class="border p-1">100pt너트 60개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">불의수정 450</td>
-                    <td class="border p-1">공용가속 80h</td>
-                    <td class="border p-1">공용섬조각 60개</td>
-                    <td class="border p-1">영웅장비상자 200개</td>
-                    <td class="border p-1">100pt너트 60개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">불의수정 900</td>
-                    <td class="border p-1">공용가속 80h</td>
-                    <td class="border p-1">공용섬조각 40개</td>
-                    <td class="border p-1">영웅장비상자 200개</td>
-                    <td class="border p-1">100pt너트 60개</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </details>
-      
-      <details class="bg-white border border-orange-300 rounded-md p-4">
-        <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🛒 만물잡화점 [영주장비, 보석]</summary>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div class="text-lg font-semibold mb-2">🔹 만물잡화점(영주장비, 보석) - 6세대
-            <div class="overflow-x-auto">
-              <table class="table-auto border w-full text-xs text-center bg-white shadow">
-                <thead class="bg-orange-100">
-                  <tr>
-                    <th class="border p-1">금액</th>
-                    <th class="border p-1" colspan="6">구성품</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border p-1">1,500</td>
-                    <td class="border p-1">설계도면 8개</td>
-                    <td class="border p-1">영주장비 재료상자 3개</td>
-                    <td class="border p-1">광택제 40개</td>
-                    <td class="border p-1">합금 4,000개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">4,400</td>
-                    <td class="border p-1">설계도면 24개</td>
-                    <td class="border p-1">영주장비 재료상자 9개</td>
-                    <td class="border p-1">광택제 90개</td>
-                    <td class="border p-1">합금 9,000개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">7,500</td>
-                    <td class="border p-1">설계도면 35개</td>
-                    <td class="border p-1">영주장비 재료상자 12개</td>
-                    <td class="border p-1">광택제 140개</td>
-                    <td class="border p-1">합금 14,000개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">15,000</td>
-                    <td class="border p-1">설계도면 70개</td>
-                    <td class="border p-1">영주장비 재료상자 24개</td>
-                    <td class="border p-1">광택제 80개</td>
-                    <td class="border p-1">합금 8,000개</td>
-                    <td class="border p-1">보석도면 40개</td>
-                    <td class="border p-1">보석매뉴얼 40개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">30,000</td>
-                    <td class="border p-1">설계도면 140개</td>
-                    <td class="border p-1">영주장비 재료상자 48개</td>
-                    <td class="border p-1">광택제 100개</td>
-                    <td class="border p-1">합금 10,000개</td>
-                    <td class="border p-1">보석도면 50개</td>
-                    <td class="border p-1">보석매뉴얼 50개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">79,000</td>
-                    <td class="border p-1">설계도면 350개</td>
-                    <td class="border p-1">영주장비 재료상자 120개</td>
-                    <td class="border p-1">광택제 200개</td>
-                    <td class="border p-1">합금 20,000개</td>
-                    <td class="border p-1">보석도면 100개</td>
-                    <td class="border p-1">보석매뉴얼 100개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">설계도면 700개</td>
-                    <td class="border p-1">영주장비 재료상자 24개</td>
-                    <td class="border p-1">광택제 300개</td>
-                    <td class="border p-1">합금 30,000개</td>
-                    <td class="border p-1">보석도면 200개</td>
-                    <td class="border p-1">보석매뉴얼 200개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">공용섬조각 60개</td>
-                    <td class="border p-1">불의수정 250개</td>
-                    <td class="border p-1">광택제 300개</td>
-                    <td class="border p-1">합금 30,000개</td>
-                    <td class="border p-1">보석도면 200개</td>
-                    <td class="border p-1">보석매뉴얼 200개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">공용섬조각 40개</td>
-                    <td class="border p-1">불의수정 500개</td>
-                    <td class="border p-1">광택제 300개</td>
-                    <td class="border p-1">합금 3,000개</td>
-                    <td class="border p-1">보석도면 200개</td>
-                    <td class="border p-1">보석매뉴얼 200개</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="text-lg font-semibold mb-2">🔹 만물잡화점(영주장비, 보석) - 7세대
-            <div class="overflow-x-auto">
-              <table class="table-auto border w-full text-xs text-center bg-white shadow">
-                <thead class="bg-orange-100">
-                  <tr>
-                    <th class="border p-1">금액</th>
-                    <th class="border p-1" colspan="6">구성품</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border p-1">1,500</td>
-                    <td class="border p-1">설계도면 10개</td>
-                    <td class="border p-1">영주장비 재료상자 3개</td>
-                    <td class="border p-1">광택제 40개</td>
-                    <td class="border p-1">합금 4,000개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">4,400</td>
-                    <td class="border p-1">설계도면 30개</td>
-                    <td class="border p-1">영주장비 재료상자 9개</td>
-                    <td class="border p-1">광택제 100개</td>
-                    <td class="border p-1">합금 10,000개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">7,500</td>
-                    <td class="border p-1">설계도면 40개</td>
-                    <td class="border p-1">영주장비 재료상자 12개</td>
-                    <td class="border p-1">광택제 180개</td>
-                    <td class="border p-1">합금 18,000개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">15,000</td>
-                    <td class="border p-1">설계도면 80개</td>
-                    <td class="border p-1">영주장비 재료상자 24개</td>
-                    <td class="border p-1">광택제 80개</td>
-                    <td class="border p-1">합금 8,000개</td>
-                    <td class="border p-1">보석도면 55개</td>
-                    <td class="border p-1">보석매뉴얼 55개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">30,000</td>
-                    <td class="border p-1">설계도면 160개</td>
-                    <td class="border p-1">영주장비 재료상자 48개</td>
-                    <td class="border p-1">광택제 100개</td>
-                    <td class="border p-1">합금 10,000개</td>
-                    <td class="border p-1">보석도면 80개</td>
-                    <td class="border p-1">보석매뉴얼 80개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">79,000</td>
-                    <td class="border p-1">설계도면 400개</td>
-                    <td class="border p-1">영주장비 재료상자 120개</td>
-                    <td class="border p-1">광택제 200개</td>
-                    <td class="border p-1">합금 20,000개</td>
-                    <td class="border p-1">보석도면 140개</td>
-                    <td class="border p-1">보석매뉴얼 140개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">설계도면 800개</td>
-                    <td class="border p-1">영주장비 재료상자 240개</td>
-                    <td class="border p-1">광택제 300개</td>
-                    <td class="border p-1">합금 30,000개</td>
-                    <td class="border p-1">보석도면 280개</td>
-                    <td class="border p-1">보석매뉴얼 280개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">공용섬조각 60개</td>
-                    <td class="border p-1">불의수정 300개</td>
-                    <td class="border p-1">광택제 300개</td>
-                    <td class="border p-1">합금 30,000개</td>
-                    <td class="border p-1">보석도면 200개</td>
-                    <td class="border p-1">보석매뉴얼 200개</td>
-                  </tr>
-                  <tr>
-                    <td class="border p-1">149,000</td>
-                    <td class="border p-1">공용섬조각 40개</td>
-                    <td class="border p-1">불의수정 600개</td>
-                    <td class="border p-1">광택제 300개</td>
-                    <td class="border p-1">합금 3,000개</td>
-                    <td class="border p-1">보석도면 200개</td>
-                    <td class="border p-1">보석매뉴얼 200개</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </details>      
-
-      <!-- 희망지혜 -->
-      <details class="bg-white border border-orange-300 rounded-md p-4">
-        <summary class="cursor-pointer text-lg font-bold text-orange-700 mb-2">🕵️‍ 희망지혜 </summary>
-        <div id="희망지혜" class="mt-2">
-          <p clase="text-gray-500 text-sm">📦 데이터 로딩 중...</p>
-        </div>
-      </details>
-    </div>
-    
-    <script>
-      function sendHeightToParent() {
-        const height = document.body.scrollHeight;
-        console.log(height);
-        window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+          document.body.classList.toggle('dark-mode', e.data.value);
       }
-
-      // 페이지 최초 로드 시
-      window.addEventListener("load", () => {
-        setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-      });
-
-      // 각 details 토글 시 높이 재전송
-      document.querySelectorAll("details").forEach(detail => {
-        detail.addEventListener("toggle", () => {
-          // 약간 딜레이 후 정확한 높이 측정
-          setTimeout(sendHeightToParent, 300);
-        });
-      });
-
-      function loadPage(page) {
-        const isMobile = window.innerWidth <= 768;
-        const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
-        window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-      }
-    </script>
-      
-    <script>
-      const baseUrl = 'data/';
-
-      // [ID] => [파일명] 매핑
-      const fileMap = {
-        용어안내: 'ward.html',
-        영웅성급: '영웅성급업.html',
-        제련불수: 'refinde.html',
-        전용무기: '전용무기.html',
-        미스릴: '미스릴.html',
-        커스텀상자: 'custompakage.html',
-        커스텀무기: '커스텀무기.html',            
-        보석마스터: 'gempakage.html',
-        보석비전: 'visionpakage.html',
-        장인보물창고보석: '보물창고_보석.html',
-        장인보물창고장비: '보불창고_장비.html',
-        여행자팩 : '여행자팩.html',
-        깃발해금 : '깃발해금.html',
-        만물잡화 : '만물잡화점.html',
-        연맹대작전 : '연맹대작전.html',
-        희망지혜 : '전문가희망지혜.html'
-      };
-
-      // [ID] => 로딩 여부 저장
-      const loadState = {};
-      Object.keys(fileMap).forEach(id => loadState[id] = false);
-
-      // 모든 <details> 요소에 toggle 이벤트 바인딩
-      document.querySelectorAll('details').forEach(detail => {
-        detail.addEventListener('toggle', async () => {
-          for (const id in fileMap) {
-            const target = detail.querySelector(`#${id}`);
-            if (target && !loadState[id] && detail.open) {
-              try {
-                const res = await fetch(`${baseUrl}${fileMap[id]}`);
-                if (!res.ok) throw new Error('파일 요청 실패');
-                const html = await res.text();
-                target.innerHTML = html;
-                loadState[id] = true;
-              } catch (e) {
-                target.innerHTML = `<p class="text-red-500">⚠️ 테이블 데이터를 불러오는 데 실패했습니다.</p>`;
-              }
-            }
-          }
-        });
-      });
-    </script>
-  
-    <script>
-      document.addEventListener("contextmenu", event => event.preventDefault());
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "F12" ||
-            (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-            (e.ctrlKey && (e.key === "U" || e.key === "S")))
-        {
-          e.preventDefault();
-        }
-      });
-    </script>
-    <script>
-      window.addEventListener('message', (e) => {
-        if (e.data?.type === 'DARK_MODE') {
-            document.body.classList.toggle('dark-mode', e.data.value);
-        }
-      });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>

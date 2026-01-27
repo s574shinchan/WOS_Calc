@@ -4,170 +4,185 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title> 일정표 </title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body.dark-mode {
-      background-color: #121212;
-      color: #f0f0f0;
-    }
-    
-    .dark-mode .border-gray-200 { border-color: #0f0f0f !important; }
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-    
-    .dark-mode .text-gray-800,
-    .dark-mode .text-gray-700,
-    .dark-mode .text-gray-600 { color: #f0f0f0 !important; }
-  </style>
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <script src="js/common.js"></script> 
 </head>
-<body class="bg-gray-100 p-2 font-sans text-sm">
-  <div class="max-w-[1500px] mx-auto bg-white p-4 rounded-xl shadow-md">
-    <h1 class="text-2xl font-bold text-gray-800 mb-2">📅 주요 이벤트 일정</h1>
+<body>
+  <div id="navMount"></div>
+  
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-2xl font-bold text-gray-800 mb-2">📅 주요 이벤트 일정</h1>
+          
+          <!-- 자동 계산된 주차 안내-->
+          <div id="currentWeekInfo" class="mb-4 text-xs text-gray-600 border rounded-lg p-3 bg-gray-100"></div>
+          
+          <!-- Week Blocks (카드 + 주간표) -->
+          <div class="space-y-3">            
+            <!-- Week 1 -->
+            <div id="week-1" data-week="1"
+                 class="week-block border border-gray-200 rounded-xl p-3 bg-white">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-semibold text-gray-800">1주차</span>
+                </div>
+                <span class="text-[12px] text-gray-600" data-week-range="1"></span>          
+                <p class="text-[12px] text-gray-600">SVS 준비단계 (월~금)<br>SVS 전쟁단계 (토)</p>
 
-    <!-- 자동 계산된 주차 안내-->
-    <div id="currentWeekInfo" class="mb-4 text-xs text-gray-600 border rounded-lg p-3 bg-gray-100"></div>
-    
-    <!-- Week Blocks (카드 + 주간표) -->
-    <div class="space-y-3">
-      
-      <!-- Week 1 -->
-      <div id="week-1" data-week="1"
-           class="week-block border border-gray-200 rounded-xl p-3 bg-white">
-        <div class="flex flex-col gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-xl font-semibold text-gray-800">1주차</span>
+                <!-- 주간 표 -->
+                <div class="week-grid mt-1 grid grid-cols-7 text-[12px] border border-gray-200 rounded-md overflow-hidden">
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+
+                  <div class="day-slot border-t border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Week 2 -->
+            <div id="week-2" data-week="2"
+                 class="week-block border border-gray-200 rounded-xl p-3 bg-white">
+              <div class="flex flex-col gap-2">
+                <!-- 상단 제목/설명 -->
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-semibold text-gray-800">2주차</span>
+                </div>
+                <!-- 여기 날짜 범위 자동 표기 -->
+                <span class="text-[12px] text-gray-600" data-week-range="2"></span>
+                <p class="text-[12px] text-gray-600">연맹대작전 (월~토)<br>무기공장 (일)</p>
+
+                <!-- 하단: 주간 표 -->
+                <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
+                  <!-- 날짜(요일) 헤더 (JS로 채움) -->
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+
+                  <!-- 이벤트 브릿지 (JS로 채움) -->
+                  <div class="day-slot border-t border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Week 2 -->
+            <div id="week-3" data-week="3"
+                 class="week-block border border-gray-200 rounded-xl p-3 bg-white">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-semibold text-gray-800">3주차</span>            
+                </div>
+                <span class="text-[12px] text-gray-600" data-week-range="3"></span>
+                <p class="text-[12px] text-gray-600">빙원의 왕 (월~금)<br>내부솔라 (토)</p>
+
+                <!-- 주간 표 -->
+                <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+
+                  <div class="day-slot border-t border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Week 4 -->
+            <div id="week-4" data-week="4"
+                 class="week-block border border-gray-200 rounded-xl p-3 bg-white">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-semibold text-gray-800">4주차</span>            
+                </div>
+                <span class="text-[12px] text-gray-600" data-week-range="4"></span>
+                <p class="text-[12px] text-gray-600">연맹총동원 (월~금)<br>협곡 (토)<br>무기공장 (일)</p>
+
+                <!-- 주간 표 -->
+                <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+                  <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
+
+                  <div class="day-slot border-t border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                  <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <span class="text-[12px] text-gray-600" data-week-range="1"></span>          
-          <p class="text-[12px] text-gray-600">SVS 준비단계 (월~금)<br>SVS 전쟁단계 (토)</p>
-
-          <!-- 주간 표 -->
-          <div class="week-grid mt-1 grid grid-cols-7 text-[12px] border border-gray-200 rounded-md overflow-hidden">
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-
-            <div class="day-slot border-t border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-          </div>
+          
         </div>
       </div>
-
-      <!-- Week 2 -->
-      <div id="week-2" data-week="2"
-           class="week-block border border-gray-200 rounded-xl p-3 bg-white">
-        <div class="flex flex-col gap-2">
-          <!-- 상단 제목/설명 -->
-          <div class="flex items-center gap-2">
-            <span class="text-xl font-semibold text-gray-800">2주차</span>
-          </div>
-          <!-- 여기 날짜 범위 자동 표기 -->
-          <span class="text-[12px] text-gray-600" data-week-range="2"></span>
-          <p class="text-[12px] text-gray-600">연맹대작전 (월~토)<br>무기공장 (일)</p>
-
-          <!-- 하단: 주간 표 -->
-          <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
-            <!-- 날짜(요일) 헤더 (JS로 채움) -->
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-
-            <!-- 이벤트 브릿지 (JS로 채움) -->
-            <div class="day-slot border-t border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Week 2 -->
-      <div id="week-3" data-week="3"
-           class="week-block border border-gray-200 rounded-xl p-3 bg-white">
-        <div class="flex flex-col gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-xl font-semibold text-gray-800">3주차</span>            
-          </div>
-          <span class="text-[12px] text-gray-600" data-week-range="3"></span>
-          <p class="text-[12px] text-gray-600">빙원의 왕 (월~금)<br>내부솔라 (토)</p>
-
-          <!-- 주간 표 -->
-          <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-
-            <div class="day-slot border-t border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Week 4 -->
-      <div id="week-4" data-week="4"
-           class="week-block border border-gray-200 rounded-xl p-3 bg-white">
-        <div class="flex flex-col gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-xl font-semibold text-gray-800">4주차</span>            
-          </div>
-          <span class="text-[12px] text-gray-600" data-week-range="4"></span>
-          <p class="text-[12px] text-gray-600">연맹총동원 (월~금)<br>협곡 (토)<br>무기공장 (일)</p>
-
-          <!-- 주간 표 -->
-          <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-            <div class="day-header bg-gray-50 text-center py-1 font-medium text-gray-500"></div>
-
-            <div class="day-slot border-t border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-            <div class="day-slot border-t border-l border-gray-200 text-center py-1"></div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
+  <div id="footerMount"></div>
+	
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script> 
   <script>
     // ★ 시작일과 시작 주차를 네가 지정하는 부분
     const START_DATE = new Date(2025, 11, 01);  // (연,월-1,일) → 2025-11-10 (월요일)

@@ -1,0 +1,61 @@
+/* CSS Document */
+.muted{ color: gray-600; }
+.value{min-width:3rem;text-align:right}
+.pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+@media (max-width : 900px ){
+  .toolbar{grid-template-columns: 1fr}
+}
+.inline-label{display:flex;align-items:center;gap:.5rem}
+select.pill{height:32px}
+.err{color:#b45309}
+ /* ✅ 다크모드 전용 */
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+.dark-mode select option { color: #000 !important; }
+.dark-mode select { color: #000 !important; }
+.dark-mode input { color: #000 !important; }
+
+.divider-v{ border-left:1px solid rgba(0,0,0,.18); }
+.divider-h{ border-top: 1px solid rgba(0,0,0,.18); }
+
+.dark-mode .divider-v{ border-left:1px solid rgba(255,255,255,.22) !important; }
+.dark-mode .divider-h{ border-top: 1px solid rgba(255,255,255,.22) !important; }
+/* 이미지 프레임: 배경 ❌ / 테두리만 */
+.expert-imgframe{
+  background: transparent !important;
+  border: 1px solid rgba(0,0,0,.12);
+  padding: 16px;
+}
+
+/* 다크모드 대응 */
+.dark-mode .expert-imgframe{
+  border: 1px solid rgba(255,255,255,.22);
+}
+
+/* 혹시 모를 img 배경 강제 제거 */
+#expertPickImg{
+  background: transparent !important;
+}
+/* ✅ 전문가 아이콘 프레임(팝업/메인 공용) */
+.expert-icon-frame{
+  background: #eef1f5;                 /* 연회색(팝업처럼) */
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 18px;
+  padding: 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.dark-mode .expert-icon-frame{
+  background: rgba(255,255,255,.10) !important; /* 다크에서도 비슷한 톤 */
+  border-color: rgba(255,255,255,.18) !important;
+}
+.expert-icon-img{
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  background: transparent !important;
+}

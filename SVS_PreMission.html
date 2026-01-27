@@ -4,1132 +4,1075 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>SVS 점수계산</title>
-		<script src="https://cdn.tailwindcss.com"></script>
-		<style>
-			/* 1) 라이트 기본 팔레트 */
-			:root{
-				--bg:#ffffff;         /* 페이지 배경 */
-        --text:#111827;       /* 텍스트 색 */ 
-        --card:#ffffff;       /* 카드/표 배경 */
-        --head:#f3f4f6;       /* thead 배경 */
-        --border:#e5e7eb;     /* 테두리 */
-        --in:#d1fae5;         /* 입력칸(초록) */
-        --sum:#fef08a;        /* 합계(노랑) */
-        --tab-bg:#f9fafb;     /* 비선택 탭 배경 */
-      }
-
-      /* 2) 다크모드 팔레트 (body.dark-mode 클래스 사용 시) */
-      body.dark-mode{
-        --bg:#2c2c2c;
-        --text:#f0f0f0;
-        --card:#121212;
-        --head:#111827;
-        --border:#374151;
-        --in:#134e4a;
-        --sum:#a57c00;
-        --tab-bg:#1f2937;
-        --shadow:0 10px 26px rgba(0,0,0,.35);
-      }
-
-      /* 3) 공통 스타일 */
-      html{ font-size:15px; }
-      body{ background:var(--bg); color:var(--text); }
-      .maxw{max-width:1200px}
-      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; text-align: right}
-      .sum{ background:var(--sum) }
-      .tcap{ font-size:.83rem; color:var(--muted) }
-      .tlabel{ font-size:1.05rem; font-weight:800 }
-      .tile{
-        background:var(--card); border:1px solid var(--border); border-radius:16px;
-        box-shadow:var(--shadow); padding:1.05rem 1.1rem;
-      }
-      .tin{ background:var(--in); border:1px solid var(--border); border-radius:9999px; padding:.45rem .95rem; text-align:right; font-size:1rem }
-      .tintb { background:var(--in); padding:.45rem .95rem; text-align:right; font-size:1rem }
-
-      input[type="number"]{-moz-appearance:textfield; appearance:textfield}
-      input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{ appearance:none; margin:0 }
-      select{ border:1px solid var(--border); background:var(--card); border-radius:12px; padding:.35rem .6rem }
-      /* 4) 탭 */
-      .tabs{
-        display:flex; gap:.25rem;
-        border-bottom:1px solid var(--border);
-        margin-bottom:.75rem
-      }
-      .tab-btn{
-        padding:.6rem 1rem; font-weight:600;
-        border:1px solid var(--border); border-bottom:0;
-        border-top-left-radius:.6rem; border-top-right-radius:.6rem;
-        background:var(--tab-bg); color:var(--text)
-      }
-      .tab-btn[aria-selected="true"] {
-        background-color: #2563eb;  /* 예: 파란색 */
-        color: #fff;                /* 글자 흰색 */
-        border-color: #1d4ed8;
-      }
-      
-      table{ border-collapse:collapse; width:100% }
-      th, td{ border:1px solid var(--border); padding:.6rem .5rem; vertical-align:middle; font-size:.95rem }
-      thead th{ background:var(--head); font-weight:700 }
-      tbody td input{ width:100% }
-      .col-qty{ background:var(--in) }
-      .row-sub td{ background:var(--sum); font-weight:700 }
-      .grid-wrap{ display:grid; grid-template-columns:1fr; gap:1rem }
-      @media (min-width:1100px){ .grid-wrap{ grid-template-columns: 1fr 1.2fr; } }
-
-      .dense th, .dense td{ padding:.36rem .42rem; font-size:.92rem; line-height:1.25 }
-      .dense .col-qty input{ height:38px; padding:.2rem .6rem; font-size:.9rem }
-
-      /* ▼ 병사 테이블 밀집 모드 */
-      .table-dense th, .table-dense td{
-        padding:.32rem .42rem;
-        line-height:1.15;
-        font-size:.92rem;
-      }
-      .table-dense thead th{ padding:.36rem .42rem }
-      .table-dense .col-qty input.tin.qty{
-        height:40px; padding:.22rem .6rem; font-size:.9rem;
-      }
-      .table-dense .pts{ white-space:nowrap; }
-      .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-		</style>
     <script>
-      window.addEventListener('DOMContentLoaded', () => {
-        if (localStorage.getItem('darkMode') === 'true') {
-          document.body.classList.add('dark-mode');
-        }
-      });
-    </script>
+      (function () {
+        try {
+          const v = localStorage.getItem('darkMode');
+          if (v === 'true') document.documentElement.classList.add('dark-mode');
+        } catch (e) {}
+      })();
+    </script>    
+		<script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/svs.css">
+    <script src="js/common.js"></script> 
 	</head>
-	<body class="p-3 md:p-6">
-		<div class="max-w-[1500px] mx-auto bg-white p-3 rounded-xl shadow-md space-y-6">
-      <div class="flex items-center gap-2">
-        <label class="block text-sm mb-1">발레리아</label>
-        <select id="chkExpert" class="w-[150px] rounded-md border px-2 py-2">
-          <option>None</option>
-          <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
-          <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
-        </select>
-        <!-- ✅ 레벨 설명 표시 영역 -->
-        <span id="expertDesc"
-              class="text-sm font-semibold hidden px-4">
-        </span>
+  <body>
+    <div id="navMount"></div>
+
+    <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+      <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+        <div class="bg-gray-100 p-2 font-sans text-sm">
+          <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+            <div class="flex items-center gap-2">
+              <label class="block text-sm mb-1">발레리아</label>
+              <select id="chkExpert" class="w-[150px] rounded-md border px-2 py-2">
+                <option>None</option>
+                <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+                <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+              </select>
+              <!-- ✅ 레벨 설명 표시 영역 -->
+              <span id="expertDesc"
+                    class="text-sm font-semibold hidden px-4">
+              </span>
+            </div>
+            <!-- 탭 버튼 -->
+            <div class="tabs">
+              <button class="tab-btn" data-tab="day1" aria-selected="true">1일차</button>
+              <button class="tab-btn" data-tab="day2" aria-selected="false">2일차</button>
+              <button class="tab-btn" data-tab="day3" aria-selected="false">3일차</button>
+              <button class="tab-btn" data-tab="day4" aria-selected="false">4일차</button>
+              <button class="tab-btn" data-tab="day5" aria-selected="false">5일차</button>
+            </div>
+
+            <!-- ==================== day1 ==================== -->
+            <section id="day1" class="tab-panel">
+              <!-- 헤더 -->
+              <div class="flex items-center justify-between mb-3">
+                <h1 class="text-[1.55rem] font-extrabold">준비단계 1일차</h1>
+                <div class="text-right">
+                  <span class="align-middle mr-2 font-semibold">총 점수</span>
+                  <span id="d1_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
+                </div>
+              </div>
+
+              <!-- 2열 레이아웃 -->
+              <div class="grid grid-cols-1 gap-3 lg:grid-cols-2 mb-3">
+                <!-- 불의수정 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">불의수정 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span>
+                    <span class="mono">2,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d1_qFire" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span>
+                    <span id="d1_pFire" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 제련된 불의수정(FC6+) -->
+                <section class="tile">
+                  <div class="tlabel mb-2">제련된 불의수정 소모 (FC6+)</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">30,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d1_qRef" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d1_pRef" class="mono">0</span>
+                  </div>
+                </section>
+              </div>
+
+              <div class="grid grid-cols-1 gap-3 lg:grid-cols-2 mb-3">
+                <!-- 불의수정 조각(연구) -->
+                <section class="tile">
+                  <div class="tlabel mb-2">불의수정 조각 소모(연구)</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">1,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d1_qShard" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d1_pShard" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 영주보석 업그레이드 -->
+                <section class="tile">
+                  <div class="tlabel">영주보석 업그레이드</div>
+                  <div class="mt-2 grid grid-cols-2 gap-2 items-center">
+                    <div class="tcap text-[13px]">보석 레벨</div>
+                    <select id="d1_cLv" class="w-full h-[30px] text-sm px-2 ">
+                      <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
+                      <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
+                      <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
+                      <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
+                      <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
+                      <option value="16">Lv 16</option>
+                    </select>
+                    <div class="tcap text-[13px]">레벨 기본</div>
+                    <div id="d1_cBase" class="mono tcap text-right">625</div>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d1_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d1_cPts" class="mono">0</span>
+                  </div>
+                </section>
+              </div>
+
+              <div>
+                <!-- RIGHT: 가속 사용 -->
+                <section class="tile">
+                  <div class="tlabel">가속사용 (1분당 30점, 전문가 스킬학습 가속 포함)</div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:15%">단위</th>
+                        <th style="width:15%">개별 점수</th>
+                        <th style="width:20%">개수</th>
+                        <th style="width:50%">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>일</td>
+                        <td class="mono">43,200</td>
+                        <td class="col-qty">
+                          <input id="d1_spdD" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono" id="d1_spdDP">0</td>
+                      </tr>
+                      <tr>
+                        <td>시간</td>
+                        <td class="mono">1,800</td>
+                        <td class="col-qty">
+                          <input id="d1_spdH" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono" id="d1_spdHP">0</td>
+                      </tr>
+                      <tr>
+                        <td>분</td>
+                        <td class="mono">30</td>
+                        <td class="col-qty">
+                          <input id="d1_spdM" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono" id="d1_spdMP">0</td>
+                      </tr>
+                      <tr>
+                        <td class="text-right font-semibold" colspan="2">소계(분)</td>
+                        <td class="sum mono" id="d1_spdMin">0</td>
+                        <td class="sum mono" id="d1_spdTot">0</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </div>
+            </section>
+
+            <!-- ==================== day2 ==================== -->
+            <section id="day2" class="tab-panel hidden">
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-3">
+                <h1 class="text-[1.55rem] font-extrabold">준비단계 2일차</h1>
+                <div class="text-right">
+                  <span class="align-middle mr-2 font-semibold">총 점수</span>
+                  <span id="d2_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
+                </div>
+              </div>
+
+              <!-- 상단 3개 -->
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
+                <!-- 불의수정 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">불의수정 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">2,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d2_qFire" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d2_pFire" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 제련된 불의수정 (FC6+) -->
+                <section class="tile">
+                  <div class="tlabel mb-2">제련된 불의수정 소모 (FC6+)</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">30,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d2_qRef" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d2_pRef" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 불의수정 조각(연구) -->
+                <section class="tile">
+                  <div class="tlabel mb-2">불의수정 조각 소모(연구)</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">1,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d2_qShard" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d2_pShard" class="mono">0</span>
+                  </div>
+                </section>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <!-- 행운의 룰렛 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">행운의 룰렛</div>
+                  <div class="flex items-center justify-between tcap mt-1"><span>개별 점수</span><span class="mono">8,000</span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span><input id="d2_qWheel" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2"><span class="tcap">Points</span><span id="d2_pWheel" class="mono">0</span></div>
+                </section>
+
+                <!-- 전문가 표식 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">전문가 표식 소모</div>
+                  <div class="flex items-center justify-between tcap mt-1"><span>개별 점수</span><span class="mono">6,000</span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span><input id="d2_qExp1" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2"><span class="tcap">Points</span><span id="d2_pExp1" class="mono">0</span></div>
+                </section>
+
+                <!-- 학문의 책 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">학문의 책 소모</div>
+                  <div class="flex items-center justify-between tcap mt-1"><span>개별 점수</span><span class="mono">60</span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span><input id="d2_qExp2" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2"><span class="tcap">Points</span><span id="d2_pExp2" class="mono">0</span></div>
+                </section>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
+                <!-- 가속 -->
+                <section class="tile">
+                  <div class="tlabel">가속 사용 (1분당 30점)</div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:25%">단위</th>
+                        <th style="width:25%">개별 점수</th>
+                        <th style="width:25%">개수</th>
+                        <th style="width:25%">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>일</td>
+                        <td class="mono text-right">43,200</td>
+                        <td class="col-qty">
+                          <input id="d2_spdD" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono text-right" id="d2_spdDP">0</td>
+                      </tr>
+                      <tr>
+                        <td>시간</td>
+                        <td class="mono text-right">1,800</td>
+                        <td class="col-qty">
+                          <input id="d2_spdH" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono text-right" id="d2_spdHP">0</td>
+                      </tr>
+                      <tr>
+                        <td>분</td>
+                        <td class="mono text-right">30</td>
+                        <td class="col-qty">
+                          <input id="d2_spdM" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono text-right" id="d2_spdMP">0</td>
+                      </tr>
+                      <tr class="row-sub">
+                        <td colspan="2" class="text-right">소계(분)</td>
+                        <td id="d2_spdMin" class="mono text-right">0</td>
+                        <td id="d2_spdTot" class="mono text-right">0</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+
+                <!-- 영웅조각 -->
+                <section class="tile">
+                  <div class="tlabel">영웅조각을 이용하여 성급업</div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr><th style="width:50%">영웅조각</th><th style="width:25%">개수</th><th style="width:25%">Points</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>레어 영웅 파편</td>
+                        <td class="col-qty"><input id="d2_hsR" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+                        <td class="mono text-right" id="d2_hsRP">0</td>
+                      </tr>
+                      <tr>
+                        <td>에픽 영웅 파편</td>
+                        <td class="col-qty"><input id="d2_hsE" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+                        <td class="mono text-right" id="d2_hsEP">0</td>
+                      </tr>
+                      <tr>
+                        <td>레전드 영웅 파편</td>
+                        <td class="col-qty"><input id="d2_hsM" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+                        <td class="mono text-right" id="d2_hsMP">0</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="row-sub">
+                        <td class="text-right" colspan="2">소계</td>
+                        <td class="mono text-right" id="d2_hsTot">0</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </section>
+
+                <!-- 영주보석 -->
+                <section class="tile">
+                  <div class="tlabel">영주보석 업그레이드</div>
+                  <div class="mt-2 grid grid-cols-2 gap-2 items-center">
+                    <div class="tcap text-[13px]">보석 레벨</div>
+                    <select id="d2_cLv" class="w-full h-[30px] text-sm px-2">
+                      <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
+                      <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
+                      <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
+                      <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
+                      <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
+                      <option value="16">Lv 16</option>
+                    </select>
+                    <div class="tcap text-[13px]">레벨 기본</div>
+                    <div id="d2_cBase" class="mono tcap text-right">625</div>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d2_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d2_cPts" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 자원채집 (드롭다운 행 + 추가/삭제) -->
+                <section class="tile">
+                  <div class="flex items-center justify-between">
+                    <div class="tlabel">자원채집</div>
+                    <button id="d2_gAdd" class="btn text-sm">+ 행 추가</button>
+                  </div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:45%">자원(티어)</th>
+                        <th style="width:22%">개수</th>
+                        <th style="width:22%">Points</th>
+                        <th style="width:11%"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="d2_gBody"></tbody>
+                    <tfoot>
+                      <tr class="row-sub">
+                        <td class="text-right" colspan="2">소계</td>
+                        <td class="mono text-right" id="d2_gTot">0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  <p class="tcap mt-2">※ 티어를 선택(드롭다운)하고 개수를 입력하세요. 여러 티어를 섞어서 추가할 수 있습니다.</p>
+                </section>
+              </div>
+            </section>
+
+            <!-- ==================== day3 ==================== -->
+            <section id="day3" class="tab-panel hidden">
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-3">
+                <h1 class="text-[1.55rem] font-extrabold">준비단계 3일차</h1>
+                <div class="text-right">
+                  <span class="align-middle mr-2 font-semibold">총 점수</span>
+                  <span id="d3_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
+                </div>
+              </div>
+
+              <!-- 상단 4카드 -->
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
+                <!-- 행운의 룰렛 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">행운의 룰렛</div>
+                  <div class="flex items-center justify-between tcap">
+                    <span>개별 점수</span>
+                    <span class="mono">8,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">횟수</span>
+                    <input id="d3_wQty" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span>
+                    <span id="d3_wPts" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 전문가 표식 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">전문가 표식 소모</div>
+                  <div class="flex items-center justify-between tcap">
+                    <span>개별 점수</span><span class="mono">6,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d3_qExp1" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span>
+                    <span id="d3_pExp1" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 학문의 책 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">학문의 책 소모</div>
+                  <div class="flex items-center justify-between tcap">
+                    <span>개별 점수</span>
+                    <span class="mono">60</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d3_qExp2" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span>
+                    <span id="d3_pExp2" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 영주보석 -->
+                <section class="tile">
+                  <div class="tlabel">영주보석 업그레이드</div>
+                  <div class="mt-2 grid grid-cols-2 gap-2 items-center">
+                    <div class="tcap text-[13px]">보석 레벨</div>
+                    <select id="d3_cLv" class="w-full h-[30px] text-sm px-2">
+                      <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
+                      <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
+                      <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
+                      <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
+                      <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
+                      <option value="16">Lv 16</option>
+                    </select>
+                    <div class="tcap text-[13px]">레벨 기본</div>
+                    <div id="d3_cBase" class="mono tcap text-right">625</div>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d3_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-28 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d3_charmsPts" class="mono">0</span>
+                  </div>
+                </section>			
+              </div>
+
+              <!-- 중앙 2열 -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <!-- 영웅조각 -->
+                <section class="tile">
+                  <div class="tlabel">영웅조각을 이용하여 성급업</div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr><th style="width:50%">영웅조각</th><th style="width:25%">개수</th><th style="width:25%">Points</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>레어 영웅 조각</td>
+                        <td class="col-qty"><input id="d3_hsR" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+                        <td class="mono" id="d3_hsRPts">0</td>
+                      </tr>
+                      <tr>
+                        <td>에픽 영웅 조각</td>
+                        <td class="col-qty"><input id="d3_hsE" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+                        <td class="mono" id="d3_hsEPts">0</td>
+                      </tr>
+                      <tr>
+                        <td>레전드 영웅조각</td>
+                        <td class="col-qty"><input id="d3_hsM" class="tintb mono" type="number" min="0" step="1" value="0"></td>
+                        <td class="mono" id="d3_hsMPts">0</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="row-sub">
+                        <td class="text-right" colspan="2">소계</td>
+                        <td class="mono" id="d3_hsTotal">0</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </section>
+
+                <!-- 펫 단련 -->
+                <section class="tile">
+                  <div class="tlabel">펫 단련</div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:40%">단련 종류</th>
+                        <th style="width:25%">개별 점수</th>
+                        <th style="width:10%">개수</th>
+                        <th style="width:25%">Points</th>
+                      </tr>
+                    </thead>
+                  <tbody id="d3_petRefBody"></tbody>
+                  <tfoot>
+                    <tr class="row-sub">
+                      <td colspan="3" class="text-right">소계</td>
+                      <td class="mono" id="d3_petRefPtsTop">0</td>
+                    </tr>
+                  </tfoot>
+                  </table>
+                </section>
+              </div>
+
+              <!-- 하단 2열: 야수/펫돌파 -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <!-- 야수사냥 -->
+                <section class="tile">
+                  <div class="tlabel">야수 사냥</div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:40%">레벨 구간</th>
+                        <th style="width:20%">개별 점수</th>
+                        <th style="width:20%">행군 수</th>
+                        <th style="width:20%">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody id="d3_beastBody"></tbody>
+                    <tfoot>
+                      <tr class="row-sub">
+                        <td colspan="3" class="text-right">소계</td>
+                        <td class="mono" id="d3_beastPtsTop">0</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </section>
+
+                <!-- 펫 돌파 (드롭다운 행 + 추가/삭제) -->
+                <section class="tile">
+                  <div class="flex items-center justify-between">
+                    <div class="tlabel">펫 돌파</div>
+                    <button id="d3_advAdd" class="btn text-sm">+ 행 추가</button>
+                  </div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:40%">돌파 레벨</th>
+                        <th style="width:25%">개별 점수</th>
+                        <th style="width:10%">개수</th>
+                        <th style="width:25%">Points</th>
+                        <th style="width:0%"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="d3_petAdvBody"><!-- 동적 행 --></tbody>
+                    <tfoot>
+                      <tr class="row-sub">
+                        <td colspan="3" class="text-right">소계</td>
+                        <td class="mono" id="d3_petAdvPtsTop">0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </section>
+              </div>
+
+              <!-- 빙원괴수 (스태미너 + 전략선택) -->
+              <section class="tile">
+                <div class="tlabel mb-2">빙원괴수</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <!-- 좌: EA & 설명 -->
+                  <div>
+                    <div class="flex items-center justify-between tcap">
+                      <span class="text-lg">EA (Level 1–7)</span>
+                      <span id="d3_polarEA" class="mono text-lg">30,000</span>
+                    </div>				
+                    <p class="tcap mt-2">※ 전략에 따라 1번 집결당 소모 스태미너 평균이 달라집니다.</p>
+                    <div class="tlabel mt-4">스태미너 계산</div>
+                    <div class="flex items-center justify-between mt-2">
+                      <span class="tcap py-2">시작 스태미너</span>
+                      <input id="d3_stStart" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                      <span class="tcap py-2">스태미너 캔 개수</span>
+                      <input id="d3_stChief" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                      <span class="tcap">총 스태미너</span><span id="d3_stTotal" class="mono">0</span>
+                    </div>					
+                  </div>
+                  <!-- 우: 전략 표 -->
+                  <div>
+                    <table class="w-full border-collapse dense">
+                      <thead>
+                        <tr>
+                          <th style="width:30%">전략(지나o:x)</th>
+                          <th style="width:25%">집결 수</th>
+                          <th style="width:25%">Points</th>
+                          <th style="width:10%">선택</th>
+                        </tr>
+                      </thead>
+                      <tbody id="d3_polarBody"></tbody>
+                      <tfoot>
+                        <tr class="row-sub">
+                          <td colspan="2" class="text-right">선택 합계</td>
+                          <td colspan="2" class="mono" id="d3_polarPtsTop">0</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            </section>
+
+            <!-- ==================== day4 ==================== -->
+            <section id="day4" class="tab-panel hidden">
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-3">
+                <h1 class="text-[1.55rem] font-extrabold">준비단계 4일차</h1>
+                <div class="text-right">
+                  <span class="align-middle mr-2 font-semibold">총 점수</span>
+                  <span id="d4_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <!-- 마스터리석 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">마스터리석 1개 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">4,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d4_qEss" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d4_pEss" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 미스릴 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">미스릴 1개 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">144,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d4_qMit" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d4_pMit" class="mono">0</span>
+                  </div>
+                </section>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <!-- 영웅전용장비 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">영웅전용장비 1개 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">8,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d4_qWid" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span>
+                    <span id="d4_pWid" class="mono">0</span>
+                  </div>
+                  <!-- ▼ 현재 / 목표 레벨 -->
+                  <div class="tlabel mt-2 mb-2">영웅 전용장비 레벨계산</div>
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2">
+                      <span class="text-[12px] text-gray-600">현재</span>
+                      <select id="d4_curLv" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
+                        <option value="" selected disabled hidden></option>
+                        <option value="0">Lv0</option>
+                        <option value="1">Lv1</option>
+                        <option value="2">Lv2</option>
+                        <option value="3">Lv3</option>
+                        <option value="4">Lv4</option>
+                        <option value="5">Lv5</option>
+                        <option value="6">Lv6</option>
+                        <option value="7">Lv7</option>
+                        <option value="8">Lv8</option>
+                        <option value="9">Lv9</option>
+                      </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[12px] text-gray-600">목표</span>
+                      <select id="d4_tgtLv" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
+                        <option value="" selected disabled hidden></option>
+                        <option value="1">Lv1</option>
+                        <option value="2">Lv2</option>
+                        <option value="3">Lv3</option>
+                        <option value="4">Lv4</option>
+                        <option value="5">Lv5</option>
+                        <option value="6">Lv6</option>
+                        <option value="7">Lv7</option>
+                        <option value="8">Lv8</option>
+                        <option value="9">Lv9</option>
+                        <option value="10">Lv10</option>
+                      </select>
+                    </div>
+                    <!-- ▼ 계산 결과 -->
+                    <div class="flex items-center justify-between">
+                      <span class="tcap">필요 개수</span>
+                      <span id="d4_nWid" class="mono px-2">0</span>
+                      <span class="tcap px-2">Point</span>
+                      <span id="d4_nPWid" class="mono">0</span>            
+                    </div>
+                  </div>
+                </section>
+
+                <!-- 영주보석 업그레이드 -->			
+                <section class="tile">
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="tlabel">영주보석 업그레이드</div>
+                  </div>
+
+                  <div class="mt-2 grid grid-cols-2 gap-2 items-center">
+                    <div class="tcap text-[13px]">보석 레벨</div>
+                    <select id="d4_cLv" class="w-full h-[30px] text-s px-2">
+                      <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
+                      <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
+                      <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
+                      <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
+                      <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
+                      <option value="16">Lv 16</option>
+                    </select>
+                    <div class="tcap text-[13px] mt-2">평점</div>
+                    <div id="d4_cBase" class="mono tcap mt-2">625</div>
+                  </div>
+
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d4_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-44 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d4_cPts" class="mono">0</span>
+                  </div>
+                </section>
+              </div>
+
+              <div>
+                <!-- 병사생산 (드롭다운 행 + 추가/삭제) -->
+                <section class="tile">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="tlabel">병사 생산</div>
+                    <button id="troopAdd" class="btn text-sm">+ 행 추가</button>
+                  </div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:25%">병사 티어</th>
+                        <th style="width:25%">생산량</th>
+                        <th style="width:25%">개별 점수</th>
+                        <th style="width:25%">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody id="troopBody">
+                      <!-- 동적 행 -->
+                    </tbody>
+                    <tfoot>
+                      <tr class="row-sub">
+                        <td class="text-right" colspan="3">소계</td>
+                        <td class="mono text-right" id="d4_tTot">0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  <p class="tcap mt-2">※ 여러 티어를 계산하려면 행추가를 누르세요.</p>
+                </section>
+              </div>
+            </section>
+
+            <!-- ==================== day5 ==================== -->
+            <section id="day5" class="tab-panel hidden">
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-3">
+                <h1 class="text-[1.55rem] font-extrabold">준비단계 5일차</h1>
+                <div class="text-right">
+                  <span class="align-middle mr-2 font-semibold">총 점수</span>
+                  <span id="d5_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
+                <!-- 불의수정 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">불의수정 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">2,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d5_qFire" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d5_pFire" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 제련된 불의수정 (FC6+) -->
+                <section class="tile">
+                  <div class="tlabel mb-2">제련된 불의수정 소모 (FC6+)</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">30,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d5_qRef" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d5_pRef" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 불의수정 조각(연구) -->
+                <section class="tile">
+                  <div class="tlabel mb-2">불의수정 조각 소모(연구)</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">1,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d5_qShard" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d5_pShard" class="mono">0</span>
+                  </div>
+                </section>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
+                <!-- 영웅전용장비 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">영웅전용장비 1개 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">8,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d5_qWid" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d5_pWid" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 마스터리석 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">마스터리석 1개 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">4,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d5_qEss" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d5_pEss" class="mono">0</span>
+                  </div>
+                </section>
+
+                <!-- 미스릴 -->
+                <section class="tile">
+                  <div class="tlabel mb-2">미스릴 1개 소모</div>
+                  <div class="flex items-center justify-between tcap mt-2">
+                    <span>개별 점수</span><span class="mono">144,000</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">개수</span>
+                    <input id="d5_qMit" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="tcap">Points</span><span id="d5_pMit" class="mono">0</span>
+                  </div>
+                </section>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <!-- 가속 -->
+                <section class="tile">
+                  <div class="tlabel">가속 사용 (1분당 30점, 전문가 스킬학습 가속 포함)</div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:25%">단위</th>
+                        <th style="width:25%">개별 점수</th>
+                        <th style="width:10%">개수</th>
+                        <th style="width:45%">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>일</td>
+                        <td class="mono text-right">43,200</td>
+                        <td class="col-qty">
+                          <input id="d5_spdD" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono text-right" id="d5_spdDP">0</td>
+                      </tr>
+                      <tr>
+                        <td>시간</td>
+                        <td class="mono text-right">1,800</td>
+                        <td class="col-qty">
+                          <input id="d5_spdH" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono text-right" id="d5_spdHP">0</td>
+                      </tr>
+                      <tr>
+                        <td>분</td>
+                        <td class="mono text-right">30</td>
+                        <td class="col-qty">
+                          <input id="d5_spdM" class="tintb mono" type="number" min="0" step="1" value="0">
+                        </td>
+                        <td class="mono text-right" id="d5_spdMP">0</td>
+                      </tr>
+                      <tr class="row-sub">
+                        <td colspan="2" class="text-right">소계(분)</td>
+                        <td id="d5_spdMin" class="mono text-right">0</td>
+                        <td id="d5_spdTot" class="mono text-right">0</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+
+                <!-- 펫 단련 -->
+                <section class="tile">
+                  <div class="tlabel">펫 단련</div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:35%">단련 종류</th>
+                        <th style="width:20%">개별 점수</th>
+                        <th style="width:10%">개수</th>
+                        <th style="width:35%">Points</th>
+                      </tr>
+                    </thead>
+                  <tbody id="d5_petRefBody"></tbody>
+                  <tfoot>
+                    <tr class="row-sub">
+                      <td colspan="3" class="text-right">소계</td>
+                      <td class="mono" id="d5_petRefPtsTop">0</td>
+                    </tr>
+                  </tfoot>
+                  </table>
+                </section>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <!-- 펫 돌파 (드롭다운 행 + 추가/삭제) -->
+                <section class="tile">
+                  <div class="flex items-center justify-between">
+                    <div class="tlabel">펫 돌파</div>
+                    <button id="d5_advAdd" class="btn text-sm">+ 행 추가</button>
+                  </div>
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:30%">돌파 레벨</th>
+                        <th style="width:20%">평점</th>
+                        <th style="width:10%">개수</th>
+                        <th style="width:30%">Points</th>
+                        <th style="width:0%"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="d5_petAdvBody"><!-- 동적 행 --></tbody>
+                    <tfoot>
+                      <tr class="row-sub">
+                        <td colspan="3" class="text-right">소계</td>
+                        <td class="mono" id="d5_petAdvPtsTop">0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </section>
+
+                <!-- 영주장비 (드롭다운 행 + 추가/삭제) -->
+                <section class="tile">
+                  <div class="flex items-center justify-between">
+                    <div class="tlabel">영주장비</div>
+                    <button id="d5_eqAdd" class="btn text-sm">+ 행 추가</button>
+                  </div>
+
+                  <table class="mt-2 w-full border-collapse dense">
+                    <thead>
+                      <tr>
+                        <th style="width:35%">장비 등급</th>
+                        <th style="width:20%">평점</th>
+                        <th style="width:10%">개수</th>
+                        <th style="width:25%">Points</th>
+                        <th style="width:0%"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="d5_eqBody"><!-- 동적 행 --></tbody>
+                    <tfoot>
+                      <tr class="row-sub">
+                        <td class="text-right" colspan="3">소계</td>
+                        <td class="mono" id="d5_eqTot">0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </section>
+              </div>
+            </section>
+          </div>
+        </div>
       </div>
-      <!-- 탭 버튼 -->
-			<div class="tabs">
-				<button class="tab-btn" data-tab="day1" aria-selected="true">1일차</button>
-				<button class="tab-btn" data-tab="day2" aria-selected="false">2일차</button>
-				<button class="tab-btn" data-tab="day3" aria-selected="false">3일차</button>
-				<button class="tab-btn" data-tab="day4" aria-selected="false">4일차</button>
-				<button class="tab-btn" data-tab="day5" aria-selected="false">5일차</button>
-			</div>
-      
-      <!-- ==================== day1 ==================== -->
-      <section id="day1" class="tab-panel">
-        <!-- 헤더 -->
-        <div class="flex items-center justify-between mb-3">
-          <h1 class="text-[1.55rem] font-extrabold">준비단계 1일차</h1>
-          <div class="text-right">
-            <span class="align-middle mr-2 font-semibold">총 점수</span>
-            <span id="d1_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
-          </div>
-        </div>
-
-        <!-- 2열 레이아웃 -->
-        <div class="grid grid-cols-1 gap-3 lg:grid-cols-2 mb-3">
-          <!-- 불의수정 -->
-          <section class="tile">
-            <div class="tlabel mb-2">불의수정 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span>
-              <span class="mono">2,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d1_qFire" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span>
-              <span id="d1_pFire" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 제련된 불의수정(FC6+) -->
-          <section class="tile">
-            <div class="tlabel mb-2">제련된 불의수정 소모 (FC6+)</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">30,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d1_qRef" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d1_pRef" class="mono">0</span>
-            </div>
-          </section>
-        </div>
-
-        <div class="grid grid-cols-1 gap-3 lg:grid-cols-2 mb-3">
-          <!-- 불의수정 조각(연구) -->
-          <section class="tile">
-            <div class="tlabel mb-2">불의수정 조각 소모(연구)</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">1,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d1_qShard" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d1_pShard" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 영주보석 업그레이드 -->
-          <section class="tile">
-            <div class="tlabel">영주보석 업그레이드</div>
-            <div class="mt-2 grid grid-cols-2 gap-2 items-center">
-              <div class="tcap text-[13px]">보석 레벨</div>
-              <select id="d1_cLv" class="w-full h-[30px] text-sm px-2 ">
-                <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
-                <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
-                <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
-                <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
-                <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
-                <option value="16">Lv 16</option>
-              </select>
-              <div class="tcap text-[13px]">레벨 기본</div>
-              <div id="d1_cBase" class="mono tcap text-right">625</div>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d1_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d1_cPts" class="mono">0</span>
-            </div>
-          </section>
-        </div>
-
-        <div>
-          <!-- RIGHT: 가속 사용 -->
-          <section class="tile">
-            <div class="tlabel">가속사용 (1분당 30점, 전문가 스킬학습 가속 포함)</div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:15%">단위</th>
-                  <th style="width:15%">개별 점수</th>
-                  <th style="width:20%">개수</th>
-                  <th style="width:50%">Points</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>일</td>
-                  <td class="mono">43,200</td>
-                  <td class="col-qty">
-                    <input id="d1_spdD" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono" id="d1_spdDP">0</td>
-                </tr>
-                <tr>
-                  <td>시간</td>
-                  <td class="mono">1,800</td>
-                  <td class="col-qty">
-                    <input id="d1_spdH" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono" id="d1_spdHP">0</td>
-                </tr>
-                <tr>
-                  <td>분</td>
-                  <td class="mono">30</td>
-                  <td class="col-qty">
-                    <input id="d1_spdM" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono" id="d1_spdMP">0</td>
-                </tr>
-                <tr>
-                  <td class="text-right font-semibold" colspan="2">소계(분)</td>
-                  <td class="sum mono" id="d1_spdMin">0</td>
-                  <td class="sum mono" id="d1_spdTot">0</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-        </div>
-      </section>
-
-      <!-- ==================== day2 ==================== -->
-      <section id="day2" class="tab-panel hidden">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-3">
-          <h1 class="text-[1.55rem] font-extrabold">준비단계 2일차</h1>
-          <div class="text-right">
-            <span class="align-middle mr-2 font-semibold">총 점수</span>
-            <span id="d2_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
-          </div>
-        </div>
-
-        <!-- 상단 3개 -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
-          <!-- 불의수정 -->
-          <section class="tile">
-            <div class="tlabel mb-2">불의수정 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">2,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d2_qFire" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d2_pFire" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 제련된 불의수정 (FC6+) -->
-          <section class="tile">
-            <div class="tlabel mb-2">제련된 불의수정 소모 (FC6+)</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">30,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d2_qRef" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d2_pRef" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 불의수정 조각(연구) -->
-          <section class="tile">
-            <div class="tlabel mb-2">불의수정 조각 소모(연구)</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">1,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d2_qShard" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d2_pShard" class="mono">0</span>
-            </div>
-          </section>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-          <!-- 행운의 룰렛 -->
-          <section class="tile">
-            <div class="tlabel mb-2">행운의 룰렛</div>
-            <div class="flex items-center justify-between tcap mt-1"><span>개별 점수</span><span class="mono">8,000</span></div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span><input id="d2_qWheel" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2"><span class="tcap">Points</span><span id="d2_pWheel" class="mono">0</span></div>
-          </section>
-
-          <!-- 전문가 표식 -->
-          <section class="tile">
-            <div class="tlabel mb-2">전문가 표식 소모</div>
-            <div class="flex items-center justify-between tcap mt-1"><span>개별 점수</span><span class="mono">6,000</span></div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span><input id="d2_qExp1" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2"><span class="tcap">Points</span><span id="d2_pExp1" class="mono">0</span></div>
-          </section>
-
-          <!-- 학문의 책 -->
-          <section class="tile">
-            <div class="tlabel mb-2">학문의 책 소모</div>
-            <div class="flex items-center justify-between tcap mt-1"><span>개별 점수</span><span class="mono">60</span></div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span><input id="d2_qExp2" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2"><span class="tcap">Points</span><span id="d2_pExp2" class="mono">0</span></div>
-          </section>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
-          <!-- 가속 -->
-          <section class="tile">
-            <div class="tlabel">가속 사용 (1분당 30점)</div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:25%">단위</th>
-                  <th style="width:25%">개별 점수</th>
-                  <th style="width:25%">개수</th>
-                  <th style="width:25%">Points</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>일</td>
-                  <td class="mono text-right">43,200</td>
-                  <td class="col-qty">
-                    <input id="d2_spdD" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono text-right" id="d2_spdDP">0</td>
-                </tr>
-                <tr>
-                  <td>시간</td>
-                  <td class="mono text-right">1,800</td>
-                  <td class="col-qty">
-                    <input id="d2_spdH" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono text-right" id="d2_spdHP">0</td>
-                </tr>
-                <tr>
-                  <td>분</td>
-                  <td class="mono text-right">30</td>
-                  <td class="col-qty">
-                    <input id="d2_spdM" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono text-right" id="d2_spdMP">0</td>
-                </tr>
-                <tr class="row-sub">
-                  <td colspan="2" class="text-right">소계(분)</td>
-                  <td id="d2_spdMin" class="mono text-right">0</td>
-                  <td id="d2_spdTot" class="mono text-right">0</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <!-- 영웅조각 -->
-          <section class="tile">
-            <div class="tlabel">영웅조각을 이용하여 성급업</div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr><th style="width:50%">영웅조각</th><th style="width:25%">개수</th><th style="width:25%">Points</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>레어 영웅 파편</td>
-                  <td class="col-qty"><input id="d2_hsR" class="tintb mono" type="number" min="0" step="1" value="0"></td>
-                  <td class="mono text-right" id="d2_hsRP">0</td>
-                </tr>
-                <tr>
-                  <td>에픽 영웅 파편</td>
-                  <td class="col-qty"><input id="d2_hsE" class="tintb mono" type="number" min="0" step="1" value="0"></td>
-                  <td class="mono text-right" id="d2_hsEP">0</td>
-                </tr>
-                <tr>
-                  <td>레전드 영웅 파편</td>
-                  <td class="col-qty"><input id="d2_hsM" class="tintb mono" type="number" min="0" step="1" value="0"></td>
-                  <td class="mono text-right" id="d2_hsMP">0</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr class="row-sub">
-                  <td class="text-right" colspan="2">소계</td>
-                  <td class="mono text-right" id="d2_hsTot">0</td>
-                </tr>
-              </tfoot>
-            </table>
-          </section>
-
-          <!-- 영주보석 -->
-          <section class="tile">
-            <div class="tlabel">영주보석 업그레이드</div>
-            <div class="mt-2 grid grid-cols-2 gap-2 items-center">
-              <div class="tcap text-[13px]">보석 레벨</div>
-              <select id="d2_cLv" class="w-full h-[30px] text-sm px-2">
-                <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
-                <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
-                <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
-                <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
-                <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
-                <option value="16">Lv 16</option>
-              </select>
-              <div class="tcap text-[13px]">레벨 기본</div>
-              <div id="d2_cBase" class="mono tcap text-right">625</div>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d2_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d2_cPts" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 자원채집 (드롭다운 행 + 추가/삭제) -->
-          <section class="tile">
-            <div class="flex items-center justify-between">
-              <div class="tlabel">자원채집</div>
-              <button id="d2_gAdd" class="btn text-sm">+ 행 추가</button>
-            </div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:45%">자원(티어)</th>
-                  <th style="width:22%">개수</th>
-                  <th style="width:22%">Points</th>
-                  <th style="width:11%"></th>
-                </tr>
-              </thead>
-              <tbody id="d2_gBody"></tbody>
-              <tfoot>
-                <tr class="row-sub">
-                  <td class="text-right" colspan="2">소계</td>
-                  <td class="mono text-right" id="d2_gTot">0</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-            <p class="tcap mt-2">※ 티어를 선택(드롭다운)하고 개수를 입력하세요. 여러 티어를 섞어서 추가할 수 있습니다.</p>
-          </section>
-        </div>
-      </section>
-
-      <!-- ==================== day3 ==================== -->
-      <section id="day3" class="tab-panel hidden">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-3">
-          <h1 class="text-[1.55rem] font-extrabold">준비단계 3일차</h1>
-          <div class="text-right">
-            <span class="align-middle mr-2 font-semibold">총 점수</span>
-            <span id="d3_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
-          </div>
-        </div>
-
-        <!-- 상단 4카드 -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
-          <!-- 행운의 룰렛 -->
-          <section class="tile">
-            <div class="tlabel mb-2">행운의 룰렛</div>
-            <div class="flex items-center justify-between tcap">
-              <span>개별 점수</span>
-              <span class="mono">8,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">횟수</span>
-              <input id="d3_wQty" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span>
-              <span id="d3_wPts" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 전문가 표식 -->
-          <section class="tile">
-            <div class="tlabel mb-2">전문가 표식 소모</div>
-            <div class="flex items-center justify-between tcap">
-              <span>개별 점수</span><span class="mono">6,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d3_qExp1" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span>
-              <span id="d3_pExp1" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 학문의 책 -->
-          <section class="tile">
-            <div class="tlabel mb-2">학문의 책 소모</div>
-            <div class="flex items-center justify-between tcap">
-              <span>개별 점수</span>
-              <span class="mono">60</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d3_qExp2" type="number" min="0" step="1" value="0" class="tin mono w-28 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span>
-              <span id="d3_pExp2" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 영주보석 -->
-          <section class="tile">
-            <div class="tlabel">영주보석 업그레이드</div>
-            <div class="mt-2 grid grid-cols-2 gap-2 items-center">
-              <div class="tcap text-[13px]">보석 레벨</div>
-              <select id="d3_cLv" class="w-full h-[30px] text-sm px-2">
-                <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
-                <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
-                <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
-                <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
-                <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
-                <option value="16">Lv 16</option>
-              </select>
-              <div class="tcap text-[13px]">레벨 기본</div>
-              <div id="d3_cBase" class="mono tcap text-right">625</div>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d3_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-28 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d3_charmsPts" class="mono">0</span>
-            </div>
-          </section>			
-        </div>
-
-        <!-- 중앙 2열 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-          <!-- 영웅조각 -->
-          <section class="tile">
-            <div class="tlabel">영웅조각을 이용하여 성급업</div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr><th style="width:50%">영웅조각</th><th style="width:25%">개수</th><th style="width:25%">Points</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>레어 영웅 조각</td>
-                  <td class="col-qty"><input id="d3_hsR" class="tintb mono" type="number" min="0" step="1" value="0"></td>
-                  <td class="mono" id="d3_hsRPts">0</td>
-                </tr>
-                <tr>
-                  <td>에픽 영웅 조각</td>
-                  <td class="col-qty"><input id="d3_hsE" class="tintb mono" type="number" min="0" step="1" value="0"></td>
-                  <td class="mono" id="d3_hsEPts">0</td>
-                </tr>
-                <tr>
-                  <td>레전드 영웅조각</td>
-                  <td class="col-qty"><input id="d3_hsM" class="tintb mono" type="number" min="0" step="1" value="0"></td>
-                  <td class="mono" id="d3_hsMPts">0</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr class="row-sub">
-                  <td class="text-right" colspan="2">소계</td>
-                  <td class="mono" id="d3_hsTotal">0</td>
-                </tr>
-              </tfoot>
-            </table>
-          </section>
-
-          <!-- 펫 단련 -->
-          <section class="tile">
-            <div class="tlabel">펫 단련</div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:40%">단련 종류</th>
-                  <th style="width:25%">개별 점수</th>
-                  <th style="width:10%">개수</th>
-                  <th style="width:25%">Points</th>
-                </tr>
-              </thead>
-            <tbody id="d3_petRefBody"></tbody>
-            <tfoot>
-              <tr class="row-sub">
-                <td colspan="3" class="text-right">소계</td>
-                <td class="mono" id="d3_petRefPtsTop">0</td>
-              </tr>
-            </tfoot>
-            </table>
-          </section>
-        </div>
-
-        <!-- 하단 2열: 야수/펫돌파 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-          <!-- 야수사냥 -->
-          <section class="tile">
-            <div class="tlabel">야수 사냥</div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:40%">레벨 구간</th>
-                  <th style="width:20%">개별 점수</th>
-                  <th style="width:20%">행군 수</th>
-                  <th style="width:20%">Points</th>
-                </tr>
-              </thead>
-              <tbody id="d3_beastBody"></tbody>
-              <tfoot>
-                <tr class="row-sub">
-                  <td colspan="3" class="text-right">소계</td>
-                  <td class="mono" id="d3_beastPtsTop">0</td>
-                </tr>
-              </tfoot>
-            </table>
-          </section>
-
-          <!-- 펫 돌파 (드롭다운 행 + 추가/삭제) -->
-          <section class="tile">
-            <div class="flex items-center justify-between">
-              <div class="tlabel">펫 돌파</div>
-              <button id="d3_advAdd" class="btn text-sm">+ 행 추가</button>
-            </div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:40%">돌파 레벨</th>
-                  <th style="width:25%">개별 점수</th>
-                  <th style="width:10%">개수</th>
-                  <th style="width:25%">Points</th>
-                  <th style="width:0%"></th>
-                </tr>
-              </thead>
-              <tbody id="d3_petAdvBody"><!-- 동적 행 --></tbody>
-              <tfoot>
-                <tr class="row-sub">
-                  <td colspan="3" class="text-right">소계</td>
-                  <td class="mono" id="d3_petAdvPtsTop">0</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-          </section>
-        </div>
-
-        <!-- 빙원괴수 (스태미너 + 전략선택) -->
-        <section class="tile">
-          <div class="tlabel mb-2">빙원괴수</div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <!-- 좌: EA & 설명 -->
-            <div>
-              <div class="flex items-center justify-between tcap">
-                <span class="text-lg">EA (Level 1–7)</span>
-                <span id="d3_polarEA" class="mono text-lg">30,000</span>
-              </div>				
-              <p class="tcap mt-2">※ 전략에 따라 1번 집결당 소모 스태미너 평균이 달라집니다.</p>
-              <div class="tlabel mt-4">스태미너 계산</div>
-              <div class="flex items-center justify-between mt-2">
-                <span class="tcap py-2">시작 스태미너</span>
-                <input id="d3_stStart" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
-              </div>
-              <div class="flex items-center justify-between mt-2">
-                <span class="tcap py-2">스태미너 캔 개수</span>
-                <input id="d3_stChief" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
-              </div>
-              <div class="flex items-center justify-between mt-2">
-                <span class="tcap">총 스태미너</span><span id="d3_stTotal" class="mono">0</span>
-              </div>					
-            </div>
-            <!-- 우: 전략 표 -->
-            <div>
-              <table class="w-full border-collapse dense">
-                <thead>
-                  <tr>
-                    <th style="width:30%">전략(지나o:x)</th>
-                    <th style="width:25%">집결 수</th>
-                    <th style="width:25%">Points</th>
-                    <th style="width:10%">선택</th>
-                  </tr>
-                </thead>
-                <tbody id="d3_polarBody"></tbody>
-                <tfoot>
-                  <tr class="row-sub">
-                    <td colspan="2" class="text-right">선택 합계</td>
-                    <td colspan="2" class="mono" id="d3_polarPtsTop">0</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-        </section>
-      </section>
-
-      <!-- ==================== day4 ==================== -->
-      <section id="day4" class="tab-panel hidden">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-3">
-          <h1 class="text-[1.55rem] font-extrabold">준비단계 4일차</h1>
-          <div class="text-right">
-            <span class="align-middle mr-2 font-semibold">총 점수</span>
-            <span id="d4_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-          <!-- 마스터리석 -->
-          <section class="tile">
-            <div class="tlabel mb-2">마스터리석 1개 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">4,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d4_qEss" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d4_pEss" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 미스릴 -->
-          <section class="tile">
-            <div class="tlabel mb-2">미스릴 1개 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">144,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d4_qMit" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d4_pMit" class="mono">0</span>
-            </div>
-          </section>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-          <!-- 영웅전용장비 -->
-          <section class="tile">
-            <div class="tlabel mb-2">영웅전용장비 1개 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">8,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d4_qWid" type="number" min="0" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span>
-              <span id="d4_pWid" class="mono">0</span>
-            </div>
-            <!-- ▼ 현재 / 목표 레벨 -->
-            <div class="tlabel mt-2 mb-2">영웅 전용장비 레벨계산</div>
-            <div class="flex items-center gap-3">
-              <div class="flex items-center gap-2">
-                <span class="text-[12px] text-gray-600">현재</span>
-                <select id="d4_curLv" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
-                  <option value="" selected disabled hidden></option>
-                  <option value="0">Lv0</option>
-                  <option value="1">Lv1</option>
-                  <option value="2">Lv2</option>
-                  <option value="3">Lv3</option>
-                  <option value="4">Lv4</option>
-                  <option value="5">Lv5</option>
-                  <option value="6">Lv6</option>
-                  <option value="7">Lv7</option>
-                  <option value="8">Lv8</option>
-                  <option value="9">Lv9</option>
-                </select>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-[12px] text-gray-600">목표</span>
-                <select id="d4_tgtLv" class="border rounded-lg px-2 py-1 text-sm min-w-[88px]">
-                  <option value="" selected disabled hidden></option>
-                  <option value="1">Lv1</option>
-                  <option value="2">Lv2</option>
-                  <option value="3">Lv3</option>
-                  <option value="4">Lv4</option>
-                  <option value="5">Lv5</option>
-                  <option value="6">Lv6</option>
-                  <option value="7">Lv7</option>
-                  <option value="8">Lv8</option>
-                  <option value="9">Lv9</option>
-                  <option value="10">Lv10</option>
-                </select>
-              </div>
-              <!-- ▼ 계산 결과 -->
-              <div class="flex items-center justify-between">
-                <span class="tcap">필요 개수</span>
-                <span id="d4_nWid" class="mono px-2">0</span>
-                <span class="tcap px-2">Point</span>
-                <span id="d4_nPWid" class="mono">0</span>            
-              </div>
-            </div>
-          </section>
-
-          <!-- 영주보석 업그레이드 -->			
-          <section class="tile">
-            <div class="flex items-center justify-between mt-2">
-              <div class="tlabel">영주보석 업그레이드</div>
-            </div>
-
-            <div class="mt-2 grid grid-cols-2 gap-2 items-center">
-              <div class="tcap text-[13px]">보석 레벨</div>
-              <select id="d4_cLv" class="w-full h-[30px] text-s px-2">
-                <option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option>
-                <option value="4">Lv 4</option><option value="5">Lv 5</option><option value="6">Lv 6</option>
-                <option value="7">Lv 7</option><option value="8">Lv 8</option><option value="9">Lv 9</option>
-                <option value="10">Lv 10</option><option value="11">Lv 11</option><option value="12">Lv 12</option>
-                <option value="13">Lv 13</option><option value="14">Lv 14</option><option value="15">Lv 15</option>
-                <option value="16">Lv 16</option>
-              </select>
-              <div class="tcap text-[13px] mt-2">평점</div>
-              <div id="d4_cBase" class="mono tcap mt-2">625</div>
-            </div>
-
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d4_cQty" type="number" min="0" max="18" step="1" value="0" class="tin mono w-44 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d4_cPts" class="mono">0</span>
-            </div>
-          </section>
-        </div>
-
-        <div>
-          <!-- 병사생산 (드롭다운 행 + 추가/삭제) -->
-          <section class="tile">
-            <div class="flex items-center justify-between mb-3">
-              <div class="tlabel">병사 생산</div>
-              <button id="troopAdd" class="btn text-sm">+ 행 추가</button>
-            </div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:25%">병사 티어</th>
-                  <th style="width:25%">생산량</th>
-                  <th style="width:25%">개별 점수</th>
-                  <th style="width:25%">Points</th>
-                </tr>
-              </thead>
-              <tbody id="troopBody">
-                <!-- 동적 행 -->
-              </tbody>
-              <tfoot>
-                <tr class="row-sub">
-                  <td class="text-right" colspan="3">소계</td>
-                  <td class="mono text-right" id="d4_tTot">0</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-            <p class="tcap mt-2">※ 여러 티어를 계산하려면 행추가를 누르세요.</p>
-          </section>
-        </div>
-      </section>
-
-      <!-- ==================== day5 ==================== -->
-      <section id="day5" class="tab-panel hidden">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-3">
-          <h1 class="text-[1.55rem] font-extrabold">준비단계 5일차</h1>
-          <div class="text-right">
-            <span class="align-middle mr-2 font-semibold">총 점수</span>
-            <span id="d5_total" class="sum inline-block min-w-[180px] px-4 py-2 text-right rounded mono">0</span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
-          <!-- 불의수정 -->
-          <section class="tile">
-            <div class="tlabel mb-2">불의수정 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">2,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d5_qFire" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d5_pFire" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 제련된 불의수정 (FC6+) -->
-          <section class="tile">
-            <div class="tlabel mb-2">제련된 불의수정 소모 (FC6+)</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">30,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d5_qRef" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d5_pRef" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 불의수정 조각(연구) -->
-          <section class="tile">
-            <div class="tlabel mb-2">불의수정 조각 소모(연구)</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">1,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d5_qShard" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d5_pShard" class="mono">0</span>
-            </div>
-          </section>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
-          <!-- 영웅전용장비 -->
-          <section class="tile">
-            <div class="tlabel mb-2">영웅전용장비 1개 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">8,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d5_qWid" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d5_pWid" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 마스터리석 -->
-          <section class="tile">
-            <div class="tlabel mb-2">마스터리석 1개 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">4,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d5_qEss" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d5_pEss" class="mono">0</span>
-            </div>
-          </section>
-
-          <!-- 미스릴 -->
-          <section class="tile">
-            <div class="tlabel mb-2">미스릴 1개 소모</div>
-            <div class="flex items-center justify-between tcap mt-2">
-              <span>개별 점수</span><span class="mono">144,000</span>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">개수</span>
-              <input id="d5_qMit" type="number" min="0" step="1" value="0" class="tin mono w-40 h-[30px]">
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <span class="tcap">Points</span><span id="d5_pMit" class="mono">0</span>
-            </div>
-          </section>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-          <!-- 가속 -->
-          <section class="tile">
-            <div class="tlabel">가속 사용 (1분당 30점, 전문가 스킬학습 가속 포함)</div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:25%">단위</th>
-                  <th style="width:25%">개별 점수</th>
-                  <th style="width:10%">개수</th>
-                  <th style="width:45%">Points</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>일</td>
-                  <td class="mono text-right">43,200</td>
-                  <td class="col-qty">
-                    <input id="d5_spdD" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono text-right" id="d5_spdDP">0</td>
-                </tr>
-                <tr>
-                  <td>시간</td>
-                  <td class="mono text-right">1,800</td>
-                  <td class="col-qty">
-                    <input id="d5_spdH" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono text-right" id="d5_spdHP">0</td>
-                </tr>
-                <tr>
-                  <td>분</td>
-                  <td class="mono text-right">30</td>
-                  <td class="col-qty">
-                    <input id="d5_spdM" class="tintb mono" type="number" min="0" step="1" value="0">
-                  </td>
-                  <td class="mono text-right" id="d5_spdMP">0</td>
-                </tr>
-                <tr class="row-sub">
-                  <td colspan="2" class="text-right">소계(분)</td>
-                  <td id="d5_spdMin" class="mono text-right">0</td>
-                  <td id="d5_spdTot" class="mono text-right">0</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <!-- 펫 단련 -->
-          <section class="tile">
-            <div class="tlabel">펫 단련</div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:35%">단련 종류</th>
-                  <th style="width:20%">개별 점수</th>
-                  <th style="width:10%">개수</th>
-                  <th style="width:35%">Points</th>
-                </tr>
-              </thead>
-            <tbody id="d5_petRefBody"></tbody>
-            <tfoot>
-              <tr class="row-sub">
-                <td colspan="3" class="text-right">소계</td>
-                <td class="mono" id="d5_petRefPtsTop">0</td>
-              </tr>
-            </tfoot>
-            </table>
-          </section>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-          <!-- 펫 돌파 (드롭다운 행 + 추가/삭제) -->
-          <section class="tile">
-            <div class="flex items-center justify-between">
-              <div class="tlabel">펫 돌파</div>
-              <button id="d5_advAdd" class="btn text-sm">+ 행 추가</button>
-            </div>
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:30%">돌파 레벨</th>
-                  <th style="width:20%">평점</th>
-                  <th style="width:10%">개수</th>
-                  <th style="width:30%">Points</th>
-                  <th style="width:0%"></th>
-                </tr>
-              </thead>
-              <tbody id="d5_petAdvBody"><!-- 동적 행 --></tbody>
-              <tfoot>
-                <tr class="row-sub">
-                  <td colspan="3" class="text-right">소계</td>
-                  <td class="mono" id="d5_petAdvPtsTop">0</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-          </section>
-
-          <!-- 영주장비 (드롭다운 행 + 추가/삭제) -->
-          <section class="tile">
-            <div class="flex items-center justify-between">
-              <div class="tlabel">영주장비</div>
-              <button id="d5_eqAdd" class="btn text-sm">+ 행 추가</button>
-            </div>
-
-            <table class="mt-2 w-full border-collapse dense">
-              <thead>
-                <tr>
-                  <th style="width:35%">장비 등급</th>
-                  <th style="width:20%">평점</th>
-                  <th style="width:10%">개수</th>
-                  <th style="width:25%">Points</th>
-                  <th style="width:0%"></th>
-                </tr>
-              </thead>
-              <tbody id="d5_eqBody"><!-- 동적 행 --></tbody>
-              <tfoot>
-                <tr class="row-sub">
-                  <td class="text-right" colspan="3">소계</td>
-                  <td class="mono" id="d5_eqTot">0</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-          </section>
-        </div>
-      </section>
     </div>
+    
+    <div id="footerMount"></div>
+
+    <script>
+      fetch("nav.html")
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById("navMount").innerHTML = html;
+          //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+          initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+        });
+
+      // 2) FOOTER
+      fetch("footer.html").then(r=>r.text()).then(html=>{
+        document.getElementById("footerMount").innerHTML = html;
+        initFooter({ mode:"navigate" }); // 또는 "iframe"
+        initAdsense({ ids:["ad1"] });    // 슬롯 id들
+      });
+    </script>     
     
     <!-- ==================== 전문가 보너스 공통 유틸 ==================== -->
     <script>

@@ -4,374 +4,305 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>전문가/스킬 레벨업 계산기</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .muted{ color: gray-600; }
-    .value{min-width:3rem;text-align:right}
-    .pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
-    @media (max-width : 900px ){
-      .toolbar{grid-template-columns: 1fr}
-    }
-    .inline-label{display:flex;align-items:center;gap:.5rem}
-    select.pill{height:32px}
-    .err{color:#b45309}
-     /* ✅ 다크모드 전용 */
-    body.dark-mode {
-      background-color: #121212;
-      color: #f0f0f0;
-    }
-    
-    .dark-mode .border { border-color: #444 !important; }
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-  
-    .dark-mode .text-gray-800,
-    .dark-mode .text-gray-600 { color: #dddddd !important; }
-    
-    .dark-mode .text-gray-700 { color: #6DA7D8 !important; }
-
-    .dark-mode .text-blue-700 { color: #66b0ff !important; }
-    .dark-mode .text-blue-600 { color: #80caff !important; }
-    .dark-mode .text-orange-500 { color: #ffa94d !important; }
-    .dark-mode .text-green-600 { color: #79e68c !important; }
-    .dark-mode .text-red-500 { color: #ff8080 !important; }
-    .dark-mode .text-gray-500 { color: #aaa !important; }    
-    
-    .dark-mode table { background-color: #2c2c2c; color: #f0f0f0; }
-    .dark-mode th, .dark-mode td { border-color: #444 !important; }
-    .dark-mode thead th { color: #000 !important; }
-    
-    .dark-mode .bg-amber-100,    
-    .dark-mode .bg-green-100,
-    .dark-mode .bg-indigo-100 { background-color: #3a3a3a !important; color: #f0f0f0 !important; }
-    
-    .dark-mode .bg-white { background-color: #2c2c2c !important; color: #f0f0f0 !important; }
-    .dark-mode .bg-gray-100 { background-color: #1e1e1e !important; }
-    
-    .dark-mode .bg-amber-50,
-    .dark-mode .bg-indigo-50 { background-color: #2d2d2d !important; }
-
-    .dark-mode .bg-blue-100,
-    .dark-mode .bg-blue-50,
-    .dark-mode .bg-orange-50,
-    .dark-mode .bg-red-50 { background-color: #2e2e2e !important; }
-    
-    .dark-mode summary { background-color: #333 !important; color: #fff !important; }
-    .dark-mode ul li { color: #ddd; }
-    
-    .dark-mode select option { color: #000 !important; }
-    .dark-mode select { color: #000 !important; }
-    .dark-mode input { color: #000 !important; }
-    
-    .divider-v{ border-left:1px solid rgba(0,0,0,.18); }
-    .divider-h{ border-top: 1px solid rgba(0,0,0,.18); }
-
-    body.dark-mode .divider-v{ border-left:1px solid rgba(255,255,255,.22) !important; }
-    body.dark-mode .divider-h{ border-top: 1px solid rgba(255,255,255,.22) !important; }
-    /* 이미지 프레임: 배경 ❌ / 테두리만 */
-    .expert-imgframe{
-      background: transparent !important;
-      border: 1px solid rgba(0,0,0,.12);
-      padding: 16px;
-    }
-
-    /* 다크모드 대응 */
-    body.dark-mode .expert-imgframe{
-      border: 1px solid rgba(255,255,255,.22);
-    }
-
-    /* 혹시 모를 img 배경 강제 제거 */
-    #expertPickImg{
-      background: transparent !important;
-    }
-    /* ✅ 전문가 아이콘 프레임(팝업/메인 공용) */
-    .expert-icon-frame{
-      background: #eef1f5;                 /* 연회색(팝업처럼) */
-      border: 1px solid rgba(0,0,0,.12);
-      border-radius: 18px;
-      padding: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    body.dark-mode .expert-icon-frame{
-      background: rgba(255,255,255,.10) !important; /* 다크에서도 비슷한 톤 */
-      border-color: rgba(255,255,255,.18) !important;
-    }
-    .expert-icon-img{
-      width: 140px;
-      height: 140px;
-      object-fit: contain;
-      background: transparent !important;
-    }
-  </style>
-  <!-- ✅ 다크모드 상태 유지 스크립트 -->
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-  </script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/experts.css">
+  <script src="js/common.js"></script>  
 </head>
-<body class="bg-gray-100 p-3 font-sans text-sm">
-  <main class="max-w-[1500px] mx-auto bg-white p-2 rounded-xl shadow-md">
-    <header class="flex items-center justify-between">
-      <div class ="p-4">
-        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">전문가 계산기</h1>
-        <p class="text-sm muted mt-1">레벨을 선택하면 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>
-      </div>
-    </header>    
-    <section class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-      <div class="grid gap-4 md:gap-6 md:grid-cols-[220px_1fr_1.1fr] md:items-stretch">
-        <!-- LEFT: 전문가 선택 -->
-        <div class="space-y-2">
-          <div class="font-semibold text-gray-800">전문가 선택</div>
+<body>
+  <div id="navMount"></div>
+  
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          
+          <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">전문가 계산기</h1>
+          <p class="text-sm muted mt-1">레벨을 선택하면 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>  
+          
+          <div>
+            <section class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+              <div class="grid gap-4 md:gap-6 md:grid-cols-[220px_1fr_1.1fr] md:items-stretch">
+                <!-- LEFT: 전문가 선택 -->
+                <div class="space-y-2">
+                  <div class="font-semibold text-gray-800">전문가 선택</div>
 
-          <!-- 기존 로직용 select 유지(숨김) -->
-          <select id="selType" class="pill w-full hidden">
-            <option value="Cyrille">키릴</option>
-            <option value="Agnes">아그네스</option>
-            <option value="Holger">홀게르</option>
-            <option value="Romulus">로물루스</option>
-            <option value="Baldur">발데</option>
-            <option value="Fabian">파비안</option>
-            <option value="Valeria">발레리아</option>
-          </select>
+                  <!-- 기존 로직용 select 유지(숨김) -->
+                  <select id="selType" class="pill w-full hidden">
+                    <option value="Cyrille">키릴</option>
+                    <option value="Agnes">아그네스</option>
+                    <option value="Holger">홀게르</option>
+                    <option value="Romulus">로물루스</option>
+                    <option value="Baldur">발데</option>
+                    <option value="Fabian">파비안</option>
+                    <option value="Valeria">발레리아</option>
+                  </select>
 
-          <!-- ✅ 팝업 그리드 카드 느낌: 단일 라운드 박스 + 이미지 -->
-          <div class="expert-imgbox w-full rounded-2xl border border-black/10 p-4 flex items-center justify-center">
-            <button id="expertPickBtn" type="button" class="w-full flex flex-col items-center gap-3">
-              <!-- ✅ 두번째 사진 느낌: 밝은 패널 + 큰 이미지 -->
-              <div class="expert-card-light w-full rounded-2xl border border-black/10 p-4 flex items-center justify-center">
-                <img id="expertPickImg" alt="" class="w-[140px] h-[140px] object-contain" />
+                  <!-- ✅ 팝업 그리드 카드 느낌: 단일 라운드 박스 + 이미지 -->
+                  <div class="expert-imgbox w-full rounded-2xl border border-black/10 p-4 flex items-center justify-center">
+                    <button id="expertPickBtn" type="button" class="w-full flex flex-col items-center gap-3">
+                      <!-- ✅ 두번째 사진 느낌: 밝은 패널 + 큰 이미지 -->
+                      <div class="expert-card-light w-full p-4 flex items-center justify-center">
+                        <img id="expertPickImg" alt="" class="w-[140px] h-[140px] object-contain" />
+                      </div>
+
+                      <div id="expertPickName" class="font-bold text-gray-600 text-center">-</div>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- MIDDLE: 레벨 범위 -->
+                <div class="space-y-2">
+                  <div class="font-semibold text-gray-800">레벨 범위</div>
+                  <div class="flex items-center gap-3"></div>
+                  <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 text-sm text-gray-600">현재</div>
+                      <select id="expertCur" class="pill w-44"></select>
+                    </div>            
+                    <div class="flex items-center gap-3"></div>
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 text-sm text-gray-600">목표</div>
+                      <select id="expertTgt" class="pill w-44"></select>
+                    </div>
+
+                    <p id="expertWarn" class="text-xs err"></p>
+
+                    <div class="flex items-center gap-2 pt-[90px]">
+                      <button id="btnSum"
+                        class="px-5 py-2 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+                        계산하기
+                      </button>
+                      <button id="btnReset"
+                        class="px-5 py-2 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+                        초기화
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- RIGHT: 효과/관계 (✅ 세로선 + ✅ 가로선) -->
+                <div class="divider-v md:pl-4">
+                  <div class="h-full grid grid-rows-3">
+                    <div class="pb-3">
+                      <div class="font-semibold mb-1 text-blue-700">전문가 효과 (목표 기준)</div>
+                      <div id="expertEffect" class="muted">-</div>
+                    </div>
+
+                    <div class="divider-h pt-3">
+                      <div class="font-semibold mb-1 text-blue-700">전문가 관계</div>
+                      <div id="expertrelationship" class="muted">-</div>
+                    </div>
+
+                    <div class="divider-h pt-3">
+                      <div class="font-semibold mb-1 text-blue-700">총합</div>
+                      <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <div class="flex justify-between"><span class="muted">경험치</span><span id="sumExpertExp">0</span></div>
+                          <div class="flex justify-between"><span class="muted">표식</span><span id="sumExpertMark">0</span></div>
+                        </div>
+                        <div>
+                          <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="sumSkillExp">0</span></div>
+                          <div class="flex justify-between"><span class="muted">학습의 책</span><span id="sumSkillItem">0</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="grid md:grid-cols-2 gap-2 mb-2">
+              <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+                <h3 class="text-base font-bold mb-3 skill-title muted" data-index="0">스킬 1</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <div class="text-sm font-semibold mb-4">레벨 범위<span id="s1Cap" class="muted"></span></div>
+                    <div class="flex items-center gap-2">
+                      <label class="inline-label"><span class="muted">현재</span><select id="s1Cur" class="pill w-24"></select></label>
+                      <label class="inline-label"><span class="muted">목표</span><select id="s1Tgt" class="pill w-24"></select></label>
+                    </div>
+                    <p id="s1Warn" class="text-xs err mt-1"></p>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold mb-1">필요 합계</div>
+                    <div class="space-y-1 text-sm">
+                      <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s1Exp">0</span></div>
+                      <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s1Item">0</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-divider border-t mt-4"></div>
+                <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+                  <div class="pt-3">
+                    <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+                    <div class="skill-effect muted whitespace-pre-line" data-index="0">-</div>
+                  </div>
+                  <!-- 세로 구분선 -->
+                  <div class="w-px mx-2"></div>
+                  <div class="pt-3">
+                    <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+                    <div class="skill-cond muted whitespace-pre-line" data-index="0">-</div>
+                  </div>
+                </div>
               </div>
 
-              <div id="expertPickName" class="font-bold text-gray-600 text-center">-</div>
-            </button>
-          </div>
-        </div>
-
-        <!-- MIDDLE: 레벨 범위 -->
-        <div class="space-y-2">
-          <div class="font-semibold text-gray-800">레벨 범위</div>
-          <div class="flex items-center gap-3"></div>
-          <div class="space-y-3">
-            <div class="flex items-center gap-3">
-              <div class="w-10 text-sm text-gray-600">현재</div>
-              <select id="expertCur" class="pill w-44"></select>
-            </div>            
-            <div class="flex items-center gap-3"></div>
-            <div class="flex items-center gap-3">
-              <div class="w-10 text-sm text-gray-600">목표</div>
-              <select id="expertTgt" class="pill w-44"></select>
-            </div>
-
-            <p id="expertWarn" class="text-xs err"></p>
-
-            <div class="flex items-center gap-2 pt-[90px]">
-              <button id="btnSum"
-                class="px-5 py-2 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
-                계산하기
-              </button>
-              <button id="btnReset"
-                class="px-5 py-2 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
-                초기화
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT: 효과/관계 (✅ 세로선 + ✅ 가로선) -->
-        <div class="divider-v md:pl-4">
-          <div class="h-full grid grid-rows-3">
-            <div class="pb-3">
-              <div class="font-semibold mb-1 text-blue-700">전문가 효과 (목표 기준)</div>
-              <div id="expertEffect" class="muted">-</div>
-            </div>
-
-            <div class="divider-h pt-3">
-              <div class="font-semibold mb-1 text-blue-700">전문가 관계</div>
-              <div id="expertrelationship" class="muted">-</div>
-            </div>
-            
-            <div class="divider-h pt-3">
-              <div class="font-semibold mb-1 text-blue-700">총합</div>
-              <div class="grid sm:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <div class="flex justify-between"><span class="muted">경험치</span><span id="sumExpertExp">0</span></div>
-                  <div class="flex justify-between"><span class="muted">표식</span><span id="sumExpertMark">0</span></div>
+              <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+                <h3 class="text-base font-bold mb-3 skill-title muted" data-index="1">스킬 2</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <div class="text-sm font-semibold mb-4">레벨 범위<span id="s2Cap" class="muted"></span></div>
+                    <div class="flex items-center gap-2">
+                      <label class="inline-label"><span class="muted">현재</span><select id="s2Cur" class="pill w-24"></select></label>
+                      <label class="inline-label"><span class="muted">목표</span><select id="s2Tgt" class="pill w-24"></select></label>
+                    </div>
+                    <p id="s2Warn" class="text-xs err mt-1"></p>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold mb-1">필요 합계</div>
+                    <div class="space-y-1 text-sm">
+                      <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s2Exp">0</span></div>
+                      <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s2Item">0</span></div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="sumSkillExp">0</span></div>
-                  <div class="flex justify-between"><span class="muted">학습의 책</span><span id="sumSkillItem">0</span></div>
+                <div class="exp-divider border-t mt-4"></div>
+                <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+                  <div class="pt-3 pr-4">
+                    <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+                    <div class="skill-effect muted whitespace-pre-line" data-index="1">-</div>
+                  </div>
+                  <!-- 세로 구분선 -->
+                  <div class="w-px mx-2"></div>
+                  <div class="pt-3">
+                    <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+                    <div class="skill-cond muted whitespace-pre-line" data-index="1">-</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+                <h3 class="text-base font-bold mb-3 skill-title muted" data-index="2">스킬 3</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <div class="text-sm font-semibold mb-4">레벨 범위<span id="s3Cap" class="muted"></span></div>
+                    <div class="flex items-center gap-2">
+                      <label class="inline-label"><span class="muted">현재</span><select id="s3Cur" class="pill w-24"></select></label>
+                      <label class="inline-label"><span class="muted">목표</span><select id="s3Tgt" class="pill w-24"></select></label>
+                    </div>
+                    <p id="s3Warn" class="text-xs err mt-1"></p>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold mb-1">필요 합계</div>
+                    <div class="space-y-1 text-sm">
+                      <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s3Exp">0</span></div>
+                      <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s3Item">0</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-divider border-t mt-4"></div>
+                <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+                  <div class="pt-3 pr-4">
+                    <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+                    <div class="skill-effect muted whitespace-pre-line" data-index="2">-</div>
+                  </div>
+                  <!-- 세로 구분선 -->
+                  <div class="w-px mx-2"></div>
+                  <div class="pt-3">
+                    <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+                    <div class="skill-cond muted whitespace-pre-line" data-index="2">-</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+                <h3 class="text-base font-bold mb-3 skill-title muted" data-index="3">스킬 4</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <div class="text-sm font-semibold mb-4">레벨 범위<span id="s4Cap" class="muted"></span></div>
+                    <div class="flex items-center gap-2">
+                      <label class="inline-label"><span class="muted">현재</span><select id="s4Cur" class="pill w-24"></select></label>
+                      <label class="inline-label"><span class="muted">목표</span><select id="s4Tgt" class="pill w-24"></select></label>
+                    </div>
+                    <p id="s4Warn" class="text-xs err mt-1"></p>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold mb-1">필요 합계</div>
+                    <div class="space-y-1 text-sm">
+                      <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s4Exp">0</span></div>
+                      <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s4Item">0</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-divider border-t mt-4"></div>
+                <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+                  <div class="pt-3 pr-4">
+                    <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+                    <div class="skill-effect muted whitespace-pre-line" data-index="3">-</div>
+                  </div>
+                  <!-- 세로 구분선 -->
+                  <div class="w-px mx-2"></div>
+                  <div class="pt-3">
+                    <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+                    <div class="skill-cond muted whitespace-pre-line" data-index="3">-</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ✅ 전문가 선택 모달 -->
+            <div id="expertModal" class="fixed inset-0 z-50 hidden">
+              <div class="absolute inset-0 bg-black/60"></div>
+
+              <div class="absolute inset-0 flex items-center justify-center p-4">
+                <div class="w-full max-w-[720px] rounded-2xl border border-black/10 bg-white shadow-xl overflow-hidden">
+                  <div class="flex items-center justify-between px-4 py-3 border-b">
+                    <div class="font-bold text-gray-800">전문가 선택</div>
+                    <button id="expertModalClose" type="button"
+                      class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+                      닫기
+                    </button>
+                  </div>
+
+                  <div class="p-4">
+                    <div id="expertGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="grid md:grid-cols-2 gap-2 mb-2">
-      <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="0">스킬 1</h3>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <div class="text-sm font-semibold mb-4">레벨 범위<span id="s1Cap" class="muted"></span></div>
-            <div class="flex items-center gap-2">
-              <label class="inline-label"><span class="muted">현재</span><select id="s1Cur" class="pill w-24"></select></label>
-              <label class="inline-label"><span class="muted">목표</span><select id="s1Tgt" class="pill w-24"></select></label>
-            </div>
-            <p id="s1Warn" class="text-xs err mt-1"></p>
-          </div>
-          <div>
-            <div class="text-sm font-semibold mb-1">필요 합계</div>
-            <div class="space-y-1 text-sm">
-              <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s1Exp">0</span></div>
-              <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s1Item">0</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="exp-divider border-t mt-4"></div>
-        <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
-          <div class="pt-3">
-            <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
-            <div class="skill-effect muted whitespace-pre-line" data-index="0">-</div>
-          </div>
-          <!-- 세로 구분선 -->
-          <div class="w-px mx-2"></div>
-          <div class="pt-3">
-            <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
-            <div class="skill-cond muted whitespace-pre-line" data-index="0">-</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="1">스킬 2</h3>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <div class="text-sm font-semibold mb-4">레벨 범위<span id="s2Cap" class="muted"></span></div>
-            <div class="flex items-center gap-2">
-              <label class="inline-label"><span class="muted">현재</span><select id="s2Cur" class="pill w-24"></select></label>
-              <label class="inline-label"><span class="muted">목표</span><select id="s2Tgt" class="pill w-24"></select></label>
-            </div>
-            <p id="s2Warn" class="text-xs err mt-1"></p>
-          </div>
-          <div>
-            <div class="text-sm font-semibold mb-1">필요 합계</div>
-            <div class="space-y-1 text-sm">
-              <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s2Exp">0</span></div>
-              <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s2Item">0</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="exp-divider border-t mt-4"></div>
-        <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
-          <div class="pt-3 pr-4">
-            <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
-            <div class="skill-effect muted whitespace-pre-line" data-index="1">-</div>
-          </div>
-          <!-- 세로 구분선 -->
-          <div class="w-px mx-2"></div>
-          <div class="pt-3">
-            <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
-            <div class="skill-cond muted whitespace-pre-line" data-index="1">-</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="2">스킬 3</h3>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <div class="text-sm font-semibold mb-4">레벨 범위<span id="s3Cap" class="muted"></span></div>
-            <div class="flex items-center gap-2">
-              <label class="inline-label"><span class="muted">현재</span><select id="s3Cur" class="pill w-24"></select></label>
-              <label class="inline-label"><span class="muted">목표</span><select id="s3Tgt" class="pill w-24"></select></label>
-            </div>
-            <p id="s3Warn" class="text-xs err mt-1"></p>
-          </div>
-          <div>
-            <div class="text-sm font-semibold mb-1">필요 합계</div>
-            <div class="space-y-1 text-sm">
-              <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s3Exp">0</span></div>
-              <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s3Item">0</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="exp-divider border-t mt-4"></div>
-        <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
-          <div class="pt-3 pr-4">
-            <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
-            <div class="skill-effect muted whitespace-pre-line" data-index="2">-</div>
-          </div>
-          <!-- 세로 구분선 -->
-          <div class="w-px mx-2"></div>
-          <div class="pt-3">
-            <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
-            <div class="skill-cond muted whitespace-pre-line" data-index="2">-</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
-        <h3 class="text-base font-bold mb-3 skill-title muted" data-index="3">스킬 4</h3>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <div class="text-sm font-semibold mb-4">레벨 범위<span id="s4Cap" class="muted"></span></div>
-            <div class="flex items-center gap-2">
-              <label class="inline-label"><span class="muted">현재</span><select id="s4Cur" class="pill w-24"></select></label>
-              <label class="inline-label"><span class="muted">목표</span><select id="s4Tgt" class="pill w-24"></select></label>
-            </div>
-            <p id="s4Warn" class="text-xs err mt-1"></p>
-          </div>
-          <div>
-            <div class="text-sm font-semibold mb-1">필요 합계</div>
-            <div class="space-y-1 text-sm">
-              <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s4Exp">0</span></div>
-              <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s4Item">0</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="exp-divider border-t mt-4"></div>
-        <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
-          <div class="pt-3 pr-4">
-            <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
-            <div class="skill-effect muted whitespace-pre-line" data-index="3">-</div>
-          </div>
-          <!-- 세로 구분선 -->
-          <div class="w-px mx-2"></div>
-          <div class="pt-3">
-            <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
-            <div class="skill-cond muted whitespace-pre-line" data-index="3">-</div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- ✅ 전문가 선택 모달 -->
-    <div id="expertModal" class="fixed inset-0 z-50 hidden">
-      <div class="absolute inset-0 bg-black/60"></div>
-
-      <div class="absolute inset-0 flex items-center justify-center p-4">
-        <div class="w-full max-w-[720px] rounded-2xl border border-black/10 bg-white shadow-xl overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-3 border-b">
-            <div class="font-bold text-gray-800">전문가 선택</div>
-            <button id="expertModalClose" type="button"
-              class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
-              닫기
-            </button>
-          </div>
-
-          <div class="p-4">
-            <div id="expertGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
-          </div>
+          </div>        
+        
         </div>
       </div>
     </div>
-  </main>
+  </div>
+  
+  <div id="footerMount"></div>
+	
+  <script>
+    fetch("nav.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("navMount").innerHTML = html;
+        //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
+        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+      });
+    
+    // 2) FOOTER
+    fetch("footer.html").then(r=>r.text()).then(html=>{
+      document.getElementById("footerMount").innerHTML = html;
+      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initAdsense({ ids:["ad1"] });    // 슬롯 id들
+    });
+  </script>  
   <script>
     // ✅ 전문가 이미지/표시명 매핑 (필요시 경로 수정)
     const EXPERT_UI = [
@@ -428,7 +359,7 @@
       if (grid){
         grid.innerHTML = EXPERT_UI.map(e => `
           <button type="button"
-            class="group w-full rounded-2xl p-3 bg-white hover:bg-slate-50 border border-slate-300 hover:border-slate-400 transition"
+            class="group w-full rounded-2xl p-3 bg-white border transition"
             data-key="${e.key}">
             <div class="expert-icon-frame">
               <img src="${e.img}" alt="${e.name}" class="expert-icon-img" />

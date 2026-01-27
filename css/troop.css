@@ -1,0 +1,30 @@
+/* CSS Document */
+/* ✅ 다크모드 전용 */    
+.dark-mode .card  {background:#2c2c2c; border:1px solid #ddd; border-radius:1rem; box-shadow:0 3px 6px rgba(0,0,0,0.08); }
+.dark-mode .exp-card{
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  background:#121212;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+  transition: box-shadow .2s ease;
+}
+.dark-mode select option{ color:#000 !important; }
+.dark-mode select{ color:#000 !important; }
+.dark-mode input{ color:#000 !important; }
+.card { background:#fff; border:1px solid #ddd; border-radius:1rem; box-shadow:0 3px 6px rgba(0,0,0,0.08); }
+input:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.2); }
+
+.dark-mode .label { font-size:13px; color:#f0f0f0; margin-bottom:2px; }
+.label { font-size:13px; color:#555; margin-bottom:2px; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+.mono2, .out { border:1px solid #ccc; border-radius:0.5rem; padding:.55rem .75rem; width:100%; font-size:14px; }
+.muted { color:#6b7280; font-size:12px; }
+button.primary { background:#111827; color:#fff; border-radius:0.5rem; padding:.6rem 1rem; font-weight:600; transition:background .15s; }
+button.primary:hover { background:#374151; }
+.exp-card{
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+  transition: box-shadow .2s ease;
+}
