@@ -858,16 +858,16 @@
   });
   </script> 
   <script>
-    function openHeroModalInParent() {
-      const el = document.getElementById("modalBackdrop");
-      if (!el) return;
-
-      // ✅ 자식에서 만든 모달 통째로 HTML로 보냄
-      window.parent?.postMessage({
-        type: "OPEN_HERO_MODAL",
-        html: el.outerHTML
-      }, "*");
-    }
+//    function openHeroModalInParent() {
+//      const el = document.getElementById("modalBackdrop");
+//      if (!el) return;
+//
+//      // ✅ 자식에서 만든 모달 통째로 HTML로 보냄
+//      window.parent?.postMessage({
+//        type: "OPEN_HERO_MODAL",
+//        html: el.outerHTML
+//      }, "*");
+//    }
   </script>
   </body>
 </html>
