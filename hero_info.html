@@ -798,16 +798,16 @@
       renderSkills("expeditionSkills", hero, hero.expeditionSkills);
       renderStats();
 
-      //$("modalBackdrop").classList.remove("hidden");
-      //document.body.style.overflow = "hidden";
+      $("modalBackdrop").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
 
-      const modal = document.getElementById("modalBackdrop");
-      if(!modal) return;
+      //const modal = document.getElementById("modalBackdrop");
+      //if(!modal) return;
 
       // ❌ 기존: 자식에서 띄우기
-      // modal.classList.remove("hidden");
+       modal.classList.remove("hidden");
       // ✅ 변경: "완성된 모달 HTML"을 부모로 보냄 (통째로)
-      window.parent?.postMessage({type: "OPEN_HERO_MODAL",html: modal.outerHTML}, "*");
+      //window.parent?.postMessage({type: "OPEN_HERO_MODAL",html: modal.outerHTML}, "*");
     }
 
     function closeHeroModal(){
