@@ -2,9 +2,9 @@
 /* ✅ 다크모드 전용 */    
 .dark-mode .card  {background:#2c2c2c; border:1px solid #ddd; border-radius:1rem; box-shadow:0 3px 6px rgba(0,0,0,0.08); }
 .dark-mode .exp-card{
-  border:1px solid rgba(0,0,0,.08);
+  border:1px solid #ddd;
   border-radius:16px;
-  background:#121212;
+  background:#2c2c2c;
   box-shadow:0 6px 18px rgba(15,23,42,.06);
   transition: box-shadow .2s ease;
 }

@@ -1,0 +1,413 @@
+<meta charset="UTF-8" />
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+
+        <h1 class="text-2xl font-bold text-gray-800">🐾 펫 계산기</h1>
+        <p>펫(등급/이름)별로 <b>현재 → 목표</b>를 지정하면, 필요한 <b>펫먹이/조련매뉴얼/활력의약/강화혈청</b>이 자동 합산됩니다.</p>
+
+        <!-- 보유량 -->
+        <div class="rounded-xl border border-black/10 p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-semibold">보유량</div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div class="flex items-center gap-2">
+              <label class="text-[12px] text-gray-600 w-24">보유 펫먹이</label>
+              <input type="number" id="own-펫먹이"
+                class="flex-1 border rounded-lg px-3 py-2 text-sm"
+                placeholder="0" min="0" />
+            </div>
+
+            <div class="flex items-center gap-2">
+              <label class="text-[12px] text-gray-600 w-24">보유 조련매뉴얼</label>
+              <input type="number" id="own-조련매뉴얼"
+                class="flex-1 border rounded-lg px-3 py-2 text-sm"
+                placeholder="0" min="0" />
+            </div>
+
+            <div class="flex items-center gap-2">
+              <label class="text-[12px] text-gray-600 w-24">보유 활력의약</label>
+              <input type="number" id="own-활력의약"
+                class="flex-1 border rounded-lg px-3 py-2 text-sm"
+                placeholder="0" min="0" />
+            </div>
+
+            <div class="flex items-center gap-2">
+              <label class="text-[12px] text-gray-600 w-24">보유 강화혈청</label>
+              <input type="number" id="own-강화혈청"
+                class="flex-1 border rounded-lg px-3 py-2 text-sm"
+                placeholder="0" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 섹션별 카드 컨테이너 -->
+        <div id="petSections" class="space-y-4"></div>
+
+        <!-- 하단 총합 패널 -->
+        <div id="summaryPanel">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <!-- 총합 -->
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold mb-2">총합</div>
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span id="sum-펫먹이">0</span></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span id="sum-조련매뉴얼">0</span></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span id="sum-활력의약">0</span></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span id="sum-강화혈청">0</span></div>
+              </div>
+            </div>
+            <!-- 과부족 -->
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold mb-2">과부족</div>
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">펫먹이</span><span id="def-펫먹이">0</span></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">조련매뉴얼</span><span id="def-조련매뉴얼">0</span></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">활력의약</span><span id="def-활력의약">0</span></div>
+                <div class="flex justify-between text-[13px]"><span class="text-gray-600">강화혈청</span><span id="def-강화혈청">0</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-2">
+          <button id="btn-calc-total" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">총합계산</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 데이터 & 로직 ===== -->
+<script>
+(function(){  
+  window.PetsInit = function PetsInit(){
+  // ===============================
+  // ✅ 등급별 카드 + 카드 내부 제목바(스샷 스타일)
+  // ✅ 카드 내부 간격 compact 처리
+  // ===============================
+
+  var pets = [
+    { name: "하이에나", rarityKey: "UnKnown" },
+
+    { name: "북극늑대", rarityKey: "N" },
+    { name: "사향소", rarityKey: "N" },
+
+    { name: "테이퍼", rarityKey: "R" },
+    { name: "티타니스", rarityKey: "R" },
+
+    { name: "큰뿔사슴", rarityKey: "SR" },
+    { name: "흑표범", rarityKey: "SR" },
+
+    { name: "동굴사자", rarityKey: "SSR" },
+    { name: "고릴라", rarityKey: "SSR" },
+    { name: "코뿔소", rarityKey: "SSR" },
+    { name: "호랑이", rarityKey: "SSR" },
+    { name: "매머드", rarityKey: "SSR" },
+    { name: "기간토", rarityKey: "SSR" },
+    { name: "카멜레온", rarityKey: "SSR" },
+  ];
+
+  var PET_IMAGE = {
+    "하이에나": "images/pets/Cave Hyena.webp",
+    "북극늑대": "images/pets/Arctic Wolf.webp",
+    "사향소": "images/pets/Musk Ox.webp",
+    "테이퍼": "images/pets/Giant Tapir.webp",
+    "티타니스": "images/pets/Titan Roc.webp",
+    "큰뿔사슴": "images/pets/Giant Elk.webp",
+    "흑표범": "images/pets/Snow Leopard.webp",
+    "동굴사자": "images/pets/Cave Lion.webp",
+    "고릴라": "images/pets/Snoe Ape.webp",
+    "코뿔소": "images/pets/Iron Rhino.webp",
+    "호랑이": "images/pets/Saber-tooth Tiger.webp",
+    "매머드": "images/pets/Mammoth.webp",
+    "기간토": "images/pets/Frost Gorilla.webp",
+    "카멜레온": "images/pets/Frostscale Chameleon.webp",
+  };
+
+  // ✅ DOM id 안전키
+  var petKeyByName = Object.create(null);
+  pets.forEach((p, i) => { petKeyByName[p.name] = `p${i}`; });
+
+  // 희귀도 섹션(헤더 색상/텍스트)
+  var sectionMeta = {
+    "UnKnown": { title: "Common",   dot: "bg-slate-400",   bar: "bg-slate-200",   text: "text-slate-700" },
+    "N":       { title: "Uncommon", dot: "bg-emerald-500", bar: "bg-emerald-200", text: "text-emerald-700" },
+    "R":       { title: "Rare",     dot: "bg-blue-500",    bar: "bg-blue-200",    text: "text-blue-700" },
+    "SR":      { title: "Epic",     dot: "bg-purple-500",  bar: "bg-purple-200",  text: "text-purple-700" },
+    "SSR":     { title: "SSR",      dot: "bg-orange-500",  bar: "bg-orange-200",  text: "text-orange-800" },
+  };
+
+  var CSV_BASE = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Pet/";
+
+  var dataByRarity = {};
+  var levelsByPet = {};
+
+  var sectionsRoot = document.getElementById("petSections");
+
+  function splitLines(t){ return t.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n"); }
+
+  async function fetchPetCSV(gradeKey) {
+    var url = `${CSV_BASE}Pet_${gradeKey}.csv`;
+    var res = await fetch(url);
+    if (!res.ok) throw new Error("CSV not found: " + url);
+
+    var text = await res.text();
+    var lines = splitLines(text)
+      .filter(Boolean)
+      .map(row => row.split(","));
+
+    var headers = lines[0].map(h => h.trim());
+
+    var rows = lines.slice(1).map(cols => {
+      var obj = {};
+      headers.forEach((h, i) => {
+        obj[h] = (cols[i] ?? "").trim();
+      });
+      return obj;
+    });
+
+    return rows;
+  }
+
+  async function loadAll() {
+    var uniqueKeys = [...new Set(pets.map(p => p.rarityKey))];
+    for (var key of uniqueKeys) {
+      try {
+        dataByRarity[key] = await fetchPetCSV(key);
+      } catch (e) {
+        console.warn(key, e.message);
+        dataByRarity[key] = [];
+      }
+    }
+
+    pets.forEach(p => {
+      var rows = dataByRarity[p.rarityKey] || [];
+      var lvSet = new Set(rows.map(r => (r["레벨"] || "").trim()).filter(Boolean));
+      var lvList = [...lvSet];
+      var nums = lvList.map(v => Number(v));
+      var allNum = nums.every(n => !Number.isNaN(n));
+      levelsByPet[p.name] = allNum ? lvList.sort((a,b)=>Number(a)-Number(b)) : lvList;
+    });
+
+    renderSections();
+    bindOwnedInputs();
+  }
+
+  // ✅ compact 카드 렌더 (카드마다 제목바 포함)
+  function renderSections() {
+    sectionsRoot.innerHTML = "";
+
+    var rarityOrder = ["UnKnown", "N", "R", "SR", "SSR"];
+
+    for (var rk of rarityOrder) {
+      var meta = sectionMeta[rk];
+      if (!meta) continue;
+
+      var groupPets = pets.filter(p => p.rarityKey === rk);
+      if (groupPets.length === 0) continue;
+
+      // 등급별로 그리드 블록 하나(간격 유지용)
+      var block = document.createElement("div");
+      block.className = "space-y-3";
+      sectionsRoot.appendChild(block);
+
+      var grid = document.createElement("div");
+      grid.className = "grid grid-cols-1 md:grid-cols-3 gap-2";
+      block.appendChild(grid);
+
+      groupPets.forEach((p) => {
+        var imgSrc = PET_IMAGE[p.name];
+        var key = `pet-${petKeyByName[p.name]}`;
+        var lvList = levelsByPet[p.name] || [];
+        var options = lvList.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+
+        var card = document.createElement("div");
+        card.className = "exp-card";
+
+        card.innerHTML = `
+          <div class="card-head ${meta.bar}">
+            <span class="w-2.5 h-2.5 rounded-full ${meta.dot}"></span>
+            <div class="text-[13px] font-semibold ${meta.text}">${meta.title}</div>
+          </div>
+
+          <div class="p-2">
+            <div class="grid grid-cols-1 md:grid-cols-[110px_1fr_1fr] gap-4 items-start">
+              <!-- 이미지 -->
+              <div class="w-28 h-28 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                <img src="${imgSrc}" alt="${p.name}"
+                     class="w-full h-full object-contain"
+                     loading="lazy"/>
+              </div>
+              <!-- 이름 + 현재/목표 -->
+              <div>
+                <div class="flex items-baseline gap-2">
+                  <h3 class="text-[15px] font-semibold text-gray-800 leading-none">${p.name}</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-2 mt-3">
+                  <div class="flex items-center justify-start gap-2">
+                    <span class="text-[12px] text-gray-600">현재</span>
+                    <select id="cur-${key}" class="border rounded-lg px-2 py-1 text-sm w-32">${options}</select>
+                  </div>
+                  <div class="flex items-center justify-start gap-2 mt-2">
+                    <span class="text-[12px] text-gray-600">목표</span>
+                    <select id="tgt-${key}" class="border rounded-lg px-2 py-1 text-sm w-32">${options}</select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 필요 합계 -->
+              <div class="md:pl-4">
+                <div class="flex items-baseline gap-2">
+                  <h3 class="text-[15px] font-semibold text-gray-800 leading-none">필요 합계</h3>
+                </div>
+                <div class="grid grid-cols-[1fr_auto] gap-x-3 mt-3 text-[13px]">
+                  <div class="text-gray-600">펫먹이</div><div class="text-right tabular-nums" id="sub-food-${key}">0</div>
+                  <div class="text-gray-600">조련매뉴얼</div><div class="text-right tabular-nums" id="sub-manual-${key}">0</div>
+                  <div class="text-gray-600">활력의약</div><div class="text-right tabular-nums" id="sub-vital-${key}">0</div>
+                  <div class="text-gray-600">강화혈청</div><div class="text-right tabular-nums" id="sub-serum-${key}">0</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          `;
+        grid.appendChild(card);
+
+        var curSel = document.getElementById(`cur-${key}`);
+        var tgtSel = document.getElementById(`tgt-${key}`);
+
+        var onAnyChange = () => {
+          var lvListLocal = levelsByPet[p.name] || [];
+          var ci = lvListLocal.indexOf(curSel.value);
+          var ti = lvListLocal.indexOf(tgtSel.value);
+          if (ci !== -1 && ti !== -1 && ti < ci) tgtSel.value = curSel.value;
+          updateCardSubtotal(p, key);
+        };
+
+        curSel.addEventListener("change", onAnyChange);
+        tgtSel.addEventListener("change", onAnyChange);
+
+        if (lvList.length > 0) {
+          curSel.value = lvList[0];
+          tgtSel.value = lvList[0];
+        }
+
+        updateCardSubtotal(p, key);
+      });
+    }
+  }
+
+  function toNum(v){
+    var n = Number(String(v ?? "").replace(/,/g, "").trim());
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function updateCardSubtotal(pet, key) {
+    var rows = (dataByRarity[pet.rarityKey] || []).slice();
+    var lvList = levelsByPet[pet.name] || [];
+    var cur = document.getElementById(`cur-${key}`)?.value ?? "";
+    var tgt = document.getElementById(`tgt-${key}`)?.value ?? "";
+
+    var s = lvList.indexOf(cur);
+    var e = lvList.indexOf(tgt);
+
+    var sum = { food:0, manual:0, vital:0, serum:0 };
+    if (s >= 0 && e > s) {
+      for (var i = s + 1; i <= e; i++) {
+        var lv = lvList[i];
+        var r = rows.find(x => String(x["레벨"]).trim() === String(lv).trim());
+        if (!r) continue;
+        sum.food   += toNum(r["펫먹이"]);
+        sum.manual += toNum(r["조련매뉴얼"]);
+        sum.vital  += toNum(r["활력의약"]);
+        sum.serum  += toNum(r["강화혈청"]);
+      }
+    }
+
+    var a = document.getElementById(`sub-food-${key}`);
+    var b = document.getElementById(`sub-manual-${key}`);
+    var c = document.getElementById(`sub-vital-${key}`);
+    var d = document.getElementById(`sub-serum-${key}`);
+    if (a) a.textContent = sum.food.toLocaleString();
+    if (b) b.textContent = sum.manual.toLocaleString();
+    if (c) c.textContent = sum.vital.toLocaleString();
+    if (d) d.textContent = sum.serum.toLocaleString();
+  }
+
+  function calculateTotals() {
+    var totals = { food:0, manual:0, vital:0, serum:0 };
+
+    pets.forEach(p => {
+      var key = `pet-${petKeyByName[p.name]}`;
+      var lvList = levelsByPet[p.name] || [];
+      var cur = document.getElementById(`cur-${key}`)?.value ?? "";
+      var tgt = document.getElementById(`tgt-${key}`)?.value ?? "";
+
+      var s = lvList.indexOf(cur);
+      var e = lvList.indexOf(tgt);
+      if (s === -1 || e === -1 || s >= e) return;
+
+      var rows = dataByRarity[p.rarityKey] || [];
+
+      for (var i = s + 1; i <= e; i++) {
+        var lv = lvList[i];
+        var r = rows.find(x => String(x["레벨"]).trim() === String(lv).trim());
+        if (!r) continue;
+        totals.food   += toNum(r["펫먹이"]);
+        totals.manual += toNum(r["조련매뉴얼"]);
+        totals.vital  += toNum(r["활력의약"]);
+        totals.serum  += toNum(r["강화혈청"]);
+      }
+    });
+
+    return totals;
+  }
+
+  function renderSummary() {
+    var total = calculateTotals();
+
+    document.getElementById("sum-펫먹이").textContent = total["food"].toLocaleString();
+    document.getElementById("sum-조련매뉴얼").textContent = total["manual"].toLocaleString();
+    document.getElementById("sum-활력의약").textContent = total["vital"].toLocaleString();
+    document.getElementById("sum-강화혈청").textContent = total["serum"].toLocaleString();
+
+    var defA = document.getElementById("def-펫먹이");
+    var defB = document.getElementById("def-조련매뉴얼");
+    var defC = document.getElementById("def-활력의약");
+    var defD = document.getElementById("def-강화혈청");
+
+    defA.textContent = ((parseFloat(document.getElementById("own-펫먹이").value||0) - total["food"])).toLocaleString();
+    defB.textContent = ((parseFloat(document.getElementById("own-조련매뉴얼").value||0) - total["manual"])).toLocaleString();
+    defC.textContent = ((parseFloat(document.getElementById("own-활력의약").value||0) - total["vital"])).toLocaleString();
+    defD.textContent = ((parseFloat(document.getElementById("own-강화혈청").value||0) - total["serum"])).toLocaleString();
+
+    defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+    defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+    defC.classList.toggle("text-red-600", parseFloat(defC.textContent.replace(/,/g,'')) < 0);
+    defD.classList.toggle("text-red-600", parseFloat(defD.textContent.replace(/,/g,'')) < 0);
+  }
+
+  // 디바운스(미사용 유지)
+  var calcTimer = null;
+  function scheduleCalc() {
+    if (calcTimer) clearTimeout(calcTimer);
+    calcTimer = setTimeout(renderSummary, 120);
+  }
+
+  function bindOwnedInputs() {
+    // 필요하면 보유량 입력 시 자동 업데이트를 여기서 연결 가능
+  }
+
+  // 시작
+  loadAll();
+
+  document.getElementById("btn-calc-total")?.addEventListener("click", () => { renderSummary(); });
+ };
+  window.PetsInit();
+})();
+</script>
+

@@ -49,7 +49,9 @@
   })();
   </script>
   <link rel="stylesheet" href="css/common.css">
+  <link id="page-style" rel="stylesheet">
   <script src="js/common.js"></script>
+  <script src="js/spa.js"></script>
 </head>
 <body>
   <!-- 모바일로 접속시 PC버전인 경우 캐시삭제 -->
@@ -1245,8 +1247,12 @@
     
     <!-- iframe 영역 -->
     <div id="frameWrapper" class="max-w-[1500px] w-full hidden bg-white rounded shadow gap-2">
-      <iframe id="mainFrame" class="w-full bg-white rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
+      <!--<iframe id="mainFrame" class="w-full bg-white rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>-->
     </div>
+    
+<!--    <div id="mainMount"
+         class="max-w-[1500px] w-full hidden bg-white rounded shadow gap-2">
+    </div>-->
 
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn"

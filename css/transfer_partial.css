@@ -1,0 +1,32 @@
+body {
+  font-family: sans-serif;
+  padding: 2px;
+  background: #f4f4f4;
+}
+
+body.dark-mode { background-color:#121212; color:#f0f0f0; }
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dark-mode .card { 
+  background: #121212; 
+  border-radius: 10px; 
+  padding: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+}

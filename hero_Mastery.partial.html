@@ -1,0 +1,336 @@
+<meta charset="UTF-8" />
+
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+<div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+  <div class="bg-gray-100 p-2 font-sans text-sm">
+    <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+      <h1 class="text-2xl font-bold text-gray-800">🧝 영웅장비[마스터리]</h1>
+
+      <div class="text-gray-600 text-sm">
+        <p>현재레벨과 목표레벨을 선택하면, 업그레이드에 필요한 자원(마스터리석/레전드 장비)을 계산합니다.</p>
+        <p>각 항목의 ‘필요 합계’는 레벨 선택 시 자동 갱신됩니다. </p>
+        <p>각 항목별로 체크를 하면 체크항목별 필요합계를 더하여 총합계에 표시됩니다.</p>
+      </div>
+
+      <!-- ===================== 📙 마스터리 ===================== -->
+      <div class="p-4">
+        <form id="masteryForm" class="space-y-3">
+          <div class="mb-4 flex items-center justify-start gap-2 w-full">
+            <label class="text-sm font-medium whitespace-nowrap">발레리아</label>
+            <select id="chkExpertV" class="w-[120px] border rounded-md px-2 py-1.5">
+              <option>None</option>
+              <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+              <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+            </select>
+            <!-- ✅ 레벨 설명 표시 영역 -->
+            <span id="expertDesc" class="svs-score-value text-sm font-semibold hidden px-4"></span>          
+          </div>
+          <div id="masteryGrid" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
+
+          <!-- 📙 마스터리 총합계 -->
+          <div id="masteryTotals">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold mb-2">필요 총합</div>
+
+                <!-- 사전형 4컬럼: 라벨/값 | 라벨/값 -->
+                <div class="grid items-center text-[12px]
+                            gap-x-3 gap-y-1
+                            grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)] w-full">
+
+                  <!-- 1행 -->
+                  <div class="text-gray-600">마스터리석</div>
+                  <div id="ms-tot-stone" class="tabular-nums font-medium text-right">0</div>
+                  <div class="text-gray-600">레전드장비</div>
+                  <div id="ms-tot-leg" class="tabular-nums font-medium text-right">0</div>
+
+                  <!-- 구분선(전체 폭) -->
+                  <div class="col-span-4 border-t border-gray-200 mt-1"></div>
+
+                  <!-- SVS 줄: 왼쪽 3칸(라벨 폭) + 마지막 칸 값 우측정렬 -->
+                  <div class="svs-score-label pt-1">SVS 점수</div>                            
+                  <span id="svs-long"  class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>                
+                  <div></div>
+                  <span id="svs-short" class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>
+                </div>
+              </div>
+
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold mb-2">보유량</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[12px] text-gray-600 mb-1">마스터리석</label>
+                    <input type="number" id="owned-마스터리석" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                  </div>
+                  <div>
+                    <label class="block text-[12px] text-gray-600 mb-1">레전드장비</label>
+                    <input type="number" id="owned-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold mb-2">과부족</div>
+                <div class="flex justify-between text-[12px]">
+                  <span class="text-gray-600">마스터리석</span>
+                  <span id="ms-def-stone" class="tabular-nums">0</span>
+                </div>
+                <div class="flex justify-between text-[12px]">
+                  <span class="text-gray-600">레전드장비</span>
+                  <span id="ms-def-leg" class="tabular-nums">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ========== 📙 마스터리 로직 ========== -->
+<script>
+(function(){  
+  window.MasteryInit = function MasteryInit(){  
+    var masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Hero/Mastery.csv";
+    var masterySlots = ["고글", "장갑", "벨트", "신발"];
+    var masteryLevels = [];
+    var masteryData = [];
+
+    // ✅ 발레리아(SVS 점수 보너스)
+    var EXPERT_BONUS = {
+      "None":0,
+      "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+      "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+    };
+    var EXPERT_DESC = {
+      "Lv.1":"+2%",
+      "Lv.2":"+4%",
+      "Lv.3":"+6%",
+      "Lv.4":"+8%",
+      "Lv.5":"+10%",
+      "Lv.6":"+12%",
+      "Lv.7":"+14%",
+      "Lv.8":"+16%",
+      "Lv.9":"+18%",
+      "Lv.10":"+20%"
+    };
+
+    function getValeriaBonus(){
+      var sel = document.getElementById("chkExpertV");
+      if (!sel) return 0;
+      var key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+      return EXPERT_BONUS[key] ?? 0;
+    }
+
+    var expertSel  = document.getElementById('chkExpertV');
+    var expertDesc = document.getElementById('expertDesc');                   
+
+    function getValeriaDesc(){
+      var lv = expertSel?.value ?? "None";
+      var bonusText = EXPERT_DESC[lv] ? ` ${EXPERT_DESC[lv]}` : "";
+
+      // 상단 설명 배지
+      if (EXPERT_DESC[lv]) {
+        expertDesc.textContent = `SVS 점수 ${EXPERT_DESC[lv]}`;
+        expertDesc.classList.remove('hidden');
+      } else {
+        expertDesc.textContent = "";
+        expertDesc.classList.add('hidden');
+      }
+    }
+
+    // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
+    function formatSVS(value){
+      var num = Number(value);
+      if (!Number.isFinite(num)) return "0";
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+      if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+      return num.toLocaleString();
+    }
+
+    async function loadMasteryCSV() {
+      try{
+        var res = await fetch(masteryUrl, {cache:"no-store"});
+        var text = await res.text();
+        var lines = text.trim().split("\n").map(row => row.split(","));
+        var headers = lines[0];
+        masteryData = lines.slice(1).map(row => {
+          var obj = {};
+          headers.forEach((h, i) => obj[h.trim()] = (row[i] ?? "").trim() || "0");
+          return obj;
+        });
+        masteryLevels = masteryData.map(r => r["레벨"]);
+      }catch(e){
+        // 간단한 폴백 (레벨 1~5)
+        masteryData = [
+          {레벨:"1", 마스터리석:"0", 레전드장비:"0"},
+          {레벨:"2", 마스터리석:"10", 레전드장비:"0"},
+          {레벨:"3", 마스터리석:"22", 레전드장비:"0"},
+          {레벨:"4", 마스터리석:"36", 레전드장비:"1"},
+          {레벨:"5", 마스터리석:"52", 레전드장비:"1"},
+        ];
+        masteryLevels = masteryData.map(r=>r["레벨"]);
+      }
+      renderMasteryUI();
+    }
+
+    function renderMasteryUI() {
+      var grid = document.getElementById("masteryGrid");
+      grid.innerHTML = "";
+
+      masterySlots.forEach((name, i) => {
+        var options = masteryLevels.map(lv => `<option value="${lv}">${lv}</option>`).join("");
+        var card = document.createElement("div");
+        card.className = "exp-card";
+        card.innerHTML = `
+          <div class="p-4 space-y-4">
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-3 max-w-[360px]">
+              <div>
+                <div class="text-[12px] text-gray-600 mb-1">현재</div>
+                <select id="m-start-${i}" 
+                        class="w-full border rounded-lg px-2 py-1 text-sm bg-white">${options}</select>
+              </div>
+              <div>
+                <div class="text-[12px] text-gray-600 mb-1">목표</div>
+                <select id="m-end-${i}"
+                        class="w-full border rounded-lg px-2 py-1 text-sm bg-white">${options}</select>
+              </div>
+            </div>
+            <div>
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold text-gray-800 dark:text-gray-100 mb-2">필요 합계</div>
+                  <div class="grid items-center text-[12px] gap-x-3 gap-y-1 grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+                  <!-- 1행 -->
+                  <div class="text-gray-600">마스터리석</div>
+                  <div class="text-right tabular-nums" id="ms-sub-stone-${i}">0</div>
+
+                  <!-- 2행 -->
+                  <div class="text-gray-600">레전드장비</div>
+                  <div class="text-right tabular-nums" id="ms-sub-legend-${i}">0</div>
+
+                  <!-- 구분선 -->
+                  <div class="col-span-4 border-t border-gray-200 mt-1"></div>
+
+                  <!-- SVS 점수: 왼쪽은 3칸(라벨 폭), 값은 마지막 칸에 우측정렬 -->
+                  <div class="svs-score-label pt-1">SVS 점수</div>
+                  <div id="sub-점수A-${masterySlots[i]}" class="svs-score-value text-right tabular-nums font-medium pt-1">0</div>
+                  <div></div>
+                  <div id="sub-점수-${masterySlots[i]}" class="svs-score-value text-right tabular-nums font-medium pt-1">0</div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+
+        var curSelect = card.querySelector(`#m-start-${i}`);
+        var tgtSelect = card.querySelector(`#m-end-${i}`);
+
+        var onChange = () => { updateMasterySubtotals(i); updateMasteryTotals(); };
+        curSelect.addEventListener("change", () => { tgtSelect.value = curSelect.value; onChange(); });
+        tgtSelect.addEventListener("change", onChange);
+
+        updateMasterySubtotals(i);
+      });
+
+      document.getElementById("chkExpertV")?.addEventListener("change", () => {
+        masterySlots.forEach((_, i) => updateMasterySubtotals(i)); // 각 카드 SVS 갱신
+        getValeriaDesc(); 
+        updateMasteryTotals();                                   // 총합 패널 갱신
+      });
+      ["owned-마스터리석","owned-레전드장비"].forEach(id=>{
+        document.getElementById(id)?.addEventListener("input", updateMasteryTotals);
+      });
+
+      updateMasteryTotals();
+    }
+
+    function updateMasterySubtotals(i) {
+      var cur = document.getElementById(`m-start-${i}`).value;
+      var tgt = document.getElementById(`m-end-${i}`).value;
+      var sIdx = masteryLevels.indexOf(cur);
+      var eIdx = masteryLevels.indexOf(tgt);
+
+      var sums = { stone:0, legend:0 };
+      if (sIdx >= 0 && eIdx > sIdx) {
+        for (var j = sIdx + 1; j <= eIdx; j++) {
+          var r = masteryData[j];
+          sums.stone  += parseFloat(r["마스터리석"] || "0");
+          sums.legend += parseFloat(r["레전드장비"] || "0");
+        }
+      }
+      document.getElementById(`ms-sub-stone-${i}`).textContent  = sums.stone.toLocaleString();
+      document.getElementById(`ms-sub-legend-${i}`).textContent = sums.legend.toLocaleString();
+
+      // ✅ 이 슬롯만의 SVS 계산/표시
+      var valeriaBonus = getValeriaBonus();
+      // 가중치는 네가 쓰는 규칙으로 맞춰줘 (예시는 미스릴*4000 + 레전드*144000)
+      var baseSlot = sums.stone * 4000;
+      var svsSlot  = Math.round(baseSlot * (1 + valeriaBonus));
+
+      var id  = `sub-점수-${masterySlots[i]}`;
+      var idA = `sub-점수A-${masterySlots[i]}`; // 있으면 같이 표기
+      var el  = document.getElementById(id);
+      var elA = document.getElementById(idA);
+      if (el)  el.textContent  = formatSVS(svsSlot);
+      if (elA) elA.textContent = svsSlot.toLocaleString();
+    }
+
+    function updateMasteryTotals(){
+      var total = { stone:0, leg:0 };
+      masterySlots.forEach((_, i)=>{
+        var cur = document.getElementById(`m-start-${i}`).value;
+        var tgt = document.getElementById(`m-end-${i}`).value;
+        var sIdx = masteryLevels.indexOf(cur);
+        var eIdx = masteryLevels.indexOf(tgt);
+        if (sIdx < 0 || eIdx <= sIdx) return;
+
+        for(var j=sIdx+1;j<=eIdx;j++){
+          var r = masteryData[j];
+          total.stone += +(r["마스터리석"]||0);
+          total.leg   += +(r["레전드장비"]||0);
+        }
+      });
+
+      var own = {
+        stone: +(document.getElementById("owned-마스터리석")?.value || 0),
+        leg:   +(document.getElementById("owned-레전드장비")?.value || 0),
+      };
+
+      document.getElementById("ms-tot-stone").textContent = total.stone.toLocaleString();
+      document.getElementById("ms-tot-leg").textContent   = total.leg.toLocaleString();
+
+      const inStone = document.getElementById("owned-마스터리석");
+      const inLeg   = document.getElementById("owned-레전드장비");
+      if (inStone) inStone.value = own.stone.toLocaleString();
+      if (inLeg)   inLeg.value   = own.leg.toLocaleString();
+
+      document.getElementById("ms-def-stone").textContent = (own.stone-total.stone).toLocaleString();
+      document.getElementById("ms-def-leg").textContent   = (own.leg-total.leg).toLocaleString();
+
+      ["ms-def-stone","ms-def-leg"].forEach(id=>{
+        var el = document.getElementById(id);
+        var n  = parseFloat(el.textContent.replace(/,/g,''));
+        el.classList.toggle("text-red-600", n < 0);
+      });
+
+      // ✅ 총합 패널 SVS (총합 기준으로 한 번만)
+      var valeriaBonus = getValeriaBonus();
+      var baseTotal = total.stone * 4000; // 규칙에 맞게
+      var svsTotal  = Math.round(baseTotal * (1 + valeriaBonus));
+
+      // 총합 패널 안의 svs-score-value만 업데이트 (카드의 것은 건들지 않음)
+      document.getElementById("svs-long").textContent  = svsTotal.toLocaleString();
+      document.getElementById("svs-short").textContent = formatSVS(svsTotal);
+    }
+
+    // 최초 로딩
+    loadMasteryCSV();
+  };
+  window.MasteryInit();
+})();
+</script>

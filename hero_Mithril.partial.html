@@ -1,0 +1,391 @@
+<meta charset="UTF-8" />
+
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <h1 class="text-2xl font-bold text-gray-800">🧝 영웅장비[미스릴]</h1>
+
+        <div class="text-gray-600 text-sm">
+          <p>현재레벨과 목표레벨을 선택하면, 업그레이드에 필요한 자원(미스릴/레전드 장비)을 계산합니다.</p>
+          <p>각 항목의 ‘필요 합계’는 레벨 선택 시 자동 갱신됩니다. </p>
+          <p>각 항목별로 체크를 하면 체크항목별 필요합계를 더하여 총합계에 표시됩니다.</p>
+        </div>
+
+        <!-- ===================== 📕 미스릴 ===================== -->
+        <div class="p-4">
+          <form id="heroEquipForm" class="space-y-3">        
+            <div class="mb-4 flex items-center justify-start gap-2 w-full">
+              <label class="text-sm font-medium whitespace-nowrap">발레리아</label>
+              <select id="chkExpertV" class="w-[120px] border rounded-md px-2 py-1.5">
+                <option>None</option>
+                <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+                <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+              </select>
+              <!-- ✅ 레벨 설명 표시 영역 -->
+              <span id="expertDesc" class="svs-score-value text-sm font-semibold hidden px-4"></span>
+            </div>
+            <div id="heroEquipGridBody" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
+
+            <!-- 📕 미스릴 총합계 -->
+            <div id="mithrilTotals">
+              <!-- 3등분 -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                <!-- 🧮 필요 총합 -->
+                <div class="rounded-xl border border-black/10 p-3">
+                  <div class="font-semibold text-gray-800 mb-2">필요 총합</div>
+                  <div class="grid items-center text-[12px]
+                              gap-x-3 gap-y-1
+                              grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+                    <div class="text-gray-600">경험치</div>
+                    <div id="tot-exp" class="text-right tabular-nums">0</div>
+                    <div class="text-gray-600">미스릴</div>
+                    <div id="tot-mith" class="text-right tabular-nums">0</div>
+
+                    <div class="text-gray-600">너트</div>
+                    <div id="tot-nut" class="text-right tabular-nums">0</div>
+                    <div class="text-gray-600">레전드장비</div>
+                    <div id="tot-leg" class="text-right tabular-nums">0</div>
+
+                    <div class="col-span-4 border-t border-gray-200 mt-1"></div>
+
+                    <div class="svs-score-label pt-1">SVS 점수</div>
+                    <span id="svs-long"  class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>                
+                    <div></div>
+                    <span id="svs-short" class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>
+                  </div>
+                </div>
+
+                <!-- 🧺 보유량 (기존 유지) -->
+                <div class="rounded-xl border border-black/10 dark:border-gray-700 p-3">
+                  <div class="font-semibold text-gray-800 mb-2">보유량</div>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                      <label class="block text-[12px] text-gray-600 mb-1">보라너트</label>
+                      <input type="number" id="own-너트" class="w-full border rounded-lg px-3 py-2 text-sm
+                          bg-white dark:bg-[#2b2b2b] dark:border-gray-600"
+                          placeholder="0" min="0" inputmode="numeric"/>
+                    </div>
+                    <div>
+                      <label class="block text-[12px] text-gray-600 mb-1">미스릴</label>
+                      <input type="number" id="own-미스릴" class="w-full border rounded-lg px-3 py-2 text-sm
+                          bg-white dark:bg-[#2b2b2b] dark:border-gray-600"
+                          placeholder="0" min="0" inputmode="numeric"/>
+                    </div>
+                    <div>
+                      <label class="block text-[12px] text-gray-600 mb-1">레전드장비</label>
+                      <input type="number" id="own-레전드장비" class="w-full border rounded-lg px-3 py-2 text-sm
+                          bg-white dark:bg-[#2b2b2b] dark:border-gray-600"
+                          placeholder="0" min="0" inputmode="numeric"/>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ⚖️ 과부족 -->
+                <div class="rounded-xl border border-black/10 p-3">
+                  <div class="font-semibold text-gray-800 mb-2">과부족</div>
+                  <div class="grid items-center text-[12px]
+                              gap-x-3 gap-y-1
+                              grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+                    <div class="text-gray-600">경험치</div>
+                    <div id="def-exp" class="text-right tabular-nums">0</div>
+                    <div class="text-gray-600">미스릴</div>
+                    <div id="def-mith" class="text-right tabular-nums">0</div>
+
+                    <div class="text-gray-600">너트</div>
+                    <div id="def-nut" class="text-right tabular-nums">0</div>
+                    <div class="text-gray-600">레전드장비</div>
+                    <div id="def-leg" class="text-right tabular-nums">0</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>    
+</div>
+
+<!-- ========== 📕 미스릴 로직 ========== -->
+<script>
+(function(){
+  window.MithrillInit = function MithrillInit(){
+    var slotNames = ["고글", "장갑", "벨트", "신발"];
+    var mithrilCsvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Hero/Mithril.csv";
+
+    let stageList = [];
+    let csvData = [];
+
+    // ✅ 발레리아(SVS 점수 보너스)
+    var EXPERT_BONUS = {
+      "None":0,
+      "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+      "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+    };
+    var EXPERT_DESC = {
+      "Lv.1":"+2%",
+      "Lv.2":"+4%",
+      "Lv.3":"+6%",
+      "Lv.4":"+8%",
+      "Lv.5":"+10%",
+      "Lv.6":"+12%",
+      "Lv.7":"+14%",
+      "Lv.8":"+16%",
+      "Lv.9":"+18%",
+      "Lv.10":"+20%"
+    };
+
+    function getValeriaBonus(){
+      var sel = document.getElementById("chkExpertV");
+      if (!sel) return 0;
+      var key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+      return EXPERT_BONUS[key] ?? 0;
+    }
+
+    var expertSel  = document.getElementById('chkExpertV');
+    var expertDesc = document.getElementById('expertDesc');                   
+
+    function getValeriaDesc(){
+      var lv = expertSel?.value ?? "None";
+      var bonusText = EXPERT_DESC[lv] ? ` ${EXPERT_DESC[lv]}` : "";
+
+      // 상단 설명 배지
+      if (EXPERT_DESC[lv]) {
+        expertDesc.textContent = `SVS 점수 ${EXPERT_DESC[lv]}`;
+        expertDesc.classList.remove('hidden');
+      } else {
+        expertDesc.textContent = "";
+        expertDesc.classList.add('hidden');
+      }
+    }
+    // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
+    function formatSVS(value){
+      var num = Number(value);
+      if (!Number.isFinite(num)) return "0";
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+      if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+      return num.toLocaleString();
+    }
+
+    async function loadMithrilCSV() {
+      try{
+        var res = await fetch(mithrilCsvUrl, {cache:"no-store"});
+        var text = await res.text();
+        var lines = text.trim().split("\n").map(l => l.split(","));
+        var headers = lines[0];
+        csvData = lines.slice(1).map(row => {
+          var obj = {};
+          headers.forEach((h, i) => obj[h.trim()] = (row[i] ?? "").trim() || "0");
+          return obj;
+        });
+        stageList = csvData.map(r => r["레벨"]);
+      }catch(e){
+        // 간단한 폴백 (레벨 1~5)
+        csvData = [
+          {레벨:"1", 경험치:"0", 너트:"0", 미스릴:"0", 레전드장비:"0"},
+          {레벨:"2", 경험치:"100", 너트:"5", 미스릴:"8", 레전드장비:"0"},
+          {레벨:"3", 경험치:"220", 너트:"12", 미스릴:"18", 레전드장비:"0"},
+          {레벨:"4", 경험치:"360", 너트:"20", 미스릴:"30", 레전드장비:"1"},
+          {레벨:"5", 경험치:"520", 너트:"30", 미스릴:"45", 레전드장비:"1"},
+        ];
+        stageList = csvData.map(r=>r["레벨"]);
+      }
+      renderHeroEquipUI();
+      sendHeightToParent();
+    }
+
+    function renderHeroEquipUI() {
+      var grid = document.getElementById("heroEquipGridBody");
+      grid.innerHTML = "";
+
+      slotNames.forEach((name, i) => {
+        var options = stageList.map(stage => `<option value="${stage}">${stage}</option>`).join("");
+        var card = document.createElement("div");
+        card.className = "exp-card";
+        card.innerHTML = `
+          <div class="p-4 space-y-4">
+            <!-- 상단: 제목 + 현재/목표 -->
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
+            </div>
+            <!-- 현재 / 목표 : 한 줄(2컬럼). 각 칸은 라벨 위 + 셀렉트 아래 -->
+            <div class="grid grid-cols-2 gap-3 max-w-[360px]">
+              <div>
+                <div class="text-[12px] text-gray-600 mb-1">현재</div>
+                <select id="start-${i}"
+                        class="w-full border rounded-lg px-2 py-1 text-sm
+                               bg-white dark:bg-[#2b2b2b] dark:border-gray-600">
+                  ${options}
+                </select>
+              </div>
+              <div>
+                <div class="text-[12px] text-gray-600 mb-1">목표</div>
+                <select id="end-${i}"
+                        class="w-full border rounded-lg px-2 py-1 text-sm
+                               bg-white dark:bg-[#2b2b2b] dark:border-gray-600">
+                  ${options}
+                </select>
+              </div>
+            </div>
+
+            <!-- 하단: 필요 합계 -->
+            <div>
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
+
+                <!-- 라벨/값 × 2 세트 (4컬럼) -->
+                <div class="grid items-center text-[12px]
+                            gap-x-3 gap-y-1
+                            grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+                  <!-- 1행 -->
+                  <div class="text-gray-600">경험치</div>
+                  <div class="text-right tabular-nums" id="m-sub-exp-${i}">0</div>
+                  <div class="text-gray-600">미스릴</div>
+                  <div class="text-right tabular-nums" id="m-sub-mith-${i}">0</div>
+
+                  <!-- 2행 -->
+                  <div class="text-gray-600">너트</div>
+                  <div class="text-right tabular-nums" id="m-sub-nut-${i}">0</div>
+                  <div class="text-gray-600">레전드장비</div>
+                  <div class="text-right tabular-nums" id="m-sub-legend-${i}">0</div>
+
+                  <!-- 구분선 -->
+                  <div class="col-span-4 border-t border-gray-200 dark:border-gray-200 mt-1"></div>
+
+                  <!-- SVS 점수: 왼쪽은 3칸(라벨 폭), 값은 마지막 칸에 우측정렬 -->
+                  <div class="svs-score-label pt-1">SVS 점수</div>
+                  <div id="sub-점수A-${slotNames[i]}" class="svs-score-value text-right tabular-nums font-medium pt-1">0</div>
+                  <div></div>
+                  <div id="sub-점수-${slotNames[i]}" class="svs-score-value text-right tabular-nums font-medium pt-1">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+
+        var curSelect = card.querySelector(`#start-${i}`);
+        var tgtSelect = card.querySelector(`#end-${i}`);
+
+        var onChange = () => { updateMithrilSubtotals(i); updateMithrilTotals(); };
+        curSelect.addEventListener("change", () => { tgtSelect.value = curSelect.value; onChange(); });
+        tgtSelect.addEventListener("change", onChange);
+
+        // 초기 1회 계산
+        updateMithrilSubtotals(i);
+      });
+
+      document.getElementById("chkExpertV")?.addEventListener("change", () => {
+        slotNames.forEach((_, i) => updateMithrilSubtotals(i)); // 각 카드 SVS 갱신
+        getValeriaDesc(); 
+        updateMithrilTotals();                                   // 총합 패널 갱신
+      });
+
+      // 보유 입력 변화 시 총합계 갱신
+      ["own-너트","own-미스릴","own-레전드장비"].forEach(id=>{
+        document.getElementById(id)?.addEventListener("input", updateMithrilTotals);
+      });
+
+      updateMithrilTotals();
+    }
+
+    function updateMithrilSubtotals(i) {
+      var cur = document.getElementById(`start-${i}`).value;
+      var tgt = document.getElementById(`end-${i}`).value;
+      var sIdx = stageList.indexOf(cur);
+      var eIdx = stageList.indexOf(tgt);
+
+      var sums = { exp:0, nut:0, mith:0, legend:0 };
+      if (sIdx >= 0 && eIdx > sIdx) {
+        for (let j = sIdx + 1; j <= eIdx; j++) {
+          var r = csvData[j];
+          sums.exp    += parseFloat(r["경험치"] || "0");
+          sums.nut    += parseFloat(r["너트"] || "0");
+          sums.mith   += parseFloat(r["미스릴"] || "0");
+          sums.legend += parseFloat(r["레전드장비"] || "0");
+        }
+      }
+
+      document.getElementById(`m-sub-exp-${i}`).textContent    = sums.exp.toLocaleString();
+      document.getElementById(`m-sub-nut-${i}`).textContent    = sums.nut.toLocaleString();
+      document.getElementById(`m-sub-mith-${i}`).textContent   = sums.mith.toLocaleString();
+      document.getElementById(`m-sub-legend-${i}`).textContent = sums.legend.toLocaleString();
+
+      // ✅ 이 슬롯만의 SVS 계산/표시
+      var valeriaBonus = getValeriaBonus();
+      // 가중치는 네가 쓰는 규칙으로 맞춰줘 (예시는 미스릴*4000 + 레전드*144000)
+      var baseSlot = sums.mith * 144000;
+      var svsSlot  = Math.round(baseSlot * (1 + valeriaBonus));
+
+      var id  = `sub-점수-${slotNames[i]}`;
+      var idA = `sub-점수A-${slotNames[i]}`; // 있으면 같이 표기
+      var el  = document.getElementById(id);
+      var elA = document.getElementById(idA);
+      if (el)  el.textContent  = formatSVS(svsSlot);
+      if (elA) elA.textContent = svsSlot.toLocaleString();
+    }
+
+    function updateMithrilTotals(){
+      let total = { exp:0, nut:0, mith:0, leg:0 };
+      slotNames.forEach((_, i)=>{
+        var cur = document.getElementById(`start-${i}`).value;
+        var tgt = document.getElementById(`end-${i}`).value;
+        var sIdx = stageList.indexOf(cur);
+        var eIdx = stageList.indexOf(tgt);
+        if (sIdx < 0 || eIdx <= sIdx) return;
+
+        for(let j=sIdx+1;j<=eIdx;j++){
+          var r = csvData[j];
+          total.exp += +(r["경험치"]||0);
+          total.nut += +(r["너트"]||0);
+          total.mith+= +(r["미스릴"]||0);
+          total.leg += +(r["레전드장비"]||0);
+        }
+      });
+
+      var own = {
+        nut: +(document.getElementById("own-너트")?.value || 0),
+        mith:+(document.getElementById("own-미스릴")?.value || 0),
+        leg: +(document.getElementById("own-레전드장비")?.value || 0),
+      };
+
+      // 표기
+      document.getElementById("tot-exp").textContent  = total.exp.toLocaleString();
+      document.getElementById("tot-nut").textContent  = total.nut.toLocaleString();
+      document.getElementById("tot-mith").textContent = total.mith.toLocaleString();
+      document.getElementById("tot-leg").textContent  = total.leg.toLocaleString();
+
+      document.getElementById("def-exp").textContent  = total.exp.toLocaleString(); // 경험치는 보유치 개념 없음
+      document.getElementById("def-nut").textContent  = (own.nut-total.nut).toLocaleString();
+      document.getElementById("def-mith").textContent = (own.mith-total.mith).toLocaleString();
+      document.getElementById("def-leg").textContent  = (own.leg-total.leg).toLocaleString();
+
+      ["def-nut","def-mith","def-leg"].forEach(id=>{
+        var el = document.getElementById(id);
+        var n  = parseFloat(el.textContent.replace(/,/g,''));
+        el.classList.toggle("text-red-600", n < 0);
+      });
+
+      // ✅ 총합 패널 SVS (총합 기준으로 한 번만)
+      var valeriaBonus = getValeriaBonus();
+      var baseTotal = total.mith * 144000; // 규칙에 맞게
+      var svsTotal  = Math.round(baseTotal * (1 + valeriaBonus));
+
+      // 총합 패널 안의 svs-score-value만 업데이트 (카드의 것은 건들지 않음)
+      document.getElementById("svs-long").textContent  = svsTotal.toLocaleString();
+      document.getElementById("svs-short").textContent = formatSVS(svsTotal);
+    }
+
+    // 최초 로딩
+    loadMithrilCSV();
+   };
+  window.MithrillInit();
+})();
+</script>

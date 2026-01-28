@@ -1,0 +1,697 @@
+<meta charset="utf-8" />
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">전문가 계산기</h1>
+        <p class="text-sm muted mt-1">레벨을 선택하면 필요한 <b>경험치</b>와 <b>표식·학습의 책</b> 합계를 계산합니다.</p>  
+
+        <div>
+          <section class="mb-4 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+            <div class="grid gap-4 md:gap-6 md:grid-cols-[220px_1fr_1.1fr] md:items-stretch">
+              <!-- LEFT: 전문가 선택 -->
+              <div class="space-y-2">
+                <div class="font-semibold text-gray-800">전문가 선택</div>
+
+                <!-- 기존 로직용 select 유지(숨김) -->
+                <select id="selType" class="pill w-full hidden">
+                  <option value="Cyrille">키릴</option>
+                  <option value="Agnes">아그네스</option>
+                  <option value="Holger">홀게르</option>
+                  <option value="Romulus">로물루스</option>
+                  <option value="Baldur">발데</option>
+                  <option value="Fabian">파비안</option>
+                  <option value="Valeria">발레리아</option>
+                </select>
+
+                <!-- ✅ 팝업 그리드 카드 느낌: 단일 라운드 박스 + 이미지 -->
+                <div class="expert-imgbox w-full rounded-2xl border border-black/10 p-4 flex items-center justify-center">
+                  <button id="expertPickBtn" type="button" class="w-full flex flex-col items-center gap-3">
+                    <!-- ✅ 두번째 사진 느낌: 밝은 패널 + 큰 이미지 -->
+                    <div class="expert-card-light w-full p-4 flex items-center justify-center">
+                      <img id="expertPickImg" alt="" class="w-[140px] h-[140px] object-contain" />
+                    </div>
+
+                    <div id="expertPickName" class="font-bold text-gray-600 text-center">-</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- MIDDLE: 레벨 범위 -->
+              <div class="space-y-2">
+                <div class="font-semibold text-gray-800">레벨 범위</div>
+                <div class="flex items-center gap-3"></div>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 text-sm text-gray-600">현재</div>
+                    <select id="expertCur" class="pill w-44"></select>
+                  </div>            
+                  <div class="flex items-center gap-3"></div>
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 text-sm text-gray-600">목표</div>
+                    <select id="expertTgt" class="pill w-44"></select>
+                  </div>
+
+                  <p id="expertWarn" class="text-xs err"></p>
+
+                  <div class="flex items-center gap-2 pt-[90px]">
+                    <button id="btnSum"
+                      class="px-5 py-2 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+                      계산하기
+                    </button>
+                    <button id="btnReset"
+                      class="px-5 py-2 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+                      초기화
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT: 효과/관계 (✅ 세로선 + ✅ 가로선) -->
+              <div class="divider-v md:pl-4">
+                <div class="h-full grid grid-rows-3">
+                  <div class="pb-3">
+                    <div class="font-semibold mb-1 text-blue-700">전문가 효과 (목표 기준)</div>
+                    <div id="expertEffect" class="muted">-</div>
+                  </div>
+
+                  <div class="divider-h pt-3">
+                    <div class="font-semibold mb-1 text-blue-700">전문가 관계</div>
+                    <div id="expertrelationship" class="muted">-</div>
+                  </div>
+
+                  <div class="divider-h pt-3">
+                    <div class="font-semibold mb-1 text-blue-700">총합</div>
+                    <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <div class="flex justify-between"><span class="muted">경험치</span><span id="sumExpertExp">0</span></div>
+                        <div class="flex justify-between"><span class="muted">표식</span><span id="sumExpertMark">0</span></div>
+                      </div>
+                      <div>
+                        <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="sumSkillExp">0</span></div>
+                        <div class="flex justify-between"><span class="muted">학습의 책</span><span id="sumSkillItem">0</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="grid md:grid-cols-2 gap-2 mb-2">
+            <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+              <h3 class="text-base font-bold mb-3 skill-title muted" data-index="0">스킬 1</h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <div class="text-sm font-semibold mb-4">레벨 범위<span id="s1Cap" class="muted"></span></div>
+                  <div class="flex items-center gap-2">
+                    <label class="inline-label"><span class="muted">현재</span><select id="s1Cur" class="pill w-24"></select></label>
+                    <label class="inline-label"><span class="muted">목표</span><select id="s1Tgt" class="pill w-24"></select></label>
+                  </div>
+                  <p id="s1Warn" class="text-xs err mt-1"></p>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold mb-1">필요 합계</div>
+                  <div class="space-y-1 text-sm">
+                    <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s1Exp">0</span></div>
+                    <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s1Item">0</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-divider border-t mt-4"></div>
+              <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+                <div class="pt-3">
+                  <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+                  <div class="skill-effect muted whitespace-pre-line" data-index="0">-</div>
+                </div>
+                <!-- 세로 구분선 -->
+                <div class="w-px mx-2"></div>
+                <div class="pt-3">
+                  <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+                  <div class="skill-cond muted whitespace-pre-line" data-index="0">-</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+              <h3 class="text-base font-bold mb-3 skill-title muted" data-index="1">스킬 2</h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <div class="text-sm font-semibold mb-4">레벨 범위<span id="s2Cap" class="muted"></span></div>
+                  <div class="flex items-center gap-2">
+                    <label class="inline-label"><span class="muted">현재</span><select id="s2Cur" class="pill w-24"></select></label>
+                    <label class="inline-label"><span class="muted">목표</span><select id="s2Tgt" class="pill w-24"></select></label>
+                  </div>
+                  <p id="s2Warn" class="text-xs err mt-1"></p>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold mb-1">필요 합계</div>
+                  <div class="space-y-1 text-sm">
+                    <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s2Exp">0</span></div>
+                    <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s2Item">0</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-divider border-t mt-4"></div>
+              <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+                <div class="pt-3 pr-4">
+                  <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+                  <div class="skill-effect muted whitespace-pre-line" data-index="1">-</div>
+                </div>
+                <!-- 세로 구분선 -->
+                <div class="w-px mx-2"></div>
+                <div class="pt-3">
+                  <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+                  <div class="skill-cond muted whitespace-pre-line" data-index="1">-</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+              <h3 class="text-base font-bold mb-3 skill-title muted" data-index="2">스킬 3</h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <div class="text-sm font-semibold mb-4">레벨 범위<span id="s3Cap" class="muted"></span></div>
+                  <div class="flex items-center gap-2">
+                    <label class="inline-label"><span class="muted">현재</span><select id="s3Cur" class="pill w-24"></select></label>
+                    <label class="inline-label"><span class="muted">목표</span><select id="s3Tgt" class="pill w-24"></select></label>
+                  </div>
+                  <p id="s3Warn" class="text-xs err mt-1"></p>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold mb-1">필요 합계</div>
+                  <div class="space-y-1 text-sm">
+                    <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s3Exp">0</span></div>
+                    <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s3Item">0</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-divider border-t mt-4"></div>
+              <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+                <div class="pt-3 pr-4">
+                  <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+                  <div class="skill-effect muted whitespace-pre-line" data-index="2">-</div>
+                </div>
+                <!-- 세로 구분선 -->
+                <div class="w-px mx-2"></div>
+                <div class="pt-3">
+                  <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+                  <div class="skill-cond muted whitespace-pre-line" data-index="2">-</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-2 rounded-xl border border-black/10 bg-white px-4 py-3 shadow-lg">
+              <h3 class="text-base font-bold mb-3 skill-title muted" data-index="3">스킬 4</h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <div class="text-sm font-semibold mb-4">레벨 범위<span id="s4Cap" class="muted"></span></div>
+                  <div class="flex items-center gap-2">
+                    <label class="inline-label"><span class="muted">현재</span><select id="s4Cur" class="pill w-24"></select></label>
+                    <label class="inline-label"><span class="muted">목표</span><select id="s4Tgt" class="pill w-24"></select></label>
+                  </div>
+                  <p id="s4Warn" class="text-xs err mt-1"></p>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold mb-1">필요 합계</div>
+                  <div class="space-y-1 text-sm">
+                    <div class="flex justify-between"><span class="muted">스킬 경험치</span><span id="s4Exp">0</span></div>
+                    <div class="flex justify-between"><span class="muted">학습의 책</span><span id="s4Item">0</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-divider border-t mt-4"></div>
+              <div class="grid grid-cols-[1fr_auto_1fr] items-stretch">          
+                <div class="pt-3 pr-4">
+                  <div class="font-semibold mb-1 text-gray-700">스킬 효과 (목표 기준)</div>
+                  <div class="skill-effect muted whitespace-pre-line" data-index="3">-</div>
+                </div>
+                <!-- 세로 구분선 -->
+                <div class="w-px mx-2"></div>
+                <div class="pt-3">
+                  <div class="font-semibold mb-1 text-gray-700">레벨업 조건 (목표 기준)</div>
+                  <div class="skill-cond muted whitespace-pre-line" data-index="3">-</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ✅ 전문가 선택 모달 -->
+          <div id="expertModal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/60"></div>
+
+            <div class="absolute inset-0 flex items-center justify-center p-4">
+              <div class="w-full max-w-[720px] rounded-2xl border border-black/10 bg-white shadow-xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-3 border-b">
+                  <div class="font-bold text-gray-800">전문가 선택</div>
+                  <button id="expertModalClose" type="button"
+                    class="px-3 py-1.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50">
+                    닫기
+                  </button>
+                </div>
+
+                <div class="p-4">
+                  <div id="expertGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ✅ SPA에서도 동작: 이미 로드됐으면 즉시 실행
+  function onReady(fn){
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
+    else fn();
+  }
+
+  window.ExpertsInit = function ExpertsInit(){
+    // ===== UI MAP =====
+    var EXPERT_UI = [
+      { key:"Cyrille", name:"키릴",    img:"images/experts/Cyrille.webp" },
+      { key:"Agnes",   name:"아그네스", img:"images/experts/Agnes.webp" },
+      { key:"Holger",  name:"홀게르",   img:"images/experts/Holger.webp" },
+      { key:"Romulus", name:"로물루스", img:"images/experts/Romulus.webp" },
+      { key:"Baldur",  name:"발데",     img:"images/experts/Baldur.webp" },
+      { key:"Fabian",  name:"파비안",   img:"images/experts/Fabian.webp" },
+      { key:"Valeria", name:"발레리아", img:"images/experts/Valeria.webp" },
+    ];
+
+    // ===== SETTINGS =====
+    var SETTINGS = {
+      Cyrille: {
+        base:{ csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille.csv" },
+        skills:[
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Cyrille_S4.csv" },
+        ]
+      },
+      Agnes: {
+        base:{ csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes.csv" },
+        skills:[
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Agnes_S4.csv" },
+        ]
+      },
+      Holger: {
+        base:{ csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger.csv" },
+        skills:[
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Holger_S4.csv" },
+        ]
+      },
+      Romulus: {
+        base:{ csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus.csv" },
+        skills:[
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Romulus_S4.csv" },
+        ]
+      },
+      Baldur: {
+        base:{ csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur.csv" },
+        skills:[
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Baldur_S4.csv" },
+        ]
+      },
+      Fabian: {
+        base:{ csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian.csv" },
+        skills:[
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Expertise/Fabian_S4.csv" },
+        ]
+      },
+      Valeria: {
+        base:{ csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria.csv" },
+        skills:[
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria_S1.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria_S2.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria_S3.csv" },
+          { csv:"https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/Expertise/Valeria_S4.csv" },
+        ]
+      },
+    };
+
+    // ===== STATE =====
+    var expertLevels = [], expertExp = [], expertMark = [];
+    var skillLevels = [[],[],[],[]];
+    var skillExp  = [[],[],[],[]];
+    var skillItem = [[],[],[],[]];
+
+    // ===== DOM =====
+    var $ = (id)=>document.getElementById(id);
+
+    // ===== UTIL =====
+    var fmt = n => Number(n||0).toLocaleString("ko-KR");
+    var isFilled = v => v !== "" && v !== null && v !== undefined && !Number.isNaN(+v);
+
+    function detectDelim(sample){
+      if (sample.includes("\t")) return "\t";
+      if (sample.includes(";"))  return ";";
+      return ",";
+    }
+    function preprocessByLevel(text){
+      var s = text.replace(/\uFEFF/g,"").replace(/\r/g,"");
+      if (!s.includes("\n") && /Lv\.\s*\d+/i.test(s)) s = s.replace(/(Lv\.\s*\d+)/gi, "\n$1");
+      return s;
+    }
+
+    function parseExpertCSV(text){
+      var pre = preprocessByLevel(text);
+      var lines = pre.split("\n").filter(l=>l.trim()!=="");
+      if (!lines.length) return { levels:[], expSteps:[], markSteps:[] };
+
+      var delim = detectDelim(lines[0]);
+      var hasHeader = /(레벨|lv|level|경험치|exp)/i.test(lines[0]);
+      var start = hasHeader ? 1 : 0;
+
+      var EXP = new Map(), MARK = new Map(), rawLevels=[];
+      var toInt = s => { var m=String(s||"").match(/\d+/); return m ? parseInt(m[0],10) : NaN; };
+      var toNum = s => { var v=String(s??"").replace(/,/g,"").trim(); var n=Number(v); return Number.isFinite(n)?n:0; };
+
+      for (var i=start;i<lines.length;i++){
+        var c=lines[i].split(delim);
+        var lv=toInt(c[0]); if(!Number.isFinite(lv)) continue;
+        rawLevels.push(lv);
+        EXP.set(lv, toNum(c[1]));
+        MARK.set(lv,toNum(c[2]));
+      }
+      var levels=[...new Set(rawLevels)].sort((a,b)=>a-b);
+      var expSteps=[], markSteps=[];
+      for (var j=0;j<levels.length-1;j++){
+        var b=levels[j+1];
+        expSteps[j]=Math.max(0, EXP.get(b)||0);
+        markSteps[j]=Math.max(0, MARK.get(b)||0);
+      }
+      return { levels, expSteps, markSteps };
+    }
+
+    function parseSkillCSV(text){
+      var pre = preprocessByLevel(text);
+      var rows = pre.split("\n").filter(l=>l.trim()!=="");
+      if (!rows.length) return { levels:[], expSteps:[], itemSteps:[] };
+
+      var delim = detectDelim(rows[0]);
+      var headerLooks = /(레벨|lv|level|exp|item|아이템|학습의 책|경험치)/i.test(rows[0]);
+      var start = headerLooks ? 1 : 0;
+
+      var exp=[], item=[], levelsFromFile=[];
+      var toInt = s => { var m=String(s||"").match(/\d+/); return m?parseInt(m[0],10):NaN; };
+      var toNum = s => { var v=String(s??"").replace(/,/g,"").trim(); var n=Number(v); return Number.isFinite(n)?n:0; };
+
+      for (var i=start;i<rows.length;i++){
+        var c = rows[i].split(delim);
+        if (c.length >= 3){
+          var lv=toInt(c[0]); if(Number.isFinite(lv)) levelsFromFile.push(lv);
+          exp.push(toNum(c[1])); item.push(toNum(c[2]));
+        } else {
+          exp.push(toNum(c[0])); item.push(toNum(c[1]));
+        }
+      }
+      var L = Math.max(1, exp.length);
+      var levels;
+      if (levelsFromFile.length){
+        var uniq=[...new Set(levelsFromFile)].sort((a,b)=>a-b);
+        levels = uniq.length >= (L+1) ? uniq.slice(0, L+1) : Array.from({length:L},(_,k)=>k+1);
+      } else {
+        levels = Array.from({length:L},(_,k)=>k+1);
+      }
+      return { levels, expSteps:exp, itemSteps:item };
+    }
+
+    function renderOptions(selectEl, levels, useDot){
+      var label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
+      selectEl.innerHTML = ['<option value=""></option>']
+        .concat(levels.map(lv=>`<option value="${lv}">${label(lv)}</option>`)).join("");
+    }
+    function renderTargetOptions(selectEl, levels, greaterThan, useDot){
+      var label = lv => useDot ? `Lv.${lv}` : `Lv${lv}`;
+      var filtered = levels.filter(lv => lv > greaterThan);
+      selectEl.innerHTML = ['<option value=""></option>']
+        .concat(filtered.map(lv=>`<option value="${lv}">${label(lv)}</option>`)).join("");
+    }
+
+    async function fetchText(url){
+      var r = await fetch(url, { cache:"no-store", mode:"cors", redirect:"follow", referrerPolicy:"no-referrer" });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return await r.text();
+    }
+
+    function openExpertModal(){ $("expertModal")?.classList.remove("hidden"); }
+    function closeExpertModal(){ $("expertModal")?.classList.add("hidden"); }
+
+    function setExpertUIByKey(key){
+      var found = EXPERT_UI.find(x=>x.key===key);
+      if(!found) return;
+      var imgEl = $("expertPickImg");
+      var nameEl = $("expertPickName");
+
+      if (imgEl){
+        imgEl.onerror = function(){ console.error("[IMG FAIL]", found.img); };
+        imgEl.src = found.img;
+      }
+      if (nameEl) nameEl.textContent = found.name;
+    }
+
+    async function loadDataFor(type){
+      var conf = SETTINGS[type];
+      var expertCur = $("expertCur");
+      var expertTgt = $("expertTgt");
+      var expertWarn = $("expertWarn");
+
+      // 본체
+      try{
+        var txt = await fetchText(conf.base.csv);
+        var parsed = parseExpertCSV(txt);
+        expertLevels = parsed.levels;
+        expertExp = parsed.expSteps;
+        expertMark = parsed.markSteps;
+        renderOptions(expertCur, expertLevels, true);
+        expertTgt.innerHTML = '<option value=""></option>';
+        if (expertWarn) expertWarn.textContent = "";
+      }catch(e){
+        if (expertWarn) expertWarn.textContent = "데이터를 불러오지 못했습니다. 경로/CORS 확인";
+        expertLevels=[]; expertExp=[]; expertMark=[];
+        renderOptions(expertCur, [], true);
+        renderOptions(expertTgt, [], true);
+      }
+
+      // 스킬 1~4
+      for (var i=0;i<4;i++){
+        var s = conf.skills[i];
+        var cur = $(`s${i+1}Cur`);
+        var tgt = $(`s${i+1}Tgt`);
+        var cap = $(`s${i+1}Cap`);
+        var warn = $(`s${i+1}Warn`);
+        var outE = $(`s${i+1}Exp`);
+        var outI = $(`s${i+1}Item`);
+
+        try{
+          var t = await fetchText(s.csv);
+          var p = parseSkillCSV(t);
+          skillLevels[i]=p.levels;
+          skillExp[i]=p.expSteps;
+          skillItem[i]=p.itemSteps;
+
+          if (cap) cap.textContent = p.levels.length ? `(최대 Lv.${p.levels[p.levels.length-1]})` : "";
+          renderOptions(cur, p.levels, true);
+          tgt.innerHTML = '<option value=""></option>';
+          if (warn) warn.textContent = "";
+        }catch(e2){
+          skillLevels[i]=[]; skillExp[i]=[]; skillItem[i]=[];
+          if (cap) cap.textContent = "";
+          renderOptions(cur, [], true);
+          renderOptions(tgt, [], true);
+          if (warn) warn.textContent = "스킬 로드 실패";
+        }
+        if (outE) outE.textContent="0";
+        if (outI) outI.textContent="0";
+      }
+
+      // 총합 초기화
+      $("sumExpertExp").textContent="0";
+      $("sumExpertMark").textContent="0";
+      $("sumSkillExp").textContent="0";
+      $("sumSkillItem").textContent="0";
+    }
+
+    function sumRangeSteps(steps, fromLv, toLv){
+      var s=0; for (var lv=fromLv; lv<toLv; lv++) s += steps[lv]||0; return s;
+    }
+
+    function calcLive(){
+      // 스킬 카드 내 소계만 갱신(너 원래 calc 방식 유지)
+      for (var i=0;i<4;i++){
+        var cur = $(`s${i+1}Cur`), tgt = $(`s${i+1}Tgt`);
+        var warn = $(`s${i+1}Warn`);
+        var outE = $(`s${i+1}Exp`), outI = $(`s${i+1}Item`);
+
+        var sE=0, sI=0;
+        if (isFilled(cur.value) && isFilled(tgt.value) && skillLevels[i].length>1){
+          var c=+cur.value, t=+tgt.value;
+          if (warn) warn.textContent = (t<=c) ? "목표 레벨은 현재보다 커야 합니다." : "";
+          if (t>c){ sE=sumRangeSteps(skillExp[i], c, t); sI=sumRangeSteps(skillItem[i], c, t); }
+        }else{
+          if (warn) warn.textContent="";
+        }
+        if (outE) outE.textContent=fmt(sE);
+        if (outI) outI.textContent=fmt(sI);
+      }
+    }
+
+    function calcSum(){
+      // 본체
+      var eExp=0, eMark=0;
+      var expertCur = $("expertCur"), expertTgt = $("expertTgt");
+      if (isFilled(expertCur.value) && isFilled(expertTgt.value) && expertLevels.length>1){
+        var fi=expertLevels.indexOf(+expertCur.value);
+        var ti=expertLevels.indexOf(+expertTgt.value);
+        if (fi>=0 && ti>fi){
+          for (var i=fi;i<ti;i++){ eExp+=(expertExp[i]||0); eMark+=(expertMark[i]||0); }
+        }
+      }
+      $("sumExpertExp").textContent=fmt(eExp);
+      $("sumExpertMark").textContent=fmt(eMark);
+
+      // 스킬
+      var tExp=0, tItem=0;
+      for (var k=0;k<4;k++){
+        var cur = $(`s${k+1}Cur`), tgt = $(`s${k+1}Tgt`);
+        if (isFilled(cur.value) && isFilled(tgt.value) && skillLevels[k].length>1){
+          var c=+cur.value, t=+tgt.value;
+          if (t>c){ tExp+=sumRangeSteps(skillExp[k], c, t); tItem+=sumRangeSteps(skillItem[k], c, t); }
+        }
+      }
+      $("sumSkillExp").textContent=fmt(tExp);
+      $("sumSkillItem").textContent=fmt(tItem);
+    }
+
+    function clearAll(){
+      $("expertCur").value="";
+      $("expertTgt").innerHTML='<option value=""></option>';
+      $("expertWarn").textContent="";
+      $("sumExpertExp").textContent="0";
+      $("sumExpertMark").textContent="0";
+      for (var i=1;i<=4;i++){
+        $(`s${i}Cur`).value="";
+        $(`s${i}Tgt`).innerHTML='<option value=""></option>';
+        $(`s${i}Warn`).textContent="";
+        $(`s${i}Exp`).textContent="0";
+        $(`s${i}Item`).textContent="0";
+      }
+      $("sumSkillExp").textContent="0";
+      $("sumSkillItem").textContent="0";
+      document.querySelectorAll(".skill-effect,.skill-cond").forEach(el=>el.textContent="-");
+      $("expertEffect").textContent="-";
+      $("expertrelationship").textContent="-";
+    }
+
+    // ===== 여기서부터 네 기존 효과/관계/스킬명 데이터(그대로) =====
+    // ※ 너가 이미 붙여둔 EXPERT_EFFECTS_OVERRIDE / EXPERT_RELATIONSHIP / SKILL_EFFECTS / SKILL_CONDITIONS / SKILL_NAMES
+    //   이 블럭은 "그대로" 아래에 두고, updateXXX 함수만 init에서 호출해.
+    // (중략: 너 코드 그대로 두면 됨)
+    // ===========================================
+
+    // ✅ 최종: 바인딩/초기 로드/초기 표시를 “한 번의 init”에서 수행
+    onReady(async () => {
+      var selType = $("selType");
+      var pickBtn = $("expertPickBtn");
+      var modal = $("expertModal");
+      var closeBtn = $("expertModalClose");
+      var grid = $("expertGrid");
+
+      // 1) 모달 그리드 렌더 + 클릭 적용
+      if (grid){
+        grid.innerHTML = EXPERT_UI.map(e=>`
+          <button type="button" class="group w-full rounded-2xl p-3 bg-white border transition" data-key="${e.key}">
+            <div class="expert-icon-frame"><img src="${e.img}" alt="${e.name}" class="expert-icon-img" /></div>
+            <div class="mt-3 text-base font-bold text-gray-800 text-center">${e.name}</div>
+          </button>
+        `).join("");
+
+        grid.onclick = (ev)=>{
+          var btn = ev.target.closest("button[data-key]");
+          if (!btn) return;
+          var key = btn.getAttribute("data-key");
+          selType.value = key;
+          selType.dispatchEvent(new Event("change", {bubbles:true}));
+          setExpertUIByKey(key);
+          closeExpertModal();
+        };
+      }
+
+      pickBtn?.addEventListener("click", openExpertModal);
+      closeBtn?.addEventListener("click", closeExpertModal);
+      modal?.addEventListener("click", (ev)=>{ if(ev.target===modal) closeExpertModal(); });
+      window.addEventListener("keydown", (ev)=>{ if(ev.key==="Escape") closeExpertModal(); });
+
+      // 2) select 변화 = 데이터 로드 → 초기화 → (효과/타이틀 갱신)
+      selType.addEventListener("change", async ()=>{
+        await loadDataFor(selType.value);
+        clearAll();
+        setExpertUIByKey(selType.value);
+
+        // ✅ 네 기존 함수들 있으면 여기서 호출
+        // buildFullExpertEffects(selType.value, expertLevels);
+        // updateSkillTitles(); updateSkillEffects(); updateSkillConditions(); updateExpertEffect();
+      });
+
+      // 3) 레벨 셀렉트 로직
+      $("expertCur").addEventListener("change", ()=>{
+        var cur = +$("expertCur").value;
+        if (!isFilled(cur)) { $("expertTgt").innerHTML='<option value=""></option>'; return; }
+        renderTargetOptions($("expertTgt"), expertLevels, cur, true);
+        if ($("expertTgt").options.length>1) $("expertTgt").selectedIndex=1;
+        // updateExpertEffect();
+      });
+      for (let i=1;i<=4;i++){
+        $(`s${i}Cur`).addEventListener("change", ()=>{
+          var cur = +$(`s${i}Cur`).value;
+          if (!isFilled(cur)) { $(`s${i}Tgt`).innerHTML='<option value=""></option>'; return; }
+          renderTargetOptions($(`s${i}Tgt`), skillLevels[i-1], cur, true);
+          if ($(`s${i}Tgt`).options.length>1) $(`s${i}Tgt`).selectedIndex=1;
+          // updateSkillEffects(); updateSkillConditions();
+        });
+        $(`s${i}Tgt`).addEventListener("change", ()=>{
+          calcLive();
+          // updateSkillEffects(); updateSkillConditions();
+        });
+      }
+      $("expertTgt").addEventListener("change", ()=>{
+        // updateExpertEffect();
+      });
+
+      $("btnReset").addEventListener("click", clearAll);
+      $("btnSum").addEventListener("click", calcSum);
+
+      // 4) 최초 1회 로드
+      setExpertUIByKey(selType.value || "Cyrille");
+      await loadDataFor(selType.value || "Cyrille");
+      // buildFullExpertEffects(selType.value, expertLevels);
+      // updateSkillTitles(); updateSkillEffects(); updateSkillConditions(); updateExpertEffect();
+    });
+  };
+
+  // ✅ 이 한 줄만으로도 SPA/일반 둘 다 ok
+  window.ExpertsInit();
+})();
+</script>

@@ -1,0 +1,123 @@
+  <meta charset="UTF-8">
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+          <h1 class="text-xl md:text-2xl font-bold text-gray-700">📊 이민예상범위</h1>
+          <div class="text-gray-700 text-sm mb-4">
+            <p>26년 2월 이후 이민 예측 정보는 12T관련 이슈가 있어, 당장에 예측할 수 없습니다.</p>
+            <p>12T가 출시되어도 서버 진행도가 어디까지 오픈될지도 미지수 입니다.</p>
+            <p>차후 두번째 12T가 포함될 서버들의 진행도 또한 알 수 없습니다.</p>
+            <p>즉, 2월은 12T를 배제하고 예측했지만, 3월이민의 경우 예측불허 상태입니다.</p>
+            <p>　</p>
+            <p>기준일자 : 이민 채팅이 열리는 일요일</p>
+            <p>다음 세대 영웅이 적혀있는 경우 : 기준일 다음날인 월요일에 해당 세대 시작</p>
+            <p>└ 월요일에 일일혜택 보상 영웅이 변경되었는지 확인가능</p>
+            <p>이전까지의 데이터를 기반으로 예측한 정보이므로 100% 정확하지 않습니다.</p>
+            <p>이웃왕국 범위가 잘못된 부분이나 누락된 부분이 있다면, 우측상단 오픈카톡으로 알려주시면 반영하겠습니다.</p>
+          </div>
+          <div id="sheet-table">⏳ 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  (function(){
+    window.TransferInit = function TransferInit(){  
+      function toRGB(color, fallback = "#ffffff") {
+        if (!color) return fallback;
+        var r = Math.round((color.red ?? 0) * 255);
+        var g = Math.round((color.green ?? 0) * 255);
+        var b = Math.round((color.blue ?? 0) * 255);
+        return `rgb(${r},${g},${b})`;
+      }
+
+      function toBorderColor(border) {
+        if (!border?.color) return null;
+        var { red = 0, green = 0, blue = 0 } = border.color;
+        return `rgb(${Math.round(red * 255)},${Math.round(green * 255)},${Math.round(blue * 255)})`;
+      }
+
+      async function loadData() {
+        try {
+          var response = await fetch("https://wos-proxy.mko75620.workers.dev/get-sheet");
+          if (!response.ok) throw new Error("프록시 호출 실패");
+          var data = await response.json();
+
+          var sheet = data.sheets[0];
+          var merges = sheet.merges || [];
+          var rows = sheet.data[0].rowData || [];
+
+          var mergeMap = {};
+          var skip = new Set();
+          for (var m of merges) {
+            var key = `${m.startRowIndex},${m.startColumnIndex}`;
+            mergeMap[key] = {
+              rowspan: m.endRowIndex - m.startRowIndex,
+              colspan: m.endColumnIndex - m.startColumnIndex
+            };
+            for (let r = m.startRowIndex; r < m.endRowIndex; r++) {
+              for (let c = m.startColumnIndex; c < m.endColumnIndex; c++) {
+                if (r !== m.startRowIndex || c !== m.startColumnIndex) {
+                  skip.add(`${r},${c}`);
+                }
+              }
+            }
+          }
+
+          let html = "<table><tbody>";
+          rows.forEach((row, ri) => {
+            html += "<tr>";
+            var cells = row.values || [];
+            cells.forEach((cell, ci) => {
+              var key = `${ri},${ci}`;
+              if (skip.has(key)) return;
+
+              var val = cell?.effectiveValue;
+              var text = val?.stringValue ?? val?.numberValue ?? val?.boolValue ?? "";
+
+              var effectiveFmt = cell?.effectiveFormat ?? {};
+              var userFmt = cell?.userEnteredFormat ?? {};
+              var bg = toRGB(userFmt.backgroundColor, "#ffffff");
+              var fg = toRGB(effectiveFmt.textFormat?.foregroundColor, "#000000");
+
+              var isBold = effectiveFmt.textFormat?.bold === true || userFmt.textFormat?.bold === true;
+              var rawSize = effectiveFmt.textFormat?.fontSize;
+              var fontSize = rawSize > 10 ? rawSize : "";
+
+              var borders = userFmt.borders || {};
+              var borderTop = toBorderColor(borders.top);
+              var borderBottom = toBorderColor(borders.bottom);
+              var borderLeft = toBorderColor(borders.left);
+              var borderRight = toBorderColor(borders.right);
+
+              let borderStyle = "";
+              if (borderTop) borderStyle += `border-top: 1px solid ${borderTop};`;
+              if (borderBottom) borderStyle += `border-bottom: 1px solid ${borderBottom};`;
+              if (borderLeft) borderStyle += `border-left: 1px solid ${borderLeft};`;
+              if (borderRight) borderStyle += `border-right: 1px solid ${borderRight};`;
+
+              var span = mergeMap[key];
+              var tag = `<td style="background:${bg}; color:${fg}; font-weight:${isBold ? "bold" : "normal"}; font-size:${fontSize}px; ${borderStyle}"` +
+                (span?.rowspan ? ` rowspan="${span.rowspan}"` : "") +
+                (span?.colspan ? ` colspan="${span.colspan}"` : "") +
+                `>${text}</td>`;
+              html += tag;
+            });
+            html += "</tr>";
+          });
+          html += "</tbody></table>";
+
+          document.getElementById("sheet-table").innerHTML = html;
+        } catch (err) {
+          console.error("로딩 오류:", err);
+          document.getElementById("sheet-table").innerText = "❌ 데이터를 불러오지 못했습니다.";
+        }
+      }
+
+      loadData();
+    };
+    window.TransferInit();
+  })();
+</script>

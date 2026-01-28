@@ -1,0 +1,258 @@
+
+<meta charset="UTF-8" />
+
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <h1 class="text-2xl font-bold text-gray-800">🛡️ 장비 계산기</h1>
+
+        <div class="text-gray-600 text-sm">
+          <p>현재 등급과 목표 등급을 선택하면, 업그레이드에 필요한 자원(합금/설계도면/광택제/달빛앰버)을 계산합니다.</p>
+          <p>각 항목 우측의 ‘필요 합계’는 현재 등급과 목표 등급을 선택 시 자동 갱신됩니다.</p>
+          <p>각 항목을 체크할 경우 하단에 총합계에 각 항목 필요합계들을 합산하여 표시합니다.</p>
+        </div>
+
+        <!-- 장비 카드 그리드 -->
+        <div id="gearGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+
+        <!-- 하단 총합 패널 -->
+        <div id="summaryPanel" class="mt-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold mb-2">총합</div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="sum-합금">0</span></div>
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="sum-설계도면">0</span></div>
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="sum-광택제">0</span></div>
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="sum-달빛앰버">0</span></div>                 
+            </div>
+
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[15px] font-semibold text-gray-800">보유 자원</h3>
+                <span class="muted">입력 시 자동 반영</span>              
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <div>
+                    <label class="block text-[13px] text-gray-600 mb-1">보유 합금</label>
+                    <input type="number" id="owned-합금" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                  </div>
+                  <div>
+                    <label class="block text-[13px] text-gray-600 mb-1">보유 설계도면</label>
+                    <input type="number" id="owned-설계도면" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="block text-[13px] text-gray-600 mb-1">보유 광택제</label>
+                    <input type="number" id="owned-광택제" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                  </div>
+                  <div>
+                    <label class="block text-[13px] text-gray-600 mb-1">보유 달빛앰버</label>
+                    <input type="number" id="owned-앰버" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold mb-2">과부족</div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">합금</span><span id="def-합금">0</span></div>
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">설계도면</span><span id="def-설계도면">0</span></div>
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">광택제</span><span id="def-광택제">0</span></div>
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">달빛앰버</span><span id="def-달빛앰버">0</span></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 데이터 & 로직 ========== -->
+<script>
+(function(){
+  window.EquipInit = function EquipInit(){
+    const gearSlots = ["장비1(창)", "장비2(창)", "장비3(방)", "장비4(방)", "장비5(궁)", "장비6(궁)"];
+    const csvUrl = 'https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/chief/Gear.csv';
+    let gearLevels = [];
+    let gearData = [];
+
+    // CSV 로드
+    async function fetchCSVData() {
+      const res = await fetch(csvUrl);
+      const text = await res.text();
+      const lines = text.trim().split("\n").map(l => l.split(","));
+      const headers = lines[0];
+      gearData = lines.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim() || "0");
+        return obj;
+      });
+      gearLevels = gearData.map(r => r["단계"]);
+      renderGearCards();
+      scheduleCalc();
+    }
+
+    // 카드 렌더
+    function renderGearCards() {
+      const grid = document.getElementById("gearGrid");
+      grid.innerHTML = "";
+      gearSlots.forEach((name, i) => {
+        const options = gearLevels.map(stage => `<option value="${stage}">${stage}</option>`).join("");
+        const card = document.createElement("div");
+        card.className = "exp-card";
+        card.innerHTML = `
+          <div class="p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
+                </div>
+                <!-- 현재/목표 세로 배치 -->
+                <div class="grid grid-cols-1 gap-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-gray-600">현재</span>
+                    <select id="start-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">${options}</select>
+                  </div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-gray-600">목표</span>
+                    <select id="end-${i}" class="border rounded-lg px-2 py-1 text-sm min-w-[120px]">${options}</select>
+                  </div>
+                </div>
+              </div>
+              <div class="md:pl-4">
+                <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
+                <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
+                  <div class="text-gray-600">합금</div><div class="text-right tabular-nums" id="sub-alloy-${i}">0</div>
+                  <div class="text-gray-600">설계도면</div><div class="text-right tabular-nums" id="sub-blue-${i}">0</div>
+                  <div class="text-gray-600">광택제</div><div class="text-right tabular-nums" id="sub-polish-${i}">0</div>
+                  <div class="text-gray-600">달빛앰버</div><div class="text-right tabular-nums" id="sub-amber-${i}">0</div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+
+        const startSel = card.querySelector(`#start-${i}`);
+        const endSel   = card.querySelector(`#end-${i}`);
+
+        const onChange = () => { updateSubtotals(i); scheduleCalc(); };
+        startSel.addEventListener("change", () => { endSel.value = startSel.value; onChange(); });
+        endSel.addEventListener("change", onChange);
+        // 초기 계산
+        updateSubtotals(i);
+      });
+
+      // 보유 입력 변화시 전체 재계산
+      ["owned-합금","owned-설계도면","owned-광택제","owned-앰버"].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("input", scheduleCalc);
+      });
+    }
+
+    // 카드별 필요 합계 계산
+    function updateSubtotals(i) {
+      const start = document.getElementById(`start-${i}`).value;
+      const end   = document.getElementById(`end-${i}`).value;
+      const sIdx = gearLevels.indexOf(start);
+      const eIdx = gearLevels.indexOf(end);
+
+      const sub = { 합금:0, 설계도면:0, 광택제:0, 달빛앰버:0 };
+      if (sIdx >= 0 && eIdx > sIdx) {
+        for (let j = sIdx + 1; j <= eIdx; j++) {
+          const row = gearData[j];
+          sub.합금     += parseFloat(row["합금"]||"0");
+          sub.설계도면 += parseFloat(row["설계도면"]||"0");
+          sub.광택제   += parseFloat(row["광택제"]||"0");
+          sub.달빛앰버 += parseFloat(row["달빛앰버"]||"0");
+        }
+      }
+      document.getElementById(`sub-alloy-${i}`).textContent = sub.합금.toLocaleString();
+      document.getElementById(`sub-blue-${i}`).textContent  = sub.설계도면.toLocaleString();
+      document.getElementById(`sub-polish-${i}`).textContent= sub.광택제.toLocaleString();
+      document.getElementById(`sub-amber-${i}`).textContent = sub.달빛앰버.toLocaleString();
+    }
+
+    // 하단 총합 계산 (체크된 카드만 포함)
+    function calculateTotals() {
+      const totals = { 합금:0, 설계도면:0, 광택제:0, 달빛앰버:0 };
+      gearSlots.forEach((_, i) => {
+        const start = document.getElementById(`start-${i}`).value;
+        const end   = document.getElementById(`end-${i}`).value;
+        const sIdx = gearLevels.indexOf(start);
+        const eIdx = gearLevels.indexOf(end);
+        if (sIdx === -1 || eIdx === -1 || sIdx >= eIdx) return;
+
+        for (let j = sIdx + 1; j <= eIdx; j++) {
+          const row = gearData[j];
+          totals.합금     += parseFloat(row["합금"]||"0");
+          totals.설계도면 += parseFloat(row["설계도면"]||"0");
+          totals.광택제   += parseFloat(row["광택제"]||"0");
+          totals.달빛앰버 += parseFloat(row["달빛앰버"]||"0");
+        }
+      });
+      return totals;
+    }
+
+    function renderSummary() {
+      const total = calculateTotals();
+      const owned = {
+        합금: parseFloat(document.getElementById("owned-합금").value)||0,
+        설계도면: parseFloat(document.getElementById("owned-설계도면").value)||0,
+        광택제: parseFloat(document.getElementById("owned-광택제").value)||0,
+        달빛앰버: parseFloat(document.getElementById("owned-앰버").value)||0,
+      };
+      const deficit = {
+        합금: owned.합금 - total.합금,
+        설계도면: owned.설계도면 - total.설계도면,
+        광택제: owned.광택제 - total.광택제,
+        달빛앰버: owned.달빛앰버 - total.달빛앰버,
+      };
+
+      document.getElementById("sum-합금").textContent = total["합금"].toLocaleString();
+      document.getElementById("sum-설계도면").textContent = total["설계도면"].toLocaleString();
+      document.getElementById("sum-광택제").textContent = total["광택제"].toLocaleString();
+      document.getElementById("sum-달빛앰버").textContent = total["달빛앰버"].toLocaleString();
+
+      const defA = document.getElementById("def-합금");
+      const defB = document.getElementById("def-설계도면");
+      const defC = document.getElementById("def-광택제");
+      const defD = document.getElementById("def-달빛앰버");
+
+      defA.textContent = parseFloat(deficit.합금).toLocaleString();
+      defB.textContent = parseFloat(deficit.설계도면).toLocaleString();
+      defC.textContent = parseFloat(deficit.광택제).toLocaleString();
+      defD.textContent = parseFloat(deficit.달빛앰버).toLocaleString();
+
+      defA.classList.toggle("text-red-600", parseFloat(defA.textContent.replace(/,/g,'')) < 0);
+      defB.classList.toggle("text-red-600", parseFloat(defB.textContent.replace(/,/g,'')) < 0);
+      defC.classList.toggle("text-red-600", parseFloat(defC.textContent.replace(/,/g,'')) < 0);
+      defD.classList.toggle("text-red-600", parseFloat(defD.textContent.replace(/,/g,'')) < 0);
+    }
+
+    // 디바운스
+    let calcTimer = null;
+    function scheduleCalc() {
+      if (calcTimer) clearTimeout(calcTimer);
+      calcTimer = setTimeout(renderSummary, 120);
+    }
+
+    // 초기화
+    fetchCSVData();
+   };
+  window.EquipInit();
+})();
+
+</script>
+

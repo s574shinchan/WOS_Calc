@@ -2,7 +2,6 @@
    - nav.html fetch 주입 후 initNav() 호출 필수
    - footer 이벤트(initFooter), adsense(initAdsense)도 필요하면 호출
 */
-
 (function () {
   // ====== 공통: 1회만 바인딩 가드 ======
   let outsideBound = false;
@@ -323,22 +322,165 @@
     });
   };
 })();
+  
+  // =========================================================
+  //  Page CSS Controller (SPA 전용 CSS 교체)
+  // =========================================================
+  window.setPageStyle = function setPageStyle(href){
+    let link = document.getElementById("page-style");
 
-// common.js
+    if (!link) {
+      link = document.createElement("link");
+      link.id = "page-style";
+      link.rel = "stylesheet";
+      document.head.appendChild(link);
+    }
 
-// Home 메뉴 (전역 함수로 등록되어야 onclick에서 호출 가능)
-window.ReturnHome = function () {
-  // 1) 공통: 메뉴 닫기
-  document.querySelectorAll('.dd.open').forEach(dd => dd.classList.remove('open'));
-  document.querySelectorAll('.dd-item.active').forEach(x => x.classList.remove('active'));
+    if (!href) {
+      link.removeAttribute("href");
+      return;
+    }
 
-  // 2) (구 프레임 UI 흔적이 있어도 에러 없이)
-  document.getElementById("guideDetails")?.classList.remove('hidden');
-  document.getElementById('frameWrapper')?.classList.add('hidden');
+    // 같은 CSS면 재설정 안 함 (깜빡임 방지)
+    const cur = (link.getAttribute("href") || "").split("?")[0];
+    if (cur === href) return;
 
-  // 3) 홈으로 이동
-  // 캐시 때문에 새로고침 느낌 필요하면 v 붙여라
-  location.href = 'index.html';
-  // location.replace('index.html'); // 뒤로가기 기록 남기기 싫으면 이걸로
-  // location.href = 'index.html?v=' + Date.now(); // 강제 갱신 필요하면 이걸로
-};
+    link.setAttribute("href", href + "?v=" + Date.now());
+  };
+  
+  // Home 메뉴 (전역 함수로 등록되어야 onclick에서 호출 가능)
+  window.ReturnHome = function () {
+    // 1) 공통: 메뉴 닫기
+    document.querySelectorAll('.dd.open').forEach(dd => dd.classList.remove('open'));
+    document.querySelectorAll('.dd-item.active').forEach(x => x.classList.remove('active'));
+
+    // 2) (구 프레임 UI 흔적이 있어도 에러 없이)
+    document.getElementById("mainMount")?.classList.add("hidden");
+    document.getElementById("mainMount") && (document.getElementById("mainMount").innerHTML = "");
+    document.getElementById("guideDetails")?.classList.remove("hidden");
+
+    // 3) 홈으로 이동
+    // 캐시 때문에 새로고침 느낌 필요하면 v 붙여라
+    //location.href = 'index.html';
+    // location.replace('index.html'); // 뒤로가기 기록 남기기 싫으면 이걸로
+    // location.href = 'index.html?v=' + Date.now(); // 강제 갱신 필요하면 이걸로
+    // SPA 방식: 주소만 폴더로 정리
+    const dir = location.pathname.replace(/[^\/]*$/, "");
+    history.replaceState({}, "", dir);
+
+    // 메인 영역 비우기(선택)
+    document.getElementById("mainMount") && (document.getElementById("mainMount").innerHTML = "");
+  };
+
+  // =========================================================
+  //  SPA Partial Loader (data-page + 주소창 "/" 고정)
+  //  - index.html에 <div id="mainMount"></div> 필요
+  // =========================================================
+  (function () {
+    async function loadPartial(url) {
+      const mount = document.getElementById("mainMount");
+      if (!mount) return;
+
+      // 홈 가이드/iframe 숨김
+      document.getElementById("guideDetails")?.classList.add("hidden");
+      document.getElementById("frameWrapper")?.classList.add("hidden");
+      mount.classList.remove("hidden");
+
+      // 주소창 파일명 제거(폴더 경로만 유지)
+      const dir = location.pathname.replace(/[^\/]*$/, "");
+      history.replaceState({}, "", dir);
+
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) {
+        mount.innerHTML = `<div style="padding:16px">로드 실패: ${url} (${res.status})</div>`;
+        return;
+      }
+
+      // 이전에 append 했던 SPA 스크립트 제거(누적 방지)
+      document.querySelectorAll("script[data-spa-script='1']").forEach(s => s.remove());
+
+      // HTML 주입
+      mount.innerHTML = await res.text();
+
+      // 다크모드 다시 적용(새로 들어온 DOM에 class가 적용되어야 함)
+      document.body.classList.toggle("dark-mode", localStorage.getItem("darkMode") === "true");
+
+      // 이미 로드된 src인지(상대/절대 모두) 정확히 판별
+      const isLoaded = (abs) => {
+        return Array.from(document.scripts).some(sc => {
+          if (!sc.src) return false;
+          try { return new URL(sc.src, location.href).href === abs; }
+          catch { return sc.src === abs; }
+        });
+      };
+
+      // mount 내부 script 실행 (외부는 로드 완료까지 대기)
+      const scripts = Array.from(mount.querySelectorAll("script"));
+      for (const old of scripts) {
+        const src = old.getAttribute("src");
+
+        if (src) {
+          const abs = new URL(src, location.href).href;
+
+          // 이미 로드된 외부 스크립트면 재실행 금지
+          if (isLoaded(abs)) { old.remove(); continue; }
+
+          await new Promise((resolve, reject) => {
+            const s = document.createElement("script");
+            s.setAttribute("data-spa-script", "1");
+            s.src = abs;
+            s.onload = resolve;
+            s.onerror = reject;
+            console.log("[SPA append]", s.src || "(inline)", "from", url);
+            document.body.appendChild(s);          
+          });
+
+          old.remove();
+          continue;
+        }
+
+        // 인라인 스크립트 실행
+        const s = document.createElement("script");
+        s.setAttribute("data-spa-script", "1");
+        s.textContent = old.textContent || "";
+        console.log("[SPA append]", s.src || "(inline)", "from", url);
+        document.body.appendChild(s);
+        old.remove();
+      }
+    }
+
+    // 외부에서도 쓸 수 있게
+    window.loadPartial = loadPartial;
+
+    // nav.html의 data-page 클릭 처리 (캡처로 잡아서 stopPropagation에 안 죽게)
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a[data-page]");
+      if (!a) return;
+
+      // 새탭/단축키 클릭은 통과
+      if (a.target === "_blank" || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      e.preventDefault();
+
+      // 드랍다운 닫기(고정 방지)
+      document.querySelectorAll(".dd.open").forEach(dd => {
+        dd.classList.remove("open");
+        const btn = dd.querySelector(".dd-btn");
+        if (btn) btn.setAttribute("aria-expanded", "false");
+      });
+
+      if (a.dataset.css !== undefined) {
+        setPageStyle(a.dataset.css);
+      }
+
+      loadPartial(a.dataset.page);
+    }, true);
+
+    // partial 내부 openPage()가 요청하는 이동 처리
+    document.addEventListener("SPA_NAVIGATE", (e) => {
+      const url = e.detail?.url;
+      const css = e.detail?.css;
+      if (css !== undefined) { setPageStyle(css); }
+      if (url) loadPartial(url);    
+    });
+  })();

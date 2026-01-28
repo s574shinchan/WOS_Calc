@@ -1,0 +1,787 @@
+<meta charset="UTF-8" />
+
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <!-- 헤더 -->
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <div>
+            <h1 class="text-xl md:text-2xl font-extrabold">세대별 영웅 정보</h1>
+            <p class="text-sm">영웅 클릭 → 이미지 스타일 상세 카드</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-sm">세대 선택</span>
+          <select id="genSelect"
+                  class="px-3 py-2 w-24 rounded-xl text-sm border shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+          </select>
+          <div id="typeWrap" class="pill-wrap">
+            <span class="text-sm">병종 선택</span>
+            <select id="selType" 
+                    class="px-3 py-2 w-24 rounded-xl text-sm border shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+              <option value="ALL">전체</option>
+              <option value="INFANTRY">방패병</option>
+              <option value="LANCER">창병</option>
+              <option value="MARKSMAN">궁병</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 영웅 카드 그리드 -->
+        <div id="heroGrid" class="grid grid-cols-1 gap-3"></div>
+      </div>
+
+      <!-- ====== 상세 모달 ====== -->
+      <div id="modalBackdrop" class="fixed inset-0 z-[2000] hidden">
+        <div class="absolute inset-0 bg-black/60"></div>
+
+        <!-- ✅ 팝업 폭/패딩 축소 -->
+        <div class="absolute inset-0 overflow-auto p-3 md:p-3">
+          <div class="max-w-5xl mx-auto"> <!-- 기존 6xl -> 5xl -->
+            <div class="rounded-2xl overflow-hidden shadow-2xl border bg-white">
+              <!-- 상단 배경 헤더 -->
+              <div id="modalHeroHeader"
+                   class="relative px-4 py-2 md:px-5 md:py-3 text-white"
+                   style="background: linear-gradient(135deg,#0ea5e9,#2563eb);">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2 text-sm md:text-xs opacity-90">
+                      <span id="hdrClass" class="inline-flex items-center gap-1">
+                        <span class="w-4 h-4 rounded bg-white/20 inline-flex items-center justify-center">
+                          <img id="hdrClassIcon"
+                               src=""
+                               class="w-3.5 h-3.5 object-contain"
+                               onerror="this.style.display='none'"
+                               alt="ClassIcon"/>
+                        </span>
+                        <span>HERO CLASS: -</span>
+                      </span>
+                      <span class="opacity-60">•</span>
+                      <span id="hdrType" class="inline-flex items-center gap-1">
+                        <span class="w-4 h-4 rounded bg-white/20 inline-flex items-center justify-center">
+                          <img id="expeditionIcon"
+                               src=""
+                               class="w-3.5 h-3.5 object-contain"
+                               onerror="this.style.display='none'"
+                               alt="Skills"/>
+                        </span>
+                        <span>EXPEDITION TYPE: -</span>
+                      </span>
+                    </div>
+
+                    <div class="mt-2">
+                      <div id="hdrName" class="text-3xl md:text-4xl font-black title-grit uppercase">
+                        HERO
+                      </div>
+                      <div id="hdrGen" class="mt-1 text-xs opacity-90">Gen -</div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <button id="closeModal"
+                            class="px-3 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-sm">
+                      닫기
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 본문: 좌/중앙/우 -->
+              <div class="relative p-4 md:p-3">
+                <div class="grid grid-cols-12 gap-3">
+
+                  <!-- 좌: Exploration (✅ 막대 제거, 바로 표시) -->
+                  <div class="lg:col-span-4">
+                    <div class="rounded-2xl border p-3 md:p-4 h-full">
+                      <h3 class="text-base md:text-lg font-extrabold">탐험 스킬</h3>
+                      <div id="exploreSkills" class="mt-3 space-y-3"></div>
+                    </div>
+                  </div>
+
+                  <!-- 중앙: 캐릭터 이미지 -->
+                  <div class="lg:col-span-4">
+                    <div class="rounded-2xl border p-3 md:p-4 h-full flex flex-col">
+                      <div class="flex items-center justify-between">
+                        <div id="sourceText" class="text-[11px] text-gray-500"></div>
+                      </div>
+
+                      <div class="mt-3 flex-1 flex items-center justify-center">
+                        <!-- ✅ 이미지 박스도 살짝 축소 -->
+                        <div class="w-full max-w-[300px] aspect-[3/4] overflow-hidden flex items-center justify-center">
+                          <img id="heroImg"
+                               src="/images/hero/thumb/Gen1/jeronimo.webp"
+                               alt="hero"
+                               class="w-full h-full object-contain"
+                               loading="lazy"
+                               onerror="this.onerror=null; this.style.display='none'; document.getElementById('heroImgFallback').classList.remove('hidden');" />
+                          <div id="heroImgFallback" class="hidden text-sm text-gray-500 p-4 text-center">
+                            hero image not found<br/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 우: Expedition (✅ 막대 제거, 바로 표시) -->
+                  <div class="lg:col-span-4">
+                    <div class="rounded-2xl border p-3 md:p-4 h-full">
+                      <h3 class="text-base md:text-lg font-extrabold">원정 스킬</h3>
+                      <div id="expeditionSkills" class="mt-3 space-y-3"></div>
+                    </div>
+                  </div>
+
+                  <!-- ✅ 특성버프 카드 -->
+                  <div id="traitCard" class="col-span-6 rounded-2xl border p-3 md:p-4">
+                    <div class="font-extrabold text-base whitespace-nowrap">특성버프</div>
+                    <div id="traitBuffArea" class="mt-3 space-y-3"></div>
+                  </div>
+
+                  <!-- ✅ 전용무기 카드 -->
+                  <div id="weapon" class="col-span-6 rounded-2xl border bg-white p-3 md:p-4">
+                    <div class="font-extrabold text-base whitespace-nowrap">전용무기</div>
+                    <!-- 전용무기 스킬은 추후 추가할 영역 -->
+                    <div id="weaponSkills" class="mt-3 space-y-3"></div>
+                  </div>
+
+                  <!-- 하단 스탯 (✅ 패딩 살짝 다운) -->
+                  <div class="col-span-12">
+                    <div class="grid grid-cols-2 gap-3">
+                      <div class="rounded-2xl border bg-white p-3 md:p-4">
+                        <div class="flex flex-col grid grid-cols-2">
+                          <div class="font-extrabold">전용무기속성</div> 
+                          <div class="text-[11px] text-right text-gray-500">+10강 기준/해당 병종에 적용</div> 
+                        </div>
+                        <div id="statExplore" class="mt-2 grid grid-cols-2 gap-2 text-sm"></div>
+                      </div>
+                      <div class="rounded-2xl border bg-white p-3 md:p-4">
+                        <div class="font-extrabold">영웅 속성 (원정)</div>
+                        <div id="statExpedition" class="mt-2 grid grid-cols-2 gap-2 text-sm"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  window.HeroInfoInit = function HeroInfoInit(){  
+    // =========================
+    // ✅ 데이터 (샘플)
+    // =========================
+    var HEROES = [];
+
+    async function loadHeroes(){
+      try{
+        var url = new URL("data/heroes.json", window.location.href).toString();
+        var res = await fetch(url, { cache: "no-store" });
+
+        if(!res.ok){
+          throw new Error(`heroes.json 로드 실패: ${res.status} ${res.statusText} / ${url}`);
+        }
+
+        HEROES = await res.json();
+
+        // ✅ 여기서 렌더 순서 고정
+        initTypeSelect();
+        renderGenTabs();
+        renderHeroGrid();
+
+      }catch(err){
+        console.error(err);
+
+        var wrap = document.getElementById("heroGrid");
+        if(wrap){
+          wrap.className = "p-4 rounded-xl border bg-red-50 text-red-700 text-sm";
+          wrap.innerHTML = `
+            <div class="font-extrabold mb-1">영웅 데이터 로드 실패</div>
+            <div>${String(err.message)}</div>
+            <div class="mt-2 text-xs text-gray-600">
+              ✅ heroes.json 파일이 이 페이지와 같은 폴더에 있는지 / 서버에서 열고 있는지(파일:// 아님) 확인
+            </div>
+          `;
+        }
+      }
+    }
+
+    loadHeroes();
+
+    // =========================
+    // 상태
+    // =========================
+    var currentGen = "ALL";
+    var currentHero = null;
+    var currentType = "ALL";
+
+    // =========================
+    // 유틸
+    // =========================
+    var $ = (id) => document.getElementById(id);
+    var escapeHtml = (s) => (s ?? "").toString()
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    var fmt = (v) => typeof v === "number" ? v.toLocaleString("ko-KR") : String(v);
+
+    // =========================
+    // 렌더: 세대 드롭다운
+    // =========================
+    function renderGenTabs(){
+      var gens = Array.from(new Set(HEROES.map(h => h.gen)))
+        .sort((a, b) => a - b);
+
+      var select = $("genSelect");
+      select.innerHTML = "";
+
+      // 전체 옵션
+      var optAll = document.createElement("option");
+      optAll.value = "ALL";
+      optAll.textContent = "전체";
+      select.appendChild(optAll);
+
+      // 세대 옵션
+      gens.forEach(g => {
+        var opt = document.createElement("option");
+        opt.value = g;
+        opt.textContent = `${g}세대`;
+        select.appendChild(opt);
+      });
+
+      // 현재값 반영
+      select.value = currentGen ?? "ALL";
+
+      // 변경 이벤트
+      select.onchange = () => {
+        var v = select.value;
+        currentGen = (v === "ALL") ? "ALL" : Number(v);
+        renderHeroGrid();
+      };
+    }
+
+    // =========================
+    // 렌더: 영웅 리스트 카드
+    // =========================
+    var CLASS_ICON_MAP = {
+      INFANTRY: "images/hero/icon_infantry.webp",
+      LANCER: "images/hero/icon_lancer.webp",
+      MARKSMAN: "images/hero/icon_marksman.webp"
+    };
+
+    function initTypeSelect(){
+      var sel = $("selType");
+      if(!sel) return;
+
+      sel.value = currentType;
+
+      sel.onchange = () => {
+        if(currentGen !== "ALL"){
+          currentType = "ALL";
+          return;
+        }
+
+        currentType = sel.value;
+        renderHeroGrid();
+      };
+    }
+
+    function renderHeroGrid(){
+      var wrap = $("heroGrid");
+      var typeWrap = $("typeWrap") 
+      wrap.innerHTML = "";
+
+      if(currentGen !== "ALL"){
+        typeWrap.classList.add("hidden")
+      }
+      else{
+        typeWrap.classList.remove("hidden")
+      }
+
+      // ✅ (1) 세대 + 병종 필터
+      var list = HEROES.filter(h => {
+        var genOk  = (currentGen === "ALL") || (h.gen === currentGen);
+        var typeOk = (currentGen !== "ALL") ? true : (currentType === "ALL") || (h.heroClass === currentType);
+        return genOk && typeOk;
+      });
+
+      // ✅ (추가) 전체세대 + 병종 선택 시: Gen 섹션 없이 3컬럼으로 "쭉" 표시
+      if(currentGen === "ALL" && currentType !== "ALL"){
+        // heroGrid를 3컬럼으로
+        wrap.className = "grid grid-cols-3 gap-3";
+
+        // 정렬(세대→이름)
+        list.sort((a,b)=> (a.gen - b.gen) || String(a.nameKo||a.name).localeCompare(String(b.nameKo||b.name), "ko"));
+
+        // 카드 추가 (기존 카드 마크업 그대로)
+        list.forEach(hero=>{
+          var card = document.createElement("button");
+          card.className = "text-left rounded-2xl border p-3 hover:shadow-md transition";
+          card.onclick = () => openHeroModal(hero);
+
+          var img = renderHeroThumb(hero) || renderPortrait(hero) || "";
+          card.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shrink-0">
+                <img src="${escapeHtml(img)}" class="w-full h-full object-contain"
+                     onerror="this.onerror=null; this.style.display='none';" />
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <div class="text-lg font-extrabold truncate">${escapeHtml(hero.nameKo || hero.name)}</div>
+
+                  <div class="shrink-0">
+                    ${CLASS_ICON_MAP[hero.heroClass] ? `
+                      <img src="${escapeHtml(CLASS_ICON_MAP[hero.heroClass])}"
+                           class="w-5 h-5 object-contain opacity-90"
+                           alt="${escapeHtml(hero.heroClass)}"
+                           loading="lazy"
+                           onerror="this.onerror=null; this.style.display='none';" />
+                    ` : ``}
+                  </div>
+                </div>
+
+                <div class="mt-0.5 text-xs truncate">
+                  Gen ${hero.gen} • ${escapeHtml(hero.heroClass)} • ${escapeHtml(hero.expeditionType)}
+                </div>
+                <div class="mt-1 text-[11px] truncate">${escapeHtml(hero.source||"")}</div>
+              </div>
+            </div>
+          `;
+          wrap.appendChild(card);
+        });
+
+        if(list.length === 0){
+          wrap.className = "grid grid-cols-1 gap-3";
+          wrap.innerHTML = `<div class="text-sm">표시할 영웅이 없습니다.</div>`;
+        }
+        return; // ✅ 여기서 끝내고 아래 Gen 그룹핑 로직은 안 탐
+      }
+
+      // 병종선택했다가 전체 병종할때 UX 깨져서 클래스네임 삭제
+      if(currentGen !== "ALL"){
+        wrap.classList.remove("grid-cols-3");
+        wrap.classList.remove("grid-cols-2");
+      } else {
+        wrap.classList.remove("grid-cols-3");
+        wrap.classList.add("grid-cols-2");  
+      }
+
+
+      // ✅ Gen 그룹핑
+      var byGen = new Map();
+      for(var h of list){
+        if(!byGen.has(h.gen)) byGen.set(h.gen, []);
+        byGen.get(h.gen).push(h);
+      }
+
+      // ✅ 정렬(Gen1, Gen2...)
+      var gens = Array.from(byGen.keys()).sort((a,b)=>a-b);
+
+      // ✅ 현재 탭이 ALL이면: 세대별 섹션(접기/펼치기)
+      // ✅ 특정 Gen이면: 섹션 1개만(접기 제거 or 기본 open)
+      var useAccordion = (currentGen === "ALL");
+
+      gens.forEach(gen=>{
+        var heroes = byGen.get(gen);
+
+        // 섹션 컨테이너
+        var section = document.createElement(useAccordion ? "details" : "div");
+        if(useAccordion){
+          section.open = true; // 기본 펼침
+          section.className = "rounded-2xl border overflow-hidden";
+          section.innerHTML = `
+            <summary class="cursor-pointer select-none px-4 py-3 font-extrabold flex items-center justify-between">
+              <span>${gen}세대 (${heroes.length}명)</span>
+            </summary>
+            <div class="px-3 pb-3">
+              <div class="gen-grid grid gap-3"></div>
+            </div>
+          `;
+
+          // ✅ 접힘 방지: summary 클릭으로 open 토글되는 기본동작 차단 + open 강제 유지
+          var summary = section.querySelector("summary");
+          summary.addEventListener("click", (e) => {
+            e.preventDefault();     // details 토글 막기
+            section.open = true;    // 혹시라도 닫히면 즉시 다시 열기
+          });
+        }else{
+          // 특정 세대만 보는 화면이면 헤더만 가볍게
+          section.className = "space-y-3";
+          section.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="text-lg font-extrabold">${gen}세대 영웅 (${heroes.length}명)</div>
+            </div>
+            <div class="gen-grid grid gap-3"></div>
+          `;
+        }
+
+        // 그리드 컬럼: 4명(Gen1) vs 3명(다른 세대) 최적화
+        var grid = section.querySelector(".gen-grid");
+        var cols = (heroes.length >= 4) ? "grid-cols-2" : "grid-cols-3";
+        grid.className = `gen-grid grid ${cols} gap-3`;
+
+        // 카드 추가
+        heroes.forEach(hero=>{
+          var card = document.createElement("button");
+          card.className = "text-left rounded-2xl border p-3 hover:shadow-md transition";
+          card.onclick = () => openHeroModal(hero);
+
+          var img = renderHeroThumb(hero) || renderPortrait(hero) || "";
+          card.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shrink-0">
+                <img src="${escapeHtml(img)}" class="w-full h-full object-contain"
+                     onerror="this.onerror=null; this.style.display='none';" />
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <div class="text-lg font-extrabold truncate">${escapeHtml(hero.nameKo || hero.name)}</div>
+                  <div class="shrink-0">
+                    ${CLASS_ICON_MAP[hero.heroClass] ? `
+                      <img src="${escapeHtml(CLASS_ICON_MAP[hero.heroClass])}"
+                           class="w-5 h-5 object-contain opacity-90"
+                           alt="${escapeHtml(hero.heroClass)}"
+                           loading="lazy"
+                           onerror="this.onerror=null; this.style.display='none';" />
+                    ` : ``}
+                  </div>
+                </div>
+
+                <div class="mt-0.5 text-xs truncate">${escapeHtml(hero.heroClass)}</div>
+                <div class="mt-1 text-[11px] truncate">${escapeHtml(hero.source||"")}</div>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        wrap.appendChild(section);
+      });
+
+      if(list.length === 0){
+        wrap.innerHTML = `<div class="text-sm">표시할 영웅이 없습니다.</div>`;
+      }
+    }
+
+    // =========================
+    // 렌더: 스킬 카드(✅ 막대 없이, 바로 표시)
+    // =========================
+    function renderSkills(targetEl, hero, skills){
+      var wrap = $(targetEl);
+      wrap.innerHTML = "";
+
+      (skills || []).slice(0,3).forEach(sk=>{
+        var lv = sk.level ?? 5;
+        var val = sk.value ?? "-";
+
+        // ✅ hero/gen/key + skill.key 로 자동 아이콘 생성
+        var iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
+
+        var el = document.createElement("div");
+        el.className = "rounded-xl border p-3";
+        el.innerHTML = `
+          <div class="flex gap-3">
+            <div class="w-12 h-12 overflow-hidden flex items-center justify-center shrink-0">
+              <img src="${escapeHtml(iconSrc)}"
+                   class="w-full h-full object-contain"
+                   loading="lazy"
+                   onerror="this.onerror=null; this.style.display='none';" />
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <div class="mt-1 text-xs text-gray-700 leading-relaxed">
+                ${escapeHtml(sk.desc||"")}
+              </div>
+            </div>
+          </div>
+        `;
+        wrap.appendChild(el);
+      });
+    }
+
+    function renderStats(){
+      var s = currentHero?.stats || {};
+      var ex = s.exploration || {};
+      var ep = s.expedition || {};
+
+      $("statExplore").innerHTML = Object.keys(ex).map(k => `
+        <div class="rounded-xl border p-3">
+          <div class="text-xs text-gray-700">${escapeHtml(k)}</div>
+          <div class="text-base font-extrabold">${escapeHtml(fmt(ex[k]))}</div>
+        </div>
+      `).join("");
+
+      $("statExpedition").innerHTML = Object.keys(ep).map(k => `
+        <div class="rounded-xl border p-3">
+          <div class="text-xs text-gray-700">${escapeHtml(k)}</div>
+          <div class="text-base font-extrabold">${escapeHtml(fmt(ep[k]))}</div>
+        </div>
+      `).join("");
+    }
+
+    // ✅ 특성버프(= hero.exclusiveSkill) 렌더 + 12컬럼 레이아웃 토글 (최종)
+    // 레이아웃 규칙:
+    // - traitCard: col-span-6 (0~5)
+    // - weapon   : col-span-6 (6~11)
+    // - traitCard가 숨겨지면 weapon은 col-span-12 (0~11)
+    function renderExclusiveSkill(hero, skills){
+      var traitCard = $("traitCard");      // ✅ 특성버프 카드
+      var body      = $("traitBuffArea");  // ✅ 특성버프 내용 영역
+      var weapon    = $("weapon");         // ✅ 전용무기 카드
+
+      // ✅ 안전장치
+      if(!traitCard || !body || !weapon) return;
+
+      var hasTrait = Array.isArray(skills) && skills.length > 0;
+
+      // ✅ 공통: weapon span 클래스 정리 함수
+      var setWeaponSpan = (span12) => {
+        // 기존 span 제거
+        weapon.classList.remove("col-span-6", "col-span-12");
+        // 새 span 적용
+        weapon.classList.add(span12 ? "col-span-12" : "col-span-6");
+      };
+
+      // ✅ 추가: traitCard 숨김일 때 전용무기 스킬을 2컬럼으로
+      var weaponSkills = $("weaponSkills");
+      var setWeaponSkillsLayout = (twoCol) => {
+        if(!weaponSkills) return;
+
+        // 기존 레이아웃 클래스 정리
+        weaponSkills.classList.remove("space-y-3", "grid", "grid-cols-2", "gap-3");
+
+        if(twoCol){
+          // [이미지]설명 [이미지]설명
+          weaponSkills.classList.add("grid", "grid-cols-2", "gap-3");
+        }else{
+          // 기존 세로
+          weaponSkills.classList.add("space-y-3");
+        }
+      };
+
+      // ✅ 1) 특성버프가 없으면: traitCard 숨김 + weapon 12칸
+      if(!hasTrait){
+        traitCard.classList.add("hidden"); // 카드 숨김
+        setWeaponSpan(true);               // weapon = 12칸
+        setWeaponSkillsLayout(true);
+        body.innerHTML = "";               // 내용 비움
+        return;
+      }
+
+      // ✅ 2) 특성버프가 있으면: traitCard 표시 + weapon 6칸 + traitCard도 6칸 보장
+      traitCard.classList.remove("hidden");
+
+      // traitCard는 기본이 col-span-6이지만 혹시 다른 처리로 꼬였을 때 대비해 재보장
+      traitCard.classList.remove("col-span-12");
+      traitCard.classList.add("col-span-6");
+
+      setWeaponSpan(false); // weapon = 6칸
+      setWeaponSkillsLayout(false); // ✅ trait 있으면 세로
+
+      // ✅ 3) 특성버프 렌더
+      body.innerHTML = "";
+
+      skills.forEach(sk => {
+        var el = document.createElement("div");
+        el.className = "flex items-start gap-3";
+
+        // ✅ hero/gen/key + sk.key 로 자동 아이콘 생성
+        var iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
+
+        el.innerHTML = `
+          <!-- 아이콘 -->
+          <div class="w-12 h-12 rounded-xl border overflow-hidden
+                      flex items-center justify-center shrink-0">
+            <img src="${escapeHtml(iconSrc)}"
+                 class="w-full h-full object-contain"
+                 loading="lazy"
+                 onerror="this.onerror=null; this.style.display='none';" />
+          </div>
+
+          <!-- 텍스트 -->
+          <div class="min-w-0 flex-1">
+            <div class="font-bold text-sm mb-1">${escapeHtml(sk.title || "")}</div>
+            <div class="text-xs leading-relaxed text-gray-700">
+              ${escapeHtml(sk.desc || "")}
+            </div>
+          </div>
+        `;
+        body.appendChild(el);
+      });
+    }
+
+    // ✅ 전용무기 스킬(weaponSkill) 렌더: ws1 ws2
+    function renderWeaponSkills(hero, weaponSkill){
+      var area = $("weaponSkills");
+
+      // 스킬 렌더
+      area.innerHTML = "";
+      var skills = Array.isArray(weaponSkill) ? weaponSkill : [];
+
+      // ✅ ws1 -> ws2 순서 강제 (없으면 제외)
+      var order = ["ws1", "ws2"];
+      var ordered = order
+        .map(k => skills.find(s => (s?.key || "").toLowerCase() === k))
+        .filter(Boolean);
+
+      // 스킬이 없으면 영역 비움
+      if(ordered.length === 0) return;
+
+      ordered.forEach(sk => {
+        var el = document.createElement("div");
+        el.className = "flex items-start gap-3";
+
+        // ✅ hero/gen/key + sk.key(ws1/ws2) 로 자동 아이콘 생성
+        var iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
+
+        el.innerHTML = `
+          <!-- 아이콘 -->
+          <div class="w-12 h-12 rounded-xl overflow-hidden
+                      flex items-center justify-center shrink-0">
+            <img src="${escapeHtml(iconSrc)}"
+                 class="w-full h-full object-contain"
+                 loading="lazy"
+                 onerror="this.onerror=null; this.style.display='none';" />
+          </div>
+
+          <!-- 텍스트 -->
+          <div class="min-w-0 flex-1">
+            <div class="font-bold text-sm mb-1">${escapeHtml(sk.title || "")}</div>
+            <div class="text-xs leading-relaxed text-gray-700">
+              ${escapeHtml(sk.desc || "")}
+            </div>
+          </div>
+        `;
+        area.appendChild(el);
+      });
+    }
+
+    function heroGen(hero){
+      return String(hero.gen).padStart(2, "0");
+    }
+
+    function heroKey(hero){
+      return hero.key;
+    }
+
+    function renderHeroThumb(hero){
+      return `images/hero/Gen${heroGen(hero)}/thumb/${heroKey(hero)}.webp`;
+    }
+
+    function renderPortrait(hero){
+      return `images/hero/Gen${heroGen(hero)}/body/${heroKey(hero)}.webp`;
+    }
+
+    function heroSkillIcon(hero, skillKey){
+      return `images/hero/Gen${heroGen(hero)}/skills/${heroKey(hero)}/${skillKey}.webp`;
+    }
+
+    var EXPEDITION_TYPE_ICON = {
+      COMBAT: "images/hero/combat.webp",
+      varRUCTION: "images/hero/varruction.webp",
+    };
+
+    function renderExpeditionType(type){
+      var iconEl = document.getElementById("expeditionIcon");
+      var textEl = document.querySelector("#hdrType span:last-child");
+      if(!iconEl || !textEl) return;
+
+      var t = (type || "").toUpperCase();
+      var icon = EXPEDITION_TYPE_ICON[t];
+
+      if(icon){
+        iconEl.src = icon;
+        iconEl.style.display = "";
+      }else{
+        iconEl.style.display = "none";
+      }
+
+      textEl.textContent = `${t || "-"}`;
+    }
+
+    var HERO_CLASS_TYPE_ICON = {
+      INFANTRY: "images/hero/icon_infantry.webp",
+      LANCER: "images/hero/icon_Lancer.webp",
+      MARKSMAN: "images/hero/icon_marksman.webp",
+    };
+
+    function renderHeroClassType(type){
+      var iconEl = document.getElementById("hdrClassIcon");
+      var textEl = document.querySelector("#hdrClass  span:last-child");
+      if(!iconEl || !textEl) return;
+
+      var t = (type || "").toUpperCase();
+      var icon = HERO_CLASS_TYPE_ICON[t];
+
+      if(icon){
+        iconEl.src = icon;
+        iconEl.style.display = "";
+      }else{
+        iconEl.style.display = "none";
+      }
+
+      textEl.textContent = `${t || "-"}`;
+    }
+
+    // =========================
+    // 모달 열기/닫기
+    // =========================
+    function openHeroModal(hero){
+      currentHero = hero;
+
+      $("hdrName").textContent = (hero.nameKo || "").toUpperCase();
+      //$("hdrGen").textContent = `Gen ${hero.gen} • ${hero.nameKo || ""}`;
+      $("hdrGen").textContent = `Gen ${hero.gen} • ${hero.name || ""}`;
+      $("hdrClass").lastElementChild.textContent = `${hero.heroClass || "-"}`;
+      $("hdrType").lastElementChild.textContent = `${hero.expeditionType || "-"}`;
+      $("sourceText").textContent = hero.source ? `획득처: ${hero.source}` : "";
+
+      var g = hero.headerGradient || ["#0ea5e9","#2563eb"];
+      $("modalHeroHeader").style.background = `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
+
+      var imgEl = $("heroImg");
+      imgEl.style.display = "";
+      $("heroImgFallback").classList.add("hidden");
+      imgEl.src = renderPortrait(hero) || renderHeroThumb(hero) || "";
+
+      renderHeroClassType(hero.heroClass);
+      renderExpeditionType(hero.expeditionType);
+      renderExclusiveSkill(hero, hero.exclusiveSkill);
+      renderWeaponSkills(hero, hero.weaponSkills);
+
+      renderSkills("exploreSkills", hero, hero.explorationSkills);
+      renderSkills("expeditionSkills", hero, hero.expeditionSkills);
+      renderStats();
+
+      $("modalBackdrop").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeHeroModal(){
+      $("modalBackdrop").classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    // =========================
+    // 이벤트
+    // =========================
+    $("closeModal").onclick = closeHeroModal;
+    $("modalBackdrop").addEventListener("click", (e)=>{
+      if(e.target === $("modalBackdrop")) closeHeroModal();
+    });
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape" && !$("modalBackdrop").classList.contains("hidden")) closeHeroModal();
+    });
+  };
+  window.HeroInfoInit();
+})();
+</script>
