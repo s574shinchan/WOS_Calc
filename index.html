@@ -68,6 +68,18 @@
     // 이미 모바일 페이지면 종료
     if (location.pathname.includes('index_m.html')) return;
 
+//    function isMobileDevice() {
+//      // 크롬/엣지: 가장 신뢰도 높음
+//      if (navigator.userAgentData && typeof navigator.userAgentData.mobile === "boolean") {
+//        return navigator.userAgentData.mobile;
+//      }
+//      // 백업: 전통 UA 토큰
+//      const ua2 = navigator.userAgent || "";
+//      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(ua2);
+//    }
+//
+//    if (!isMobileDevice()) return;
+    
     const TRY_KEY = 'mobile_redirect_try';
     const tryCount = Number(sessionStorage.getItem(TRY_KEY) || 0);
 
