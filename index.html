@@ -61,7 +61,6 @@
 
     const uaMobile = /android|iphone|ipod|blackberry|windows phone/i.test(ua);
     const iPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const smallScreen = Math.min(screen.width, screen.height) <= 900;
     const isMobile = uaMobile || iPadOS || smallScreen;
 
     if (!isMobile) return;
@@ -1247,12 +1246,11 @@
     
     <!-- iframe 영역 -->
     <div id="frameWrapper" class="max-w-[1500px] w-full hidden bg-white rounded shadow gap-2">
-      <!--<iframe id="mainFrame" class="w-full bg-white rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>-->
+      <iframe id="mainFrame" class="w-full bg-white rounded border transition-all duration-300" style="height: auto;" frameborder="0"></iframe>
     </div>
     
-<!--    <div id="mainMount"
-         class="max-w-[1500px] w-full hidden bg-white rounded shadow gap-2">
-    </div>-->
+    
+    <div id="mainMount" class="w-full hidden bg-white rounded shadow gap-2"></div>
 
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn"
