@@ -24,7 +24,7 @@
 
 /* ✅ 카드 내부 제목바(스샷처럼) - 좌/우 테두리 이질감 제거 */
 .card-head{
-  padding:10px 14px;
+  padding:5px 12px;
   border-bottom:1px solid rgba(0,0,0,.08);
   display:flex;
   align-items:center;
