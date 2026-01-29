@@ -158,21 +158,21 @@
                   </div>
                   <div>
                     <div class="label">보유 병사수</div>
-                    <input id="ownedUnits" type="text" class="mono2 p-2" placeholder="0" min="0"/>
+                    <input id="ownedUnits" type="text" class="mono2 p-2" placeholder="0" nputmode="numeric"/>
                   </div>
 
                   <div class="grid grid-cols-3 gap-3">
                     <div>
                       <div class="label">1회 승급량</div>
-                      <input id="perPromoQty" type="text" class="mono2 p-2" placeholder="0" min="0"/>
+                      <input id="perPromoQty" type="text" class="mono2 p-2" placeholder="0" nputmode="numeric"/>
                     </div>
                     <div>
                       <div class="label">보유가속 (D:HH:MM)</div>
-                      <input id="ownedSpeedup" type="text" class="mono2 p-2" placeholder="00:00:00" min="0"/>
+                      <input id="ownedSpeedup" type="text" class="mono2 p-2" placeholder="00:00:00" inputmode="numeric"/>
                     </div>
                     <div>
                       <div class="label">승급 소요시간 (HH:MM:SS)</div>
-                      <input id="perPromoTime" type="text" class="mono2 p-2" placeholder="00:00:00" min="0"/>
+                      <input id="perPromoTime" type="text" class="mono2 p-2" placeholder="00:00:00" inputmode="numeric"//>
                     </div>
                   </div>
 
@@ -387,6 +387,61 @@
         }
       });
     });
+    
+    function attachTimeMask(inputId, mode) {
+      const el = document.getElementById(inputId);
+      if (!el) return;
+
+      el.addEventListener('input', () => {
+        let raw = el.value.replace(/\D/g, '');
+
+        if (raw.length === 0) {
+          el.value = '';
+          return;
+        }
+        
+        if (mode === 'DHHMM') {
+          // DD:HH:MM (6 digits)
+          raw = raw.slice(0, 6);
+          const d  = raw.slice(0, 2);
+          const hh = raw.slice(2, 4);
+          const mm = raw.slice(4, 6);
+          
+          let out = d;
+          if (raw.length > 2) out += `:${hh}`;
+          if (raw.length > 4) out += `:${mm}`;
+          el.value = out;
+        } else if (mode === 'HHMMSS') {
+          // HH:MM:SS (6 digits)
+          raw = raw.slice(0, 6);
+          const hh = raw.slice(0, 2);
+          const mm = raw.slice(2, 4);
+          const ss = raw.slice(4, 6);
+          let out = hh;
+          if (raw.length > 2) out += `:${mm}`;
+          if (raw.length > 4) out += `:${ss}`;
+          el.value = out;
+        }else {
+          // 숫자 천단위 콤마
+          raw = raw.slice(0); // digits only
+          // 빈값은 위에서 return 처리됨
+          el.value = Number(raw).toLocaleString('ko-KR');
+        }
+      });
+
+      // 커서 항상 끝
+      el.addEventListener('focus', () => {
+        requestAnimationFrame(() => {
+          el.setSelectionRange(el.value.length, el.value.length);
+        });
+      });
+    }
+
+    // ✅ 적용
+    attachTimeMask('ownedUnits');
+    attachTimeMask('perPromoQty');
+    attachTimeMask('ownedSpeedup', 'DHHMM');   // 361023 -> 36:10:23 (36일 10시간 23분)
+    attachTimeMask('perPromoTime', 'HHMMSS');  // 123045 -> 12:30:45
 
     // ========== 시간 파싱 ==========
     function parseOwnedSpeedup_NoSS(s) {
@@ -399,6 +454,7 @@
       if (nums.length === 1) return nums[0]*60;
       return 0;
     }
+    
     function parseHMS(s) {
       if (!s || typeof s !== 'string') return 0;
       const p = s.trim().split(':').map(x => x.trim());
@@ -408,6 +464,7 @@
       if (n.length===3)[h,m,s2]=n; else if(n.length===2)[m,s2]=n; else if(n.length===1)[s2]=n;
       return ((h*60+m)*60+s2);
     }
+    
     function secondsToDHMS(sec){
       sec=Math.max(0,Math.floor(sec));
       const d=Math.floor(sec/86400);sec%=86400;
@@ -453,23 +510,18 @@
       document.getElementById(id).addEventListener('input',()=>{ clearTimeout(window.__deb); window.__deb=setTimeout(calc,150); });
     });
   </script>    
-  <!-- iframe 높이 조정 -->
   <script>
     function sendHeightToParent(){
       const h=document.body.scrollHeight;
       window.parent.postMessage({type:"FRAME_CHANGE",height:h},"*");
     }
     window.addEventListener("load",()=>setTimeout(sendHeightToParent,100));
-  </script>
 
-  <!-- 보호 -->
-  <script>
     document.addEventListener("contextmenu", e=>e.preventDefault());
     document.addEventListener("keydown", e=>{
       if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="J"))||(e.ctrlKey&&(e.key==="U"||e.key==="S"))) e.preventDefault();
     });
-  </script>
-  <script>
+
     window.addEventListener('message', (e) => {
       if (e.data?.type === 'DARK_MODE') {
         document.body.classList.toggle('dark-mode', e.data.value);

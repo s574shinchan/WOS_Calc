@@ -1,0 +1,47 @@
+<meta charset="utf-8" />
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <h1 class="text-6xl text-center font-bold text-gray-800 mb-4">연구계산</h1>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; width: 100%; max-width: 1600px; margin: 0px auto;">
+          
+          <section onclick="openPage('research.partial.html')">
+            <div style="position: relative; border-radius: 1.25rem;overflow: hidden; cursor: pointer; transition: 0.3s; box-shadow: rgba(0,0,0,0.15) 0px 12px 24px;">             
+              <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.05));">
+                <img src="images/research-center.webp" alt="Research Center" 
+                     style="width: 100%; height: clamp(260px, 32vw, 300px); object-fit: contain; border-radius: 0.75rem;">
+              </div>
+              <div id="research1" style="padding: 1.5rem;">
+                <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">일반연구</h2>
+                <p style="font-size: 1rem; line-height: 1.6;">발전, 경제, 전투 연구</p>
+              </div>
+            </div>
+          </section>
+
+          <section onclick="openPage('helios.partial.html')">
+            <div style="position: relative; border-radius: 1.25rem;overflow: hidden; cursor: pointer; transition: 0.3s; box-shadow: rgba(0,0,0,0.15) 0px 12px 24px;">
+              <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(252, 165, 165, 0.05));">
+                <img src="images/war-academy.webp" alt="War Academy"
+                     style="width: 100%; height: clamp(260px, 32vw, 300px); object-fit: contain; border-radius: 0.5rem;">
+              </div>
+              <div id="research2" style="padding: 1.5rem;">
+                <h2 style="font-size: 1.75rem; font-weight: 500; margin-bottom: 0.5rem;">헬리오스</h2>
+                <p style="font-size: 1rem; line-height: 1.6;">방패, 창병, 궁병 11T 연구</p>
+              </div>
+            </div>
+          </section>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openPage(url){
+    document.dispatchEvent(new CustomEvent("SPA_NAVIGATE", { detail: { url } }));
+  }
+</script>

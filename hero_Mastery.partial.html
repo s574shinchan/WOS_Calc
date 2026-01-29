@@ -90,7 +90,15 @@
 
 <!-- ========== 📙 마스터리 로직 ========== -->
 <script>
-(function(){  
+(function(){
+  // ✅ SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
+  if (window.__MASTERY_INIT_BOUND__) {
+    // 이미 초기화된 상태면 그냥 실행만(필요 시)
+    window.MasteryInit?.();
+    return;
+  }
+  window.__MASTERY_INIT_BOUND__ = true;
+    
   window.MasteryInit = function MasteryInit(){  
     var masteryUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Hero/Mastery.csv";
     var masterySlots = ["고글", "장갑", "벨트", "신발"];

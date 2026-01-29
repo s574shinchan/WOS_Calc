@@ -24,6 +24,14 @@
 
 <script>
   (function(){
+    // ✅ SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
+    if (window.__TRASFER_INIT_BOUND__) {
+      // 이미 초기화된 상태면 그냥 실행만(필요 시)
+      window.TransferInit?.();
+      return;
+    }
+    window.__TRASFER_INIT_BOUND__ = true;       
+    
     window.TransferInit = function TransferInit(){  
       function toRGB(color, fallback = "#ffffff") {
         if (!color) return fallback;

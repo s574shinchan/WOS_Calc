@@ -1,0 +1,733 @@
+<meta charset="UTF-8" />
+
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">🧪 헬리오스 연구 계산기</h1>
+
+        <div class="text-gray-600 mb-4 text-sm">
+          <div class="mb-4">
+            <p>헬리오스 병사연구에 필요한 자원(불수조각, 철강재)을 계산합니다.</p>
+            <p>연구 항목을 선택하고 현재/목표 레벨을 지정하면 자동 합산됩니다.</p>
+            <p>SVS 점수는 <span class="font-semibold text-blue-300">[조각 소모점수 + 소요시간만큼 가속아이템을 사용할 경우]</span> 계산된 점수 입니다.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4">
+            <!-- 병종 선택 (버튼 토글) -->
+            <div>
+              <div class="text-sm font-medium mb-1">병종선택</div>
+              <div class="grid grid-cols-3 gap-2 mb-2">
+                <button type="button"
+                        class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkInf" data-group="troop" data-mode="single">
+                  방패병
+                </button>
+                <button type="button"
+                        class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkLan" data-group="troop" data-mode="single">
+                  창병
+                </button>
+                <button type="button"
+                        class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkMask" data-group="troop" data-mode="single">
+                  궁병
+                </button>
+                <!-- ✅ 기존 로직 그대로 쓰기 위한 체크박스(숨김) -->
+                <input type="checkbox" id="chkInf" checked hidden>
+                <input type="checkbox" id="chkLan" hidden>
+                <input type="checkbox" id="chkMask" hidden>
+              </div>
+            </div>        
+            <!-- 부집행관 -->
+            <div>
+              <div class="text-sm font-medium mb-1">부집행관 관직 버프</div>
+              <div class="flex flex-wrap gap-2">
+                <button type="button"
+                        class="w-[105px] px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkVP10" data-group="vp" data-mode="single">
+                  10%
+                </button>
+                <button type="button"
+                        class="w-[105px] px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkVP15" data-group="vp" data-mode="single">
+                  15%
+                </button>
+              </div>
+              <input type="checkbox" id="chkVP10" hidden>
+              <input type="checkbox" id="chkVP15" hidden>
+            </div>
+            <div>
+              <label class="block text-sm mb-1">발레리아</label>
+              <select id="chkExpertV" class="w-full rounded-md border px-2 py-2">
+                <option>None</option>
+                <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+                <option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+              </select>
+            </div>
+            <!--서버버프-->
+            <div>
+              <div class="text-sm font-medium mb-1">서버버프 (10%)</div>
+              <div class="flex flex-wrap gap-2">
+                <button type="button"
+                        class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkServerBuff" data-group="server" data-mode="single">
+                  활성화
+                </button>
+              </div>
+              <input type="checkbox" id="chkServerBuff" hidden>
+            </div>        
+            <!-- 연구속도 -->
+            <div>
+              <label for="speedPercent" class="block text-sm mb-1">연구속도 (%)</label>
+              <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
+            </div>
+            <div id="svs" class="hidden">
+              <label for="svspoint" class="block text-sm mb-1">SVS Point</label>
+              <input type="text" id="svspoint" class="border rounded p-2 text-sm w-full text-right cursor-not-allowed" readonly  tabindex="-1"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- 카드 그리드 -->
+        <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-2 mb-4"></div>
+
+        <!-- ✅ 최하단 총합계 패널 -->
+        <div id="summaryPanel" class="mt-4">      
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+            <!-- 총합 -->
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold mb-2">총합</div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수조각</span><span id="sum-가루">0</span></div>
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="sum-철강재">0</span></div>           
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">소요시간</span><span id="sum-시간">0분</span></div>
+            </div>
+
+            <!-- 보유량 -->          
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold mb-2">보유량</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label for="owned-가루" class="block text-[13px] text-gray-600 mb-1">보유 불수조각</label>
+                  <input type="number" id="owned-가루" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+                </div>
+                <div>
+                  <label for="owned-철강재" class="block text-[13px] text-gray-600 mb-1">보유 철강재</label>
+                  <input type="number" id="owned-철강재" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="0" min="0" inputmode="numeric" />
+                </div>
+              </div>
+            </div>
+
+            <!-- 과부족 -->
+            <div class="rounded-xl border border-black/10 p-3">
+              <div class="font-semibold mb-2">과부족</div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">불수조각</span><span id="def-가루">0</span></div>
+              <div class="font-semibold mb-2"></div>
+              <div class="flex justify-between text-[13px]"><span class="text-gray-600">철강재</span><span id="def-철강재">0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-2">
+          <button id="btn-calc-total" class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">총합계산</button>
+        </div>  
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){  
+    window.heliosInit = function heliosInit(){
+      /* ========== 데이터 ========== */
+      const researchData = {
+        "I": [
+          { level: 1, 가루: 16, 철강재: 5000, 시간: "0d 08:00:00" },
+          { level: 2, 가루: 25, 철강재: 8000, 시간: "0d 12:48:00" },
+          { level: 3, 가루: 41, 철강재: 13000, 시간: "0d 20:48:00" },
+          { level: 4, 가루: 68, 철강재: 21000, 시간: "1d 10:24:00" },
+          { level: 5, 가루: 102, 철강재: 33000, 시간: "2d 06:00:00" },
+        ],
+        "II-A": [
+          { level: 1, 가루: 40, 철강재: 10000, 시간: "0d 20:00:00" },
+          { level: 2, 가루: 56, 철강재: 14000, 시간: "1d 04:00:00" },
+          { level: 3, 가루: 74, 철강재: 18000, 시간: "1d 13:00:00" },
+          { level: 4, 가루: 102, 철강재: 25000, 시간: "2d 03:00:00" },
+          { level: 5, 가루: 136, 철강재: 24000, 시간: "2d 20:00:00" },
+          { level: 6, 가루: 184, 철강재: 46000, 시간: "3d 20:00:00" },
+          { level: 7, 가루: 248, 철강재: 62000, 시간: "5d 04:00:00" },
+          { level: 8, 가루: 334, 철강재: 83000, 시간: "6d 23:00:00" },
+        ],
+        "II-B": [
+          { level: 1, 가루: 40, 철강재: 10000, 시간: "0d 20:00:00" },
+          { level: 2, 가루: 56, 철강재: 14000, 시간: "1d 04:00:00" },
+          { level: 3, 가루: 74, 철강재: 18000, 시간: "1d 13:00:00" },
+          { level: 4, 가루: 102, 철강재: 25000, 시간: "2d 03:00:00" },
+          { level: 5, 가루: 136, 철강재: 24000, 시간: "2d 20:00:00" },
+          { level: 6, 가루: 184, 철강재: 46000, 시간: "3d 20:00:00" },
+          { level: 7, 가루: 248, 철강재: 62000, 시간: "5d 04:00:00" },
+          { level: 8, 가루: 334, 철강재: 83000, 시간: "6d 23:00:00" },
+        ],
+        "III": [
+          { level: 1, 가루: 83, 철강재: 23000, 시간: "1d 05:20:17" },
+          { level: 2, 가루: 102, 철강재: 28000, 시간: "1d 12:05:08" },
+          { level: 3, 가루: 125, 철강재: 34000, 시간: "1d 20:00:25" },
+          { level: 4, 가루: 150, 철강재: 41000, 시간: "2d 04:48:30" },
+          { level: 5, 가루: 184, 철강재: 51000, 시간: "2d 16:32:37" },
+          { level: 6, 가루: 225, 철강재: 62000, 시간: "3d 07:12:45" },
+          { level: 7, 가루: 276, 철강재: 76000, 시간: "4d 00:58:56" },
+          { level: 8, 가루: 334, 철강재: 93000, 시간: "4d 21:21:08" },
+          { level: 9, 가루: 418, 철강재: 110000, 시간: "6d 02:41:25" },
+          { level: 10, 가루: 502, 철강재: 130000, 시간: "7d 08:01:42" },
+          { level: 11, 가루: 602, 철강재: 160000, 시간: "8d 19:14:02" },
+          { level: 12, 가루: 744, 철강재: 200000, 시간: "10d 21:06:31" },
+        ],
+        "IV-A": [
+          { level: 1, 가루: 54, 철강재: 15000, 시간: "0d 18:55:40" },
+          { level: 2, 가루: 66, 철강재: 18000, 시간: "0d 23:16:52" },
+          { level: 3, 가루: 81, 철강재: 22000, 시간: "1d 04:23:30" },
+          { level: 4, 가루: 97, 철강재: 27000, 시간: "1d 10:04:12" },
+          { level: 5, 가루: 118, 철강재: 33000, 시간: "1d 17:38:28" },
+          { level: 6, 가루: 145, 철강재: 40000, 시간: "2d 03:06:18" },
+          { level: 7, 가루: 178, 철강재: 49000, 시간: "2d 14:27:42" },
+          { level: 8, 가루: 216, 철강재: 60000, 시간: "3d 03:42:20" },
+          { level: 9, 가루: 270, 철강재: 75000, 시간: "3d 22:38:20" },
+          { level: 10, 가루: 324, 철강재: 90000, 시간: "4d 17:34:00" },
+          { level: 11, 가루: 388, 철강재: 100000, 시간: "5d 16:16:48" },
+          { level: 12, 가루: 480, 철강재: 130000, 시간: "7d 00:27:26" },
+        ],
+        "IV-B": [
+          { level: 1, 가루: 54, 철강재: 15000, 시간: "0d 18:55:40" },
+          { level: 2, 가루: 66, 철강재: 18000, 시간: "0d 23:16:52" },
+          { level: 3, 가루: 81, 철강재: 22000, 시간: "1d 04:23:30" },
+          { level: 4, 가루: 97, 철강재: 27000, 시간: "1d 10:04:12" },
+          { level: 5, 가루: 118, 철강재: 33000, 시간: "1d 17:38:28" },
+          { level: 6, 가루: 145, 철강재: 40000, 시간: "2d 03:06:18" },
+          { level: 7, 가루: 178, 철강재: 49000, 시간: "2d 14:27:42" },
+          { level: 8, 가루: 216, 철강재: 60000, 시간: "3d 03:42:20" },
+          { level: 9, 가루: 270, 철강재: 75000, 시간: "3d 22:38:20" },
+          { level: 10, 가루: 324, 철강재: 90000, 시간: "4d 17:34:00" },
+          { level: 11, 가루: 388, 철강재: 100000, 시간: "5d 16:16:48" },
+          { level: 12, 가루: 480, 철강재: 130000, 시간: "7d 00:27:26" },
+        ],
+        "V": [
+          { level: 1, 가루: 2236, 철강재: 1000000, 시간: "91d 08:15:00" },
+        ],
+        "Healing": [
+          { level: 1, 가루: 102, 철강재: 30000, 시간: "2d 02:00:00" },
+          { level: 2, 가루: 137, 철강재: 40000, 시간: "2d 19:30:00" },
+          { level: 3, 가루: 188, 철강재: 55000, 시간: "3d 20:30:00" },
+          { level: 4, 가루: 255, 철강재: 75000, 시간: "5d 05:00:00" },
+          { level: 5, 가루: 341, 철강재: 100000, 시간: "6d 23:30:00" },
+          { level: 6, 가루: 459, 철강재: 130000, 시간: "9d 09:00:00" },
+          { level: 7, 가루: 612, 철강재: 180000, 시간: "12d 12:00:00" },
+          { level: 8, 가루: 836, 철강재: 240000, 시간: "17d 02:00:00" },
+          { level: 9, 가루: 1122, 철강재: 330000, 시간: "22d 22:00:00" },
+          { level: 10, 가루: 1530, 철강재: 450000, 시간: "31d 06:00:00" },
+        ],
+        "Training": [
+          { level: 1, 가루: 102, 철강재: 30000, 시간: "2d 02:00:00" },
+          { level: 2, 가루: 137, 철강재: 40000, 시간: "2d 19:30:00" },
+          { level: 3, 가루: 188, 철강재: 55000, 시간: "3d 20:30:00" },
+          { level: 4, 가루: 255, 철강재: 75000, 시간: "5d 05:00:00" },
+          { level: 5, 가루: 341, 철강재: 100000, 시간: "6d 23:30:00" },
+          { level: 6, 가루: 459, 철강재: 130000, 시간: "9d 09:00:00" },
+          { level: 7, 가루: 612, 철강재: 180000, 시간: "12d 12:00:00" },
+          { level: 8, 가루: 836, 철강재: 240000, 시간: "17d 02:00:00" },
+          { level: 9, 가루: 1122, 철강재: 330000, 시간: "22d 22:00:00" },
+          { level: 10, 가루: 1530, 철강재: 450000, 시간: "31d 06:00:00" },
+        ],
+        "HealingTime": [
+          { level: 1, 가루: 51, 철강재: 15000, 시간: "1d 01:00:00" },
+          { level: 2, 가루: 68, 철강재: 20000, 시간: "1d 09:45:00" },
+          { level: 3, 가루: 94, 철강재: 27000, 시간: "1d 22:15:00" },
+          { level: 4, 가루: 127, 철강재: 37000, 시간: "2d 14:30:00" },
+          { level: 5, 가루: 170, 철강재: 50000, 시간: "3d 11:45:00" },
+          { level: 6, 가루: 229, 철강재: 67000, 시간: "4d 16:30:00" },
+          { level: 7, 가루: 306, 철강재: 90000, 시간: "6d 06:00:00" },
+          { level: 8, 가루: 418, 철강재: 120000, 시간: "8d 13:00:00" },
+          { level: 9, 가루: 561, 철강재: 160000, 시간: "11d 11:00:00" },
+          { level: 10, 가루: 765, 철강재: 220000, 시간: "15d 15:00:00" },
+        ]
+      };
+
+      // ✅ 발레리아(SVS 점수 보너스)
+      const EXPERT_BONUS = {
+        "None":0,
+        "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+        "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+      };
+      const EXPERT_DESC = {
+        "Lv.1":  "+2%",
+        "Lv.2":  "+4%",
+        "Lv.3":  "+6%",
+        "Lv.4":  "+8%",
+        "Lv.5":  "+10%",
+        "Lv.6":  "+12%",
+        "Lv.7":  "+14%",
+        "Lv.8":  "+16%",
+        "Lv.9":  "+18%",
+        "Lv.10": "+20%"
+      };
+
+      function getValeriaBonus(){
+        const sel = document.getElementById("chkExpertV");
+        if (!sel) return 0;
+        const key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+        return EXPERT_BONUS[key] ?? 0;
+      }
+
+      function getValeriaDesc(){
+        const expertSel = document.getElementById("chkExpertV");
+        const lv = expertSel.value;
+        const text = EXPERT_DESC[lv]
+          ? "SvS 점수 " + EXPERT_DESC[lv]
+          : "SvS 점수";
+
+        document.querySelectorAll(".svs-score-label").forEach(el => {
+          el.textContent = text;
+        });
+      }
+      /* ========== 상태 & 유틸 ========== */
+      let researchList = [];
+
+      function parseTimeToSeconds(timeStr) {
+        const [d, hms] = timeStr.split(" ");
+        const [h, m, s] = hms.split(":").map(Number);
+        return (parseInt(d)||0)*86400 + h*3600 + m*60 + s;
+      }
+      function formatTime(sec) {
+        const d = Math.floor(sec / 86400);
+        sec %= 86400;
+        const h = Math.floor(sec / 3600);
+        sec %= 3600;
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      }
+      function createLevelOptions(max) {
+        return Array.from({length:max+1}, (_,i)=>`<option value="${i}">${i}</option>`).join('');
+      }
+
+      function updateResearchList() {
+        const chkInf = document.getElementById("chkInf");
+        const chkLan = document.getElementById("chkLan");
+        const chkMask = document.getElementById("chkMask");
+
+        researchList = Object.entries(researchData).map(([key, value]) => {
+          let label = {
+            "I": "불꽃 부대",
+            "II-A": "파괴력 연구",
+            "II-B" : "HP 연구",
+            "III" : "불꽃 군단",
+            "IV-A" : "공격력 연구",
+            "IV-B" : "방어력 연구",
+            "V" : "헬리오스 병사",
+            "Healing" : "치료 연구",
+            "Training" : "훈련 연구",
+            "HealingTime" : "구급 연구",
+          }[key];
+
+          switch (key) {
+            case "II-A":
+              if (chkInf.checked) label = "불꽃 공격";
+              else if (chkLan.checked) label = "불의 돌격";
+              else if (chkMask.checked) label = "수정의 시야";
+              break;
+            case "II-B":
+              if (chkInf.checked) label = "불꽃 방패";
+              else if (chkLan.checked) label = "불의 방어";
+              else if (chkMask.checked) label = "수정 갑옷";
+              break;
+            case "IV-A":
+              if (chkInf.checked) label = "불꽃 도끼";
+              else if (chkLan.checked) label = "불의 창";
+              else if (chkMask.checked) label = "수정 화살";
+              break;
+            case "IV-B":
+              if (chkInf.checked) label = "불꽃 수호";
+              else if (chkLan.checked) label = "불의 수호";
+              else if (chkMask.checked) label = "수정의 가호";
+              break;
+          }
+          return { key, label, max: Math.max(...value.map(v=>v.level)) };
+        });
+      }
+
+      function getTroopCode(){
+        if (document.getElementById("chkInf")?.checked) return "inf";   // 방패
+        if (document.getElementById("chkLan")?.checked) return "lan";   // 창
+        if (document.getElementById("chkMask")?.checked) return "marsk"; // 궁
+        return "inf";
+      }
+
+      function renderResearchCards() {
+        const container = document.getElementById("researchGrid");
+        container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4";
+        container.innerHTML = "";
+
+        const POS = {
+          "I": {r:1,c:2},           // 불꽃부대
+          "II-A": {r:2,c:1},        // 불꽃공격
+          "II-B": {r:2,c:3},        // 불꽃방패
+          "III": {r:3,c:2},         // 불꽃군단
+          "IV-A": {r:4,c:1},        // 불꽃도끼
+          "IV-B": {r:4,c:3},        // 불꽃수호
+          "V": {r:5,c:2},           // 헬리오스 병사
+          "Healing": {r:6,c:1},     // 치료연구
+          "Training": {r:7,c:2},    // 훈련연구
+          "HealingTime": {r:6,c:3}  // 구급연구
+        };
+
+        researchList.forEach(item => {
+          const wrap = document.createElement("div");
+          wrap.className = "exp-card";
+          if (POS[item.key]) {
+            wrap.style.gridRowStart = POS[item.key].r;
+            wrap.style.gridColumnStart = POS[item.key].c;
+          }
+
+          const chkId = `check-${item.key}`;
+          const curId = `current-${item.key}`;
+          const tgtId = `target-${item.key}`;
+
+          const troop = getTroopCode();
+          const imgSrc = `images/helios/${troop}/${troop}-${item.key}.webp`;
+
+          wrap.innerHTML = `
+            <div class="p-2">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div class="flex gap-2">
+                  <!-- ✅ 공통 카드 이미지 -->
+                  <div class="shrink-0">
+                    <div class="w-[84px] h-[84px]">
+                      <img src="${imgSrc}"class="w-full h-full object-cover" alt="card-icon" loading="lazy" />
+                    </div>
+                  </div>
+
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2 mb-2">
+                      <h3 class="text-[15px] font-semibold text-gray-800">${item.label}</h3>
+                    </div>
+                    <p class="muted mb-3">레벨 범위 (최대 Lv.${item.max})</p>
+
+                    <!-- ✅ 현재/목표 세로 배치 -->
+                    <div class="flex flex-col gap-2">
+                      <!-- 현재 -->
+                      <div class="flex items-center gap-2">
+                        <span class="text-[12px] text-gray-600 w-[42px]">현재</span>
+                        <select id="${curId}"
+                          class="border rounded-lg px-2 py-1 text-sm w-full min-w-[88px]">
+                          ${createLevelOptions(item.max)}
+                        </select>
+                      </div>
+
+                      <!-- 목표 -->
+                      <div class="flex items-center gap-2">
+                        <span class="text-[12px] text-gray-600 w-[42px]">목표</span>
+                        <select id="${tgtId}"
+                          class="border rounded-lg px-2 py-1 text-sm w-full min-w-[88px]">
+                          ${createLevelOptions(item.max)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-gray-600 pl-2">
+                  <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
+                  <div class="grid grid-cols-[1fr_auto] gap-x-3 text-[13px]">
+                    <div>불수조각</div>
+                    <div class="text-right tabular-nums" id="subtotal-dust-${item.key}">0</div>
+                    <div>철강재</div>
+                    <div class="text-right tabular-nums" id="subtotal-steel-${item.key}">0</div>
+                    <div>소요시간</div>
+                    <div class="text-right tabular-nums" id="subtotal-time-${item.key}">0</div>
+                    <div class="col-span-2 border-t border-gray-200 mt-1"></div>
+                    <div class="svs-score-label">SVS 점수</div>
+                    <div id="sub-점수-${item.label}" class="svs-score-value text-right tabular-nums font-medium">0</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          container.appendChild(wrap);
+
+          // 현재 변경 시 목표 자동 +1
+          const curSel = wrap.querySelector(`#${curId}`);
+          const tgtSel = wrap.querySelector(`#${tgtId}`);
+          curSel.addEventListener("change", () => {
+            let nextValue = parseInt(curSel.value) + 1;
+            if (nextValue > item.max) nextValue = item.max;
+            tgtSel.value = nextValue;
+            scheduleCalc();
+          });
+          tgtSel.addEventListener("change", scheduleCalc);
+        });
+      }
+
+      /* ========== 옵션 토글 ========== */
+      function handleCheck(toggleId) {
+        const chkInf = document.getElementById("chkInf");
+        const chkLan = document.getElementById("chkLan");
+        const chkMask = document.getElementById("chkMask");
+
+        if (toggleId === "chkInf" && chkInf.checked) {
+          chkLan.checked = false; chkMask.checked = false;
+        } else if (toggleId === "chkLan" && chkLan.checked) {
+          chkInf.checked = false; chkMask.checked = false;
+        } else if (toggleId === "chkMask" && chkMask.checked) {
+          chkInf.checked = false; chkLan.checked = false;
+        }
+        updateResearchList();
+        renderResearchCards();
+        scheduleCalc();
+      }
+      function handleVPCheck(toggleId) {
+        const chkVP10 = document.getElementById("chkVP10");
+        const chkVP15 = document.getElementById("chkVP15");
+        if (toggleId === "chkVP10" && chkVP10.checked) chkVP15.checked = false;
+        else if (toggleId === "chkVP15" && chkVP15.checked) chkVP10.checked = false;
+        scheduleCalc();
+      }
+      // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
+      function formatSVS(value){
+        const num = Number(value);
+        if (!Number.isFinite(num)) return "0";
+        if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+        if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+        return num.toLocaleString();
+      }
+      // 이벤트 바인딩
+      document.addEventListener("change", (e) => {
+        if (e.target.id === "chkVP10" || e.target.id === "chkVP15" || e.target.id === "chkServerBuff") scheduleCalc();
+        if (e.target.id === "speedPercent" || e.target.id === "owned-가루" || e.target.id === "owned-철강재") scheduleCalc();
+        if (e.target.id === "chkInf") handleCheck("chkInf");
+        if (e.target.id === "chkLan") handleCheck("chkLan");
+        if (e.target.id === "chkMask") handleCheck("chkMask");
+        if (e.target.id === "chkVP10") handleVPCheck("chkVP10");
+        if (e.target.id === "chkVP15") handleVPCheck("chkVP15");
+      });
+
+      /* ========== 계산 로직 (분리) ========== */
+      function calculateTotals(){
+        let total = { 가루: 0, 철강재: 0, 시간: 0 };
+
+        // 연구속도/버프 계수 (시간에만 적용)
+        let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+        if (document.getElementById("chkVP10").checked) factor += 0.10;
+        if (document.getElementById("chkVP15").checked) factor += 0.15;
+        if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+
+        researchList.forEach(item => {
+          const curEl = document.getElementById(`current-${item.key}`);
+          const tgtEl = document.getElementById(`target-${item.key}`);
+          if (!curEl || !tgtEl) return;
+
+          const cur = parseInt(curEl.value, 10);
+          const tgt = parseInt(tgtEl.value, 10);
+          if (!Number.isFinite(cur) || !Number.isFinite(tgt) || cur >= tgt) return;
+
+          const data = researchData[item.key] || [];
+          for (let lv = cur + 1; lv <= tgt; lv++) {
+            const row = data.find(r => r.level === lv);
+            if (!row) continue;
+
+            total.가루 += row.가루 || 0;
+            total.철강재 += row.철강재 || 0;
+            total.시간 += parseTimeToSeconds(row.시간) || 0;
+          }
+        });
+
+        return { total, factor };
+      }
+
+      function renderSummary(){
+        const { total, factor } = calculateTotals();
+
+        // 보유량
+        const ownedDust  = parseFloat(document.getElementById("owned-가루").value) || 0;
+        const ownedSteel = parseFloat(document.getElementById("owned-철강재").value) || 0;
+
+        const totalTime = Math.round(total.시간 / factor);
+
+        // 총합
+        document.getElementById("sum-가루").textContent   = total.가루.toLocaleString();
+        document.getElementById("sum-철강재").textContent = total.철강재.toLocaleString();
+        document.getElementById("sum-시간").textContent   = formatTime(totalTime);
+
+        // 과부족(보유 - 필요)  ← 너 원래 방식 그대로
+        const defA = document.getElementById("def-가루");
+        const defB = document.getElementById("def-철강재");
+
+        const vA = ownedDust - total.가루;
+        const vB = ownedSteel - total.철강재;
+
+        defA.textContent = vA.toLocaleString();
+        defB.textContent = vB.toLocaleString();
+
+        defA.classList.toggle("text-red-600", vA < 0);
+        defB.classList.toggle("text-red-600", vB < 0);
+
+        // ✅ (추가) SVS Point = 카드별 SVS 점수 합산 (버튼 클릭 시에만)
+        let totalSVS = 0;
+        researchList.forEach(item => {
+          const scoreEl = document.getElementById(`sub-점수-${item.label}`);
+          if (!scoreEl) return;
+
+          // 카드에 표시된 "1,234,567" 형태를 숫자로 변환
+          const v = parseFloat(String(scoreEl.textContent || "0").replace(/,/g, "")) || 0;
+          totalSVS += v;
+        });
+
+        const svsInput = document.getElementById("svspoint");
+        if (svsInput) svsInput.value = Math.floor(totalSVS).toLocaleString();      
+      }
+
+      document.getElementById("btn-calc-total")?.addEventListener("click", () => {
+        document.getElementById("svs")?.classList.remove("hidden");
+        renderSummary();
+      });
+
+      /* ========== 계산 로직 (자동) ========== */
+      function calculateResearch() {
+        let total = { 가루: 0, 철강재: 0, 시간: 0 };
+        let rows = "";
+
+        // 연구속도/버프 계수 (시간에만 적용)
+        let factor = (parseFloat(document.getElementById("speedPercent").value) || 0) * 0.01 + 1;
+        if (document.getElementById("chkVP10").checked) factor += 0.10;
+        if (document.getElementById("chkVP15").checked) factor += 0.15;
+        if (document.getElementById("chkServerBuff").checked) factor += 0.10;
+
+        // 카드 우측 합계 초기화
+        researchList.forEach(item => {
+          const dEl = document.getElementById(`subtotal-dust-${item.key}`);
+          const sEl = document.getElementById(`subtotal-steel-${item.key}`);
+          const tEl = document.getElementById(`subtotal-time-${item.key}`);
+          if (dEl) dEl.textContent = "0";
+          if (sEl) sEl.textContent = "0";
+          if (tEl) tEl.textContent = "0";
+        });
+
+        // 각 카드별 계산
+        researchList.forEach(item => {
+          const cur = parseInt(document.getElementById(`current-${item.key}`).value);
+          const tgt = parseInt(document.getElementById(`target-${item.key}`).value);
+
+          const data = researchData[item.key];
+          const subtotal = { 가루: 0, 철강재: 0, 시간: 0 };
+
+          if (cur < tgt) {
+            for (let lv = cur + 1; lv <= tgt; lv++) {
+              const row = data.find(r => r.level === lv);
+              if (!row) continue;
+              subtotal.가루 += row.가루 || 0;
+              subtotal.철강재 += row.철강재 || 0;
+              subtotal.시간 += parseTimeToSeconds(row.시간) || 0;
+            }
+          }
+
+          // ✅ 카드 우측 "필요 합계" 갱신(체크와 무관)
+          const dEl = document.getElementById(`subtotal-dust-${item.key}`);
+          const sEl = document.getElementById(`subtotal-steel-${item.key}`);
+          const tEl = document.getElementById(`subtotal-time-${item.key}`);
+          if (dEl) dEl.textContent = subtotal.가루.toLocaleString();
+          if (sEl) sEl.textContent = subtotal.철강재.toLocaleString();
+          if (tEl) tEl.textContent = formatTime(Math.round(subtotal.시간 / factor));
+
+          // ✅ SVS 점수 = (가루*1000) × (1 + 발레리아 보너스)
+          const shard = (subtotal.가루 * 1000);
+          const vBonus = getValeriaBonus(); // 0 ~ 0.20      
+          const sScore = Math.floor(shard * (1 + vBonus));        
+          const tScore = Math.floor((subtotal.시간/60) * (1 + vBonus));        
+          let finalScore = sScore+tScore;
+
+          const scoreEl = document.getElementById(`sub-점수-${item.label}`);
+          if (scoreEl) scoreEl.textContent = finalScore.toLocaleString();
+
+          if (cur < tgt) {
+            total.가루 += subtotal.가루;
+            total.철강재 += subtotal.철강재;
+            total.시간 += subtotal.시간;
+
+            rows += `
+              <tr class="text-center">
+                <td class="border p-1">${item.label}</td>
+                <td class="border p-1">${cur} → ${tgt}</td>
+                <td class="border p-1">${subtotal.가루.toLocaleString()}</td>
+                <td class="border p-1">${subtotal.철강재.toLocaleString()}</td>
+                <td class="border p-1">${formatTime(Math.round(subtotal.시간 / factor))}</td>
+              </tr>`;
+          }
+        });
+
+        sendHeightToParent();
+      }
+
+      // 변경 이벤트 디바운스
+      let calcTimer = null;
+      function scheduleCalc() {
+        if (calcTimer) clearTimeout(calcTimer);
+        calcTimer = setTimeout(calculateResearch, 120);
+      }
+
+      // 초기 세팅
+      updateResearchList();
+      renderResearchCards();
+      scheduleCalc();
+
+      // 숫자 입력 즉시 계산
+      ["owned-가루","owned-철강재","speedPercent"].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("input", scheduleCalc);
+      });
+
+      /* ===== 핵심: 버튼 → 체크박스 → 기존 로직 ===== */
+      function setBtn(btn,on){
+        btn.classList.toggle('is-on',on);
+      }
+      document.querySelectorAll('.toggle-btn').forEach(btn=>{
+        const chk = document.getElementById(btn.dataset.toggle);
+        if (chk) btn.classList.toggle('is-on', chk.checked);
+
+        btn.addEventListener('click', () => {
+          const group=btn.dataset.group;
+
+          if (group === 'troop') {
+            document.querySelectorAll('.toggle-btn[data-group="troop"]').forEach(b=>{
+              const c = document.getElementById(b.dataset.toggle);
+              c.checked = false;
+              b.classList.remove('is-on');
+            });
+            chk.checked = true;
+            btn.classList.add('is-on');
+          }
+          else {
+            chk.checked = !chk.checked;
+            btn.classList.toggle('is-on', chk.checked);
+          }
+          chk.dispatchEvent(new Event('change', { bubbles:true }));
+        });
+      });
+
+      /* ===== 기존 계산 로직은 그대로 ===== */
+      document.addEventListener('change',(e)=>{
+        const id = e.target.id;
+        if(id === "chkExpertV")  getValeriaDesc();
+        scheduleCalc();
+      });
+
+      ['owned-가루','owned-철강재','speedPercent'].forEach(id=>{
+        document.getElementById(id)?.addEventListener('input',scheduleCalc);
+      });
+    };
+    window.heliosInit();    
+})();
+</script>
+

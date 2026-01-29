@@ -1,0 +1,548 @@
+<meta charset="UTF-8" />
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <h1 class="text-xl md:text-2xl font-bold text-gray-800">🧪 연구 계산기</h1>
+
+        <!-- 연구속도/버프 카드 -->
+        <div class="bg-white border rounded-xl shadow-sm p-3">
+          <h2 class="text-base font-bold text-gray-800 mb-2">연구 속도 / 버프</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <!-- 부집행관 -->
+            <div>
+              <div class="text-sm font-medium mb-1">부집행관 관직 버프</div>
+              <div class="flex flex-wrap gap-2">
+                <button type="button"
+                        class="w-[125px] px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkVP10" data-group="vp" data-mode="single">
+                  10%
+                </button>
+                <button type="button"
+                        class="w-[125px] px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkVP15" data-group="vp" data-mode="single">
+                  15%
+                </button>
+              </div>
+              <input type="checkbox" id="chkVP10" hidden>
+              <input type="checkbox" id="chkVP15" hidden>
+            </div>
+            <!--서버버프-->
+            <div>
+              <div class="text-sm font-medium mb-1">서버버프 (10%)</div>
+              <div class="flex flex-wrap gap-2">
+                <button type="button"
+                        class="w-full px-3 py-2 rounded-xl border font-semibold text-sm toggle-btn"
+                        data-toggle="chkServerBuff" data-group="server" data-mode="single">
+                  활성화
+                </button>
+              </div>
+              <input type="checkbox" id="chkServerBuff" hidden>
+            </div>        
+            <!-- 연구속도 -->
+            <div>
+              <label for="speedPercent" class="block text-sm mb-1">연구속도 (%)</label>
+              <input type="number" id="speedPercent" class="border rounded p-2 text-sm w-24 text-right" placeholder="0" min="0" />
+            </div>         
+          </div>
+        </div>
+
+        <!-- 전투/경제/발전 카드 3개 -->
+        <div class="grid md:grid-cols-3 gap-3">
+          <!-- 전투 -->
+          <div class="bg-white border rounded-xl shadow-sm p-3">
+            <h2 class="text-base font-bold text-blue-700 mb-2">[전투]</h2>
+            <div class="grid grid-cols-[64px_1fr] gap-x-3 gap-y-2">
+              <div class="text-[15px] text-gray-600 font-semibold self-center">연구항목</div>
+              <select class="border rounded p-2 text-sm w-full" id="researchType"></select>
+
+              <div class="text-[15px] text-gray-600 font-semibold self-center">현재</div>
+              <select class="border rounded p-2 text-sm w-full" id="currentLevel"></select>
+
+              <div class="text-[15px] text-gray-600 font-semibold self-center">목표</div>
+              <select class="border rounded p-2 text-sm w-full" id="targetLevel"></select>
+            </div>
+            <button type="button"
+              class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black"
+              data-section="battle">추가</button>
+          </div>
+
+          <!-- 경제 -->
+          <div class="bg-white border rounded-xl shadow-sm p-3">
+            <h2 class="text-base font-bold text-green-700 mb-2">[경제]</h2>
+            <div class="grid grid-cols-[64px_1fr] gap-x-3 gap-y-2">
+              <div class="text-[15px] text-gray-600 font-semibold self-center">연구항목</div>
+              <select class="border rounded p-2 text-sm w-full" id="economyType"></select>
+
+              <div class="text-[15px] text-gray-600 font-semibold self-center">현재</div>
+              <select class="border rounded p-2 text-sm w-full" id="economyCurrent"></select>
+
+              <div class="text-[15px] text-gray-600 font-semibold self-center">목표</div>
+              <select class="border rounded p-2 text-sm w-full" id="economyTarget"></select>
+            </div>
+            <button type="button"
+              class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black"
+              data-section="economy">추가</button>
+          </div>
+
+          <!-- 발전 -->
+          <div class="bg-white border rounded-xl shadow-sm p-3">
+            <h2 class="text-base font-bold text-purple-700 mb-2">[발전]</h2>
+            <div class="grid grid-cols-[64px_1fr] gap-x-3 gap-y-2">
+              <div class="text-[15px] text-gray-600 font-semibold self-center">연구항목</div>
+              <select class="border rounded p-2 text-sm w-full" id="growthType"></select>
+
+              <div class="text-[15px] text-gray-600 font-semibold self-center">현재</div>
+              <select class="border rounded p-2 text-sm w-full" id="growthCurrent"></select>
+
+              <div class="text-[15px] text-gray-600 font-semibold self-center">목표</div>
+              <select class="border rounded p-2 text-sm w-full" id="growthTarget"></select>
+            </div>
+            <button type="button"
+              class="w-full add-btn mt-3 bg-gray-200 text-sm px-3 py-2 rounded hover:bg-blue-300 text-black"
+              data-section="growth">추가</button>
+          </div>
+        </div>
+
+        <!-- 좌: 선택목록 / 우: 결과 -->
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="bg-white border rounded-xl shadow-sm p-3" id="addedList">
+            <div class="flex justify-between items-center mb-2">
+              <h2 class="text-base font-bold text-gray-700">📋 선택된 연구 목록</h2>
+              <div class="flex gap-x-2">
+                <button id="calculateFromList" class="text-blue-500 text-sm hover:underline">📊 계산하기</button>
+                <button id="clearList" class="text-sm text-red-600 hover:underline">🧹 목록 초기화</button>
+              </div>
+            </div>
+            <div class="space-y-1 text-sm" id="listContainer"></div>
+          </div>
+
+          <div class="bg-white border rounded-xl shadow-sm p-3" id="resultCard">
+            <div class="flex items-center justify-between">
+              <h2 class="text-base font-bold text-gray-700">📈 계산 결과</h2>
+            </div>
+            <div id="resultContainer" class="mt-2 overflow-auto">
+              <div class="text-sm text-gray-600">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // ✅ SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
+    if (window.__RESEARCH_INIT_BOUND__) {
+      // 이미 초기화된 상태면 그냥 실행만(필요 시)
+      window.ResearchInit?.();
+      return;
+    }
+    window.__RESEARCH_INIT_BOUND__ = true;
+
+    window.ResearchInit = function ResearchInit() {
+
+      // =========================
+      //  Toggle Buttons
+      // =========================
+      function setBtn(btn, on) {
+        btn.classList.toggle('is-on', !!on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      }
+
+      function syncGroup(group) {
+        document.querySelectorAll(`.toggle-btn[data-group="${group}"]`).forEach(b => {
+          const c = document.getElementById(b.dataset.toggle);
+          if (c) setBtn(b, c.checked);
+        });
+      }
+
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        // 초기 표시 동기화
+        const initChk = document.getElementById(btn.dataset.toggle);
+        if (initChk) setBtn(btn, initChk.checked);
+
+        btn.addEventListener('click', () => {
+          const chk = document.getElementById(btn.dataset.toggle);
+          if (!chk) return;
+
+          const group = btn.dataset.group || '';
+
+          // ✅ vp: 택1(라디오처럼) + 다시 누르면 해제 가능
+          if (group === 'vp') {
+            const wasOn = chk.checked;
+
+            // 전체 OFF
+            document.querySelectorAll('.toggle-btn[data-group="vp"]').forEach(b => {
+              const c = document.getElementById(b.dataset.toggle);
+              if (c) c.checked = false;
+              setBtn(b, false);
+            });
+
+            // 이전 OFF면 ON, 이전 ON이면 OFF
+            chk.checked = !wasOn;
+            setBtn(btn, chk.checked);
+
+            chk.dispatchEvent(new Event('change', { bubbles: true }));
+            syncGroup('vp');
+            return;
+          }
+
+          // ✅ server: 단일 토글(재클릭 해제)
+          if (group === 'server') {
+            chk.checked = !chk.checked;
+            setBtn(btn, chk.checked);
+            chk.dispatchEvent(new Event('change', { bubbles: true }));
+            return;
+          }
+
+          // ✅ 기타: 일반 토글
+          chk.checked = !chk.checked;
+          setBtn(btn, chk.checked);
+          chk.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      });
+
+      // =========================
+      //  Common Helpers
+      // =========================
+      function setupAutoTargetLevel(currentId, targetId) {
+        const cur = document.getElementById(currentId);
+        const tgt = document.getElementById(targetId);
+        if (!cur || !tgt) return;
+
+        cur.addEventListener("change", () => {
+          const currentVal = parseInt(cur.value, 10);
+          const options = Array.from(tgt.options).map(opt => parseInt(opt.value, 10));
+          const nextVal = options.find(val => val > currentVal);
+          if (nextVal !== undefined) tgt.value = String(nextVal);
+        });
+      }
+
+      function fetchResearchCSV(url, typeId, currentId, targetId) {
+        const map = new Map();
+        const selectType = document.getElementById(typeId);
+        const selectCurrent = document.getElementById(currentId);
+        const selectTarget = document.getElementById(targetId);
+        if (!selectType || !selectCurrent || !selectTarget) return;
+
+        fetch(url)
+          .then(res => res.text())
+          .then(text => {
+            const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+            if (!lines.length) return;
+
+            const headers = lines[0].split(",");
+            const nameIdx = headers.indexOf("연구");
+            if (nameIdx < 0) return;
+
+            for (let i = 1; i < lines.length; i++) {
+              const cols = lines[i].split(",");
+              const fullName = cols[nameIdx];
+              if (!fullName || !fullName.includes("-")) continue;
+
+              const [type, levelStr] = fullName.split("-");
+              const level = parseInt(levelStr, 10);
+              if (!type || !Number.isFinite(level)) continue;
+
+              if (!map.has(type)) map.set(type, []);
+              const levels = map.get(type);
+              if (!levels.includes(level)) levels.push(level);
+            }
+
+            selectType.innerHTML = "";
+            Array.from(map.keys()).forEach(type => selectType.appendChild(new Option(type, type)));
+
+            function fillLevels() {
+              const levels = (map.get(selectType.value) || []).sort((a, b) => a - b);
+              selectCurrent.innerHTML = "";
+              selectTarget.innerHTML = "";
+              levels.forEach(lv => {
+                selectCurrent.appendChild(new Option(lv, lv));
+                selectTarget.appendChild(new Option(lv, lv));
+              });
+            }
+
+            selectType.addEventListener("change", fillLevels);
+            selectType.dispatchEvent(new Event("change"));
+          })
+          .catch(() => { /* ignore */ });
+      }
+
+      function cleanInt(str) {
+        return parseInt((str || "0").replace(/,/g, ""), 10) || 0;
+      }
+
+      function formatResource(value) {
+        value = Number(value) || 0;
+        if (value >= 1_000_000_000) return (value / 1_000_000_000).toFixed(2).replace(/\.00$/, '') + 'B';
+        if (value >= 1_000_000) return (value / 1_000_000).toFixed(2).replace(/\.00$/, '') + 'M';
+        if (value >= 1_000) return value.toLocaleString();
+        return String(value);
+      }
+
+      function parseTimeToSeconds(timeStr) {
+        // 형식: "Xd HH:MM:SS" 또는 "X HH:MM:SS"
+        const parts = (timeStr || "").trim().split(" ");
+        let d = 0, hms = "00:00:00";
+
+        if (parts.length === 2) {
+          d = parseInt(parts[0], 10) || 0;
+          hms = parts[1] || "00:00:00";
+        } else if (parts.length === 1) {
+          // 혹시 "0d 00:00:00" 같이 들어올 때 대비
+          if (parts[0].includes(":")) hms = parts[0];
+          else d = parseInt(parts[0], 10) || 0;
+        }
+
+        const [h, m, s] = (hms || "00:00:00").split(":").map(x => parseInt(x, 10) || 0);
+        return d * 86400 + h * 3600 + m * 60 + s;
+      }
+
+      function formatTime(sec) {
+        sec = Math.max(0, Math.round(Number(sec) || 0));
+        const d = Math.floor(sec / 86400); sec %= 86400;
+        const h = Math.floor(sec / 3600); sec %= 3600;
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return `${d}d ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+
+      // sendHeightToParent 없으면 안전하게 noop
+      const sendHeightToParentSafe = (typeof window.sendHeightToParent === "function")
+        ? window.sendHeightToParent
+        : function () { };
+
+      // =========================
+      //  Data Binding (CSV)
+      // =========================
+      fetchResearchCSV(
+        "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/research/Battle.csv",
+        "researchType", "currentLevel", "targetLevel"
+      );
+      setupAutoTargetLevel("currentLevel", "targetLevel");
+
+      fetchResearchCSV(
+        "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/research/Economy.csv",
+        "economyType", "economyCurrent", "economyTarget"
+      );
+      setupAutoTargetLevel("economyCurrent", "economyTarget");
+
+      fetchResearchCSV(
+        "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/research/Growth.csv",
+        "growthType", "growthCurrent", "growthTarget"
+      );
+      setupAutoTargetLevel("growthCurrent", "growthTarget");
+
+      // =========================
+      //  Add / Remove List Items
+      // =========================
+      document.querySelectorAll(".add-btn").forEach(button => {
+        button.addEventListener("click", () => {
+          const section = button.dataset.section;
+          let typeSelect, currentSelect, targetSelect, sectionLabel;
+
+          if (section === "battle") {
+            typeSelect = document.getElementById("researchType");
+            currentSelect = document.getElementById("currentLevel");
+            targetSelect = document.getElementById("targetLevel");
+            sectionLabel = "전투";
+          } else if (section === "economy") {
+            typeSelect = document.getElementById("economyType");
+            currentSelect = document.getElementById("economyCurrent");
+            targetSelect = document.getElementById("economyTarget");
+            sectionLabel = "경제";
+          } else if (section === "growth") {
+            typeSelect = document.getElementById("growthType");
+            currentSelect = document.getElementById("growthCurrent");
+            targetSelect = document.getElementById("growthTarget");
+            sectionLabel = "발전";
+          } else return;
+
+          const type = typeSelect?.value;
+          const current = currentSelect?.value;
+          const target = targetSelect?.value;
+
+          if (!type || !current || !target || parseInt(current, 10) >= parseInt(target, 10)) {
+            alert("유효한 연구 항목과 레벨을 선택하세요.");
+            return;
+          }
+
+          // 중복 방지
+          const exists = Array.from(document.querySelectorAll("#listContainer span"))
+            .some(el => el.textContent === `[${sectionLabel}] ${type} : ${current} → ${target}`);
+          if (exists) { alert("이미 추가된 항목입니다."); return; }
+
+          const row = document.createElement("div");
+          row.className = "flex justify-between items-center p-2 rounded border";
+          row.innerHTML = `
+            <span class="font-semibold">[${sectionLabel}] ${type} : ${current} → ${target}</span>
+            <button type="button" class="text-xs text-red-500 hover:underline remove-btn">삭제</button>
+          `;
+          document.getElementById("listContainer")?.appendChild(row);
+
+          row.querySelector(".remove-btn")?.addEventListener("click", () => {
+            row.remove();
+            sendHeightToParentSafe();
+          });
+
+          sendHeightToParentSafe();
+        });
+      });
+
+      // =========================
+      //  Clear
+      // =========================
+      document.getElementById("clearList")?.addEventListener("click", () => {
+        const list = document.getElementById("listContainer");
+        const result = document.getElementById("resultContainer");
+        if (list) list.innerHTML = "";
+        if (result) {
+          result.innerHTML =
+            `<div class="text-sm text-gray-500">항목을 추가하고 <span class="font-semibold">[📊 계산하기]</span>를 눌러주세요.</div>`;
+        }
+        sendHeightToParentSafe();
+      });
+
+      // =========================
+      //  Calculate
+      // =========================
+      document.getElementById("calculateFromList")?.addEventListener("click", () => {
+        const rows = document.querySelectorAll("#listContainer div");
+        if (!rows.length) { alert("계산할 연구 항목이 없습니다."); return; }
+
+        let total = { 고기: 0, 목재: 0, 석탄: 0, 철광: 0, 철강재: 0, 시간: 0 };
+        const tasks = [];
+
+        // 속도(시간 단축) 계수
+        let factor = (parseFloat(document.getElementById("speedPercent")?.value) || 0) * 0.01 + 1;
+        if (document.getElementById("chkVP10")?.checked) factor += 0.10;
+        if (document.getElementById("chkVP15")?.checked) factor += 0.15;
+        if (document.getElementById("chkServerBuff")?.checked) factor += 0.10;
+
+        rows.forEach(row => {
+          const text = row.querySelector("span")?.textContent || "";
+          const m = text.match(/\[(.*?)\]\s(.*?)\s:\s(\d+)\s→\s(\d+)/);
+          if (!m) return;
+
+          const [, section, type, start, end] = m;
+          const s = parseInt(start, 10);
+          const e = parseInt(end, 10);
+
+          const urlMap = { "전투": "Battle.csv", "경제": "Economy.csv", "발전": "Growth.csv" };
+          const file = urlMap[section];
+          if (!file) return;
+
+          const url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/refs/heads/main/data/research/${file}`;
+
+          tasks.push(
+            fetch(url)
+              .then(res => res.text())
+              .then(text => {
+                const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+                if (!lines.length) return "";
+
+                const headers = lines[0].split(",");
+                const idx = {
+                  연구: headers.indexOf("연구"),
+                  고기: headers.indexOf("고기"),
+                  목재: headers.indexOf("목재"),
+                  석탄: headers.indexOf("석탄"),
+                  철광: headers.indexOf("철광"),
+                  철강재: headers.indexOf("철강재"),
+                  시간: headers.indexOf("시간")
+                };
+                if (idx.연구 < 0) return "";
+
+                let sum = { 고기: 0, 목재: 0, 석탄: 0, 철광: 0, 철강재: 0, 시간: 0 };
+
+                for (let i = 1; i < lines.length; i++) {
+                  const cols = lines[i].split(",");
+                  const name = cols[idx.연구];
+                  if (!name) continue;
+
+                  const m2 = name.match(/^(.*)-(\d+)$/);
+                  if (!m2) continue;
+
+                  const fullType = m2[1];
+                  const level = parseInt(m2[2], 10);
+                  if (fullType !== type) continue;
+
+                  if (level > s && level <= e) {
+                    sum.고기 += cleanInt(cols[idx.고기]);
+                    sum.목재 += cleanInt(cols[idx.목재]);
+                    sum.석탄 += cleanInt(cols[idx.석탄]);
+                    sum.철광 += cleanInt(cols[idx.철광]);
+                    sum.철강재 += cleanInt(cols[idx.철강재]);
+                    sum.시간 += parseTimeToSeconds(cols[idx.시간]);
+                  }
+                }
+
+                total.고기 += sum.고기;
+                total.목재 += sum.목재;
+                total.석탄 += sum.석탄;
+                total.철광 += sum.철광;
+                total.철강재 += sum.철강재;
+                total.시간 += sum.시간;
+
+                return `
+                  <tr class="bg-white">
+                    <td class="border p-1 font-medium">${type}</td>
+                    <td class="border p-1">${s} → ${e}</td>
+                    <td class="border p-1">${formatResource(sum.고기)}</td>
+                    <td class="border p-1">${formatResource(sum.목재)}</td>
+                    <td class="border p-1">${formatResource(sum.석탄)}</td>
+                    <td class="border p-1">${formatResource(sum.철광)}</td>
+                    <td class="border p-1">${formatResource(sum.철강재)}</td>
+                    <td class="border p-1">${formatTime(sum.시간)}</td>
+                    <td class="border p-1">${formatTime(Math.round(sum.시간 / factor))}</td>
+                  </tr>`;
+              })
+              .catch(() => "")
+          );
+        });
+
+        Promise.all(tasks).then(tableRows => {
+          const html = `
+            <table class="w-full border text-sm text-center table-auto">
+              <thead class="bg-blue-100">
+                <tr>
+                  <th class="border p-1">연구항목</th>
+                  <th class="border p-1">레벨</th>
+                  <th class="border p-1">고기</th>
+                  <th class="border p-1">목재</th>
+                  <th class="border p-1">석탄</th>
+                  <th class="border p-1">철광</th>
+                  <th class="border p-1">철강재</th>
+                  <th class="border p-1">연구시간</th>
+                  <th class="border p-1">적용시간</th>
+                </tr>
+              </thead>
+              <tbody>${tableRows.filter(Boolean).join("")}</tbody>
+              <tfoot class="bg-gray-100 font-semibold">
+                <tr>
+                  <td class="border p-1" colspan="2">총합</td>
+                  <td class="border p-1">${formatResource(total.고기)}</td>
+                  <td class="border p-1">${formatResource(total.목재)}</td>
+                  <td class="border p-1">${formatResource(total.석탄)}</td>
+                  <td class="border p-1">${formatResource(total.철광)}</td>
+                  <td class="border p-1">${formatResource(total.철강재)}</td>
+                  <td class="border p-1">${formatTime(total.시간)}</td>
+                  <td class="border p-1">${formatTime(Math.round(total.시간 / factor))}</td>
+                </tr>
+              </tfoot>
+            </table>
+          `;
+          const result = document.getElementById("resultContainer");
+          if (result) result.innerHTML = html;
+          sendHeightToParentSafe();
+        });
+      });
+    };
+
+    // ✅ 즉시 실행
+    window.ResearchInit();
+  })();
+</script>

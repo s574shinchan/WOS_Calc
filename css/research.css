@@ -20,11 +20,35 @@
 .muted{ font-size:12px; color:#6b7280; }
 
 /* 다크모드 카드 보정 */
-body.dark-mode .exp-card{ background-color:#2c2c2c !important; border-color:#444 !important; }
-body.dark-mode .exp-divider{ border-color:#444 !important; }
-body.dark-mode .muted{ color:#b7b7b7 !important; }
-body.dark-mode .svs-score-label,
-body.dark-mode .svs-score-value {
+.dark-mode .exp-card{ background-color:#2c2c2c !important; border-color:#444 !important; }
+.dark-mode .exp-divider{ border-color:#444 !important; }
+.dark-mode .muted{ color:#b7b7b7 !important; }
+.dark-mode .svs-score-label,
+.dark-mode .svs-score-value {
   font-weight: 700;
   color: #16AC7A !important;
 }
+.pill{padding:.35rem .6rem;border:1px solid #d1d5db;border-radius:.75rem;background:#fff;color:#111827}
+.inline-label{display:flex;align-items:center;gap:.5rem}
+.tabular-nums{font-variant-numeric: tabular-nums}
+select.pill{height:32px}
+.err{color:#b45309}
+.toggle-btn{ transition:.12s ease; user-select:none; }
+.toggle-btn:active{ transform:scale(.98); }
+
+/* OFF */
+.toggle-btn{
+  background: transparent;
+  border-color: rgba(148,163,184,.65);
+  color: inherit;
+}
+
+/* ON (건물계산기 스타일: 파란 배경 + 흰 글자) */
+.toggle-btn.is-on{
+  background: #2563eb;   /* blue-600 */
+  border-color: #1d4ed8; /* blue-700 */
+  color: #fff;
+}
+
+/* 다크모드 OFF 버튼 테두리 */
+body.dark-mode .toggle-btn{ border-color:#444; }

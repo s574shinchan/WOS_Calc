@@ -148,6 +148,14 @@
 
 <script>
 (function(){
+  // ✅ SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
+  if (window.__SCHEDILE_INIT_BOUND__) {
+    // 이미 초기화된 상태면 그냥 실행만(필요 시)
+    window.ScheduleInit?.();
+    return;
+  }
+  window.__SCHEDILE_INIT_BOUND__ = true;
+    
   window.ScheduleInit = function ScheduleInit(){  
     // ★ 시작일과 시작 주차를 네가 지정하는 부분
     const START_DATE = new Date(2025, 11, 01);  // (연,월-1,일) → 2025-11-10 (월요일)

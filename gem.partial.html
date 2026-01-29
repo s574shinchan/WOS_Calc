@@ -188,7 +188,15 @@
 </div>
 
 <script>
-(function(){  
+(function(){
+  // ✅ SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
+  if (window.__GEM_INIT_BOUND__) {
+    // 이미 초기화된 상태면 그냥 실행만(필요 시)
+    window.GemInit?.();
+    return;
+  }
+  window.__GEM_INIT_BOUND__ = true;
+    
   window.GemInit = function GemInit(){  
     console.log("[GemInit] run", !!document.getElementById("imgModal"));
   /* ====== 데이터 소스: gem.html과 동일 ====== */
