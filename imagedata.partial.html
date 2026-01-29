@@ -1,0 +1,365 @@
+<meta charset="UTF-8" />
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <h1 class="text-2xl font-bold text-gray-800">📘 각종재료수 이미지 자료</h1>
+
+        <!-- 이미지 섹션 -->
+        <!-- FC 1 ~ 10 -->
+        <details class="bg-white border border-blue-300 rounded-md p-4">
+          <summary class="text-lg font-bold text-blue-700 mb-2">🏤 FC1 ~ 10 재료</summary>
+          <div id="불의수정" class="mt-3">
+            <img src="images/FC1-10.webp" alt="FC1~10"
+                 data.full="images/FC1-10.webp"
+                 loading="lazy"
+                 class="w.full h-auto rounded shadow cursor-pointer"
+                 onclick="openImage(this)" />
+          </div>
+        </details>
+
+        <!-- 영주장비 -->
+        <details class="bg-white border border-blue-300 rounded-md p-4">
+          <summary class="text-lg font-bold text-blue-700 mb-2">🛡 영주장비재료</summary>
+          <div id="영주장비재료" class="mt-3">
+            <img src="images/영주장비.webp" alt="영주장비재료"
+                 data.full="images/영주장비.webp"
+                 loading="lazy"
+                 class="w.full h-auto rounded shadow cursor-pointer"
+                 onclick="openImage(this)" />
+          </div>
+        </details>
+
+        <!-- 영주보석 -->
+        <details class="bg-white border border-blue-300 rounded-md p-4">
+          <summary class="text-lg font-bold text-blue-700 mb-3">💎 영주보석재료</summary>
+          <div class="overflow-hidden">
+            <img src="images/영주보석.webp" alt="영주보석재료"
+                 data.full="images/영주보석.webp"
+                 loading="lazy"
+                 class="w.full h-auto rounded shadow cursor-pointer"
+                 onclick="openImage(this)" />
+          </div>
+        </details>
+
+        <!-- 영웅장비 -->
+        <details class="bg-white border border-blue-300 rounded-md p-4">
+          <summary class="text-lg font-bold text-blue-700 mb-3">🦸 영웅장비재료</summary>
+          <div class="overflow-hidden">
+            <img src="images/영웅장비단련_상세.webp" alt="영웅장비재료"
+                 data.full="images/영웅장비재료.webp"
+                 loading="lazy"
+                 class="w.full h-auto rounded shadow cursor-pointer"
+                 onclick="openImage(this)" />
+          </div>
+        </details>
+
+        <!-- 연총미션 -->
+        <details class="bg-white border border-blue-300 rounded-md p-4">
+          <summary class="text-lg font-bold text-blue-700 mb-3">🎯 연총미션목록</summary>
+          <div class="overflow-hidden">
+            <img src="images/연총미션.webp" alt="연총미션"
+                 data.full="images/연총미션.webp"
+                 loading="lazy"
+                 class="w.full h-auto rounded shadow cursor-pointer"
+                 onclick="openImage(this)" />
+          </div>
+        </details>
+
+        <!-- 프로스트 드래곤 엠페러 -->
+        <details class="bg-white border border-blue-300 rounded-md p-4">
+          <summary class="text-lg font-bold text-blue-700 mb-3">🐉 프로스트 드래곤 엠페러</summary>
+          <div class="overflow-hidden">
+            <img src="images/Tyrant.webp" alt="Tyrant"
+                 data.full="images/Tyrant.webp"
+                 loading="lazy"
+                 class="w.full h-auto rounded shadow cursor-pointer"
+                 onclick="openImage(this)" />
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔍 이미지 뷰어 모달 -->
+<div id="imageViewer"
+     class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-xl shadow-lg max-w-[95vw] max-h-[90vh] flex flex-col">
+  <!--<div class="bg-white rounded-xl shadow-lg w-[95vw] max-w-[1100px] h-[85vh] flex flex-col"> -- >
+    <!-- 상단 툴바 -->
+    <div id="viewerToolbar" class="flex items-center justify-between px-3 py-2 border-b text-[11px] sm:text-xs md:text-sm">
+      <div id="viewerFilename" class="text-gray-700 truncate max-w-[60%]"></div>
+      <div class="flex gap-1">
+        <button type="button" id="btnZoomOut"
+          class="px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+          </svg>
+        </button>
+
+        <button type="button" id="btnZoomReset"
+          class="px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 4v6h6M20 20v-6h-6M20 4h-6m0 0V4m0 0l6 6M4 20h6m0 0H4m0 0l6-6" />
+          </svg>
+        </button>
+
+        <button type="button" id="btnZoomIn"
+          class="px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 4v16m8-8H4"/>
+          </svg>
+        </button>
+        <button type="button" id="btnDownload"
+                class="px-2 py-1 border rounded text-xs bg-blue-500 text-white hover:bg-blue-600">
+          다운로드
+        </button>
+        <button type="button" id="btnClose"
+                class="px-2 py-1 border rounded text-xs text-black bg-gray-200 hover:bg-gray-300">
+          닫기
+        </button>
+      </div>
+    </div>
+    <!-- 이미지 프레임 -->
+    <div id="viewerFrame"
+         class="m-2 border rounded-lg bg-black overflow-hidden flex items-center justify-center">
+      <img id="modalImage" src="none" alt=""
+           class="select-none"
+           style="transform-origin:center center;" />
+    </div>
+  </div>
+</div>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn"
+  class="hidden fixed bottom-6 right-6 z-50 bg-gray-800/60 text-white p-3 rounded.full shadow-lg hover:bg-gray-800/90 transition"
+  aria-label="Scroll to top">
+  <!-- Up arrow SVG icon -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+  </svg>
+</button>
+
+<script>
+(function () {
+  // =====================================================
+  // 🌐 Namespace
+  // =====================================================
+  window.__IMAGE_VIEWER__ = window.__IMAGE_VIEWER__ || {};
+  const V = window.__IMAGE_VIEWER__;
+
+  // =====================================================
+  // 🧠 상태
+  // =====================================================
+  V.state = V.state || {
+    scale: 1,
+    offsetX: 0,
+    offsetY: 0,
+    dragging: false,
+    dragStartX: 0,
+    dragStartY: 0,
+    dragOriginX: 0,
+    dragOriginY: 0
+  };
+
+  // =====================================================
+  // 📌 DOM
+  // =====================================================
+  const $ = id => document.getElementById(id);
+
+  const overlay   = $("imageViewer");
+  const img       = $("modalImage");
+  const frame     = $("viewerFrame");
+  const filename  = $("viewerFilename");
+  const toolbar   = $("viewerToolbar");
+
+  const btnClose  = $("btnClose");
+  const btnIn     = $("btnZoomIn");
+  const btnOut    = $("btnZoomOut");
+  const btnReset  = $("btnZoomReset");
+  const btnDown   = $("btnDownload");
+  const topBtn    = $("scrollToTopBtn");
+
+  // =====================================================
+  // 🔧 Transform
+  // =====================================================
+  function applyTransform() {
+    img.style.transform =
+      `translate(${V.state.offsetX}px, ${V.state.offsetY}px) scale(${V.state.scale})`;
+  }
+
+  function resetTransform() {
+    Object.assign(V.state, { scale: 1, offsetX: 0, offsetY: 0 });
+    applyTransform();
+  }
+
+  // =====================================================
+  // 🖼 Viewer Core
+  // =====================================================
+  function openViewer(src) {
+    resetTransform();
+
+    img.onload = () => {
+      fitToImage();
+      resetTransform();
+    };
+
+    img.src = src;
+
+    try {
+      filename.textContent =
+        decodeURIComponent(src).split("/").pop().split("?")[0];
+    } catch {
+      filename.textContent = src.split("/").pop();
+    }
+
+    overlay.classList.remove("hidden");
+    overlay.classList.add("flex");
+  }
+
+  function closeViewer() {
+    overlay.classList.add("hidden");
+    overlay.classList.remove("flex");
+    img.src = "";
+  }
+
+  // 외부 호출용
+  window.openImage = function (elOrUrl) {
+    const src = typeof elOrUrl === "string"
+      ? elOrUrl
+      : elOrUrl?.dataset?.full || elOrUrl?.src;
+
+    if (!src) return;
+    openViewer(src);
+  };
+
+  // =====================================================
+  // 📐 Fit
+  // =====================================================
+  function fitToImage() {
+    if (!img.complete || !img.naturalWidth) return;
+
+    const margin = 80;
+    const iw = img.naturalWidth;
+    const ih = img.naturalHeight;
+    const toolbarH = toolbar?.offsetHeight || 0;
+
+    const maxW = innerWidth - margin * 2;
+    const maxH = innerHeight - toolbarH - margin * 2;
+    const ratio = Math.min(1, maxW / iw, maxH / ih);
+
+    const w = Math.round(iw * ratio);
+    const h = Math.round(ih * ratio);
+
+    frame.style.width  = w + "px";
+    frame.style.height = h + "px";
+    img.style.width    = w + "px";
+    img.style.height   = h + "px";
+  }
+
+  // =====================================================
+  // 🧷 Event Bind (1회)
+  // =====================================================
+  if (!V.bound) {
+    V.bound = true;
+
+    // 버튼
+    btnIn.onclick    = () => { V.state.scale = Math.min(V.state.scale + 0.2, 5); applyTransform(); };
+    btnOut.onclick   = () => { V.state.scale = Math.max(V.state.scale - 0.2, 0.2); applyTransform(); };
+    btnReset.onclick = resetTransform;
+    btnClose.onclick = closeViewer;
+
+    btnDown.onclick = () => {
+      if (!img.src) return;
+      const a = document.createElement("a");
+      a.href = img.src;
+      a.download = img.src.split("/").pop();
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+
+    // Overlay
+    overlay.onclick = e => {
+      if (e.target === overlay) closeViewer();
+    };
+
+    // Wheel zoom
+    frame.addEventListener("wheel", e => {
+      e.preventDefault();
+      V.state.scale = Math.min(Math.max(
+        V.state.scale + (e.deltaY < 0 ? 0.1 : -0.1), 0.2), 5);
+      applyTransform();
+    }, { passive: false });
+
+    // Drag
+    frame.onmousedown = e => {
+      V.state.dragging = true;
+      Object.assign(V.state, {
+        dragStartX: e.clientX,
+        dragStartY: e.clientY,
+        dragOriginX: V.state.offsetX,
+        dragOriginY: V.state.offsetY
+      });
+      img.style.cursor = "grabbing";
+    };
+
+    window.onmousemove = e => {
+      if (!V.state.dragging) return;
+      V.state.offsetX = V.state.dragOriginX + (e.clientX - V.state.dragStartX);
+      V.state.offsetY = V.state.dragOriginY + (e.clientY - V.state.dragStartY);
+      applyTransform();
+    };
+
+    window.onmouseup = () => {
+      if (!V.state.dragging) return;
+      V.state.dragging = false;
+      img.style.cursor = "grab";
+    };
+
+    // Key
+    document.onkeydown = e => {
+      if (e.key === "Escape" && !overlay.classList.contains("hidden")) {
+        closeViewer();
+      }
+    };
+
+    // Resize
+    window.onresize = () => {
+      if (!overlay.classList.contains("hidden")) {
+        fitToImage();
+        resetTransform();
+      }
+    };
+
+    // Scroll top
+    window.onscroll = () => {
+      if (!topBtn) return;
+      topBtn.classList.toggle("hidden", scrollY < 200);
+    };
+
+    topBtn?.addEventListener("click", () => {
+      scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // iframe height
+    const sendHeight = () => {
+      parent?.postMessage(
+        { type: "FRAME_CHANGE", height: document.body.scrollHeight }, "*"
+      );
+    };
+
+    window.onload = () => setTimeout(sendHeight, 100);
+    document.querySelectorAll("details").forEach(d =>
+      d.addEventListener("toggle", () => setTimeout(sendHeight, 300))
+    );
+
+    // DevTools 차단 (선택)
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  }
+})();
+</script>

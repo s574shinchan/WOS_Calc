@@ -1,0 +1,16 @@
+/* CSS Document */
+.dark-mode .card { background:#1f1f1f; border-color:#2a2a2a; }
+.dark-mode input, .dark-mode select { color:#000; }
+.dark-mode .section-title{ font-weight:700; color:#ffffff }
+.dark-mode .subtle{ color:#ffffff; font-size:12px }
+.dark-mode .field-label{ font-size:12px; color:#ffffff }
+
+/* 카드 공통 */
+.card{
+  background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;
+  box-shadow:0 6px 18px rgba(15,23,42,.06)
+}
+.section-title{ font-weight:700; color:#334155 }
+.subtle{ color:#64748b; font-size:12px }
+.field-label{ font-size:12px; color:#475569 }
+.num{ font-variant-numeric: tabular-nums }

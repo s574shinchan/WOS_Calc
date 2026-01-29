@@ -1,0 +1,523 @@
+<meta charset="UTF-8" />
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">⚔ 부대출정 계산기</h1>
+
+        <!-- 상: 사용자 입력항목--->
+        <section class="card p-4 mb-2">
+          <h2 class="mb-3">사용자 입력</h2>
+
+          <!-- 윗줄: 4칸-->
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <div>
+              <label class="field-label">출정부대 수용량(기본)</label>
+              <input id="baseMarch" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateCapacityAndTable()"/>
+            </div>
+            <div>
+              <label class="field-label">집결부대 수용량(기본)</label>
+              <input id="baseRally" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateCapacityAndTable()"/>
+            </div>    
+            <div>
+              <label class="field-label">총 보유 방패병</label>
+              <input id="ownInf" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateTableOnly()"/>
+            </div>
+
+            <div>
+              <label class="field-label">총 보유 창병</label>
+              <input id="ownLan" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateTableOnly()"/>
+            </div>
+
+            <div>
+              <label class="field-label">총 보유 궁병</label>
+              <input id="ownMar" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateTableOnly()"/>
+            </div>
+          </div>
+
+          <!-- 아랫줄: 4칸 -->
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 mt-3">
+            <div>
+              <label class="field-label">총 행군 수</label>
+              <input id="marchCount" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateTableOnly()"/>
+            </div>
+
+            <div>
+              <label class="field-label">적용 비율 선택</label>
+              <select id="ratioPreset" class="w-full border rounded-md p-2"
+                      onchange="UI.onPresetChange()">
+                <option value="34/33/33">34 / 33 / 33</option>
+                <option value="20/40/40">20 / 40 / 40</option>
+                <option value="10/10/80">10 / 10 / 80</option>
+                <option value="60/40/0">60 / 40 / 0</option>
+                <option value="50/20/30">50 / 20 / 30</option>
+                <option value="custom">사용자 지정</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="field-label">방패(%)</label>
+              <input id="ratioInf" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateTableOnly()" disabled/>
+            </div>
+
+            <div>
+              <label class="field-label">창(%)</label>
+              <input id="ratioLan" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateTableOnly()" disabled/>
+            </div>
+            <div>
+              <label class="field-label">궁(%)</label>
+              <input id="ratioMar" type="text"
+                     class="w-full border rounded-md p-2"
+                     oninput="UI.formatNumberInput(this); Calc.updateTableOnly()" disabled/>
+            </div>
+          </div>
+        </section>
+
+        <!-- 중: 버프 선택-->
+        <section class="card p-4  mb-2">
+          <h2 class="mb-3">버프 선택</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 space-y-2">
+              <!-- 도시 버프 -->
+              <div>
+                <div class="space-y-2"> 
+                  <div class="font-semibold text-gray-800">도시 버프</div>
+                  <label class="flex items-center gap-2">
+                    <input type="radio" name="cityBuff" value="0" checked
+                           onchange="Calc.updateCapacityAndTable()"/>
+                    없음
+                  </label>
+                  <label class="flex items-center gap-2">
+                    <input type="radio" name="cityBuff" value="10"
+                           onchange="Calc.updateCapacityAndTable()"/>
+                    출정 수용량 증가 2h (+10%)
+                  </label>
+                  <label class="flex items-center gap-2">
+                    <input type="radio" name="cityBuff" value="20"
+                           onchange="Calc.updateCapacityAndTable()"/>
+                    출정 수용량 증가 12h (+20%)
+                  </label>
+                </div>
+              </div>          
+              <div class="space-y-3">
+                <div class="font-semibold text-gray-800">펫 버프</div>
+
+                <!-- 고릴라 -->
+                <div class="flex items-center gap-3">
+                  <label class="flex items-center gap-2 whitespace-nowrap">
+                    <input id="chkGorilla" type="checkbox"
+                           onchange="UI.togglePetSelect('gorillaLv', this.checked); Calc.updateCapacityAndTable()"/>
+                    프로스타 고릴라
+                  </label>
+
+                  <select id="gorillaLv"
+                          class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
+                          disabled
+                          onchange="Calc.updateCapacityAndTable()">
+                    <option value="0">Lv.0</option>
+                    <option value="1">Lv.1</option>
+                    <option value="2">Lv.2</option>
+                    <option value="3">Lv.3</option>
+                    <option value="4">Lv.4</option>
+                    <option value="5">Lv.5</option>
+                    <option value="6">Lv.6</option>
+                    <option value="7">Lv.7</option>
+                    <option value="8">Lv.8</option>
+                    <option value="9">Lv.9</option>
+                    <option value="10" selected>Lv.10</option>
+                  </select>
+                </div>
+
+                <!-- 코뿔소 -->
+                <div class="flex items-center gap-3">
+                  <label class="flex items-center gap-2 whitespace-nowrap">
+                    <input id="chkRhino" type="checkbox"
+                           onchange="UI.togglePetSelect('rhinoLv', this.checked); Calc.updateCapacityAndTable()"/>
+                    초거대 코뿔소
+                  </label>
+
+                  <select id="rhinoLv"
+                          class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
+                          disabled
+                          onchange="Calc.updateCapacityAndTable()">
+                    <option value="0">Lv.0</option>
+                    <option value="1">Lv.1</option>
+                    <option value="2">Lv.2</option>
+                    <option value="3">Lv.3</option>
+                    <option value="4">Lv.4</option>
+                    <option value="5">Lv.5</option>
+                    <option value="6">Lv.6</option>
+                    <option value="7">Lv.7</option>
+                    <option value="8">Lv.8</option>
+                    <option value="9">Lv.9</option>
+                    <option value="10" selected>Lv.10</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3) 전문가 버프 (로물루스 제거: 키릴/파비안/발레리아) -->
+            <div class="space-y-2">
+              <div class="font-semibold text-gray-800">전문가 버프</div>
+
+              <!-- PC: 2열 / 모바일: 1열 -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                <!-- ===================== 키릴 (스킬 2개) ===================== -->
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2 whitespace-nowrap">
+                    <input id="chkExpert" type="checkbox"
+                           onchange="UI.toggleSelect('expertWrapC', this.checked); Calc.updateCapacityAndTable()"/>
+                    전문가(키릴)
+                  </label>
+
+                  <div id="expertWrapC" class="opacity-0 pointer-events-none">
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 text-[12px] text-gray-500 whitespace-nowrap">사방포획</div>
+                      <select id="nemLvA"
+                              class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
+                              onchange="Calc.updateCapacityAndTable()">
+                        <option value="0" selected>Lv.0</option>
+                        <option value="1">Lv.1</option>
+                        <option value="2">Lv.2</option>
+                        <option value="3">Lv.3</option>
+                        <option value="4">Lv.4</option>
+                        <option value="5">Lv.5</option>
+                        <option value="6">Lv.6</option>
+                        <option value="7">Lv.7</option>
+                        <option value="8">Lv.8</option>
+                        <option value="9">Lv.9</option>
+                        <option value="10">Lv.10</option>
+                      </select>
+
+                      <div class="w-12 text-[12px] text-gray-500 whitespace-nowrap">곰의천적</div>
+                      <select id="nemLvB"
+                              class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
+                              onchange="Calc.updateCapacityAndTable()">
+                        <option value="0" selected>Lv.0</option>
+                        <option value="1">Lv.1</option>
+                        <option value="2">Lv.2</option>
+                        <option value="3">Lv.3</option>
+                        <option value="4">Lv.4</option>
+                        <option value="5">Lv.5</option>
+                        <option value="6">Lv.6</option>
+                        <option value="7">Lv.7</option>
+                        <option value="8">Lv.8</option>
+                        <option value="9">Lv.9</option>
+                        <option value="10">Lv.10</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===================== 파비안 (스킬 1개) ===================== -->
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2 whitespace-nowrap">
+                    <input id="chkExpert3" type="checkbox"
+                           onchange="UI.toggleSelect('expertWrapF', this.checked); Calc.updateCapacityAndTable()"/>
+                    전문가(파비안)
+                  </label>
+
+                  <div id="expertWrapF" class="opacity-0 pointer-events-none">
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 text-[12px] text-gray-500 whitespace-nowrap">군수거목</div>
+                      <select id="nemLv3"
+                              class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
+                              onchange="Calc.updateCapacityAndTable()">
+                        <option value="0" selected>Lv.0</option>
+                        <option value="1">Lv.1</option>
+                        <option value="2">Lv.2</option>
+                        <option value="3">Lv.3</option>
+                        <option value="4">Lv.4</option>
+                        <option value="5">Lv.5</option>
+                        <option value="6">Lv.6</option>
+                        <option value="7">Lv.7</option>
+                        <option value="8">Lv.8</option>
+                        <option value="9">Lv.9</option>
+                        <option value="10">Lv.10</option>
+                        <option value="11">Lv.11</option>
+                        <option value="12">Lv.12</option>
+                        <option value="13">Lv.13</option>
+                        <option value="14">Lv.14</option>
+                        <option value="15">Lv.15</option>
+                        <option value="16">Lv.16</option>
+                        <option value="17">Lv.17</option>
+                        <option value="18">Lv.18</option>
+                        <option value="19">Lv.19</option>
+                        <option value="20">Lv.20</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===================== 발레리아 (스킬 1개) ===================== -->
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2 whitespace-nowrap">
+                    <input id="chkExpert4" type="checkbox"
+                           onchange="UI.toggleSelect('expertWrapV', this.checked); Calc.updateCapacityAndTable()"/>
+                    전문가(발레리아)
+                  </label>
+
+                  <div id="expertWrapV" class="opacity-0 pointer-events-none">
+                    <div class="flex items-center gap-3">
+                      <div class="w-20 text-[12px] text-gray-500 whitespace-nowrap">압도적인 기세</div>
+                      <select id="nemLv4"
+                              class="border rounded-md h-8 w-24 px-2 text-[12px] leading-8"
+                              onchange="Calc.updateCapacityAndTable()">
+                        <option value="0" selected>Lv.0</option>
+                        <option value="1">Lv.1</option>
+                        <option value="2">Lv.2</option>
+                        <option value="3">Lv.3</option>
+                        <option value="4">Lv.4</option>
+                        <option value="5">Lv.5</option>
+                        <option value="6">Lv.6</option>
+                        <option value="7">Lv.7</option>
+                        <option value="8">Lv.8</option>
+                        <option value="9">Lv.9</option>
+                        <option value="10">Lv.10</option>
+                        <option value="11">Lv.11</option>
+                        <option value="12">Lv.12</option>
+                        <option value="13">Lv.13</option>
+                        <option value="14">Lv.14</option>
+                        <option value="15">Lv.15</option>
+                        <option value="16">Lv.16</option>
+                        <option value="17">Lv.17</option>
+                        <option value="18">Lv.18</option>
+                        <option value="19">Lv.19</option>
+                        <option value="20">Lv.20</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- 하: 결과 -->
+        <section class="card p-4">
+          <h2 class="mb-3">결과</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
+            <div>
+              <label class="field-label">출정부대 수용량 (버프 적용)</label>
+              <input id="finalMarch" type="text" readonly
+                     class="w-full border rounded-md p-2 bg-gray-100 num text-gray-800"/>
+            </div>
+            <div>
+              <label class="field-label">출정 수용량 보너스</label>
+              <input id="MarchBonus" type="text" readonly
+                     class="w-full border rounded-md p-2 bg-gray-100 num text-gray-800" />
+            </div>
+            <div>
+              <label class="field-label">집결부대 수용량 (버프 적용)</label>
+              <input id="finalRally" type="text" readonly
+                     class="w-full border rounded-md p-2 bg-gray-100 num text-gray-800"/>
+            </div>        
+            <div>
+              <label class="field-label">집결 수용량 보너스</label>
+              <input id="RallyBonus" type="text" readonly
+                     class="w-full border rounded-md p-2 bg-gray-100 num text-gray-800" />
+            </div>        
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full border border-gray-200">
+              <thead class="bg-orange-100 text-gray-800">
+                <tr class="text-center">
+                  <th class="border px-2 py-1">행군</th>
+                  <th class="border px-2 py-1">방패병</th>
+                  <th class="border px-2 py-1">창병</th>
+                  <th class="border px-2 py-1">궁병</th>
+                </tr>
+              </thead>
+              <tbody id="resultTbody">
+                <tr><td class="border text-center p-2" colspan="4">결과 없음</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>          
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ===================================================
+  // 🌐 Namespace (SPA Safe)
+  // ===================================================
+  window.__RALLY_CALC__ = window.__RALLY_CALC__ || {};
+  const App = window.__RALLY_CALC__;
+
+  if (App.bound) return;
+  App.bound = true;
+
+  // ===================================================
+  // 📊 Data Tables
+  // ===================================================
+  const DATA = {
+    GorillaPerLevel: 1500,
+    Rhino: {0:0,1:60000,2:70000,3:80000,4:90000,5:100000,6:110000,7:120000,8:130000,9:140000,10:150000},
+    Cyrille: {0:0,1:3000,2:6000,3:9000,4:12000,5:15000,6:18000,7:21000,8:24000,9:27000,10:30000},
+    Cyrille2:{0:0,1:30000,2:60000,3:90000,4:120000,5:150000,6:180000,7:210000,8:240000,9:270000,10:300000},
+    Fabian:{0:0,1:7500,2:15000,3:22500,4:30000,5:37500,6:45000,7:52500,8:60000,9:67500,10:75000,11:82500,12:90000,13:97500,14:105000,15:112500,16:120000,17:127500,18:135000,19:142500,20:150000},
+    Valeria:{0:0,1:7500,2:15000,3:22500,4:30000,5:37500,6:45000,7:52500,8:60000,9:67500,10:75000,11:82500,12:90000,13:97500,14:105000,15:112500,16:120000,17:127500,18:135000,19:142500,20:150000}
+  };
+
+  // ===================================================
+  // 🔢 Utils
+  // ===================================================
+  const num = v => Number((v||'').replace(/,/g,'')) || 0;
+  const $ = id => document.getElementById(id);
+
+  // ===================================================
+  // 🧠 State Reader
+  // ===================================================
+  function readState(){
+    return {
+      baseMarch: num($('baseMarch')?.value),
+      baseRally: num($('baseRally')?.value),
+      marchCount: num($('marchCount')?.value),
+      own: {
+        inf: num($('ownInf')?.value),
+        lan: num($('ownLan')?.value),
+        mar: num($('ownMar')?.value),
+      },
+      gorilla: {
+        on: $('chkGorilla')?.checked,
+        lv: Number($('gorillaLv')?.value||0)
+      },
+      rhino: {
+        on: $('chkRhino')?.checked,
+        lv: Number($('rhinoLv')?.value||0)
+      },
+      expert: {
+        cyrille: $('chkExpert')?.checked,
+        fabian: $('chkExpert3')?.checked,
+        valeria: $('chkExpert4')?.checked
+      },
+      nem: {
+        A: Number($('nemLvA')?.value||0),
+        B: Number($('nemLvB')?.value||0),
+        F: Number($('nemLv3')?.value||0),
+        V: Number($('nemLv4')?.value||0)
+      },
+      ratios: getRatios(),
+      cityMult: getCityMultiplier()
+    };
+  }
+
+  function getRatios(){
+    const preset = $('ratioPreset')?.value;
+    if (preset && preset !== 'custom'){
+      const [i,l,m] = preset.split('/').map(Number);
+      return {inf:i, lan:l, mar:m};
+    }
+    const inf = num($('ratioInf')?.value);
+    const lan = num($('ratioLan')?.value);
+    const mar = num($('ratioMar')?.value);
+    return (inf+lan+mar)>0 ? {inf,lan,mar} : {inf:34,lan:33,mar:33};
+  }
+
+  function getCityMultiplier(){
+    const sel = document.querySelector('input[name="cityBuff"]:checked');
+    return sel ? 1 + Number(sel.value)/100 : 1;
+  }
+
+  // ===================================================
+  // 🧮 Calc (Pure)
+  // ===================================================
+  const Calc = {
+    march(s){
+      let bonus = s.expert.cyrille ? (DATA.Cyrille[s.nem.B]||0) : 0;
+      let gorilla = s.gorilla.on ? s.gorilla.lv * DATA.GorillaPerLevel : 0;
+      return Math.floor((s.baseMarch + bonus + gorilla) * s.cityMult);
+    },
+    rally(s, march){
+      const rhino = s.rhino.on ? (DATA.Rhino[s.rhino.lv]||0) : 0;
+      const rallyBonus =
+        (s.expert.cyrille ? DATA.Cyrille2[s.nem.A]||0 : 0) +
+        (s.expert.fabian ? DATA.Fabian[s.nem.F]||0 : 0) +
+        (s.expert.valeria ? DATA.Valeria[s.nem.V]||0 : 0);
+      return Math.floor((s.baseRally - s.baseMarch + march) + rhino + rallyBonus);
+    }
+  };
+
+  // ===================================================
+  // 🎨 Render
+  // ===================================================
+  function render(){
+    const s = readState();
+    const march = Calc.march(s);
+    const rally = Calc.rally(s, march);
+
+    $('finalMarch').value = march.toLocaleString();
+    $('finalRally').value = rally.toLocaleString();
+
+    renderTable(march, s);
+  }
+
+  function renderTable(cap, s){
+    const tbody = $('resultTbody');
+    if (!cap || !s.marchCount){
+      tbody.innerHTML = `<tr><td colspan="4" class="text-center p-2">결과 없음</td></tr>`;
+      return;
+    }
+
+    let html='', si=0,sl=0,sm=0;
+    for(let i=1;i<=s.marchCount;i++){
+      const vi=Math.floor(cap*s.ratios.inf/100);
+      const vl=Math.floor(cap*s.ratios.lan/100);
+      const vm=Math.floor(cap*s.ratios.mar/100);
+      si+=vi; sl+=vl; sm+=vm;
+      html+=`<tr class="text-center">
+        <td>${i}</td><td>${vi.toLocaleString()}</td>
+        <td>${vl.toLocaleString()}</td><td>${vm.toLocaleString()}</td>
+      </tr>`;
+    }
+
+    html+=`<tr class="font-semibold bg-gray-100">
+      <td>합계</td><td>${si.toLocaleString()}</td>
+      <td>${sl.toLocaleString()}</td><td>${sm.toLocaleString()}</td>
+    </tr>
+    <tr class="font-semibold bg-amber-100">
+      <td>남은값</td>
+      <td>${(s.own.inf-si).toLocaleString()}</td>
+      <td>${(s.own.lan-sl).toLocaleString()}</td>
+      <td>${(s.own.mar-sm).toLocaleString()}</td>
+    </tr>`;
+    tbody.innerHTML = html;
+  }
+
+  // ===================================================
+  // 🧷 Bind (1회)
+  // ===================================================
+  document.addEventListener('input', e=>{
+    if (e.target.closest('input,select')) render();
+  });
+  document.addEventListener('change', e=>{
+    if (e.target.closest('input,select')) render();
+  });
+
+  render(); // 초기 실행
+})();
+</script>
