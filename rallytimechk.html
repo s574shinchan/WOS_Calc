@@ -1,0 +1,440 @@
+<!--  3열 레이아웃: 좌 / 중앙(이미지) / 우 -->
+<!--  items-stretch: 세로로 같은 높이(그리드 아이템 stretch) -->
+<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+  <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+    <div class="bg-gray-100 p-2 font-sans text-sm">
+      <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">집결 시간 계산</h1>
+        <div class="grid grid-cols-3 gap-1 items-stretch" data-rally-dual>
+          <!-- ================= LEFT ================= -->
+          <!--  h-full + flex-col: 컬럼 전체 높이를 채우고 마지막 카드가 남는 높이 먹게 -->
+          <section class="flex flex-col gap-2 h-full" data-panel="left">
+
+            <!-- 상단 카드 -->
+            <div class="card border border-black/10 bg-white p-4">
+              <div class="grid grid-cols-3 gap-2 items-end">
+                <div class="section-title">목표 도착 시간</div>
+                <div class="section-title">집결 대기시간</div>
+                <div></div>
+
+                <div class="flex items-center">
+                  <input data-time type="text" inputmode="numeric" maxlength="8"
+                         placeholder="HH:MM:SS"
+                         class="border rounded px-3 py-2 w-32 text-sm font-mono" />
+                </div>
+
+                <div class="flex items-center gap-6 h-[40px]">
+                  <label class="flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                    <input data-wait type="radio" value="5" checked />
+                    <span class="leading-none">5분</span>
+                  </label>
+                  <label class="flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                    <input data-wait type="radio" value="10" />
+                    <span class="leading-none">10분</span>
+                  </label>
+                </div>
+
+                <div class="flex gap-2 items-center justify-end">
+                  <button type="button" data-calc
+                          class="px-3 py-2 rounded bg-blue-600 text-white text-sm whitespace-nowrap">
+                    계산
+                  </button>
+                  <button type="button" data-copy
+                          class="px-3 py-2 rounded bg-gray-700 text-white text-sm whitespace-nowrap">
+                    복사
+                  </button>
+                </div>
+
+                <div class="col-span-3 text-xs">
+                  계산식: 오픈시간 = 목표도착 − (대기시간 + 이동시간)
+                </div>
+              </div>
+            </div>
+
+            <!-- 집결장 목록 -->
+            <div class="card border border-black/10 bg-white p-4">
+              <div class="section-title mb-3">집결장 목록</div>
+
+              <div class="grid grid-cols-3 gap-2 items-center">
+                <div class="font-bold">이름</div>
+                <div class="font-bold text-center">이동시간(초)</div>
+                <div class="font-bold text-center">오픈시간</div>
+
+                <!-- 6 rows -->
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+              </div>
+            </div>
+
+            <!-- 결과: textarea → pre / flex-1로 남는 높이 전부 먹음 -->
+            <div class="card border border-black/10 bg-white p-4 flex-1 flex flex-col min-h-[180px]">
+              <div class="flex items-center justify-between mb-2">
+                <div class="section-title">결과</div>
+
+                <!-- 패널별 토스트 -->
+                <span data-toast class="hidden text-xs font-bold px-2 py-1 rounded bg-green-600 text-white whitespace-nowrap"></span>
+              </div>
+              <pre data-textout class="w-full flex-1 border rounded p-2 text-sm font-mono whitespace-pre-wrap break-words overflow-auto"></pre>
+            </div>
+
+          </section>
+
+          <!-- ================= CENTER IMAGE ================= -->
+          <!--  센터가 전체 높이 기준이 되도록 min-h 유지 -->
+          <section class="card border border-black/10 bg-white p-0 overflow-hidden">
+            <div class="w-full h-full min-h-[760px] border border-white/70 flex items-center justify-center bg-black/20">
+              <div class="text-center font-bold opacity-80" style="font-size:28px; letter-spacing:1px;">
+                <img src="images/SunfireCastle.webp" alt="SFC"/>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= RIGHT ================= -->
+          <section class="flex flex-col gap-2 h-full" data-panel="right">
+
+            <!-- 상단 카드 -->
+            <div class="card border border-black/10 bg-white p-4">
+              <div class="grid grid-cols-3 gap-x-10 gap-y-2 items-end">
+                <div class="section-title">목표 출발 시간</div>
+                <div class="section-title">집결 대기시간</div>
+                <div></div>
+
+                <div class="flex items-center">
+                  <input data-time type="text" inputmode="numeric" maxlength="8"
+                         placeholder="HH:MM:SS"
+                         class="border rounded px-3 py-2 w-32 text-sm font-mono" />
+                </div>
+
+                <div class="flex items-center gap-6 h-[40px]">
+                  <label class="flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                    <input data-wait type="radio" value="5" checked />
+                    <span class="leading-none">5분</span>
+                  </label>
+                  <label class="flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                    <input data-wait type="radio" value="10" />
+                    <span class="leading-none">10분</span>
+                  </label>
+                </div>
+
+                <div class="flex gap-2 items-center justify-end">
+                  <button type="button" data-calc
+                          class="px-3 py-2 rounded bg-blue-600 text-white text-sm whitespace-nowrap">
+                    계산
+                  </button>
+                  <button type="button" data-copy
+                          class="px-3 py-2 rounded bg-gray-700 text-white text-sm whitespace-nowrap">
+                    복사
+                  </button>
+                </div>
+
+                <div class="col-span-3 text-xs">
+                  계산식: 도착시간 = 출발시간 + (대기시간 + 이동시간)
+                </div>
+              </div>
+            </div>
+
+            <!-- 집결장 목록 -->
+            <div class="card border border-black/10 bg-white p-4">
+              <div class="section-title mb-3">집결장 목록</div>
+
+              <div class="grid grid-cols-3 gap-2 items-center">
+                <div class="font-bold">이름</div>
+                <div class="font-bold text-center">이동시간(초)</div>
+                <div class="font-bold text-center">도착 시간</div>
+
+                <!-- 6 rows -->
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+
+                <input data-name class="border rounded px-2 py-1 text-sm" />
+                <input data-move class="border rounded px-2 py-1 text-sm text-center" type="number" min="0" />
+                <div data-outcell class="border rounded px-2 py-1 text-sm text-center font-mono">-</div>
+              </div>
+            </div>
+
+            <!-- 결과: textarea → pre / flex-1로 남는 높이 전부 먹음 -->
+            <div class="card border border-black/10 bg-white p-4 flex-1 flex flex-col min-h-[180px]">
+              <div class="flex items-center justify-between mb-2">
+                <div class="section-title">결과</div>
+
+                <!-- 패널별 토스트 -->
+                <span data-toast class="hidden text-xs font-bold px-2 py-1 rounded bg-green-600 text-white whitespace-nowrap"></span>
+              </div>
+
+              <pre data-textout class="w-full flex-1 border rounded p-2 text-sm font-mono whitespace-pre-wrap break-words overflow-auto"></pre>
+            </div>
+
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>
+
+<!-- Rally calc -->
+<script>
+(function () {
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function fmtHMS(d){ return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`; }
+
+  function bindTimeMask(el){
+    if (!el || el.dataset.maskBound === "1") return;
+    el.dataset.maskBound = "1";
+
+    el.addEventListener("input", () => {
+      let raw = el.value.replace(/\D/g, "").slice(0, 6);
+      const h = raw.slice(0,2);
+      const m = raw.slice(2,4);
+      const s = raw.slice(4,6);
+
+      if (raw.length <= 2) el.value = h;
+      else if (raw.length <= 4) el.value = `${h}:${m}`;
+      else el.value = `${h}:${m}:${s}`;
+    });
+  }
+
+  function parseTimeToday(hmsText){
+    const raw = (hmsText || "").replace(/\D/g, "");
+    if (raw.length < 4) return null;
+    const hh = Number(raw.slice(0,2));
+    const mm = Number(raw.slice(2,4));
+    const ss = Number(raw.slice(4,6) || 0);
+    if ([hh,mm,ss].some(n => Number.isNaN(n))) return null;
+
+    const d = new Date();
+    d.setHours(hh, mm, ss, 0);
+    return d;
+  }
+
+  function initPanel(panelEl){
+  if (!panelEl || panelEl.dataset.bound === "1") return;
+    panelEl.dataset.bound = "1";
+
+    const isLeft = panelEl.getAttribute("data-panel") === "left";
+
+    const timeEl   = panelEl.querySelector('[data-time]');
+    const calcBtn  = panelEl.querySelector('[data-calc]');
+    const copyBtn  = panelEl.querySelector('[data-copy]');
+    const textOut  = panelEl.querySelector('[data-textout]');
+    const toastEl  = panelEl.querySelector('[data-toast]'); // 패널별 토스트
+
+    const nameEls  = Array.from(panelEl.querySelectorAll('[data-name]'));
+    const moveEls  = Array.from(panelEl.querySelectorAll('[data-move]'));
+    const outCells = Array.from(panelEl.querySelectorAll('[data-outcell]'));
+
+    // 라디오 name 충돌 방지(문서 전체 유니크)
+    const gname = (isLeft ? "wait_left_" : "wait_right_") + Math.random().toString(36).slice(2);
+    panelEl.querySelectorAll('input[data-wait]').forEach(r => r.name = gname);
+
+    bindTimeMask(timeEl);
+
+    function getWaitSec(){
+      const v = panelEl.querySelector(`input[name="${gname}"]:checked`)?.value || "5";
+      return Number(v) * 60;
+    }
+
+    // 결과 옆 초록 토스트(패널별)
+    function showPanelToast(msg, ok = true){
+      if (!toastEl) return;
+
+      toastEl.textContent = msg || (ok ? "복사되었습니다" : "복사 실패");
+
+      toastEl.classList.remove("hidden");
+      toastEl.classList.remove("bg-green-600", "bg-red-600");
+      toastEl.classList.add(ok ? "bg-green-600" : "bg-red-600");
+
+      // 연속 클릭 대비
+      if (toastEl._t) clearTimeout(toastEl._t);
+      toastEl._t = setTimeout(() => {
+        toastEl.classList.add("hidden");
+      }, 1100);
+    }
+
+    function calc(){
+      const base = parseTimeToday(timeEl?.value);
+      if (!base) return;
+
+      const waitSec = getWaitSec();
+      const waitMin = Math.round(waitSec/60);
+
+      const lines = [];
+      if (isLeft){
+        lines.push("[동시 도착용 집결 오픈 시간]");
+        lines.push(`목표도착: ${fmtHMS(base)} / 대기: ${waitMin}분`);
+        lines.push("");
+      } else {
+        lines.push("[출발 기준 도착 시간]");
+        lines.push(`출발시간: ${fmtHMS(base)} / 대기: ${waitMin}분`);
+        lines.push("");
+      }
+
+      for (let i=0; i<nameEls.length; i++){
+        const name = (nameEls[i].value || "").trim();
+        const mv = Number(moveEls[i].value || 0);
+
+        if (!name){
+          outCells[i].textContent = "-";
+          continue;
+        }
+
+        const t = isLeft
+          ? new Date(base.getTime() - (waitSec + mv) * 1000)  // 오픈시간
+          : new Date(base.getTime() + (waitSec + mv) * 1000); // 도착시간
+
+        const ts = fmtHMS(t);
+        outCells[i].textContent = ts;
+        lines.push(`${name} : ${ts} (이동 ${mv}s)`);
+      }
+
+      // textarea가 아니라 pre라서 textContent
+      if (textOut) textOut.textContent = lines.join("\n");
+    }
+
+    calcBtn?.addEventListener("click", calc);
+
+    copyBtn?.addEventListener("click", async () => {
+      const txt = (textOut?.textContent || "").trim();
+      if (!txt) return;
+
+      let ok = false;
+
+      try {
+        await navigator.clipboard.writeText(txt);
+        ok = true;
+      } catch {
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = txt;
+          document.body.appendChild(ta);
+          ta.select();
+          ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+        } catch {
+          ok = false;
+        }
+      }
+
+      showPanelToast(ok ? "복사되었습니다" : "복사 실패", ok);
+    });
+
+    calc();
+  }
+
+
+  function initRoot(root){
+    if (!root || root.dataset.rootBound === "1") return;
+    root.dataset.rootBound = "1";
+    root.querySelectorAll('[data-panel]').forEach(initPanel);
+  }
+
+  document.querySelectorAll('[data-rally-dual]').forEach(initRoot);
+
+  if (!window.__RALLY_DUAL_OBS__) {
+    window.__RALLY_DUAL_OBS__ = true;
+    const obs = new MutationObserver(() => {
+      document.querySelectorAll('[data-rally-dual]').forEach(initRoot);
+    });
+    obs.observe(document.body, { childList:true, subtree:true });
+  }
+})();
+  
+(function(){
+  // 토스트 1회 생성
+  function ensureToast(){
+    if (window.__RALLY_TOAST__) return window.__RALLY_TOAST__;
+
+    const wrap = document.createElement("div");
+    wrap.id = "rallyToast";
+    wrap.style.position = "fixed";
+    wrap.style.left = "50%";
+    wrap.style.bottom = "24px";
+    wrap.style.transform = "translateX(-50%)";
+    wrap.style.zIndex = "99999";
+    wrap.style.pointerEvents = "none";
+
+    const box = document.createElement("div");
+    box.style.padding = "10px 14px";
+    box.style.borderRadius = "12px";
+    box.style.fontSize = "13px";
+    box.style.fontWeight = "700";
+    box.style.letterSpacing = "0.2px";
+    box.style.boxShadow = "0 10px 28px rgba(0,0,0,.35)";
+    box.style.opacity = "0";
+    box.style.transform = "translateY(6px)";
+    box.style.transition = "opacity .18s ease, transform .18s ease";
+    box.style.maxWidth = "80vw";
+    box.style.whiteSpace = "nowrap";
+
+    // 기본 스타일(라이트/다크 둘 다 무난)
+    box.style.background = "rgba(17,24,39,.92)";
+    box.style.color = "#fff";
+
+    wrap.appendChild(box);
+    document.body.appendChild(wrap);
+
+    let timer = null;
+
+    window.__RALLY_TOAST__ = {
+      show(msg){
+        box.textContent = msg || "완료";
+        clearTimeout(timer);
+
+        // show
+        box.style.opacity = "1";
+        box.style.transform = "translateY(0)";
+
+        // hide
+        timer = setTimeout(() => {
+          box.style.opacity = "0";
+          box.style.transform = "translateY(6px)";
+        }, 1200);
+      }
+    };
+
+    return window.__RALLY_TOAST__;
+  }
+
+  // 전역으로 노출(원하면 안 해도 됨)
+  window.showRallyToast = function(msg){
+    ensureToast().show(msg);
+  };
+})();
+</script>

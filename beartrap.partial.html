@@ -390,8 +390,89 @@
   const $ = id => document.getElementById(id);
 
   // ===================================================
+  // ✅ UI / Calc 브릿지 (HTML oninput/onchange 에서 호출)
+  // ===================================================
+  // 전역 UI 네임스페이스(기존 코드와 호환)
+  window.UI = window.UI || {};
+  const UI = window.UI;
+
+  UI.formatNumberInput = function (el) {
+    if (!el) return;
+    const raw = String(el.value || '').replace(/[^\d]/g, '');
+    el.value = raw ? Number(raw).toLocaleString() : '';
+  };
+
+  UI.toggleSelect = function (wrapId, on) {
+    const wrap = $(wrapId);
+    if (!wrap) return;
+
+    wrap.classList.toggle('opacity-0', !on);
+    wrap.classList.toggle('pointer-events-none', !on);
+    wrap.classList.toggle('opacity-100', on);
+    wrap.classList.toggle('pointer-events-auto', on);
+
+    // 래퍼 안의 select/input 활성/비활성
+    wrap.querySelectorAll('select,input').forEach(x => {
+      if (x.type !== 'checkbox' && x.type !== 'radio') x.disabled = !on;
+    });
+  };
+
+  UI.togglePetSelect = function (selectId, on) {
+    const sel = $(selectId);
+    if (!sel) return;
+    sel.disabled = !on;
+    // (원하면 체크 해제 시 Lv.0으로 리셋)
+    if (!on) sel.value = '0';
+  };
+
+  UI.onPresetChange = function () {
+    const preset = $('ratioPreset')?.value || '34/33/33';
+    const isCustom = preset === 'custom';
+
+    // custom 일 때만 직접 입력 허용
+    ['ratioInf','ratioLan','ratioMar'].forEach(id => {
+      const el = $(id);
+      if (el) el.disabled = !isCustom;
+    });
+
+    // preset이면 값 주입
+    if (!isCustom) {
+      const [i,l,m] = preset.split('/').map(n => Number(n) || 0);
+      if ($('ratioInf')) $('ratioInf').value = String(i);
+      if ($('ratioLan')) $('ratioLan').value = String(l);
+      if ($('ratioMar')) $('ratioMar').value = String(m);
+    }
+
+    render();
+  };
+
+  // 전역 Calc 네임스페이스(HTML에서 Calc.update... 호출하는 부분 살리기)
+  window.Calc = window.Calc || {};
+  const CalcBridge = window.Calc;
+
+  CalcBridge.updateCapacityAndTable = function () { render(); };
+  CalcBridge.updateTableOnly = function () { render(); };
+
+  // ===================================================
   // 🧠 State Reader
   // ===================================================
+  function getRatios(){
+    const preset = $('ratioPreset')?.value;
+    if (preset && preset !== 'custom'){
+      const [i,l,m] = preset.split('/').map(Number);
+      return {inf:i, lan:l, mar:m};
+    }
+    const inf = num($('ratioInf')?.value);
+    const lan = num($('ratioLan')?.value);
+    const mar = num($('ratioMar')?.value);
+    return (inf+lan+mar)>0 ? {inf,lan,mar} : {inf:34,lan:33,mar:33};
+  }
+
+  function getCityMultiplier(){
+    const sel = document.querySelector('input[name="cityBuff"]:checked');
+    return sel ? 1 + Number(sel.value)/100 : 1;
+  }
+
   function readState(){
     return {
       baseMarch: num($('baseMarch')?.value),
@@ -426,27 +507,10 @@
     };
   }
 
-  function getRatios(){
-    const preset = $('ratioPreset')?.value;
-    if (preset && preset !== 'custom'){
-      const [i,l,m] = preset.split('/').map(Number);
-      return {inf:i, lan:l, mar:m};
-    }
-    const inf = num($('ratioInf')?.value);
-    const lan = num($('ratioLan')?.value);
-    const mar = num($('ratioMar')?.value);
-    return (inf+lan+mar)>0 ? {inf,lan,mar} : {inf:34,lan:33,mar:33};
-  }
-
-  function getCityMultiplier(){
-    const sel = document.querySelector('input[name="cityBuff"]:checked');
-    return sel ? 1 + Number(sel.value)/100 : 1;
-  }
-
   // ===================================================
   // 🧮 Calc (Pure)
   // ===================================================
-  const Calc = {
+  const Pure = {
     march(s){
       let bonus = s.expert.cyrille ? (DATA.Cyrille[s.nem.B]||0) : 0;
       let gorilla = s.gorilla.on ? s.gorilla.lv * DATA.GorillaPerLevel : 0;
@@ -467,17 +531,23 @@
   // ===================================================
   function render(){
     const s = readState();
-    const march = Calc.march(s);
-    const rally = Calc.rally(s, march);
+    const march = Pure.march(s);
+    const rally = Pure.rally(s, march);
 
-    $('finalMarch').value = march.toLocaleString();
-    $('finalRally').value = rally.toLocaleString();
+    if ($('finalMarch')) $('finalMarch').value = march.toLocaleString();
+    if ($('finalRally')) $('finalRally').value = rally.toLocaleString();
+
+    // 보너스 표시(원래 input이 있으니 채워줌)
+    if ($('MarchBonus')) $('MarchBonus').value = (march - Math.floor(s.baseMarch * s.cityMult)).toLocaleString();
+    if ($('RallyBonus')) $('RallyBonus').value = (rally - Math.floor((s.baseRally - s.baseMarch + march))).toLocaleString();
 
     renderTable(march, s);
   }
 
   function renderTable(cap, s){
     const tbody = $('resultTbody');
+    if (!tbody) return;
+
     if (!cap || !s.marchCount){
       tbody.innerHTML = `<tr><td colspan="4" class="text-center p-2">결과 없음</td></tr>`;
       return;
@@ -490,20 +560,24 @@
       const vm=Math.floor(cap*s.ratios.mar/100);
       si+=vi; sl+=vl; sm+=vm;
       html+=`<tr class="text-center">
-        <td>${i}</td><td>${vi.toLocaleString()}</td>
-        <td>${vl.toLocaleString()}</td><td>${vm.toLocaleString()}</td>
+        <td class="border px-2 py-1">${i}</td>
+        <td class="border px-2 py-1">${vi.toLocaleString()}</td>
+        <td class="border px-2 py-1">${vl.toLocaleString()}</td>
+        <td class="border px-2 py-1">${vm.toLocaleString()}</td>
       </tr>`;
     }
 
-    html+=`<tr class="font-semibold bg-gray-100">
-      <td>합계</td><td>${si.toLocaleString()}</td>
-      <td>${sl.toLocaleString()}</td><td>${sm.toLocaleString()}</td>
+    html+=`<tr class="font-semibold bg-gray-100 text-center">
+      <td class="border px-2 py-1">합계</td>
+      <td class="border px-2 py-1">${si.toLocaleString()}</td>
+      <td class="border px-2 py-1">${sl.toLocaleString()}</td>
+      <td class="border px-2 py-1">${sm.toLocaleString()}</td>
     </tr>
-    <tr class="font-semibold bg-amber-100">
-      <td>남은값</td>
-      <td>${(s.own.inf-si).toLocaleString()}</td>
-      <td>${(s.own.lan-sl).toLocaleString()}</td>
-      <td>${(s.own.mar-sm).toLocaleString()}</td>
+    <tr class="font-semibold bg-amber-100 text-center">
+      <td class="border px-2 py-1">남은값</td>
+      <td class="border px-2 py-1">${(s.own.inf-si).toLocaleString()}</td>
+      <td class="border px-2 py-1">${(s.own.lan-sl).toLocaleString()}</td>
+      <td class="border px-2 py-1">${(s.own.mar-sm).toLocaleString()}</td>
     </tr>`;
     tbody.innerHTML = html;
   }
@@ -518,6 +592,17 @@
     if (e.target.closest('input,select')) render();
   });
 
-  render(); // 초기 실행
+  // ===================================================
+  // ✅ 초기 UI 상태 동기화 (체크 상태에 맞춰 드랍다운 열기/활성화)
+  // ===================================================
+  UI.onPresetChange();
+  UI.togglePetSelect('gorillaLv', $('chkGorilla')?.checked);
+  UI.togglePetSelect('rhinoLv', $('chkRhino')?.checked);
+
+  UI.toggleSelect('expertWrapC', $('chkExpert')?.checked);
+  UI.toggleSelect('expertWrapF', $('chkExpert3')?.checked);
+  UI.toggleSelect('expertWrapV', $('chkExpert4')?.checked);
+
+  render();
 })();
 </script>
