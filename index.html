@@ -1284,7 +1284,8 @@
       .then(html => {
         document.getElementById("navMount").innerHTML = html;
         //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
-        initNav({ mode: "spa" }); // ✅ 페이지 이동으로 갈거면
+        initNav({ mode: "spa", root: "#navMount" }); // ✅ 페이지 이동으로 갈거면
+        window.bindNavSupportCopy?.(navMount);
       });
     
     // 2) FOOTER

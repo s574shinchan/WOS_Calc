@@ -321,6 +321,7 @@
       if (el) obs.observe(el);
     });
   };
+    
 })();
   
   // =========================================================
@@ -510,3 +511,93 @@
       location.href = langCode;
     });
   })();
+
+  // =========================
+  // Nav Support Copy (data-attr 기반, SPA-safe)
+  // =========================
+  (function () {
+    if (window.bindNavSupportCopy) return;
+
+    window.bindNavSupportCopy = function bindNavSupportCopy(root) {
+      root = root || document;
+
+      // nav 안에 support 블록이 여러 개일 수도 있으니 모두 처리
+      const blocks = root.querySelectorAll('[data-support]');
+      if (!blocks.length) return;
+
+      blocks.forEach(block => {
+        const btn   = block.querySelector('[data-support-copy]');
+        const toast = block.querySelector('[data-support-toast]');
+        const numEl = block.querySelector('[data-support-number]');
+        const iconBook  = block.querySelector('[data-icon-book]');
+        const iconCheck = block.querySelector('[data-icon-check]');
+
+        if (!btn || !toast || !numEl) return;
+
+        // 중복 바인딩 방지
+        if (btn.dataset.bound === '1') return;
+        btn.dataset.bound = '1';
+
+        let timer = null;
+        const defaultMsg = (toast.textContent || '').trim() || 'Copied';
+
+        function showToast(msg) {
+          toast.textContent = msg || defaultMsg;
+          toast.classList.remove('opacity-0');
+          toast.classList.add('opacity-100');
+
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(() => {
+            toast.classList.add('opacity-0');
+            toast.classList.remove('opacity-100');
+            toast.textContent = defaultMsg;
+
+            if (iconBook && iconCheck) {
+              iconCheck.classList.add('hidden');
+              iconBook.classList.remove('hidden');
+            }
+          }, 1200);
+        }
+
+        async function copyText(text) {
+          // HTTPS면 Clipboard API
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return true;
+          }
+          // fallback
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          if (!ok) throw new Error('execCommand copy failed');
+          return true;
+        }
+
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          const text = (numEl.textContent || '').trim();
+          if (!text) return;
+
+          try {
+            await copyText(text);
+
+            if (iconBook && iconCheck) {
+              iconBook.classList.add('hidden');
+              iconCheck.classList.remove('hidden');
+            }
+            showToast();
+          } catch (err) {
+            showToast('copy failed');
+          }
+        });
+      });
+    };
+  })();
+

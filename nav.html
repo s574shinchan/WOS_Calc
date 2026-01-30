@@ -23,19 +23,18 @@
           </div>
         </div>
         <!-- Support Badge + Toast Wrapper -->
-        <div class="relative">
+        <div data-support class="relative">
           <!-- Support Badge -->
           <div class="inline-flex items-center gap-2 bg-slate-600 text-white text-xs px-3 py-1 rounded-md shadow">
             <span class="opacity-80"> Support :</span>
-            <span id="supportNumber" class="font-bold tracking-wide">67331703</span>
+            <span data-support-number id="supportNumber" class="font-bold tracking-wide">67331703</span>
 
             <!-- 복사 버튼 -->
-            <button id="copyBtn"
-                    onclick="copySupportNumber()"
+            <button data-support-copy id="copyBtn"
                     class="ml-1 bg-slate-700 hover:bg-slate-600 text-white p-1.5 rounded-md transition flex items-center">
 
               <!-- 책 아이콘 -->
-              <svg id="iconBook" xmlns="http://www.w3.org/2000/svg"
+              <svg data-icon-book id="iconBook" xmlns="http://www.w3.org/2000/svg"
                    class="w-3.5 h-3.5"
                    fill="none" viewBox="0 0 24 24"
                    stroke="currentColor" stroke-width="2">
@@ -48,7 +47,7 @@
               </svg>
 
               <!-- 체크 아이콘 -->
-              <svg id="iconCheck" xmlns="http://www.w3.org/2000/svg"
+              <svg data-icon-check id="iconCheck" xmlns="http://www.w3.org/2000/svg"
                    class="w-3.5 h-3.5 hidden"
                    fill="none" viewBox="0 0 24 24"
                    stroke="currentColor" stroke-width="2">
@@ -59,7 +58,7 @@
           </div>
 
           <!-- ★ Support 아래 표시되는 Toast -->
-          <div id="toast"
+          <div data-support-toast id="supportToast"
                class="absolute left-1/2 top-[110%] transform -translate-x-1/2
                       bg-emerald-500 text-white text-xs font-semibold
                       px-3 py-2 rounded-lg shadow-lg
