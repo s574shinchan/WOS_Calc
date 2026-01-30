@@ -454,11 +454,21 @@
 
     // nav.html의 data-page 클릭 처리 (캡처로 잡아서 stopPropagation에 안 죽게)
     document.addEventListener("click", (e) => {
-      const a = e.target.closest("a[data-page]");
+      const a = e.target.closest("a");
       if (!a) return;
 
-      // 새탭/단축키 클릭은 통과
-      if (a.target === "_blank" || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      // 언어/외부이동 등 "SPA 제외"는 그냥 href로 이동
+      if (a.hasAttribute("data-no-spa")) {
+        const lang = (a.getAttribute("data-lang") || "").toUpperCase();
+        if (lang) localStorage.setItem("lang", lang);
+        return; // preventDefault 하지 않음
+      }
+
+      // SPA 대상만 처리
+      const spa = a.closest("a[data-page]");
+      if (!spa) return;
+
+      if (spa.target === "_blank" || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
       e.preventDefault();
 
@@ -469,11 +479,11 @@
         if (btn) btn.setAttribute("aria-expanded", "false");
       });
 
-      if (a.dataset.css !== undefined) {
-        setPageStyle(a.dataset.css);
+      if (spa.dataset.css !== undefined) {
+        setPageStyle(spa.dataset.css);
       }
 
-      loadPartial(a.dataset.page);
+      loadPartial(spa.dataset.page);
     }, true);
 
     // partial 내부 openPage()가 요청하는 이동 처리
@@ -482,5 +492,21 @@
       const css = e.detail?.css;
       if (css !== undefined) { setPageStyle(css); }
       if (url) loadPartial(url);    
+    });
+  })();
+
+  (function () {
+    if (window.__LANG_SELECT_BOUND__) return;
+    window.__LANG_SELECT_BOUND__ = true;
+
+    document.addEventListener("change", (e) => {
+      const t = e.target;
+      if (!t) return;
+      if (t.id !== "langSelectMobile" && t.id !== "langSelectPC") return;
+
+      const langCode = t.value; // 예: index_EN.html
+      const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
+      localStorage.setItem('lang', lang);
+      location.href = langCode;
     });
   })();

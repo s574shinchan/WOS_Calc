@@ -1278,19 +1278,19 @@
 
   <div id="footerMount"></div>
 
-	<script>
+	<script>                 
     fetch("nav.html")
       .then(r => r.text())
       .then(html => {
         document.getElementById("navMount").innerHTML = html;
         //initNav({ mode: "iframe" });    // ✅ iframe 계속 쓸거면
-        initNav({ mode: "navigate" }); // ✅ 페이지 이동으로 갈거면
+        initNav({ mode: "spa" }); // ✅ 페이지 이동으로 갈거면
       });
     
     // 2) FOOTER
     fetch("footer.html").then(r=>r.text()).then(html=>{
       document.getElementById("footerMount").innerHTML = html;
-      initFooter({ mode:"navigate" }); // 또는 "iframe"
+      initFooter({ mode:"spa" }); // 또는 "iframe"
       initAdsense({ ids:["ad1"] });    // 슬롯 id들
     });
   </script>
@@ -1560,23 +1560,6 @@
       });
     });
   </script>
-  <script>
-    //언어선택
-    function setupLangSelect(id) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('change', function () {
-          const langCode = this.value; // 예: index_en.html
-          const lang = (langCode.split('_')[1]?.split('.')[0] || 'ko').toUpperCase();
-          localStorage.setItem('lang', lang);
-          window.location.href = langCode;
-        });
-      }
-    }
-  
-    setupLangSelect('langSelectMobile');
-    setupLangSelect('langSelectPC');
-  </script>  
   <script>
     // F12, Ctrl+Shift+I, Ctrl+U 등 방지
     document.onkeydown = function (e) {
