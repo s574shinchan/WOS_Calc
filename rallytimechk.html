@@ -245,7 +245,7 @@
   }
 
   function initPanel(panelEl){
-  if (!panelEl || panelEl.dataset.bound === "1") return;
+    if (!panelEl || panelEl.dataset.bound === "1") return;
     panelEl.dataset.bound = "1";
 
     const isLeft = panelEl.getAttribute("data-panel") === "left";
@@ -306,27 +306,57 @@
         lines.push("");
       }
 
+      // 결과 출력용 데이터 수집
+      const rows = [];
+
       for (let i=0; i<nameEls.length; i++){
         const name = (nameEls[i].value || "").trim();
-        const mv = Number(moveEls[i].value || 0);
+        const mvRaw = (moveEls[i].value || "").toString().trim();
+        const mv = Number(mvRaw || 0);
 
         if (!name){
           outCells[i].textContent = "-";
           continue;
         }
 
+        // mv가 NaN이면 0 처리
+        const moveSec = Number.isFinite(mv) ? mv : 0;
+
         const t = isLeft
-          ? new Date(base.getTime() - (waitSec + mv) * 1000)  // 오픈시간
-          : new Date(base.getTime() + (waitSec + mv) * 1000); // 도착시간
+          ? new Date(base.getTime() - (waitSec + moveSec) * 1000)  // 오픈시간
+          : new Date(base.getTime() + (waitSec + moveSec) * 1000); // 도착시간
 
         const ts = fmtHMS(t);
+
+        // 표의 오픈시간 셀은 기존처럼 그대로 표시
         outCells[i].textContent = ts;
-        lines.push(`${name} : ${ts} (이동 ${mv}s)`);
+
+        // 결과란 출력용 저장
+        rows.push({ name, ts, moveSec });
       }
+
+      // 유효 행이 없으면 헤더만 출력
+      if (rows.length === 0){
+        if (textOut) textOut.textContent = lines.join("\n");
+        return;
+      }
+
+      // 가장 빠른 이동시간(갭 기준)
+      const minMove = Math.min(...rows.map(r => r.moveSec));
+
+      // 이동시간 기준 역순 정렬
+      rows.sort((a, b) => b.moveSec - a.moveSec);
+
+      // 결과란 출력 (이름, 시간, 이동시간, 갭)
+      rows.forEach(r => {
+        const gap = r.moveSec - minMove; // 초
+        lines.push(`${r.name} : ${r.ts} (이동 ${r.moveSec}s) [차이 +${gap}s]`);
+      });
 
       // textarea가 아니라 pre라서 textContent
       if (textOut) textOut.textContent = lines.join("\n");
     }
+
 
     calcBtn?.addEventListener("click", calc);
 
