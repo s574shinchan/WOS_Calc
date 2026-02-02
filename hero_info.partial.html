@@ -44,7 +44,25 @@
           </div>
         </div>
 
-        
+        <!-- ✅ 비교 기능 바 (체크 옆으로 버튼 이동) -->
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+          <label class="inline-flex items-center gap-2 text-sm">
+            <input id="heroCompareMode" type="checkbox" class="w-4 h-4" />
+            영웅 비교
+          </label>
+
+          <button id="compareBtn"
+                  type="button"
+                  class="px-3 py-2 rounded-xl text-sm border shadow-sm bg-white disabled:opacity-40 disabled:cursor-not-allowed"
+                  disabled>
+            비교하기
+          </button>
+
+          <div id="compareHint" class="text-xs text-gray-600 hidden">
+            2명을 선택한 뒤 비교하기를 누르세요. (최대 2명)
+          </div>
+        </div>
+
         <!-- 영웅 카드 그리드 -->
         <div id="heroGrid" class="grid grid-cols-1 gap-3"></div>
       </div>
@@ -67,7 +85,6 @@
                           <img id="hdrClassIcon"
                                src=""
                                class="w-3.5 h-3.5 object-contain"
-                               onerror="this.style.display='none'"
                                alt="ClassIcon"/>
                         </span>
                         <span>HERO CLASS: -</span>
@@ -78,7 +95,6 @@
                           <img id="expeditionIcon"
                                src=""
                                class="w-3.5 h-3.5 object-contain"
-                               onerror="this.style.display='none'"
                                alt="Skills"/>
                         </span>
                         <span>EXPEDITION TYPE: -</span>
@@ -124,8 +140,7 @@
                                src="/images/hero/thumb/Gen1/jeronimo.webp"
                                alt="hero"
                                class="w-full h-full object-contain"
-                               loading="lazy"
-                               onerror="this.onerror=null; this.style.display='none'; document.getElementById('heroImgFallback').classList.remove('hidden');" />
+                               loading="lazy" />
                           <div id="heroImgFallback" class="hidden text-sm text-gray-500 p-4 text-center">
                             hero image not found<br/>
                           </div>
@@ -174,6 +189,33 @@
         </div>
       </div>
 
+      <!-- ====== ✅ 비교 모달 ====== -->
+      <div id="compareBackdrop" class="fixed inset-0 z-[2100] hidden">
+        <div class="absolute inset-0 bg-black/60"></div>
+
+        <div class="absolute inset-0 overflow-auto p-3 md:p-3">
+          <div class="max-w-6xl mx-auto">
+            <div class="rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                 style="background:#1f232a;">
+              <div class="relative px-5 py-3 text-white"
+                   style="background: linear-gradient(135deg,#7c3aed,#2563eb);">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="font-extrabold text-lg">영웅 비교</div>
+                  <button id="closeCompare"
+                          class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-sm">
+                    닫기
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-4 md:p-4">
+                <div id="compareWrap" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -186,7 +228,7 @@
     return;
   }
   window.__HEROINFO_INIT_BOUND__ = true;
-    
+
   window.HeroInfoInit = function HeroInfoInit(){  
     // =========================
     // 데이터 (샘플)
@@ -208,6 +250,7 @@
         initTypeSelect();
         initSearch();
         renderGenTabs();
+        initCompareUI();
         renderHeroGrid();
 
       }catch(err){
@@ -236,6 +279,12 @@
     var currentHero = null;
     var currentType = "ALL";
     var currentSearch = "";
+
+    // =========================
+    // ✅ 비교 상태
+    // =========================
+    var compareMode = false;
+    var compareSelectedKeys = []; // hero.key 최대 2개
 
     // =========================
     // 유틸
@@ -328,6 +377,220 @@
       }
     }
 
+    // =========================
+    // ✅ 비교 UI/로직
+    // =========================
+    function initCompareUI(){
+      var chk = $("heroCompareMode");
+      var hint = $("compareHint");
+      var btn = $("compareBtn");
+
+      if(!chk || !btn || !hint) return;
+
+      chk.checked = false;
+      compareMode = false;
+      compareSelectedKeys = [];
+      hint.classList.add("hidden");
+      btn.disabled = true;
+
+      chk.onchange = () => {
+        compareMode = !!chk.checked;
+        compareSelectedKeys = [];
+        btn.disabled = true;
+
+        if(compareMode){
+          hint.classList.remove("hidden");
+        }else{
+          hint.classList.add("hidden");
+        }
+
+        renderHeroGrid();
+      };
+
+      btn.onclick = () => {
+        if(compareSelectedKeys.length !== 2) return;
+        openCompareModal(compareSelectedKeys[0], compareSelectedKeys[1]);
+      };
+    }
+
+    function heroByKey(key){
+      return HEROES.find(h => h.key === key) || null;
+    }
+
+    function updateCompareButton(){
+      var btn = $("compareBtn");
+      if(!btn) return;
+      btn.disabled = compareSelectedKeys.length !== 2;
+    }
+
+    function showCompareLimitPopup(){
+      var a = heroByKey(compareSelectedKeys[0]);
+      var b = heroByKey(compareSelectedKeys[1]);
+      var names = [a?.nameKo || a?.name || "-", b?.nameKo || b?.name || "-"].join(", ");
+      alert(`이미 2명이 선택되어 있습니다.\n선택된 영웅: ${names}\n(최대 2명까지 선택 가능합니다)`);
+    }
+
+    function openCompareModal(k1, k2){
+      var a = heroByKey(k1);
+      var b = heroByKey(k2);
+      if(!a || !b) return;
+
+      var wrap = $("compareWrap");
+      if(!wrap) return;
+
+      wrap.innerHTML = `
+        ${renderCompareCard(a, "A")}
+        ${renderCompareCard(b, "B")}
+      `;
+
+      $("compareBackdrop").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeCompareModal(){
+      $("compareBackdrop").classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    function renderCompareCard(hero, side){
+      var nameText = hero.nameKo || hero.name || "-";
+      var genText = `${hero.gen}세대`;
+      var cls = hero.heroClass || "-";
+      var clsIcon = CLASS_ICON_MAP[cls] || "";
+      var portrait = renderPortrait(hero) || renderHeroThumb(hero) || "";
+
+      var exp = Array.isArray(hero.expeditionSkills) ? hero.expeditionSkills.slice(0,3) : [];
+      var ws2 = null;
+      if(Array.isArray(hero.weaponSkills)){
+        ws2 = hero.weaponSkills.find(s => String(s?.key || "").toLowerCase() === "ws2") || null;
+      }
+
+      var skillsHtml = `
+        ${renderCompareSkillBox(hero, exp[0], "원정스킬 1")}
+        ${renderCompareSkillBox(hero, exp[1], "원정스킬 2")}
+        ${renderCompareSkillBox(hero, exp[2], "원정스킬 3")}
+        ${renderCompareWeapon2Box(hero, ws2)}
+      `;
+
+      var header = `
+        <div class="flex items-center justify-between gap-3 px-4 py-3 text-white rounded-t-2xl"
+             style="background: linear-gradient(135deg,#0b1220,#1f2937);">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-xs font-extrabold">
+              ${clsIcon ? `<img src="${escapeHtml(clsIcon)}" class="w-4 h-4 object-contain" alt="${escapeHtml(cls)}" />` : ``}
+              <span>${escapeHtml(cls)}</span>
+            </div>
+            <div class="text-lg font-extrabold truncate">${escapeHtml(nameText)}</div>
+          </div>
+          <div class="text-xs opacity-80">${escapeHtml(genText)}</div>
+        </div>
+      `;
+
+      // A: 이미지(좌) / 스킬(우), B: 스킬(좌) / 이미지(우)
+      var gridA = `
+        <div class="grid grid-cols-12 gap-3 p-4">
+          <div class="col-span-4">
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-3 h-full flex items-center justify-center">
+              <div class="w-full max-w-[260px] aspect-[3/4] flex items-center justify-center">
+                <img src="${escapeHtml(portrait)}" class="w-full h-full object-contain" alt="hero" loading="lazy" />
+              </div>
+            </div>
+          </div>
+          <div class="col-span-8 grid gap-3">
+            ${skillsHtml}
+          </div>
+        </div>
+      `;
+
+      var gridB = `
+        <div class="grid grid-cols-12 gap-3 p-4">
+          <div class="col-span-8 grid gap-3">
+            ${skillsHtml}
+          </div>
+          <div class="col-span-4">
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-3 h-full flex items-center justify-center">
+              <div class="w-full max-w-[260px] aspect-[3/4] flex items-center justify-center">
+                <img src="${escapeHtml(portrait)}" class="w-full h-full object-contain" alt="hero" loading="lazy" />
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      return `
+        <div class="rounded-2xl overflow-hidden border border-white/10" style="background:#2a2f36;">
+          ${header}
+          ${side === "B" ? gridB : gridA}
+        </div>
+      `;
+    }
+
+    function renderCompareSkillBox(hero, sk, label){
+      var iconSrc = sk ? heroSkillIcon(hero, sk.key) : "";
+      var desc = sk?.desc || "";
+      return `
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+          <div class="text-xs text-white/70 mb-2">${escapeHtml(label)}</div>
+          <div class="flex gap-3">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
+              <img src="${escapeHtml(iconSrc)}" class="w-12 h-12 object-contain" alt="skill" loading="lazy" />
+            </div>
+            <div class="min-w-0 flex-1 text-sm leading-relaxed text-white/90">
+              ${escapeHtml(desc)}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCompareWeapon2Box(hero, ws2){
+      var iconSrc = ws2 ? heroSkillIcon(hero, ws2.key) : "";
+      var desc = ws2?.desc || "";
+      return `
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+          <div class="text-xs text-white/70 mb-2">전용무기</div>
+          <div class="flex gap-3">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
+              <img src="${escapeHtml(iconSrc)}" class="w-12 h-12 object-contain" alt="weapon" loading="lazy" />
+            </div>
+            <div class="min-w-0 flex-1 text-sm leading-relaxed text-white/90">
+              ${escapeHtml(desc)}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function syncCompareChecks(){
+      var checks = document.querySelectorAll(".hero-compare-check");
+      checks.forEach(chk => {
+        var key = chk.dataset.key || "";
+        chk.checked = compareSelectedKeys.includes(key);
+
+        chk.onchange = () => {
+          var k = chk.dataset.key || "";
+
+          // ✅ 2명 선택 상태에서 3번째 새 체크 시: 체크 자체 차단 + 팝업
+          if(!compareSelectedKeys.includes(k) && compareSelectedKeys.length >= 2){
+            chk.checked = false;
+            showCompareLimitPopup();
+            return;
+          }
+
+          var i = compareSelectedKeys.indexOf(k);
+          if(chk.checked){
+            if(i < 0) compareSelectedKeys.push(k);
+          }else{
+            if(i >= 0) compareSelectedKeys.splice(i, 1);
+          }
+
+          updateCompareButton();
+        };
+      });
+
+      updateCompareButton();
+    }
+
     function renderHeroGrid(){
       var wrap = $("heroGrid");
       var typeWrap = $("typeWrap") 
@@ -363,14 +626,42 @@
         list.forEach(hero=>{
           var card = document.createElement("button");
           card.className = "text-left rounded-2xl border p-3 hover:shadow-md transition";
-          card.onclick = () => openHeroModal(hero);
+
+          card.onclick = () => {
+            if(compareMode){
+              var key = hero.key;
+              if(!compareSelectedKeys.includes(key) && compareSelectedKeys.length >= 2){
+                showCompareLimitPopup();
+                return;
+              }
+              var checks = card.querySelector(".hero-compare-check");
+              if(checks) {
+                checks.checked = !checks.checked;
+                checks.dispatchEvent(new Event("change", { bubbles: true }));
+              }
+              return;
+            }
+            openHeroModal(hero);
+          };
 
           var img = renderHeroThumb(hero) || renderPortrait(hero) || "";
+          var checked = compareSelectedKeys.includes(hero.key) ? "checked" : "";
+
           card.innerHTML = `
+            ${compareMode ? `
+              <div class="flex items-center justify-between mb-2">
+                <label class="inline-flex items-center gap-2 text-xs text-gray-700">
+                  <input type="checkbox" class="hero-compare-check w-4 h-4"
+                         data-key="${escapeHtml(hero.key)}" ${checked}/>
+                  비교 선택
+                </label>
+                <div class="text-[11px] text-gray-500">최대 2명</div>
+              </div>
+            ` : ``}
+
             <div class="flex items-center gap-3">
               <div class="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shrink-0">
-                <img src="${escapeHtml(img)}" class="w-full h-full object-contain"
-                     onerror="this.onerror=null; this.style.display='none';" />
+                <img src="${escapeHtml(img)}" class="w-full h-full object-contain" />
               </div>
 
               <div class="min-w-0 flex-1">
@@ -382,14 +673,13 @@
                       <img src="${escapeHtml(CLASS_ICON_MAP[hero.heroClass])}"
                            class="w-5 h-5 object-contain opacity-90"
                            alt="${escapeHtml(hero.heroClass)}"
-                           loading="lazy"
-                           onerror="this.onerror=null; this.style.display='none';" />
+                           loading="lazy" />
                     ` : ``}
                   </div>
                 </div>
 
                 <div class="mt-0.5 text-xs truncate">
-                  Gen ${hero.gen} • ${escapeHtml(hero.heroClass)} • ${escapeHtml(hero.expeditionType)}
+                  ${hero.gen}세대 • ${escapeHtml(hero.heroClass)} • ${escapeHtml(hero.expeditionType)}
                 </div>
                 <div class="mt-1 text-[11px] truncate">${escapeHtml(hero.source||"")}</div>
               </div>
@@ -401,6 +691,8 @@
         if(list.length === 0){
           wrap.className = "grid grid-cols-1 gap-3";
           wrap.innerHTML = `<div class="text-sm">표시할 영웅이 없습니다.</div>`;
+        }else{
+          if(compareMode) syncCompareChecks();
         }
         return;
       }
@@ -462,14 +754,42 @@
         heroes.forEach(hero=>{
           var card = document.createElement("button");
           card.className = "text-left rounded-2xl border p-3 hover:shadow-md transition";
-          card.onclick = () => openHeroModal(hero);
+
+          card.onclick = () => {
+            if(compareMode){
+              var key = hero.key;
+              if(!compareSelectedKeys.includes(key) && compareSelectedKeys.length >= 2){
+                showCompareLimitPopup();
+                return;
+              }
+              var checks = card.querySelector(".hero-compare-check");
+              if(checks) {
+                checks.checked = !checks.checked;
+                checks.dispatchEvent(new Event("change", { bubbles: true }));
+              }
+              return;
+            }
+            openHeroModal(hero);
+          };
 
           var img = renderHeroThumb(hero) || renderPortrait(hero) || "";
+          var checked = compareSelectedKeys.includes(hero.key) ? "checked" : "";
+
           card.innerHTML = `
+            ${compareMode ? `
+              <div class="flex items-center justify-between mb-2">
+                <label class="inline-flex items-center gap-2 text-xs text-gray-700">
+                  <input type="checkbox" class="hero-compare-check w-4 h-4"
+                         data-key="${escapeHtml(hero.key)}" ${checked}/>
+                  비교 선택
+                </label>
+                <div class="text-[11px] text-gray-500">최대 2명</div>
+              </div>
+            ` : ``}
+
             <div class="flex items-center gap-3">
               <div class="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shrink-0">
-                <img src="${escapeHtml(img)}" class="w-full h-full object-contain"
-                     onerror="this.onerror=null; this.style.display='none';" />
+                <img src="${escapeHtml(img)}" class="w-full h-full object-contain" />
               </div>
 
               <div class="min-w-0 flex-1">
@@ -480,13 +800,12 @@
                       <img src="${escapeHtml(CLASS_ICON_MAP[hero.heroClass])}"
                            class="w-5 h-5 object-contain opacity-90"
                            alt="${escapeHtml(hero.heroClass)}"
-                           loading="lazy"
-                           onerror="this.onerror=null; this.style.display='none';" />
+                           loading="lazy" />
                     ` : ``}
                   </div>
                 </div>
 
-                <div class="mt-0.5 text-xs truncate">${escapeHtml(hero.heroClass)}</div>
+                <div class="mt-0.5 text-xs truncate">${hero.gen}세대 • ${escapeHtml(hero.heroClass)}</div>
                 <div class="mt-1 text-[11px] truncate">${escapeHtml(hero.source||"")}</div>
               </div>
             </div>
@@ -499,6 +818,8 @@
 
       if(list.length === 0){
         wrap.innerHTML = `<div class="text-sm">표시할 영웅이 없습니다.</div>`;
+      }else{
+        if(compareMode) syncCompareChecks();
       }
     }
 
@@ -510,9 +831,6 @@
       wrap.innerHTML = "";
 
       (skills || []).slice(0,3).forEach(sk=>{
-        var lv = sk.level ?? 5;
-        var val = sk.value ?? "-";
-
         var iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
 
         var el = document.createElement("div");
@@ -522,8 +840,7 @@
             <div class="w-12 h-12 overflow-hidden flex items-center justify-center shrink-0">
               <img src="${escapeHtml(iconSrc)}"
                    class="w-full h-full object-contain"
-                   loading="lazy"
-                   onerror="this.onerror=null; this.style.display='none';" />
+                   loading="lazy" />
             </div>
 
             <div class="min-w-0 flex-1">
@@ -613,8 +930,7 @@
                       flex items-center justify-center shrink-0">
             <img src="${escapeHtml(iconSrc)}"
                  class="w-full h-full object-contain"
-                 loading="lazy"
-                 onerror="this.onerror=null; this.style.display='none';" />
+                 loading="lazy" />
           </div>
 
           <div class="min-w-0 flex-1">
@@ -653,8 +969,7 @@
                       flex items-center justify-center shrink-0">
             <img src="${escapeHtml(iconSrc)}"
                  class="w-full h-full object-contain"
-                 loading="lazy"
-                 onerror="this.onerror=null; this.style.display='none';" />
+                 loading="lazy" />
           </div>
 
           <div class="min-w-0 flex-1">
@@ -742,7 +1057,7 @@
       currentHero = hero;
 
       $("hdrName").textContent = (hero.nameKo || "").toUpperCase();
-      $("hdrGen").textContent = `Gen ${hero.gen} • ${hero.name || ""}`;
+      $("hdrGen").textContent = `${hero.gen}세대 • ${hero.name || ""}`;
       $("hdrClass").lastElementChild.textContent = `${hero.heroClass || "-"}`;
       $("hdrType").lastElementChild.textContent = `${hero.expeditionType || "-"}`;
       $("sourceText").textContent = hero.source ? `획득처: ${hero.source}` : "";
@@ -782,6 +1097,15 @@
     });
     window.addEventListener("keydown", (e)=>{
       if(e.key === "Escape" && !$("modalBackdrop").classList.contains("hidden")) closeHeroModal();
+    });
+
+    // ✅ 비교 모달 이벤트
+    $("closeCompare").onclick = closeCompareModal;
+    $("compareBackdrop").addEventListener("click", (e)=>{
+      if(e.target === $("compareBackdrop")) closeCompareModal();
+    });
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape" && !$("compareBackdrop").classList.contains("hidden")) closeCompareModal();
     });
   };
   window.HeroInfoInit();
