@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>게시판 (Supabase)</title>
+  <style>
+    :root{
+      --bg:#0f1115; --card:#171a21; --muted:#9aa4b2; --text:#e9eef5; --line:#2a2f3a;
+      --btn:#2c67ff; --btn2:#2a2f3a; --danger:#ff4d4d; --ok:#3ddc97;
+      --in:#10131a; --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans KR,Apple SD Gothic Neo; background:var(--bg); color:var(--text);}
+    .wrap{max-width:980px; margin:0 auto; padding:16px;}
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border:1px solid var(--line); background:var(--card); border-radius:var(--radius);}
+    .brand{display:flex; align-items:center; gap:10px}
+    .dot{width:10px; height:10px; border-radius:999px; background:var(--btn)}
+    .title{font-weight:900; letter-spacing:-0.2px}
+    .sub{font-size:12px; color:var(--muted); margin-top:2px}
+    .right{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+    .chip{font-size:12px; padding:6px 10px; border:1px solid var(--line); background:#11141b; border-radius:999px; color:var(--muted);}
+    .btn{border:1px solid transparent; border-radius:12px; padding:10px 12px; cursor:pointer; font-weight:800; font-size:14px;}
+    .btn.primary{background:var(--btn); color:white;}
+    .btn.secondary{background:var(--btn2); border-color:var(--line); color:var(--text);}
+    .btn.ghost{background:transparent; border-color:var(--line); color:var(--text);}
+    .grid{display:grid; gap:12px; margin-top:12px;}
+    @media (min-width: 860px){ .grid{grid-template-columns: 1.1fr 0.9fr;} }
+    .card{border:1px solid var(--line); background:var(--card); border-radius:var(--radius); padding:14px;}
+    .h2{font-weight:900; margin:0 0 10px 0; font-size:16px; letter-spacing:-0.2px}
+    .muted{color:var(--muted); font-size:12px}
+    input[type="text"]{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:var(--in);
+      color:var(--text);
+      outline:none;
+    }
+    input[type="text"]:focus{border-color:rgba(44,103,255,.6)}
+    textarea{
+      width:100%; min-height:120px; resize:vertical; padding:12px;
+      border-radius:12px; border:1px solid var(--line); background:var(--in); color:var(--text);
+      outline:none;
+    }
+    textarea:focus{border-color:rgba(44,103,255,.6)}
+    .row{display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+    .rowL{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+    .rowR{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;}
+    .hr{height:1px; background:var(--line); margin:12px 0;}
+    .list{display:flex; flex-direction:column; gap:10px;}
+    .post{border:1px solid var(--line); background:#12151c; border-radius:12px; padding:12px;}
+    .postTop{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+    .who{font-weight:900; font-size:13px}
+    .when{color:var(--muted); font-size:12px}
+    .postTitle{margin-top:6px; font-weight:900; font-size:15px; letter-spacing:-0.2px}
+    .content{white-space:pre-wrap; margin-top:8px; line-height:1.45; font-size:14px}
+    .toast{
+      position:fixed; left:50%; transform:translateX(-50%);
+      bottom:18px; padding:10px 12px; border-radius:12px;
+      border:1px solid var(--line); background:#0f1218; color:var(--text);
+      font-size:13px; font-weight:800; opacity:0; pointer-events:none;
+      transition:opacity .18s ease;
+      max-width: calc(100vw - 24px);
+    }
+    .toast.show{opacity:1}
+    .k{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .warn{color:#ffd35a}
+  </style>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="dot"></div>
+        <div>
+          <div class="title">게시판</div>
+          <div class="sub">Google 로그인 / 익명 작성 / 1일 3회 제한(DB 강제)</div>
+        </div>
+      </div>
+
+      <div class="right">
+        <span class="chip" id="chipUser">상태: 준비중…</span>
+        <button class="btn secondary" id="btnLogin" type="button">Google 로그인</button>
+        <button class="btn ghost" id="btnLogout" type="button" style="display:none">로그아웃</button>
+        <button class="btn ghost" id="btnReload" type="button">새로고침</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- 작성 -->
+      <div class="card">
+        <h2 class="h2">글 작성</h2>
+        <div class="muted">
+          - 제목 1~80자 / 내용 1~1500자<br/>
+          - 하루 최대 3회 제한은 RPC 함수가 강제합니다.
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="muted" style="margin-bottom:6px">제목</div>
+        <input id="txtTitle" type="text" maxlength="80" placeholder="제목을 입력하세요 (최대 80자)" />
+
+        <div style="height:10px"></div>
+
+        <div class="muted" style="margin-bottom:6px">내용</div>
+        <textarea id="txtContent" maxlength="1500" placeholder="내용을 입력하세요 (최대 1500자)"></textarea>
+
+        <div class="row" style="margin-top:10px">
+          <div class="rowL">
+            <span class="chip">작성자: <b id="authorLabel">익명</b></span>
+            <span class="chip">guestId: <b id="guestShort">-</b></span>
+          </div>
+          <div class="rowR">
+            <button class="btn secondary" id="btnClear" type="button">비우기</button>
+            <button class="btn primary" id="btnPost" type="button">등록</button>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="muted">
+          글 등록은 <span class="k">create_board_post</span> RPC로 수행됩니다.
+        </div>
+      </div>
+
+      <!-- 목록 -->
+      <div class="card">
+        <div class="row">
+          <h2 class="h2" style="margin:0">글 목록</h2>
+          <span class="chip">최신순</span>
+        </div>
+        <div class="muted" id="listHint" style="margin-top:6px">
+          Supabase에서 최신 20개를 불러옵니다.
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="list" id="postList"></div>
+
+        <div class="row" style="margin-top:10px">
+          <div class="rowL"><span class="muted" id="pageInfo"></span></div>
+          <div class="rowR">
+            <button class="btn ghost" id="btnMore" type="button">더 보기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const SUPABASE_URL = "YOUR_SUPABASE_URL";
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+  const $ = (id) => document.getElementById(id);
+  const toastEl = $("toast");
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastEl._t);
+    toastEl._t = setTimeout(()=>toastEl.classList.remove("show"), 1800);
+  }
+  function ymd(d=new Date()){
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,"0");
+    const dd=String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${dd}`;
+  }
+  function safeTrim(s){ return (s||"").toString().replace(/\r/g,"").trim(); }
+  function shortId(s){
+    if(!s) return "";
+    if(s.length<=10) return s;
+    return s.slice(0,6)+"…"+s.slice(-4);
+  }
+  function escapeHtml(str){
+    return (str||"")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  const GUEST_KEY = "board_guest_id_v1";
+  function getGuestId(){
+    let v = localStorage.getItem(GUEST_KEY);
+    if(!v){
+      v = (crypto?.randomUUID ? crypto.randomUUID() : ("g_"+Math.random().toString(36).slice(2)+Date.now()));
+      localStorage.setItem(GUEST_KEY, v);
+    }
+    return v;
+  }
+
+  const supa = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let auth = { type:"guest", id:getGuestId() };
+
+  function applyAuthUI(){
+    const isGoogle = auth.type === "google";
+    $("authorLabel").textContent = isGoogle ? "Google" : "익명";
+    $("chipUser").textContent = isGoogle
+      ? `상태: Google (${shortId(auth.id)})`
+      : `상태: 익명 (${shortId(auth.id)})`;
+    $("guestShort").textContent = shortId(getGuestId());
+    $("btnLogin").style.display = isGoogle ? "none" : "inline-block";
+    $("btnLogout").style.display = isGoogle ? "inline-block" : "none";
+  }
+
+  async function syncAuthFromSession(){
+    const { data } = await supa.auth.getSession();
+    const user = data?.session?.user || null;
+    if(user){
+      auth.type = "google";
+      auth.id = user.id;
+    }else{
+      auth.type = "guest";
+      auth.id = getGuestId();
+    }
+    applyAuthUI();
+  }
+
+  $("btnLogin").addEventListener("click", async ()=>{
+    try{
+      const { error } = await supa.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: location.origin + location.pathname }
+      });
+      if(error) throw error;
+    }catch(e){
+      console.warn(e);
+      toast("로그인 실패");
+    }
+  });
+
+  $("btnLogout").addEventListener("click", async ()=>{
+    try{
+      const { error } = await supa.auth.signOut();
+      if(error) throw error;
+      toast("로그아웃");
+      await syncAuthFromSession();
+    }catch(e){
+      console.warn(e);
+      toast("로그아웃 실패");
+    }
+  });
+
+  const postListEl = $("postList");
+  let page = 0;
+  const PAGE_SIZE = 20;
+
+  function renderPosts(rows){
+    if(page === 0) postListEl.innerHTML = "";
+    if(!rows || rows.length === 0){
+      if(page === 0) postListEl.innerHTML = `<div class="muted">표시할 글이 없습니다.</div>`;
+      return;
+    }
+
+    for(const p of rows){
+      const who = p.author_type === "google"
+        ? `Google (${shortId(p.author_id)})`
+        : `익명 (${shortId(p.author_id)})`;
+
+      const d = new Date(p.created_at);
+      const when = `${ymd(d)} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+
+      const el = document.createElement("div");
+      el.className = "post";
+      el.innerHTML = `
+        <div class="postTop">
+          <div class="who">${who}</div>
+          <div class="when">${when}</div>
+        </div>
+        <div class="postTitle">${escapeHtml(p.title || "")}</div>
+        <div class="content">${escapeHtml(p.content || "")}</div>
+      `;
+      postListEl.appendChild(el);
+    }
+  }
+
+  async function loadPosts(reset=false){
+    if(reset){ page = 0; $("pageInfo").textContent = ""; }
+
+    const from = page * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    const { data, error } = await supa
+      .from("board_posts")
+      .select("id,author_type,author_id,title,content,created_at")
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if(error){
+      console.warn(error);
+      toast("목록 로드 실패");
+      return;
+    }
+
+    renderPosts(data);
+    page += 1;
+    $("pageInfo").textContent = `${page * PAGE_SIZE}개까지 로드(최대)`;
+  }
+
+  $("btnMore").addEventListener("click", async ()=>{ await loadPosts(false); });
+
+  $("btnClear").addEventListener("click", ()=>{
+    $("txtTitle").value = "";
+    $("txtContent").value = "";
+    toast("비웠습니다");
+  });
+
+  $("btnPost").addEventListener("click", async ()=>{
+    const title = safeTrim($("txtTitle").value);
+    const content = safeTrim($("txtContent").value);
+
+    if(!title){ toast("제목을 입력하세요"); return; }
+    if(title.length > 80){ toast("제목은 80자 이하"); return; }
+    if(!content){ toast("내용을 입력하세요"); return; }
+    if(content.length > 1500){ toast("내용은 1500자 이하"); return; }
+
+    $("btnPost").disabled = true;
+    $("btnPost").textContent = "등록중…";
+
+    try{
+      const isGoogle = auth.type === "google";
+      const payload = {
+        p_title: title,
+        p_content: content,
+        p_author_type: isGoogle ? "google" : "guest",
+        p_guest_id: isGoogle ? null : getGuestId()
+      };
+
+      const { data, error } = await supa.rpc("create_board_post", payload);
+      if(error) throw error;
+
+      toast("등록 완료");
+      $("txtTitle").value = "";
+      $("txtContent").value = "";
+      await loadPosts(true);
+
+    }catch(e){
+      console.warn(e);
+      const msg = (e && (e.message || e.details || e.hint)) ? String(e.message || e.details || e.hint) : "등록 실패";
+
+      const low = msg.toLowerCase();
+      if(low.includes("daily limit exceeded")) toast("하루 최대 3회까지 작성 가능합니다.");
+      else if(low.includes("login required")) toast("Google 로그인 후 작성 가능합니다.");
+      else if(low.includes("guest_id required")) toast("익명 식별자 생성 실패(새로고침 후 재시도).");
+      else if(low.includes("title required")) toast("제목을 입력하세요.");
+      else if(low.includes("title too long")) toast("제목은 80자 이하입니다.");
+      else toast("등록 실패: " + msg);
+
+    }finally{
+      $("btnPost").disabled = false;
+      $("btnPost").textContent = "등록";
+    }
+  });
+
+  $("btnReload").addEventListener("click", ()=>location.reload());
+
+  supa.auth.onAuthStateChange(async ()=>{ await syncAuthFromSession(); });
+
+  (async function init(){
+    if(SUPABASE_URL.includes("YOUR_") || SUPABASE_ANON_KEY.includes("YOUR_")){
+      $("chipUser").textContent = "상태: Supabase 설정 필요";
+      toast("SUPABASE_URL / ANON_KEY를 먼저 넣어줘");
+      return;
+    }
+    await syncAuthFromSession();
+    await loadPosts(true);
+  })();
+</script>
+</body>
+</html>
