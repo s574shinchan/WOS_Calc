@@ -17,9 +17,10 @@
           <select id="genSelect"
                   class="px-3 py-2 w-24 rounded-xl text-sm border shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
           </select>
-          <div id="typeWrap" class="pill-wrap">
+
+          <div id="typeWrap" class="flex items-center gap-2">
             <span class="text-sm">병종 선택</span>
-            <select id="selType" 
+            <select id="selType"
                     class="px-3 py-2 w-24 rounded-xl text-sm border shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
               <option value="ALL">전체</option>
               <option value="INFANTRY">방패병</option>
@@ -27,8 +28,23 @@
               <option value="MARKSMAN">궁병</option>
             </select>
           </div>
+
+          <div class="flex items-center gap-2 flex-1 min-w-[220px]">
+            <span class="text-sm whitespace-nowrap">이름 검색</span>
+            <div class="relative flex-1">
+              <input id="heroSearch"
+                     type="text"
+                     class="w-[300px] px-3 py-2 rounded-xl text-sm border shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400" />
+              <button id="heroSearchClear"
+                      type="button"
+                      class="px-3 py-2 rounded-xl text-sm border shadow-sm bg-white">
+                지우기
+              </button>
+            </div>
+          </div>
         </div>
 
+        
         <!-- 영웅 카드 그리드 -->
         <div id="heroGrid" class="grid grid-cols-1 gap-3"></div>
       </div>
@@ -37,11 +53,9 @@
       <div id="modalBackdrop" class="fixed inset-0 z-[2000] hidden">
         <div class="absolute inset-0 bg-black/60"></div>
 
-        <!-- ✅ 팝업 폭/패딩 축소 -->
         <div class="absolute inset-0 overflow-auto p-3 md:p-3">
-          <div class="max-w-5xl mx-auto"> <!-- 기존 6xl -> 5xl -->
+          <div class="max-w-5xl mx-auto">
             <div class="rounded-2xl overflow-hidden shadow-2xl border bg-white">
-              <!-- 상단 배경 헤더 -->
               <div id="modalHeroHeader"
                    class="relative px-4 py-2 md:px-5 md:py-3 text-white"
                    style="background: linear-gradient(135deg,#0ea5e9,#2563eb);">
@@ -88,11 +102,9 @@
                 </div>
               </div>
 
-              <!-- 본문: 좌/중앙/우 -->
               <div class="relative p-4 md:p-3">
                 <div class="grid grid-cols-12 gap-3">
 
-                  <!-- 좌: Exploration (✅ 막대 제거, 바로 표시) -->
                   <div class="lg:col-span-4">
                     <div class="rounded-2xl border p-3 md:p-4 h-full">
                       <h3 class="text-base md:text-lg font-extrabold">탐험 스킬</h3>
@@ -100,7 +112,6 @@
                     </div>
                   </div>
 
-                  <!-- 중앙: 캐릭터 이미지 -->
                   <div class="lg:col-span-4">
                     <div class="rounded-2xl border p-3 md:p-4 h-full flex flex-col">
                       <div class="flex items-center justify-between">
@@ -108,7 +119,6 @@
                       </div>
 
                       <div class="mt-3 flex-1 flex items-center justify-center">
-                        <!-- ✅ 이미지 박스도 살짝 축소 -->
                         <div class="w-full max-w-[300px] aspect-[3/4] overflow-hidden flex items-center justify-center">
                           <img id="heroImg"
                                src="/images/hero/thumb/Gen1/jeronimo.webp"
@@ -124,7 +134,6 @@
                     </div>
                   </div>
 
-                  <!-- 우: Expedition (✅ 막대 제거, 바로 표시) -->
                   <div class="lg:col-span-4">
                     <div class="rounded-2xl border p-3 md:p-4 h-full">
                       <h3 class="text-base md:text-lg font-extrabold">원정 스킬</h3>
@@ -132,20 +141,16 @@
                     </div>
                   </div>
 
-                  <!-- ✅ 특성버프 카드 -->
                   <div id="traitCard" class="col-span-6 rounded-2xl border p-3 md:p-4">
                     <div class="font-extrabold text-base whitespace-nowrap">특성버프</div>
                     <div id="traitBuffArea" class="mt-3 space-y-3"></div>
                   </div>
 
-                  <!-- ✅ 전용무기 카드 -->
                   <div id="weapon" class="col-span-6 rounded-2xl border bg-white p-3 md:p-4">
                     <div class="font-extrabold text-base whitespace-nowrap">전용무기</div>
-                    <!-- 전용무기 스킬은 추후 추가할 영역 -->
                     <div id="weaponSkills" class="mt-3 space-y-3"></div>
                   </div>
 
-                  <!-- 하단 스탯 (✅ 패딩 살짝 다운) -->
                   <div class="col-span-12">
                     <div class="grid grid-cols-2 gap-3">
                       <div class="rounded-2xl border bg-white p-3 md:p-4">
@@ -168,15 +173,15 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  // ✅ SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
+  // SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
   if (window.__HEROINFO_INIT_BOUND__) {
-    // 이미 초기화된 상태면 그냥 실행만(필요 시)
     window.HeroInfoInit?.();
     return;
   }
@@ -184,7 +189,7 @@
     
   window.HeroInfoInit = function HeroInfoInit(){  
     // =========================
-    // ✅ 데이터 (샘플)
+    // 데이터 (샘플)
     // =========================
     var HEROES = [];
 
@@ -199,8 +204,9 @@
 
         HEROES = await res.json();
 
-        // ✅ 여기서 렌더 순서 고정
+        // 렌더 순서 고정
         initTypeSelect();
+        initSearch();
         renderGenTabs();
         renderHeroGrid();
 
@@ -214,7 +220,7 @@
             <div class="font-extrabold mb-1">영웅 데이터 로드 실패</div>
             <div>${String(err.message)}</div>
             <div class="mt-2 text-xs text-gray-600">
-              ✅ heroes.json 파일이 이 페이지와 같은 폴더에 있는지 / 서버에서 열고 있는지(파일:// 아님) 확인
+              heroes.json 파일이 이 페이지와 같은 폴더에 있는지 / 서버에서 열고 있는지(파일:// 아님) 확인
             </div>
           `;
         }
@@ -229,6 +235,7 @@
     var currentGen = "ALL";
     var currentHero = null;
     var currentType = "ALL";
+    var currentSearch = "";
 
     // =========================
     // 유틸
@@ -249,13 +256,11 @@
       var select = $("genSelect");
       select.innerHTML = "";
 
-      // 전체 옵션
       var optAll = document.createElement("option");
       optAll.value = "ALL";
       optAll.textContent = "전체";
       select.appendChild(optAll);
 
-      // 세대 옵션
       gens.forEach(g => {
         var opt = document.createElement("option");
         opt.value = g;
@@ -263,10 +268,8 @@
         select.appendChild(opt);
       });
 
-      // 현재값 반영
       select.value = currentGen ?? "ALL";
 
-      // 변경 이벤트
       select.onchange = () => {
         var v = select.value;
         currentGen = (v === "ALL") ? "ALL" : Number(v);
@@ -300,6 +303,31 @@
       };
     }
 
+    function initSearch(){
+      var input = $("heroSearch");
+      var clear = $("heroSearchClear");
+      if(!input) return;
+
+      // 초기값 반영
+      input.value = currentSearch || "";
+
+      // 입력 시: 검색만 갱신
+      input.oninput = () => {
+        currentSearch = input.value || "";
+        renderHeroGrid();
+      };
+
+      // 지우기 버튼: 항상 표시, 클릭 시 초기화
+      if(clear){
+        clear.onclick = () => {
+          input.value = "";
+          currentSearch = "";
+          renderHeroGrid();
+          input.focus();
+        };
+      }
+    }
+
     function renderHeroGrid(){
       var wrap = $("heroGrid");
       var typeWrap = $("typeWrap") 
@@ -312,22 +340,26 @@
         typeWrap.classList.remove("hidden")
       }
 
-      // ✅ (1) 세대 + 병종 필터
+      var q = (currentSearch || "").toString().trim().toLowerCase();
+
+      // 세대 + 병종 + 이름 포함 검색
       var list = HEROES.filter(h => {
         var genOk  = (currentGen === "ALL") || (h.gen === currentGen);
         var typeOk = (currentGen !== "ALL") ? true : (currentType === "ALL") || (h.heroClass === currentType);
-        return genOk && typeOk;
+
+        var nameKo = (h.nameKo || "").toString().toLowerCase();
+        var nameEn = (h.name || "").toString().toLowerCase();
+        var nameOk = !q || nameKo.includes(q) || nameEn.includes(q);
+
+        return genOk && typeOk && nameOk;
       });
 
-      // ✅ (추가) 전체세대 + 병종 선택 시: Gen 섹션 없이 3컬럼으로 "쭉" 표시
+      // 전체세대 + 병종 선택 시: Gen 섹션 없이 3컬럼으로 표시
       if(currentGen === "ALL" && currentType !== "ALL"){
-        // heroGrid를 3컬럼으로
         wrap.className = "grid grid-cols-3 gap-3";
 
-        // 정렬(세대→이름)
         list.sort((a,b)=> (a.gen - b.gen) || String(a.nameKo||a.name).localeCompare(String(b.nameKo||b.name), "ko"));
 
-        // 카드 추가 (기존 카드 마크업 그대로)
         list.forEach(hero=>{
           var card = document.createElement("button");
           card.className = "text-left rounded-2xl border p-3 hover:shadow-md transition";
@@ -370,7 +402,7 @@
           wrap.className = "grid grid-cols-1 gap-3";
           wrap.innerHTML = `<div class="text-sm">표시할 영웅이 없습니다.</div>`;
         }
-        return; // ✅ 여기서 끝내고 아래 Gen 그룹핑 로직은 안 탐
+        return;
       }
 
       // 병종선택했다가 전체 병종할때 UX 깨져서 클래스네임 삭제
@@ -382,28 +414,22 @@
         wrap.classList.add("grid-cols-2");  
       }
 
-
-      // ✅ Gen 그룹핑
+      // Gen 그룹핑
       var byGen = new Map();
       for(var h of list){
         if(!byGen.has(h.gen)) byGen.set(h.gen, []);
         byGen.get(h.gen).push(h);
       }
 
-      // ✅ 정렬(Gen1, Gen2...)
       var gens = Array.from(byGen.keys()).sort((a,b)=>a-b);
-
-      // ✅ 현재 탭이 ALL이면: 세대별 섹션(접기/펼치기)
-      // ✅ 특정 Gen이면: 섹션 1개만(접기 제거 or 기본 open)
       var useAccordion = (currentGen === "ALL");
 
       gens.forEach(gen=>{
         var heroes = byGen.get(gen);
 
-        // 섹션 컨테이너
         var section = document.createElement(useAccordion ? "details" : "div");
         if(useAccordion){
-          section.open = true; // 기본 펼침
+          section.open = true;
           section.className = "rounded-2xl border overflow-hidden";
           section.innerHTML = `
             <summary class="cursor-pointer select-none px-4 py-3 font-extrabold flex items-center justify-between">
@@ -414,14 +440,12 @@
             </div>
           `;
 
-          // ✅ 접힘 방지: summary 클릭으로 open 토글되는 기본동작 차단 + open 강제 유지
           var summary = section.querySelector("summary");
           summary.addEventListener("click", (e) => {
-            e.preventDefault();     // details 토글 막기
-            section.open = true;    // 혹시라도 닫히면 즉시 다시 열기
+            e.preventDefault();
+            section.open = true;
           });
         }else{
-          // 특정 세대만 보는 화면이면 헤더만 가볍게
           section.className = "space-y-3";
           section.innerHTML = `
             <div class="flex items-center justify-between">
@@ -431,12 +455,10 @@
           `;
         }
 
-        // 그리드 컬럼: 4명(Gen1) vs 3명(다른 세대) 최적화
         var grid = section.querySelector(".gen-grid");
         var cols = (heroes.length >= 4) ? "grid-cols-2" : "grid-cols-3";
         grid.className = `gen-grid grid ${cols} gap-3`;
 
-        // 카드 추가
         heroes.forEach(hero=>{
           var card = document.createElement("button");
           card.className = "text-left rounded-2xl border p-3 hover:shadow-md transition";
@@ -481,7 +503,7 @@
     }
 
     // =========================
-    // 렌더: 스킬 카드(✅ 막대 없이, 바로 표시)
+    // 렌더: 스킬 카드
     // =========================
     function renderSkills(targetEl, hero, skills){
       var wrap = $(targetEl);
@@ -491,7 +513,6 @@
         var lv = sk.level ?? 5;
         var val = sk.value ?? "-";
 
-        // ✅ hero/gen/key + skill.key 로 자동 아이콘 생성
         var iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
 
         var el = document.createElement("div");
@@ -536,77 +557,58 @@
       `).join("");
     }
 
-    // ✅ 특성버프(= hero.exclusiveSkill) 렌더 + 12컬럼 레이아웃 토글 (최종)
-    // 레이아웃 규칙:
-    // - traitCard: col-span-6 (0~5)
-    // - weapon   : col-span-6 (6~11)
-    // - traitCard가 숨겨지면 weapon은 col-span-12 (0~11)
+    // 특성버프(= hero.exclusiveSkill) 렌더 + 12컬럼 레이아웃 토글
     function renderExclusiveSkill(hero, skills){
-      var traitCard = $("traitCard");      // ✅ 특성버프 카드
-      var body      = $("traitBuffArea");  // ✅ 특성버프 내용 영역
-      var weapon    = $("weapon");         // ✅ 전용무기 카드
+      var traitCard = $("traitCard");
+      var body      = $("traitBuffArea");
+      var weapon    = $("weapon");
 
-      // ✅ 안전장치
       if(!traitCard || !body || !weapon) return;
 
       var hasTrait = Array.isArray(skills) && skills.length > 0;
 
-      // ✅ 공통: weapon span 클래스 정리 함수
       var setWeaponSpan = (span12) => {
-        // 기존 span 제거
         weapon.classList.remove("col-span-6", "col-span-12");
-        // 새 span 적용
         weapon.classList.add(span12 ? "col-span-12" : "col-span-6");
       };
 
-      // ✅ 추가: traitCard 숨김일 때 전용무기 스킬을 2컬럼으로
       var weaponSkills = $("weaponSkills");
       var setWeaponSkillsLayout = (twoCol) => {
         if(!weaponSkills) return;
 
-        // 기존 레이아웃 클래스 정리
         weaponSkills.classList.remove("space-y-3", "grid", "grid-cols-2", "gap-3");
 
         if(twoCol){
-          // [이미지]설명 [이미지]설명
           weaponSkills.classList.add("grid", "grid-cols-2", "gap-3");
         }else{
-          // 기존 세로
           weaponSkills.classList.add("space-y-3");
         }
       };
 
-      // ✅ 1) 특성버프가 없으면: traitCard 숨김 + weapon 12칸
       if(!hasTrait){
-        traitCard.classList.add("hidden"); // 카드 숨김
-        setWeaponSpan(true);               // weapon = 12칸
+        traitCard.classList.add("hidden");
+        setWeaponSpan(true);
         setWeaponSkillsLayout(true);
-        body.innerHTML = "";               // 내용 비움
+        body.innerHTML = "";
         return;
       }
 
-      // ✅ 2) 특성버프가 있으면: traitCard 표시 + weapon 6칸 + traitCard도 6칸 보장
       traitCard.classList.remove("hidden");
-
-      // traitCard는 기본이 col-span-6이지만 혹시 다른 처리로 꼬였을 때 대비해 재보장
       traitCard.classList.remove("col-span-12");
       traitCard.classList.add("col-span-6");
 
-      setWeaponSpan(false); // weapon = 6칸
-      setWeaponSkillsLayout(false); // ✅ trait 있으면 세로
+      setWeaponSpan(false);
+      setWeaponSkillsLayout(false);
 
-      // ✅ 3) 특성버프 렌더
       body.innerHTML = "";
 
       skills.forEach(sk => {
         var el = document.createElement("div");
         el.className = "flex items-start gap-3";
 
-        // ✅ hero/gen/key + sk.key 로 자동 아이콘 생성
         var iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
 
         el.innerHTML = `
-          <!-- 아이콘 -->
           <div class="w-12 h-12 rounded-xl border overflow-hidden
                       flex items-center justify-center shrink-0">
             <img src="${escapeHtml(iconSrc)}"
@@ -615,7 +617,6 @@
                  onerror="this.onerror=null; this.style.display='none';" />
           </div>
 
-          <!-- 텍스트 -->
           <div class="min-w-0 flex-1">
             <div class="font-bold text-sm mb-1">${escapeHtml(sk.title || "")}</div>
             <div class="text-xs leading-relaxed text-gray-700">
@@ -627,32 +628,27 @@
       });
     }
 
-    // ✅ 전용무기 스킬(weaponSkill) 렌더: ws1 ws2
+    // 전용무기 스킬(weaponSkill) 렌더: ws1 ws2
     function renderWeaponSkills(hero, weaponSkill){
       var area = $("weaponSkills");
 
-      // 스킬 렌더
       area.innerHTML = "";
       var skills = Array.isArray(weaponSkill) ? weaponSkill : [];
 
-      // ✅ ws1 -> ws2 순서 강제 (없으면 제외)
       var order = ["ws1", "ws2"];
       var ordered = order
         .map(k => skills.find(s => (s?.key || "").toLowerCase() === k))
         .filter(Boolean);
 
-      // 스킬이 없으면 영역 비움
       if(ordered.length === 0) return;
 
       ordered.forEach(sk => {
         var el = document.createElement("div");
         el.className = "flex items-start gap-3";
 
-        // ✅ hero/gen/key + sk.key(ws1/ws2) 로 자동 아이콘 생성
         var iconSrc = hero ? heroSkillIcon(hero, sk.key) : (sk.icon || "");
 
         el.innerHTML = `
-          <!-- 아이콘 -->
           <div class="w-12 h-12 rounded-xl overflow-hidden
                       flex items-center justify-center shrink-0">
             <img src="${escapeHtml(iconSrc)}"
@@ -661,7 +657,6 @@
                  onerror="this.onerror=null; this.style.display='none';" />
           </div>
 
-          <!-- 텍스트 -->
           <div class="min-w-0 flex-1">
             <div class="font-bold text-sm mb-1">${escapeHtml(sk.title || "")}</div>
             <div class="text-xs leading-relaxed text-gray-700">
@@ -747,7 +742,6 @@
       currentHero = hero;
 
       $("hdrName").textContent = (hero.nameKo || "").toUpperCase();
-      //$("hdrGen").textContent = `Gen ${hero.gen} • ${hero.nameKo || ""}`;
       $("hdrGen").textContent = `Gen ${hero.gen} • ${hero.name || ""}`;
       $("hdrClass").lastElementChild.textContent = `${hero.heroClass || "-"}`;
       $("hdrType").lastElementChild.textContent = `${hero.expeditionType || "-"}`;
