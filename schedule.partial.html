@@ -19,7 +19,7 @@
                 <span class="text-xl font-semibold text-gray-800">1주차</span>
               </div>
               <span class="text-[12px] text-gray-600" data-week-range="1"></span>          
-              <p class="text-[12px] text-gray-600">SVS 준비단계 (월~금)<br>SVS 전쟁단계 (토)</p>
+              <p class="text-[12px] text-gray-600">연맹대작전 (월~토)<br>무기공장 (일)</p>
 
               <!-- 주간 표 -->
               <div class="week-grid mt-1 grid grid-cols-7 text-[12px] border border-gray-200 rounded-md overflow-hidden">
@@ -52,7 +52,7 @@
               </div>
               <!-- 여기 날짜 범위 자동 표기 -->
               <span class="text-[12px] text-gray-600" data-week-range="2"></span>
-              <p class="text-[12px] text-gray-600">연맹대작전 (월~토)<br>무기공장 (일)</p>
+              <p class="text-[12px] text-gray-600">빙원의 왕 (월~금)<br>내부솔라 (토)</p>
 
               <!-- 하단: 주간 표 -->
               <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
@@ -85,7 +85,7 @@
                 <span class="text-xl font-semibold text-gray-800">3주차</span>            
               </div>
               <span class="text-[12px] text-gray-600" data-week-range="3"></span>
-              <p class="text-[12px] text-gray-600">빙원의 왕 (월~금)<br>내부솔라 (토)</p>
+              <p class="text-[12px] text-gray-600">연맹총동원 (월~금)<br>협곡 (토)<br>무기공장 (일)</p>
 
               <!-- 주간 표 -->
               <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
@@ -116,7 +116,7 @@
                 <span class="text-xl font-semibold text-gray-800">4주차</span>            
               </div>
               <span class="text-[12px] text-gray-600" data-week-range="4"></span>
-              <p class="text-[12px] text-gray-600">연맹총동원 (월~금)<br>협곡 (토)<br>무기공장 (일)</p>
+              <p class="text-[12px] text-gray-600">SVS 준비단계 (월~금)<br>SVS 전쟁단계 (토)</p>
 
               <!-- 주간 표 -->
               <div class="week-grid mt-1 grid grid-cols-7 text-[11px] border border-gray-200 rounded-md overflow-hidden">
@@ -175,21 +175,21 @@
     // startDay / endDay 에 맞게 브릿지가 채워짐
     const WEEK_EVENTS = {
       1: [
-        { name: "SVS 준비단계", startDay: 0, endDay: 4, type: "svs-pre" }, // 월~금
-        { name: "SVS 전쟁단계", startDay: 5, endDay: 5, type: "svs-war" }  // 토
-      ],
-      2: [
         { name: "연맹대작전", startDay: 0, endDay: 5, type: "showdown" }, // 월~토
         { name: "무기공장",   startDay: 6, endDay: 6, type: "weapon" } // 일
       ],
-      3: [
+      2: [
         { name: "빙원의 왕", startDay: 0, endDay: 4, type: "king" },   // 월~금
         { name: "내부솔라",   startDay: 5, endDay: 5, type: "solar" }   // 토
       ],
-      4: [
+      3: [
         { name: "연맹총동원", startDay: 0, endDay: 4, type: "alliance" }, // 월~금
         { name: "협곡",       startDay: 5, endDay: 5, type: "canyon" },   // 토
         { name: "무기공장",   startDay: 6, endDay: 6, type: "weapon" }    // 일
+      ],
+      4: [
+        { name: "SVS 준비단계", startDay: 0, endDay: 4, type: "svs-pre" }, // 월~금
+        { name: "SVS 전쟁단계", startDay: 5, endDay: 5, type: "svs-war" }  // 토
       ]
     };
 
@@ -255,7 +255,7 @@
       document.getElementById("currentWeekInfo").innerHTML =
         `오늘 날짜: <b>${today.toISOString().slice(0,10)}</b><br>
          현재 자동 계산된 주차: <b style="color:#0074ff">${currentWeek}주차</b><br>
-         SVS 준비단계가 시작되는 월요일의 해당 주를 1주차로 계산합니다.`;
+         연맹대작전이 시작되는 월요일의 해당 주를 1주차로 계산합니다.`;
 
       // 주차 강조 + "현재 주" 뱃지
       document.querySelectorAll(".week-block").forEach(el => {
