@@ -158,7 +158,16 @@
     
   window.ScheduleInit = function ScheduleInit(){  
     // ★ 시작일과 시작 주차를 네가 지정하는 부분
-    const START_DATE = new Date(2025, 11, 01);  // (연,월-1,일) → 2025-11-10 (월요일)
+    function getCurrentWeekMonday() {
+      const today = new Date();
+      const day = today.getDay(); // 0=일
+      const diff = (day === 0 ? -6 : 1) - day; // 월요일 보정
+      const monday = new Date(today);
+      monday.setDate(today.getDate() + diff);
+      monday.setHours(0,0,0,0);
+      return monday;
+    }
+    const START_DATE = getCurrentWeekMonday();
     const START_WEEK = 1;                       // 1~4    
     const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
