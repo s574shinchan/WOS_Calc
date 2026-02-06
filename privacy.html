@@ -1,98 +1,335 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>개인정보 처리방침 | WOS 통합 계산기</title>
-  <meta name="robots" content="index,follow"/>
-  <meta name="description" content="화이트아웃 서바이벌(WOS) 계산기·자료 사이트의 개인정보 처리방침입니다."/>
-  <link rel="canonical" href="https://d1xsb5o91gjadf.cloudfront.net/privacy.html"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="index,follow" />
+  <title>개인정보처리방침 | WOS Calculator</title>
   <style>
-    body{font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;line-height:1.6;margin:0;background:#f7fafc;color:#1f2937}
-    .wrap{max-width:900px;margin:0 auto;padding:24px}
-    h1{font-size:24px;margin:8px 0 16px}
-    h2{font-size:18px;margin:24px 0 8px}
-    p,li{font-size:14px}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin:12px 0}
-    .muted{color:#6b7280;font-size:12px}
-    a{color:#2563eb;text-decoration:underline}
+    /* ===== Site-like palette (based on your old inline style memory) ===== */
+    :root{
+      --bg:#f6f7fb;
+      --text:#111827;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --head:#f3f4f6;
+      --border:rgba(0,0,0,.10);
+      --in:#f9fafb;
+      --sum:#eef2ff;
+      --tab-bg:#e5e7eb;
+
+      --accent:#2563eb;
+      --accent2:#22c55e;
+      --danger:#ef4444;
+
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 18px;
+    }
+    body.dark-mode{
+      --bg:#0b1220;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --card:#111827;
+      --head:#0f172a;
+      --border:rgba(255,255,255,.10);
+      --in:#0b1324;
+      --sum:#0b1b3d;
+      --tab-bg:rgba(255,255,255,.08);
+
+      --shadow: 0 12px 38px rgba(0,0,0,.45);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR",
+                   "Apple SD Gothic Neo", "Malgun Gothic", Arial, "Helvetica Neue", Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* layout */
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:16px;
+    }
+    .back{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color: var(--muted);
+      font-weight: 800;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.30);
+      backdrop-filter: blur(8px);
+    }
+    body.dark-mode .back{ background: rgba(17,24,39,.35); }
+    .back:hover{ border-color: rgba(37,99,235,.45); color: var(--text); }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color: var(--muted);
+      font-weight:800;
+      font-size: 13px;
+      user-select:none;
+      opacity: .95;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.15);
+    }
+
+    /* cards */
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardHead{
+      background: var(--head);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 18px 14px;
+    }
+    .title{
+      margin:0;
+      font-size: 22px;
+      font-weight: 1000;
+      letter-spacing: -0.02em;
+    }
+    .sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .cardBody{ padding: 18px; }
+
+    .pillRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin: 12px 0 0;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--in);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .pill b{ color: var(--text); font-weight: 1000; }
+
+    /* sections */
+    h2{
+      margin: 18px 0 8px;
+      font-size: 15px;
+      font-weight: 1000;
+      letter-spacing: -0.01em;
+    }
+    p{ margin: 8px 0; }
+    ul{ margin: 8px 0 0; padding-left: 18px; }
+    li{ margin: 6px 0; color: var(--text); }
+    .muted{ color: var(--muted); }
+
+    /* table (site-like dense table) */
+    .dense{
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow:hidden;
+    }
+    .dense th, .dense td{
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      text-align:left;
+    }
+    .dense th{
+      background: var(--head);
+      font-weight: 1000;
+      color: var(--muted);
+    }
+    .dense tr:last-child td{ border-bottom:none; }
+
+    /* highlight blocks */
+    .note{
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(34,197,94,.30);
+      background: rgba(34,197,94,.08);
+      color: var(--text);
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .warn{
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(239,68,68,.28);
+      background: rgba(239,68,68,.08);
+      color: var(--text);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    /* footer */
+    .foot{
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+    }
+    .a{
+      color: var(--accent);
+      text-decoration:none;
+      font-weight: 900;
+    }
+    .a:hover{ text-decoration: underline; }
+    code{
+      background: var(--in);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-weight: 900;
+      font-size: 12px;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <h1>개인정보 처리방침</h1>
-    <p class="muted">시행일: 2025-05-02</p>
-
-    <div class="card">
-      <p>본 사이트(<a href="https://d1xsb5o91gjadf.cloudfront.net">https://d1xsb5o91gjadf.cloudfront.net</a>)는 화이트아웃 서바이벌(Whiteout Survival) 게임 유저에게 계산기와 정보를 제공하는 팬사이트입니다. 본 사이트는 서비스 제공을 위한 최소한의 정보만을 취급하며, Google AdSense 등 제3자 광고 파트너의 쿠키가 사용될 수 있습니다.</p>
+    <div class="topbar">
+      <a class="back" href="./">
+        ← 대시보드
+      </a>
+      <div class="brand">
+        <span class="dot"></span>
+        <span>WOS Calculator</span>
+      </div>
     </div>
 
-    <h2>1. 수집 항목 및 방법</h2>
     <div class="card">
-      <ul>
-        <li>직접 수집: 문의 시 제공되는 이메일 주소 등(해당 시)</li>
-        <li>자동 수집: 접속 로그, 기기/브라우저 정보, 쿠키 등(분석·광고 목적)</li>
-      </ul>
+      <div class="cardHead">
+        <h1 class="title">개인정보처리방침</h1>
+        <p class="sub">WOS 계산기(이하 “서비스”)는 이용자의 개인정보를 어떻게 처리하는지 투명하게 안내합니다.</p>
+        <div class="pillRow">
+          <span class="pill"><b>문서 버전</b> v1.0</span>
+          <span class="pill"><b>시행일</b> 2025-02-01</span>
+          <span class="pill"><b>원칙</b> 개인정보 최소 수집</span>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <h2>1. 수집하는 개인정보 항목</h2>
+        <p>서비스는 원칙적으로 <b>이용자의 개인정보를 직접 수집하지 않습니다</b>.</p>
+        <p class="muted">다만, 서비스 이용 과정에서 다음과 같은 정보가 자동으로 생성·수집될 수 있습니다(개인을 직접 식별하지 않는 범위).</p>
+        <ul>
+          <li>기기 정보(운영체제, 기기 모델, 앱/브라우저 버전)</li>
+          <li>익명화된 이용 기록(페이지/기능 사용 현황 등)</li>
+          <li>오류 로그 및 성능 데이터(앱/웹 안정성 개선 목적)</li>
+        </ul>
+
+        <div class="note">
+          ✅ 서비스는 회원가입/로그인 없이 이용 가능하며, 이름·전화번호·주소·주민번호 등 민감한 개인정보를 요구하지 않습니다.
+        </div>
+
+        <h2>2. 개인정보의 이용 목적</h2>
+        <ul>
+          <li>서비스 품질 개선 및 기능 최적화</li>
+          <li>오류 분석 및 안정성 향상</li>
+          <li>광고 노출/성과 측정(광고 SDK 사용 시)</li>
+        </ul>
+
+        <h2>3. 개인정보의 보관 및 파기</h2>
+        <p>서비스는 개인정보를 별도로 저장·보관하지 않으며, 자동 수집 정보는 목적 달성 후 즉시 파기되거나 익명화됩니다.</p>
+
+        <h2>4. 제3자 제공 및 처리위탁</h2>
+        <p>서비스는 이용자의 개인정보를 원칙적으로 <b>제3자에게 제공하지 않습니다</b>.</p>
+        <p class="muted">다만, 서비스 운영을 위해 아래 외부 서비스(도구/SDK)가 사용될 수 있으며, 해당 서비스는 각 제공자의 정책을 따릅니다.</p>
+
+        <table class="dense" aria-label="외부 서비스 사용 안내">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>서비스</th>
+              <th>목적</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>광고</td>
+              <td>Google AdMob</td>
+              <td>광고 제공 및 성과 측정</td>
+            </tr>
+            <tr>
+              <td>통계/분석</td>
+              <td>Google Analytics for Firebase</td>
+              <td>익명 통계 분석 및 품질 개선</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>5. 아동의 개인정보 보호</h2>
+        <p>서비스는 만 13세 미만 아동을 대상으로 개인정보를 수집하지 않습니다.</p>
+        <p>만약 만 13세 미만 아동의 개인정보가 수집되었다고 판단될 경우, 관련 법령에 따라 지체 없이 삭제 등 필요한 조치를 취합니다.</p>
+
+        <h2>6. 이용자의 권리</h2>
+        <p>이용자는 개인정보와 관련하여 문의할 수 있으며, 서비스는 관련 법령에 따라 성실히 대응합니다.</p>
+
+        <h2>7. 개인정보 보호를 위한 조치</h2>
+        <ul>
+          <li>개인정보 최소 수집 원칙 준수</li>
+          <li>전송 구간 암호화(HTTPS 등)</li>
+          <li>접근 권한 최소화 및 보안 점검</li>
+        </ul>
+
+        <h2>8. 개인정보처리방침 변경</h2>
+        <p>본 개인정보처리방침은 법령 또는 서비스 변경에 따라 수정될 수 있으며, 변경 시 본 페이지를 통해 고지합니다.</p>
+
+        <h2>9. 문의처</h2>
+        <p class="muted">개인정보처리방침 관련 문의는 아래로 연락해 주세요.</p>
+        <ul>
+          <li>이메일: <b>mko75620@gmail.com</b></li>
+        </ul>
+        
+        <p class="foot">
+          이 페이지는 정적 문서(<code>privacy.html</code>)로 제공되며, 스토어 심사/검색 봇이 즉시 확인할 수 있도록 구성되었습니다.
+        </p>
+      </div>
     </div>
 
-    <h2>2. 쿠키 및 광고</h2>
-    <div class="card">
-      <p>본 사이트는 Google AdSense를 사용하며, 광고 게재 및 비용 정산을 위해 쿠키가 활용될 수 있습니다. Google을 포함한 제3자 제공업체는 사용자의 이전 방문 기록을 바탕으로 광고를 게재할 수 있습니다.</p>
-      <ul>
-        <li>광고 설정: <a href="https://adssettings.google.com/">Google 광고 설정</a></li>
-        <li>개인맞춤 광고 차단: <a href="https://myadcenter.google.com/">My Ad Center</a></li>
-        <li>제3자 공급업체 목록 및 정책: <a href="https://policies.google.com/technologies/ads?hl=ko">Google 광고 정책</a></li>
-      </ul>
-    </div>
-
-    <h2>3. 수집 목적</h2>
-    <div class="card">
-      <ul>
-        <li>사이트 기능 제공 및 품질 향상</li>
-        <li>트래픽 분석(오류 진단, 성능 개선)</li>
-        <li>광고 노출 및 통계</li>
-      </ul>
-    </div>
-
-    <h2>4. 보관 기간</h2>
-    <div class="card">
-      <p>관련 법령 또는 수집 목적 달성 시까지 보관 후 파기합니다. 쿠키는 브라우저 설정에서 삭제 가능합니다</p>
-    </div>
-
-    <h2>5. 외부 링크</h2>
-    <div class="card">
-      <p>외부 링크를 통해 이동한 사이트는 본 방침이 적용되지 않으며, 각 사이트의 정책을 확인하시기 바랍니다.</p>
-    </div>
-
-    <h2>6. 이용자 권리</h2>
-    <div class="card">
-      <p>개인정보 열람·정정·삭제를 요청할 수 있습니다(연락처 아래 기재). 쿠키 차단은 브라우저 설정을 참고하십시오.</p>
-    </div>
-
-    <h2>7. 문의처</h2>
-    <div class="card">
-      <p>오픈카카오톡 : <a href="https://open.kakao.com/o/suX41pYg">문의하기</a></p>
-    </div>
-
-    <p class="muted">본 방침은 서비스/정책 변경 시 개정될 수 있습니다. 변경 시 상단에 업데이트 날짜를 고지합니다.</p>
+    <p class="foot" style="margin-top:16px;">
+      © WOS Calculator. All rights reserved.
+    </p>
   </div>
-  <script>
-    function sendHeightToParent() {
-      const height = document.body.scrollHeight + 10;
-      window.parent.postMessage({ type: "FRAME_CHANGE", height }, "*");
-    }
-  
-    // 페이지 최초 로드 시
-    window.addEventListener("load", () => {
-      setTimeout(sendHeightToParent, 100); // 약간의 렌더링 대기
-    });
-    
-    function loadPage(page) {
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? "550px" : "345px"
-        window.location.href = page;
-      window.parent.postMessage({ type: "SET_FRAME_SIZE", height: height, width: "100%"}, "*");
-    }
-  </script>        
+
+  <!-- OPTIONAL: If your SPA sets dark-mode class on body, this page will follow automatically.
+       If you want to force dark mode here, add: class="dark-mode" to <body>. -->
 </body>
 </html>
