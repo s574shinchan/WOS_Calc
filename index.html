@@ -1879,15 +1879,31 @@
     운영지원/후원 팝업이 항상 동작하도록 이벤트 위임 처리
   */
   (function () {
-    const OPEN_KAKAO_URL = 'https://open.kakao.com/o/suX41pYg';
+    const OPEN_SUPPORT_URL   = 'https://open.kakao.com/o/suX41pYg'; // 후원/문의
+    const OPEN_CONSULT_URL   = 'https://open.kakao.com/o/sUPPaqqh'; // 컨설팅
 
-    function openSupportModal() {
+    function openSupportModal(type) {
       const modal = document.getElementById('supportModal');
       if (!modal) return;
+
+      const support = modal.querySelector('#supportContent');
+      const consult = modal.querySelector('#consultContent');
+
+      if (support && consult) {
+        if (type === 'consult') {
+          support.classList.add('hidden');
+          consult.classList.remove('hidden');
+        } else if(type === 'support') {
+          consult.classList.add('hidden');
+          support.classList.remove('hidden');
+        }
+      }
 
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       document.documentElement.style.overflow = 'hidden';
+
+      modal.dataset.type = type;
     }
 
     function closeSupportModal() {
@@ -1907,7 +1923,15 @@
       const openBtn = t.closest && t.closest('#supportOpenBtn');
       if (openBtn) {
         e.preventDefault();
-        openSupportModal();
+        openSupportModal('support');
+        return;
+      }
+      
+      // 컨설팅 문의 버튼
+      const consultBtn = t.closest && t.closest('#consultOpenBtn');
+      if (consultBtn) {
+        e.preventDefault();
+        openSupportModal('consult');
         return;
       }
 
@@ -1923,10 +1947,19 @@
       const confirmBtn = t.closest && t.closest('#supportConfirmBtn');
       if (confirmBtn) {
         e.preventDefault();
-        window.open(OPEN_KAKAO_URL, '_blank', 'noopener,noreferrer');
+
+        const modal = document.getElementById('supportModal');
+        const type = modal?.dataset.type;
+
+        const url = (type === 'consult')
+          ? OPEN_CONSULT_URL
+          : OPEN_SUPPORT_URL;
+
+        window.open(url, '_blank', 'noopener,noreferrer');
         closeSupportModal();
         return;
       }
+
     });
 
     // ESC 키 닫기

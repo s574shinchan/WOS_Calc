@@ -69,7 +69,8 @@
                       transition-opacity duration-300">
             사용자 ID가 복사되었습니다.
           </div>
-          <button onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')"
+          <button id="consultOpenBtn"
+                  type="button"
                   class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center
                          gap-2 bg-slate-600 text-white justify-center w-full">
             컨설팅문의
@@ -214,25 +215,50 @@
       <div class="relative bg-[#242424] text-white rounded-xl
                   w-[92%] max-w-md border border-white/10 shadow-xl">
         <div class="px-4 py-3 border-b border-white/10 flex justify-between items-center">
-          <span class="font-bold text-[16pxㅁ">문의 / 후원 안내</span>
+          <span id="popuptitle" class="font-bold text-[16px]">안내사항</span>
           <button type="button" data-close class="opacity-70 hover:opacity-100">✕</button>
         </div>
-
-        <div class="px-4 py-4 text-sm leading-relaxed space-y-2">
-          <p>
-            <b>자발적 후원 및 문의/오류제보를 위한 오픈카톡 연결전 안내</b>
-          </p>
-          <ul class="list-disc list-inside text-white/80">
-            <li>후원은 <b>절대 필수가 아닙니다</b></li>
-            <li>후원 여부와 관계없이 모든 기능은 동일하게 이용 가능합니다</li>
-            <li>문의 / 오류 제보도 동일 채널에서 가능합니다</li>
-            <li>후원방법 : 오픈톡입장 후 + 표시 선택 후 송금하기</li>
-          </ul>
-          <p class="text-xs text-white/60">
-            확인을 누르면 오픈카톡이 새 창으로 열립니다.
-          </p>
+        
+        <div id="supportContent">
+          <div class="px-4 py-4 text-sm leading-relaxed space-y-2">
+            <p>
+              <b>홈페이지 관련 문의/후원</b>
+            </p>
+            <ul class="list-disc list-inside text-white/80">
+              <li>후원은 <b>자발적이며, 절대 필수가 아닙니다</b></li>
+              <li>후원 여부와 관계없이 모든 기능은 동일하게 이용 가능합니다</li>
+              <li>문의 / 오류 제보도 동일 채널에서 가능합니다</li>
+              <li>후원방법 : 오픈톡입장 후 + 표시 선택 후 송금하기</li>
+            </ul>
+            <p class="text-xs text-white/60">
+              확인을 누르면 오픈카톡이 새 창으로 열립니다.
+            </p>
+          </div>
         </div>
-
+        
+        <!-- ✅ 컨설팅 문의용 (기본 hidden) -->
+        <div id="consultContent" class="hidden">
+          <div class="px-4 py-4 text-sm leading-relaxed space-y-2">
+            <p>
+              <b>컨설팅 문의</b>
+            </p>
+            <ul class="list-disc list-inside text-white/80">
+              <li>본 채널은 <b>컨설팅 문의 전용</b> 오픈카톡입니다</li>
+              <li>어떤 패키지를 사야하는지 고민될 때</li>
+              <li>과금을 효율적으로 하고 싶을 때</li>
+              <li>과금에 대한 컨설팅이 필요할 때</li>
+              <li>게임플레이 방식에 대한 컨설팅이 필요할 때</li>
+              <li>그 외 각종 컨설팅이 필요한 경우 연락주세요.</li>
+            </ul>
+            <p class="text-xs text-white/60">
+              * 상황에 따라 즉시 답변이 어려울 수 있습니다.
+            </p>
+            <p class="text-xs text-white/60">
+              확인을 누르면 컨설팅 문의용 오픈카톡이 새 창으로 열립니다.
+            </p>
+          </div>
+        </div>
+        
         <div class="px-4 py-3 border-t border-white/10 flex justify-end gap-2 bg-[#1f1f1f]">
           <button type="button"
                   data-close
