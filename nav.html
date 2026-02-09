@@ -16,10 +16,13 @@
         <div class="flex flex-col gap-1">
           <span class="text-2xl font-bold">WOS 계산기</span>
           <div class="flex">
-            <button onclick="window.open('https://toon.at/donate/shin1083', '_blank')" 
-                    class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center 
+            <!-- ✅ 운영지원 버튼: 명칭 + 이벤트만 수정 (기존 항목 삭제/생략 없음) -->
+            <button id="supportOpenBtn"
+                    type="button"
+                    class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center
                            gap-2 bg-slate-600 text-white justify-center w-full">
-              운영지원</button>
+              문의/후원
+            </button>
           </div>
         </div>
         <!-- Support Badge + Toast Wrapper -->
@@ -67,7 +70,7 @@
             사용자 ID가 복사되었습니다.
           </div>
           <button onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')"
-                  class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center 
+                  class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center
                          gap-2 bg-slate-600 text-white justify-center w-full">
             컨설팅문의
           </button>
@@ -83,18 +86,18 @@
               계산기<span class="chev" aria-hidden="true"></span>
             </button>
             <div class="dd-menu" role="menu">
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="buildingchoice.partial.html"
                  data-css="css/building.css">건물계산</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="enquirychoice.partial.html"
                  data-css="css/research.css">연구계산</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="experts.partial.html"
                  data-css="css/experts.css">전문가</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="pet.partial.html"
-                 data-css="css/pets.css">펫돌파</a>            
+                 data-css="css/pets.css">펫돌파</a>
             </div>
           </div>
           <div class="dd" data-dd>
@@ -102,10 +105,10 @@
               영웅장비<span class="chev" aria-hidden="true"></span>
             </button>
             <div class="dd-menu" role="menu">
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="hero_Mithril.partial.html"
                  data-css="css/heroes.css">미스릴</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="hero_Mastery.partial.html"
                  data-css="css/heroes.css">마스터리</a>
             </div>
@@ -115,10 +118,10 @@
               장비 및 보석<span class="chev" aria-hidden="true"></span>
             </button>
             <div class="dd-menu" role="menu">
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="equip.partial.html"
                  data-css="css/heroes.css">영주장비</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="gem.partial.html"
                  data-css="css/gem.css">영주보석</a>
             </div>
@@ -128,18 +131,18 @@
               편의항목<span class="chev" aria-hidden="true"></span>
             </button>
             <div class="dd-menu" role="menu">
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="beartrap.partial.html"
                  data-css="css/beartrap.css">부대계산</a>
-              <a class="dd-item" 
-                 data-page="troop.partial.html" 
+              <a class="dd-item"
+                 data-page="troop.partial.html"
                  data-css="css/troop.css">병사생산</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="SVS_PreMission.partial.html"
                  data-css="css/svs.css">SVS점수</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="hero_info.partial.html">영웅정보</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="rallytimechk.html"
                  data-css="css/rally.css">집결시간계산</a>
             </div>
@@ -149,45 +152,46 @@
               자료 및 일정<span class="chev" aria-hidden="true"></span>
             </button>
             <div class="dd-menu" role="menu">
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="transfer.partial.html"
                  data-css="css/transfer_partial.css">이민예측</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="schedule.partial.html">주간일정</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="pakage.partial.html">패키지자료</a>
-              <a class="dd-item" 
+              <a class="dd-item"
                  data-page="imagedata.partial.html">이미지자료</a>
             </div>
           </div>
-          <button onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
+          <!--
+          <button onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')"
                       class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
                 자료요청</button>
-          <!--
+          
           <div class="dd" data-dd>
             <button class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">
               피드백<span class="chev" aria-hidden="true"></span>
             </button>
-            <div class="dd-menu" role="menu">            
-              <button onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')" 
+            <div class="dd-menu" role="menu">
+              <button onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')"
                       class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
                 컨설팅문의</button>
-              <button onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')" 
+              <button onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')"
                       class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
                 자료요청</button>
-              <<button onclick="window.open('buymeacoffee.com/shin0825', '_blank')" 
+              <<button onclick="window.open('buymeacoffee.com/shin0825', '_blank')"
                       class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
                 후원하기</button>
             </div>
           </div>-->
 
           <div class="dd" data-dd>
-            <button id="DarkMode" 
+            <button id="DarkMode"
                     onclick="ActiveDarkMode()"
-                    style=" display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; 
-                           background: rgba(255,255,255,.07); 
-                           border: 1px solid rgba(255,255,255,.07); border-radius: 0.75rem; 
-                           color: blue; font-size: 1.3rem; 
+                    style=" display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem;
+                           background: rgba(255,255,255,.07);
+                           border: 1px solid rgba(255,255,255,.07); border-radius: 0.75rem;
+                           color: blue; font-size: 1.3rem;
                            cursor: pointer;">☀️</button>
           </div>
           <div>
@@ -198,8 +202,50 @@
               <option value="index_JP.html" data-lang-link="jp">🇯🇵 日本語</option>
             </select>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
+
+    <!-- ✅ 운영지원/후원 팝업(추가) : 기존 항목 삭제/생략 없음 -->
+    <div id="supportModal"
+         class="fixed inset-0 z-[9999] hidden items-center justify-center">
+      <div class="absolute inset-0 bg-black/60" data-close></div>
+
+      <div class="relative bg-[#242424] text-white rounded-xl
+                  w-[92%] max-w-md border border-white/10 shadow-xl">
+        <div class="px-4 py-3 border-b border-white/10 flex justify-between items-center">
+          <span class="font-bold text-[16pxㅁ">문의 / 후원 안내</span>
+          <button type="button" data-close class="opacity-70 hover:opacity-100">✕</button>
+        </div>
+
+        <div class="px-4 py-4 text-sm leading-relaxed space-y-2">
+          <p>
+            <b>자발적 후원 및 문의/오류제보를 위한 오픈카톡 연결전 안내</b>
+          </p>
+          <ul class="list-disc list-inside text-white/80">
+            <li>후원은 <b>절대 필수가 아닙니다</b></li>
+            <li>후원 여부와 관계없이 모든 기능은 동일하게 이용 가능합니다</li>
+            <li>문의 / 오류 제보도 동일 채널에서 가능합니다</li>
+            <li>후원방법 : 오픈톡입장 후 + 표시 선택 후 송금하기</li>
+          </ul>
+          <p class="text-xs text-white/60">
+            확인을 누르면 오픈카톡이 새 창으로 열립니다.
+          </p>
+        </div>
+
+        <div class="px-4 py-3 border-t border-white/10 flex justify-end gap-2 bg-[#1f1f1f]">
+          <button type="button"
+                  data-close
+                  class="px-4 py-2 rounded-lg border border-white/20 text-sm">
+            취소
+          </button>
+          <button type="button"
+                  id="supportConfirmBtn"
+                  class="px-4 py-2 rounded-lg bg-emerald-500 text-black font-bold text-sm">
+            확인
+          </button>
+        </div>
+      </div>
+    </div>    
   </body>
 </html>

@@ -1873,5 +1873,70 @@
       }
     });
   </script>
+  <script>
+  /*
+    SPA 방식 대응용: nav.html이 나중에 삽입되어도
+    운영지원/후원 팝업이 항상 동작하도록 이벤트 위임 처리
+  */
+  (function () {
+    const OPEN_KAKAO_URL = 'https://open.kakao.com/o/suX41pYg';
+
+    function openSupportModal() {
+      const modal = document.getElementById('supportModal');
+      if (!modal) return;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.documentElement.style.overflow = 'hidden';
+    }
+
+    function closeSupportModal() {
+      const modal = document.getElementById('supportModal');
+      if (!modal) return;
+
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.documentElement.style.overflow = '';
+    }
+
+    // ✅ SPA 대응: document 단위 클릭 위임
+    document.addEventListener('click', function (e) {
+      const t = e.target;
+
+      // 운영지원 / 후원 버튼
+      const openBtn = t.closest && t.closest('#supportOpenBtn');
+      if (openBtn) {
+        e.preventDefault();
+        openSupportModal();
+        return;
+      }
+
+      // 팝업 닫기 (배경 / X / 취소)
+      const closeBtn = t.closest && t.closest('[data-close]');
+      if (closeBtn) {
+        e.preventDefault();
+        closeSupportModal();
+        return;
+      }
+
+      // 확인 버튼
+      const confirmBtn = t.closest && t.closest('#supportConfirmBtn');
+      if (confirmBtn) {
+        e.preventDefault();
+        window.open(OPEN_KAKAO_URL, '_blank', 'noopener,noreferrer');
+        closeSupportModal();
+        return;
+      }
+    });
+
+    // ESC 키 닫기
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeSupportModal();
+      }
+    });
+  })();
+  </script>
+  
   </body>
 </html>
