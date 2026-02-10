@@ -16,7 +16,7 @@
         <div class="flex flex-col gap-1">
           <span class="text-2xl font-bold">WOS 계산기</span>
           <div class="flex">
-            <!-- ✅ 운영지원 버튼: 명칭 + 이벤트만 수정 (기존 항목 삭제/생략 없음) -->
+            <!-- ✅ 운영지원 버튼 -->
             <button id="supportOpenBtn"
                     type="button"
                     class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center
@@ -25,6 +25,7 @@
             </button>
           </div>
         </div>
+
         <!-- Support Badge + Toast Wrapper -->
         <div data-support class="relative">
           <!-- Support Badge -->
@@ -69,6 +70,8 @@
                       transition-opacity duration-300">
             사용자 ID가 복사되었습니다.
           </div>
+
+          <!-- ✅ 컨설팅 버튼 -->
           <button id="consultOpenBtn"
                   type="button"
                   class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center
@@ -164,27 +167,6 @@
                  data-page="imagedata.partial.html">이미지자료</a>
             </div>
           </div>
-          <!--
-          <button onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')"
-                      class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
-                자료요청</button>
-          
-          <div class="dd" data-dd>
-            <button class="dd-btn" type="button" aria-haspopup="menu" aria-expanded="false">
-              피드백<span class="chev" aria-hidden="true"></span>
-            </button>
-            <div class="dd-menu" role="menu">
-              <button onclick="window.open('https://open.kakao.com/o/sUPPaqqh', '_blank')"
-                      class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
-                컨설팅문의</button>
-              <button onclick="window.open('https://open.kakao.com/o/suX41pYg', '_blank')"
-                      class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
-                자료요청</button>
-              <<button onclick="window.open('buymeacoffee.com/shin0825', '_blank')"
-                      class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
-                후원하기</button>
-            </div>
-          </div>-->
 
           <div class="dd" data-dd>
             <button id="DarkMode"
@@ -207,7 +189,7 @@
       </div>
     </div>
 
-    <!-- ✅ 운영지원/후원 팝업(추가) : 기존 항목 삭제/생략 없음 -->
+    <!-- ✅ 운영지원/후원 + 컨설팅 공용 팝업 -->
     <div id="supportModal"
          class="fixed inset-0 z-[9999] hidden items-center justify-center">
       <div class="absolute inset-0 bg-black/60" data-close></div>
@@ -218,7 +200,7 @@
           <span id="popuptitle" class="font-bold text-[16px]">안내사항</span>
           <button type="button" data-close class="opacity-70 hover:opacity-100">✕</button>
         </div>
-        
+
         <div id="supportContent">
           <div class="px-4 py-4 text-sm leading-relaxed space-y-2">
             <p>
@@ -231,11 +213,11 @@
               <li>후원방법 : 오픈톡입장 후 + 표시 선택 후 송금하기</li>
             </ul>
             <p class="text-xs text-white/60">
-              확인을 누르면 오픈카톡이 새 창으로 열립니다.
+              아래 버튼을 누르면 오픈카톡이 새 창으로 열립니다.
             </p>
           </div>
         </div>
-        
+
         <!-- ✅ 컨설팅 문의용 (기본 hidden) -->
         <div id="consultContent" class="hidden">
           <div class="px-4 py-4 text-sm leading-relaxed space-y-2">
@@ -254,24 +236,48 @@
               * 상황에 따라 즉시 답변이 어려울 수 있습니다.
             </p>
             <p class="text-xs text-white/60">
-              확인을 누르면 컨설팅 문의용 오픈카톡이 새 창으로 열립니다.
+              아래 버튼을 누르면 컨설팅 문의용 오픈카톡이 새 창으로 열립니다.
             </p>
           </div>
         </div>
-        
-        <div class="px-4 py-3 border-t border-white/10 flex justify-end gap-2 bg-[#1f1f1f]">
-          <button type="button"
-                  data-close
-                  class="px-4 py-2 rounded-lg border border-white/20 text-sm">
-            취소
-          </button>
-          <button type="button"
-                  id="supportConfirmBtn"
-                  class="px-4 py-2 rounded-lg bg-emerald-500 text-black font-bold text-sm">
-            확인
-          </button>
+
+        <!-- ✅ Footer 분리: 운영(문의/후원) / 컨설팅 -->
+        <div class="px-4 py-3 border-t border-white/10 bg-[#1f1f1f]">
+          <!-- 운영용: 취소/문의/후원 -->
+          <div id="supportFooter" class="flex justify-end gap-2">
+            <button type="button"
+                    data-close
+                    class="px-4 py-2 rounded-lg border border-white/20 text-sm">
+              취소
+            </button>
+            <button type="button"
+                    id="supportInquiryBtn"
+                    class="px-4 py-2 rounded-lg bg-sky-500 text-black font-bold text-sm">
+              문의
+            </button>
+            <button type="button"
+                    id="supportDonateBtn"
+                    class="px-4 py-2 rounded-lg bg-emerald-500 text-black font-bold text-sm">
+              후원
+            </button>
+          </div>
+
+          <!-- 컨설팅용: 취소/확인 -->
+          <div id="consultFooter" class="hidden justify-end gap-2">
+            <button type="button"
+                    data-close
+                    class="px-4 py-2 rounded-lg border border-white/20 text-sm">
+              취소
+            </button>
+            <button type="button"
+                    id="consultConfirmBtn"
+                    class="px-4 py-2 rounded-lg bg-emerald-500 text-black font-bold text-sm">
+              확인
+            </button>
+          </div>
         </div>
       </div>
-    </div>    
+    </div>
+
   </body>
 </html>

@@ -1876,11 +1876,13 @@
   <script>
   /*
     SPA 방식 대응용: nav.html이 나중에 삽입되어도
-    운영지원/후원 팝업이 항상 동작하도록 이벤트 위임 처리
+    문의/후원/컨설팅 팝업이 항상 동작하도록 이벤트 위임 처리
   */
   (function () {
-    const OPEN_SUPPORT_URL   = 'https://open.kakao.com/o/suX41pYg'; // 후원/문의
-    const OPEN_CONSULT_URL   = 'https://open.kakao.com/o/sUPPaqqh'; // 컨설팅
+    // ✅ 링크 3개만 네 값으로 유지/수정
+    const OPEN_INQUIRY_URL = 'https://open.kakao.com/o/getncMfi'; // 문의 (원하면 분리)
+    const OPEN_DONATE_URL  = 'https://open.kakao.com/o/suX41pYg'; // 후원 (원하면 분리)
+    const OPEN_CONSULT_URL = 'https://open.kakao.com/o/sUPPaqqh'; // 컨설팅
 
     function openSupportModal(type) {
       const modal = document.getElementById('supportModal');
@@ -1889,13 +1891,31 @@
       const support = modal.querySelector('#supportContent');
       const consult = modal.querySelector('#consultContent');
 
+      const supportFooter = modal.querySelector('#supportFooter');
+      const consultFooter = modal.querySelector('#consultFooter');
+
+      // content toggle
       if (support && consult) {
         if (type === 'consult') {
           support.classList.add('hidden');
           consult.classList.remove('hidden');
-        } else if(type === 'support') {
+        } else {
           consult.classList.add('hidden');
           support.classList.remove('hidden');
+        }
+      }
+
+      // footer toggle
+      if (supportFooter && consultFooter) {
+        if (type === 'consult') {
+          supportFooter.classList.add('hidden');
+          consultFooter.classList.remove('hidden');
+          consultFooter.classList.add('flex');
+        } else {
+          consultFooter.classList.add('hidden');
+          consultFooter.classList.remove('flex');
+          supportFooter.classList.remove('hidden');
+          supportFooter.classList.add('flex');
         }
       }
 
@@ -1913,20 +1933,21 @@
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       document.documentElement.style.overflow = '';
+      delete modal.dataset.type;
     }
 
     // ✅ SPA 대응: document 단위 클릭 위임
     document.addEventListener('click', function (e) {
       const t = e.target;
 
-      // 운영지원 / 후원 버튼
+      // 문의/후원 버튼
       const openBtn = t.closest && t.closest('#supportOpenBtn');
       if (openBtn) {
         e.preventDefault();
         openSupportModal('support');
         return;
       }
-      
+
       // 컨설팅 문의 버튼
       const consultBtn = t.closest && t.closest('#consultOpenBtn');
       if (consultBtn) {
@@ -1935,7 +1956,7 @@
         return;
       }
 
-      // 팝업 닫기 (배경 / X / 취소)
+      // 팝업 닫기(배경/X/취소)
       const closeBtn = t.closest && t.closest('[data-close]');
       if (closeBtn) {
         e.preventDefault();
@@ -1943,33 +1964,41 @@
         return;
       }
 
-      // 확인 버튼
-      const confirmBtn = t.closest && t.closest('#supportConfirmBtn');
-      if (confirmBtn) {
+      // ✅ support: 문의
+      const inquiryBtn = t.closest && t.closest('#supportInquiryBtn');
+      if (inquiryBtn) {
         e.preventDefault();
-
-        const modal = document.getElementById('supportModal');
-        const type = modal?.dataset.type;
-
-        const url = (type === 'consult')
-          ? OPEN_CONSULT_URL
-          : OPEN_SUPPORT_URL;
-
-        window.open(url, '_blank', 'noopener,noreferrer');
+        window.open(OPEN_INQUIRY_URL, '_blank', 'noopener,noreferrer');
         closeSupportModal();
         return;
       }
 
+      // ✅ support: 후원
+      const donateBtn = t.closest && t.closest('#supportDonateBtn');
+      if (donateBtn) {
+        e.preventDefault();
+        window.open(OPEN_DONATE_URL, '_blank', 'noopener,noreferrer');
+        closeSupportModal();
+        return;
+      }
+
+      // ✅ consult: 확인
+      const consultConfirmBtn = t.closest && t.closest('#consultConfirmBtn');
+      if (consultConfirmBtn) {
+        e.preventDefault();
+        window.open(OPEN_CONSULT_URL, '_blank', 'noopener,noreferrer');
+        closeSupportModal();
+        return;
+      }
     });
 
     // ESC 키 닫기
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') {
-        closeSupportModal();
-      }
+      if (e.key === 'Escape') closeSupportModal();
     });
   })();
-  </script>
+</script>
+
   
   </body>
 </html>
