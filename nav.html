@@ -15,15 +15,15 @@
 
         <div class="flex flex-col gap-1">
           <span class="text-2xl font-bold">WOS 계산기</span>
-          <div class="flex">
-            <!-- ✅ 운영지원 버튼 -->
+<!--          <div class="flex">
+             ✅ 운영지원 버튼 
             <button id="supportOpenBtn"
                     type="button"
                     class="block flex mt-1 px-3 py-1 rounded-md shadow text-[15px] items-center
                            gap-2 bg-slate-600 text-white justify-center w-full">
               문의/후원
             </button>
-          </div>
+          </div>-->
         </div>
 
         <!-- Support Badge + Toast Wrapper -->
@@ -167,7 +167,12 @@
                  data-page="imagedata.partial.html">이미지자료</a>
             </div>
           </div>
-
+          
+          <button id="supportOpenBtn"
+                  class="dd-item" type="button" aria-haspopup="menu" aria-expanded="false">
+            문의/후원
+          </button>
+          
           <div class="dd" data-dd>
             <button id="DarkMode"
                     onclick="ActiveDarkMode()"
