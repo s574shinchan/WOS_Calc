@@ -457,6 +457,23 @@
 
       return factor;
     }
+		
+		function toHours(v){
+			if (v == null) return 0;
+			v = String(v).trim();
+			if (!v) return 0;
+
+			if (v.includes(':')) {
+				const p = v.split(':').map(x => x.trim());
+				const h = Number(p[0]) || 0;
+				const m = Number(p[1]) || 0;
+				const s = Number(p[2]) || 0;
+				return h + (m/60) + (s/3600);
+			}
+
+			const n = Number(v);
+			return Number.isFinite(n) ? n : 0;
+		}
     // ======================================
 
     function calculateAll(){
@@ -492,13 +509,17 @@
         let hours = 0; // 변환시간(시간)
 
         data.forEach(row=>{
-          resources.forEach(res=>{
-            const v = parseFloat(row[res] || 0);
-            if (res === "변환시간") hours += (isNaN(v)?0:v);
-            else sub[res] += (isNaN(v)?0:v);
+          resources.forEach(res=>{            
+            if (res === "변환시간") {
+							var v = toHours(row[res]);
+							hours += (isNaN(v)?0:v);
+						} else {
+							var n = Number(String(row[res] ?? "0").replace(/,/g, "").trim());
+							sub[res] += (Number.isFinite(n) ? n : 0);
+						}
           });
         });
-
+						
         // 카드 우측 ‘필요 합계’ 갱신 (체크와 무관 / 항상 표시)
         document.getElementById(`sub-고기-${name}`).textContent    = formatValue(sub["고기"]);
         document.getElementById(`sub-나무-${name}`).textContent    = formatValue(sub["나무"]);
