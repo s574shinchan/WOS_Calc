@@ -1,6 +1,6 @@
 {
   "minVersion": "1.0.0",
-  "minBuild": 17,
+  "minBuild": 18,
   "message": "현재 버전은 더 이상 사용할 수 없습니다.\n스토어에서 업데이트 해주세요.",
   "storeUrl": "https://play.google.com/store/apps/details?id=com.shinchan.wosapp"
 }
