@@ -83,8 +83,12 @@
         <div>
           <label class="block text-sm mb-1">Hyena Buff</label>
           <select id="buffSelect" class="w-full border rounded p-1 px-3 py-2">
-            <option>None</option>
-            <option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+						<option value="0">None</option>
+						<option value="5">Lv1 (5%)</option>
+						<option value="7">Lv2 (7%)</option>
+						<option value="9">Lv3 (9%)</option>
+						<option value="12">Lv4 (12%)</option>
+						<option value="15">Lv5 (15%)</option>
           </select>
         </div>
 
@@ -369,16 +373,10 @@
       return active ? Number(active.dataset.vp || 0) : 0; // 0 | 10 | 15
     }
 
-    function getPetPercent(){
-      const sel = document.getElementById('buffSelect');
-      if (!sel) return 0;
-      const v = (sel.value || '').trim();
-      if (!v || /^none$/i.test(v)) return 0;
-      const n1 = Number(v);
-      if (!Number.isNaN(n1) && Number.isFinite(n1)) return n1;
-      const m = v.match(/[-+]?\d+(\.\d+)?/);
-      return m ? Number(m[0]) : 0;
-    }
+		function getPetPercent(){
+			var sel = document.getElementById('buffSelect');
+			return sel ? Number(sel.value || 0) : 0;
+		}
 
     // ✅ Expert(아그네스) 고정 차감 시간(시간/단계) 반환
     function getExpertFlatHours(){
