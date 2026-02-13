@@ -1,22 +1,19 @@
-<meta charset="UTF-8">
-<div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 gap-2">
-	<div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
-		<div class="bg-gray-100 p-2 font-sans text-sm">
-			<div class="bg-white p-4 rounded-xl shadow-md space-y-4"
-					 style="max-width:1500px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:12px;">
-				<h1 class="text-xl md:text-2xl font-bold text-gray-700">📊 이민히스토리</h1>
-				<button data-year="2024" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;background:#121212;color:#f0f0f0;cursor:pointer;">2024</button>
-				<button data-year="2025" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;background:#121212;color:#f0f0f0;cursor:pointer;">2025</button>
-				<button data-year="2026" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;background:#121212;color:#f0f0f0;cursor:pointer;">2026</button>
-				
-				<span id="status" style="margin-left:auto;color:#666;font-size:12px;">대기중</span>
-			</div>
-			
-			<div id="sheet-table" style="overflow:auto;border:1px solid #eee;border-radius:10px;padding:8px;">
-				⏳ 데이터를 불러오는 중...
-			</div>
-		</div>
-	</div>
+<meta charset="UTF-8" />
+
+<div style="max-width:1500px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:12px;">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+    <b style="font-size:18px;">📊 이민히스토리 (Sheets API 직접)</b>
+
+    <button data-year="2024" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;background:#f7f7f7;cursor:pointer;">2024</button>
+    <button data-year="2025" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;background:#f7f7f7;cursor:pointer;">2025</button>
+    <button data-year="2026" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;background:#f7f7f7;cursor:pointer;">2026</button>
+
+    <span id="status" style="margin-left:auto;color:#666;font-size:12px;">대기중</span>
+  </div>
+
+  <div id="sheet-table" style="overflow:auto;border:1px solid #eee;border-radius:10px;padding:8px;">
+    ⏳ 데이터를 불러오는 중...
+  </div>
 </div>
 
 <script>
@@ -153,7 +150,7 @@
         const fg = rgb(eff.textFormat?.foregroundColor, "#000000");
         const bold = (eff.textFormat?.bold === true || usr.textFormat?.bold === true);
 
-        const fs = 12;//eff.textFormat?.fontSize;
+        const fs = eff.textFormat?.fontSize;
         const fsStyle = (Number.isFinite(fs) && fs > 0) ? `font-size:${fs}px;` : "";
 
         const aStyle = textAlign(eff) || textAlign(usr);
