@@ -1,0 +1,104 @@
+<meta charset="UTF-8" />
+<div class="card transfer-card">
+  <h2 class="transfer-title">🌏 이민그룹</h2>
+  <div id="sheet-table" class="transfer-loading">⏳ 데이터를 불러오는 중...</div>
+</div>
+
+<style>
+  .transfer-card{
+    background:#fff; border-radius:10px; padding:12px;
+    box-shadow:0 4px 8px rgba(0,0,0,.08);
+  }
+  .transfer-title{ margin:0 0 10px 0; font-size:16px; font-weight:800; }
+  .transfer-loading{ font-size:12px; color:#666; }
+  .transfer-table{
+    border-collapse:collapse; width:100%;
+    font-size:12px;
+  }
+  .transfer-table td, .transfer-table th{
+    border:1px solid #ccc;
+    padding:6px; text-align:center;
+  }
+</style>
+
+<script>
+  (function () {
+    const SHEET_ID = "1a2j650rgwXEMR_sXRRpM2-L6o_b-uC7FdoixGi34oTw";
+    const GID = "1992769226";
+    const targetId = "sheet-table";
+
+    // CSV 한 줄 파싱(따옴표/쉼표/"" escape 대응)
+    function parseCsvLine(line) {
+      const out = [];
+      let cur = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') {
+            cur += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (ch === "," && !inQuotes) {
+          out.push(cur);
+          cur = "";
+        } else {
+          cur += ch;
+        }
+      }
+      out.push(cur);
+      return out;
+    }
+
+    function parseCsv(text) {
+      const normalized = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+      const lines = normalized.split("\n").filter(l => l.trim() !== "");
+      return lines.map(parseCsvLine);
+    }
+
+    function esc(s) {
+      return String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    async function loadGvizCsvToTable() {
+      const url =
+        `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${encodeURIComponent(GID)}&t=${Date.now()}`;
+
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error("GVIZ fetch 실패");
+
+        const csv = await res.text();
+        const rows = parseCsv(csv);
+
+        if (!rows.length) {
+          document.getElementById(targetId).innerText = "데이터가 비어있습니다.";
+          return;
+        }
+
+        let html = '<table class="transfer-table"><tbody>';
+        for (const r of rows) {
+          html += "<tr>";
+          for (const cell of r) html += `<td>${esc(cell)}</td>`;
+          html += "</tr>";
+        }
+        html += "</tbody></table>";
+
+        document.getElementById(targetId).innerHTML = html;
+      } catch (e) {
+        console.error(e);
+        document.getElementById(targetId).innerText = "❌ 데이터를 불러오지 못했습니다.";
+      }
+    }
+
+    // partial이 삽입된 즉시 실행
+    loadGvizCsvToTable();
+  })();
+</script>
