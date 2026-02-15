@@ -139,580 +139,576 @@
 </div>
 
 <script>
-(function(){  
-  // ✅ SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
-  if (window.__REGULAR_INIT_BOUND__) {
-    // 이미 초기화된 상태면 그냥 실행만(필요 시)
-    window.RegularInit?.();
-    return;
-  }
-  window.__REGULAR_INIT_BOUND__ = true;
-    
-  window.RegularInit = function RegularInit(){  
-  // ✅ 활성/비활성 스타일 클래스(기본 테마 유지)
-  var ACTIVE = ['bg-blue-500','text-white','border-blue-500'];
-  var INACTIVE = ['bg-white','text-gray-800','border-gray-300'];
+		(function(){
+		// ✅ SPA 재진입/재로드 시 이벤트 중복 바인딩 방지
+		if (window.__REGULAR_INIT_BOUND__) {
+			// 이미 초기화된 상태면 그냥 실행만(필요 시)
+			window.RegularInit?.();
+			return;
+		}
+		window.__REGULAR_INIT_BOUND__ = true;
 
-  function setActive(el, on) {
-    el.setAttribute('aria-pressed', on ? 'true' : 'false');
-    el.classList.remove(...(on ? INACTIVE : ACTIVE));
-    el.classList.add(...(on ? ACTIVE : INACTIVE));
-  }
+		window.RegularInit = function RegularInit(){  
+		// ✅ 활성/비활성 스타일 클래스(기본 테마 유지)
+		var ACTIVE = ['bg-blue-500','text-white','border-blue-500'];
+		var INACTIVE = ['bg-white','text-gray-800','border-gray-300'];
 
-  // 초기 상태 정리 (모든 토글/버튼에 비활성 스타일 부여)
-  document.querySelectorAll('.vp-btn, .toggle-btn').forEach(b => setActive(b, false));
-
-  // ✅ 부집행관(VP): 라디오처럼 동작 + 같은 버튼 재클릭 시 해제
-  document.querySelectorAll('.vp-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      var group = btn.dataset.group || 'vp';
-      var groupBtns = document.querySelectorAll(`.vp-btn[data-group="${group}"]`);
-      var wasActive = btn.getAttribute('aria-pressed') === 'true';
-
-      if (wasActive) {
-        // 같은 버튼 다시 클릭 → 해제
-        setActive(btn, false);
-      } else {
-        // 다른 버튼 선택 → 나머지 해제, 이 버튼만 활성
-        groupBtns.forEach(b => setActive(b, false));
-        setActive(btn, true);
-      }
-      // 필요하면 값 사용: var vp = wasActive ? 0 : Number(btn.dataset.vp);
-    });
-  });
-
-  // ✅ 시청/서버 버프: 단순 토글
-  document.querySelectorAll('.toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      var nowOn = btn.getAttribute('aria-pressed') !== 'true';
-      setActive(btn, nowOn);
-      // nowOn === true 면 활성화, false 면 비활성화
-    });
-  });
-
-  // (옵션) 현재 선택값 얻기 예시
-  window.getBuffState = () => {
-    var activeVp = document.querySelector('.vp-btn[aria-pressed="true"]');
-    var vp = activeVp ? Number(activeVp.dataset.vp) : 0;
-    var city = document.getElementById('chkCityBuff').getAttribute('aria-pressed') === 'true';
-    var server = document.getElementById('chkServerBuff').getAttribute('aria-pressed') === 'true';
-    return { vp, city, server };
-  };
-
-  var buildingList = ["용광로","대사관","지휘부","의무실","방패병","창병","궁병"];
-  var resources = ["고기","나무","석탄","철광","변환시간"];
-  var buildingData = {};
-  var buildingCards = []; // {name, maxIndex}
-
-  // ✅ 건물명(한글) -> 이미지 파일명(영문) 매핑 (images/building/*)
-  var BUILDING_IMG_EN = {
-    "용광로": "Furnace",
-    "대사관": "Embassy",
-    "지휘부": "CommandCenter",
-    "방패병": "InfantryCamp",
-    "의무실": "Infirmary",
-    "창병": "LancerCamp",
-    "궁병": "MarksmanCamp"
-  };
-
-  function getBuildingImgWebp(name){
-    var en = BUILDING_IMG_EN[name] || name;
-    return `images/building/${en}.webp`;
-  }
-  function getBuildingImgPng(name){
-    var en = BUILDING_IMG_EN[name] || name;
-    return `images/building/${en}.png`;
-  }
-
-  var nf1 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
-
-  // ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
-  function formatSVS(value){
-    var num = Number(value);
-    if (!Number.isFinite(num)) return "0";
-    if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
-    if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
-    return num.toLocaleString();
-  }
-
-  function formatValue(value){
-    var num = Number(String(value ?? 0).replace(/,/g, ''));
-    if (isNaN(num)) return value;
-    var r1 = Math.round((num + Number.EPSILON) * 10) / 10;
-    if (r1 >= 1000) return nf1.format(r1 / 1000) + "B";
-    return nf1.format(r1) + "M";
-  }
-
-  function formatHourToTime(hours){
-    if (!hours || isNaN(hours)) return "0 분";
-    var totalMinutes = Math.round(hours*60);
-    var d = Math.floor(totalMinutes/1440);
-    var h = Math.floor((totalMinutes%1440)/60);
-    var m = totalMinutes%60;
-    return `${d?d+'일 ':''}${h?h+'시간 ':''}${(m||(!d&&!h))?m+'분':''}`.trim();
-  }
-
-  function handleVPCheck(which){
-    var v=document.getElementById("chkVP");
-    var s=document.getElementById("chkSPVP");
-    if(which==="chkVP" && v?.checked) s.checked=false;
-    if(which==="chkSPVP" && s?.checked) v.checked=false;
-    scheduleCalc();
-  }
-
-  // ======== 🔷 추가: 버튼 토글/펫버프 판독 유틸 ========
-  function isPressed(id){
-    var el = document.getElementById(id);
-    if (!el) return false;
-    var pressed = el.getAttribute?.('aria-pressed');
-    if (pressed === 'true') return true;
-    if (pressed === 'false') return false;
-    // 폴백: 체크박스 형태일 때
-    return !!el.checked;
-  }
-
-  function getActiveVP(){
-    var active = document.querySelector('.vp-btn[aria-pressed="true"]');
-    return active ? Number(active.dataset.vp || 0) : 0; // 0 | 10 | 15
-  }
-
-	function getPetPercent(){
-		var sel = document.getElementById('buffSelect');
-		return sel ? Number(sel.value || 0) : 0;
-	}
-
-	function toHours(v){
-		if (v == null) return 0;
-		v = String(v).trim();
-		if (!v) return 0;
-
-		if (v.includes(':')) {
-			const p = v.split(':').map(x => x.trim());
-			const h = Number(p[0]) || 0;
-			const m = Number(p[1]) || 0;
-			const s = Number(p[2]) || 0;
-			return h + (m/60) + (s/3600);
+		function setActive(el, on) {
+			el.setAttribute('aria-pressed', on ? 'true' : 'false');
+			el.classList.remove(...(on ? INACTIVE : ACTIVE));
+			el.classList.add(...(on ? ACTIVE : INACTIVE));
 		}
 
-		const n = Number(v);
-		return Number.isFinite(n) ? n : 0;
-	}
+		// 초기 상태 정리 (모든 토글/버튼에 비활성 스타일 부여)
+		document.querySelectorAll('.vp-btn, .toggle-btn').forEach(b => setActive(b, false));
 
-  // ✅ Expert(아그네스) 고정 차감 시간(시간/단계) 반환
-  function getExpertFlatHours(){
-    var sel = document.getElementById('chkExpertA');
-    if (!sel) return 0;
-    var raw = (sel.value || sel.options[sel.selectedIndex]?.text || '').trim().toLowerCase();
-    var asNum = Number(raw);
-    var lv = (!Number.isNaN(asNum) && Number.isFinite(asNum)) ? asNum
-             : (raw.includes('lv.5')||raw.includes('lv5')) ? 5
-             : (raw.includes('lv.4')||raw.includes('lv4')) ? 4
-             : (raw.includes('lv.3')||raw.includes('lv3')) ? 3
-             : (raw.includes('lv.2')||raw.includes('lv2')) ? 2
-             : (raw.includes('lv.1')||raw.includes('lv1')) ? 1 : 0;
-    return lv === 1 ? 2 : lv === 2 ? 3 : lv === 3 ? 4 : lv === 4 ? 6 : lv === 5 ? 8 : 0;
-  }
-  // ✅ 발레리아(SVS 점수 보너스)
-  var EXPERT_BONUS = {
-    "None":0,
-    "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
-    "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
-  };
-  var EXPERT_DESC = {
-    "Lv.1":  "+2%",
-    "Lv.2":  "+4%",
-    "Lv.3":  "+6%",
-    "Lv.4":  "+8%",
-    "Lv.5":  "+10%",
-    "Lv.6":  "+12%",
-    "Lv.7":  "+14%",
-    "Lv.8":  "+16%",
-    "Lv.9":  "+18%",
-    "Lv.10": "+20%"
-  };
+		// ✅ 부집행관(VP): 라디오처럼 동작 + 같은 버튼 재클릭 시 해제
+		document.querySelectorAll('.vp-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				var group = btn.dataset.group || 'vp';
+				var groupBtns = document.querySelectorAll(`.vp-btn[data-group="${group}"]`);
+				var wasActive = btn.getAttribute('aria-pressed') === 'true';
 
-  function getValeriaBonus(){
-    var sel = document.getElementById("chkExpertV");
-    if (!sel) return 0;
-    var key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
-    return EXPERT_BONUS[key] ?? 0;
-  }
+				if (wasActive) {
+					// 같은 버튼 다시 클릭 → 해제
+					setActive(btn, false);
+				} else {
+					// 다른 버튼 선택 → 나머지 해제, 이 버튼만 활성
+					groupBtns.forEach(b => setActive(b, false));
+					setActive(btn, true);
+				}
+				// 필요하면 값 사용: var vp = wasActive ? 0 : Number(btn.dataset.vp);
+			});
+		});
 
-  function getValeriaDesc(){
-    var expertSel = document.getElementById("chkExpertV");
-    var lv = expertSel.value;
-    var text = EXPERT_DESC[lv]
-      ? "SvS 점수 " + EXPERT_DESC[lv]
-      : "SvS 점수";
+		// ✅ 시청/서버 버프: 단순 토글
+		document.querySelectorAll('.toggle-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				var nowOn = btn.getAttribute('aria-pressed') !== 'true';
+				setActive(btn, nowOn);
+				// nowOn === true 면 활성화, false 면 비활성화
+			});
+		});
 
-    document.querySelectorAll(".svs-score-label").forEach(el => {
-      el.textContent = text;
-    });
-  }
-  // ===============================================
+		// (옵션) 현재 선택값 얻기 예시
+		window.getBuffState = () => {
+			var activeVp = document.querySelector('.vp-btn[aria-pressed="true"]');
+			var vp = activeVp ? Number(activeVp.dataset.vp) : 0;
+			var city = document.getElementById('chkCityBuff').getAttribute('aria-pressed') === 'true';
+			var server = document.getElementById('chkServerBuff').getAttribute('aria-pressed') === 'true';
+			return { vp, city, server };
+		};
 
-  async function fetchBuildingData(){
-    for (var name of buildingList){
-      var url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
-      var res = await fetch(url);
-      var text = await res.text();
-      var lines = text.trim().split("\n");
-      var headers = lines[0].split(",");
-      var data = lines.slice(1).map(line=>{
-        var obj = {};
-        var values = line.split(",");
-        headers.forEach((h,i)=> obj[h.trim()] = (values[i]?.trim() || "0"));
-        return obj;
-      });
-      buildingData[name]=data;
-    }
-    renderBuildingSelectors();
-    scheduleCalc();
-  }
+		var buildingList = ["용광로","대사관","지휘부","의무실","방패병","창병","궁병"];
+		var resources = ["고기","나무","석탄","철광","변환시간"];
+		var buildingData = {};
+		var buildingCards = []; // {name, maxIndex}
 
-  function renderBuildingSelectors(){
-    var container = document.getElementById("buildingGridBody");
+		// ✅ 건물명(한글) -> 이미지 파일명(영문) 매핑 (images/building/*)
+		var BUILDING_IMG_EN = {
+			"용광로": "Furnace",
+			"대사관": "Embassy",
+			"지휘부": "CommandCenter",
+			"방패병": "InfantryCamp",
+			"의무실": "Infirmary",
+			"창병": "LancerCamp",
+			"궁병": "MarksmanCamp"
+		};
 
-    // ✅ 기존 선택값 보존
-    var prev = {};
-    if (container && container.children.length) {
-      [...container.querySelectorAll('.exp-card')].forEach(card => {
-        var nameEl = card.querySelector('h3');
-        if (!nameEl) return;
-        var bname = nameEl.textContent.trim();
-        var startSel = card.querySelector(`#start-${bname}`);
-        var endSel   = card.querySelector(`#end-${bname}`);
-        if (startSel && endSel) {
-          prev[bname] = { start: startSel.value, end: endSel.value };
-        }
-      });
-    }
+		function getBuildingImgWebp(name){
+			var en = BUILDING_IMG_EN[name] || name;
+			return `images/building/${en}.webp`;
+		}
+		function getBuildingImgPng(name){
+			var en = BUILDING_IMG_EN[name] || name;
+			return `images/building/${en}.png`;
+		}
 
-    container.innerHTML = "";
-    buildingCards = [];
+		var nf1 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
 
-    buildingList.forEach(name=>{
-      var levelsFull = buildingData[name].map(d=> d["레벨"]); // 원본 모든 라벨
-      var filtered = filterLevelsWithIndex(levelsFull); // [{idx,label}] (외부 정의 가정)
+		// ✅ SVS 점수 전용 포맷 (M/B, 소수 2자리)
+		function formatSVS(value){
+			var num = Number(value);
+			if (!Number.isFinite(num)) return "0";
+			if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+			if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+			return num.toLocaleString();
+		}
 
-      // ✅ 옵션은 "화면 라벨은 filtered.label" / "value는 원본 idx"
-      var options = filtered
-        .map(({idx, label}) => `<option value="${idx}">${label}</option>`)
-        .join("");
+		function formatValue(value){
+			var num = Number(String(value ?? 0).replace(/,/g, ''));
+			if (isNaN(num)) return value;
+			var r1 = Math.round((num + Number.EPSILON) * 10) / 10;
+			if (r1 >= 1000) return nf1.format(r1 / 1000) + "B";
+			return nf1.format(r1) + "M";
+		}
 
-      var maxLabel = filtered.length ? filtered[filtered.length-1].label : (levelsFull[levelsFull.length-1] || '');
-      var card = document.createElement("div");
-      card.className = "exp-card";
-      card.innerHTML = `
-        <div class="p-2">
-          <div class="flex gap-2 items-stretch">
+		function formatHourToTime(hours){
+			if (!hours || isNaN(hours)) return "0 분";
+			var totalMinutes = Math.round(hours*60);
+			var d = Math.floor(totalMinutes/1440);
+			var h = Math.floor((totalMinutes%1440)/60);
+			var m = totalMinutes%60;
+			return `${d?d+'일 ':''}${h?h+'시간 ':''}${(m||(!d&&!h))?m+'분':''}`.trim();
+		}
 
-            <!-- LEFT: 이미지 -->
-            <div class="building-imgbox w-[170px] h-[160px] flex-shrink-0 rounded-2xl border overflow-hidden
-                        bg-gray-100 dark:bg-[#1e1e1e] flex items-center justify-center">
-              <img
-                src="${getBuildingImgWebp(name)}"
-                onerror="this.onerror=null; this.src='${getBuildingImgPng(name)}';"
-                alt="${name}"
-                class="w-full h-full object-contain"
-              />
-            </div>
+		function handleVPCheck(which){
+			var v=document.getElementById("chkVP");
+			var s=document.getElementById("chkSPVP");
+			if(which==="chkVP" && v?.checked) s.checked=false;
+			if(which==="chkSPVP" && s?.checked) v.checked=false;
+			scheduleCalc();
+		}
 
-            <!-- MID: 이름/최대레벨 + 현재/목표 -->
-            <div class="flex-1 min-w-[200px]">
-              <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
-              <div class="muted mt-1">최대 레벨: ${maxLabel}</div>
+		// ======== 🔷 추가: 버튼 토글/펫버프 판독 유틸 ========
+		function isPressed(id){
+			var el = document.getElementById(id);
+			if (!el) return false;
+			var pressed = el.getAttribute?.('aria-pressed');
+			if (pressed === 'true') return true;
+			if (pressed === 'false') return false;
+			// 폴백: 체크박스 형태일 때
+			return !!el.checked;
+		}
 
-              <div class="mt-5 grid grid-cols-[46px_1fr] gap-y-3 items-center">
-                <div class="text-sm text-gray-600">현재</div>
-                <select id="start-${name}" class="border rounded-lg px-3 py-2 text-sm w-full">
-                  ${options}
-                </select>
+		function getActiveVP(){
+			var active = document.querySelector('.vp-btn[aria-pressed="true"]');
+			return active ? Number(active.dataset.vp || 0) : 0; // 0 | 10 | 15
+		}
 
-                <div class="text-sm text-gray-600">목표</div>
-                <select id="end-${name}" class="border rounded-lg px-3 py-2 text-sm w-full">
-                  ${options}
-                </select>
-              </div>
-            </div>
+		function getPetPercent(){
+			var sel = document.getElementById('buffSelect');
+			return sel ? Number(sel.value || 0) : 0;
+		}
 
-            <!-- RIGHT: 필요자원 패널 (기존 id 그대로) -->
-            <div class="w-[480px] max-w-full rounded-2xl border p-4">
-              <div class="grid grid-cols-4 gap-x-3 gap-y-3 items-center text-[13px]">
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_Meet.webp" class="w-5 h-5" alt="고기">
-                </div>
-                <div id="sub-고기-${name}" class="tabular-nums">0</div>
+		function toHours(v){
+			if (v == null) return 0;
+			v = String(v).trim();
+			if (!v) return 0;
 
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_Wood.webp" class="w-5 h-5" alt="나무">
-                </div>
-                <div id="sub-나무-${name}" class="tabular-nums">0</div>
+			if (v.includes(':')) {
+				const p = v.split(':').map(x => x.trim());
+				const h = Number(p[0]) || 0;
+				const m = Number(p[1]) || 0;
+				const s = Number(p[2]) || 0;
+				return h + (m/60) + (s/3600);
+			}
 
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_Coal.webp" class="w-5 h-5" alt="석탄">
-                </div>
-                <div id="sub-석탄-${name}" class="tabular-nums">0</div>
+			const n = Number(v);
+			return Number.isFinite(n) ? n : 0;
+		}
 
-                <div class="flex items-center gap-1 text-gray-600">
-                  <img src="images/icon_Iron.webp" class="w-5 h-5" alt="철광">
-                </div>
-                <div id="sub-철광-${name}" class="tabular-nums">0</div>
-              </div>
+		// ✅ Expert(아그네스) 고정 차감 시간(시간/단계) 반환
+		function getExpertFlatHours(){
+			var sel = document.getElementById('chkExpertA');
+			if (!sel) return 0;
 
-              <div class="border-t border-gray-200 my-3"></div>
+			var v = Number(sel.value || 0);
+			return Number.isFinite(v) ? v : 0;
+		}
 
-              <div class="grid grid-cols-1 gap-1 text-[13px]">
-                <!-- 건설시간 -->
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-600">건설시간</span>
-                  <span id="sub-시간-${name}" class="tabular-nums font-medium">0</span>
-                </div>
+		// ✅ 발레리아(SVS 점수 보너스)
+		var EXPERT_BONUS = {
+			"None":0,
+			"Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+			"Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+		};
+		var EXPERT_DESC = {
+			"Lv.1":  "+2%",
+			"Lv.2":  "+4%",
+			"Lv.3":  "+6%",
+			"Lv.4":  "+8%",
+			"Lv.5":  "+10%",
+			"Lv.6":  "+12%",
+			"Lv.7":  "+14%",
+			"Lv.8":  "+16%",
+			"Lv.9":  "+18%",
+			"Lv.10": "+20%"
+		};
 
-                <!-- SVS -->
-                <div class="flex justify-between items-center">
-                  <span class="svs-score-label font-semibold">SVS 점수</span>
-                  <div class="flex gap-2">
-                    <span id="sub-점수-${name}" class="svs-score-value tabular-nums font-medium">0</span>
-                    <span id="sub-점수A-${name}" class="svs-score-value tabular-nums font-medium">0</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+		function getValeriaBonus(){
+			var sel = document.getElementById("chkExpertV");
+			if (!sel) return 0;
+			var key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+			return EXPERT_BONUS[key] ?? 0;
+		}
 
-          </div>
-        </div>
-      `;
-      container.appendChild(card);
+		function getValeriaDesc(){
+			var expertSel = document.getElementById("chkExpertV");
+			var lv = expertSel.value;
+			var text = EXPERT_DESC[lv]
+				? "SvS 점수 " + EXPERT_DESC[lv]
+				: "SvS 점수";
 
-      // 이벤트
-      var startSel = card.querySelector(`#start-${name}`);
-      var endSel   = card.querySelector(`#end-${name}`);
+			document.querySelectorAll(".svs-score-label").forEach(el => {
+				el.textContent = text;
+			});
+		}
+		// ===============================================
 
-      // ✅ 이전 선택값 복원 (가능하면), 아니면 기본값
-      var saved = prev[name];
-      if (saved) {
-        if ([...startSel.options].some(o => o.value === saved.start)) startSel.value = saved.start;
-        if ([...endSel.options].some(o => o.value === saved.end))     endSel.value   = saved.end;
-      } else {
-        endSel.value = startSel.value;
-      }
+		async function fetchBuildingData(){
+			for (var name of buildingList){
+				var url = `https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/building/${name}.csv`;
+				var res = await fetch(url);
+				var text = await res.text();
+				var lines = text.trim().split("\n");
+				var headers = lines[0].split(",");
+				var data = lines.slice(1).map(line=>{
+					var obj = {};
+					var values = line.split(",");
+					headers.forEach((h,i)=> obj[h.trim()] = (values[i]?.trim() || "0"));
+					return obj;
+				});
+				buildingData[name]=data;
+			}
+			renderBuildingSelectors();
+			scheduleCalc();
+		}
 
-      startSel.addEventListener("change", ()=>{
-        endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
-        scheduleCalc();
-      });
-      endSel.addEventListener("change", scheduleCalc);
+		function renderBuildingSelectors(){
+			var container = document.getElementById("buildingGridBody");
 
-      var maxIndex = buildingData[name].length - 1; // 원본 기준
-      buildingCards.push({name, maxIndex});
-    });
-  }
-
-  // ======== 🔷 변경: 버프 계수 계산 ========
-  function getFactorForTime(){
-    var buildSpeed = parseFloat(document.getElementById("buildSpeed").value || 0);
-    var factor = 1 + (isNaN(buildSpeed) ? 0 : buildSpeed/100);
-
-    // 부집행관 버튼(10/15/없음)
-    var vp = getActiveVP();      // 0 | 10 | 15
-    factor += vp/100;
-
-    // 서버버프 버튼 (활성 시 +10%)
-    if (isPressed('chkServerBuff')) factor += 0.10;
-
-    // 펫버프 (체크박스 무시, None 아니면 % 반영)
-    var petPct = getPetPercent();
-    if (petPct) factor += petPct/100;
-
-    return factor;
-  }
-  // ======================================
-
-  function calculateAll(){
-    // 합계
-    var total = {"고기":0, "나무":0, "석탄":0, "철광":0 };
-    var totalHours = 0;
-    var totalSvs = 0;
-
-    // 카드별 필요 합계 초기화
-    buildingCards.forEach(({name})=>{
-      ["고기","나무","석탄","철광"].forEach(res=>{
-        var el = document.getElementById(`sub-${res}-${name}`);
-        if (el) el.textContent = "0";
-      });
-
-      var tEl = document.getElementById(`sub-시간-${name}`);
-      if (tEl) tEl.textContent = "0";
-
-      var sEl = document.getElementById(`sub-점수-${name}`);
-      if (sEl) sEl.textContent = "0";
-    });
-
-    var factor = getFactorForTime();
-    // ✅ 시청버프는 토글 버튼 상태 사용 (폴백: 체크박스)
-    var cityBuff = isPressed('chkCityBuff');
-
-    buildingCards.forEach(({name})=>{
-      var start = parseInt(document.getElementById(`start-${name}`).value);
-      var end   = parseInt(document.getElementById(`end-${name}`).value);
-
-      // 구간 데이터
-      var data = buildingData[name].slice(start+1, end+1);
-      var sub = { "불수정":0, "정제":0, "고기":0, "나무":0, "석탄":0, "철광":0 };
-      var hours = 0; // 변환시간(시간)
-
-			data.forEach(row=>{
-				resources.forEach(res=>{            
-					if (res === "변환시간") {
-						var v = toHours(row[res]);
-						hours += (isNaN(v)?0:v);
-					} else {
-						var n = Number(String(row[res] ?? "0").replace(/,/g, "").trim());
-						sub[res] += (Number.isFinite(n) ? n : 0);
+			// ✅ 기존 선택값 보존
+			var prev = {};
+			if (container && container.children.length) {
+				[...container.querySelectorAll('.exp-card')].forEach(card => {
+					var nameEl = card.querySelector('h3');
+					if (!nameEl) return;
+					var bname = nameEl.textContent.trim();
+					var startSel = card.querySelector(`#start-${bname}`);
+					var endSel   = card.querySelector(`#end-${bname}`);
+					if (startSel && endSel) {
+						prev[bname] = { start: startSel.value, end: endSel.value };
 					}
 				});
+			}
+
+			container.innerHTML = "";
+			buildingCards = [];
+
+			buildingList.forEach(name=>{
+				var levelsFull = buildingData[name].map(d=> d["레벨"]); // 원본 모든 라벨
+				var filtered = filterLevelsWithIndex(levelsFull); // [{idx,label}] (외부 정의 가정)
+
+				// ✅ 옵션은 "화면 라벨은 filtered.label" / "value는 원본 idx"
+				var options = filtered
+					.map(({idx, label}) => `<option value="${idx}">${label}</option>`)
+					.join("");
+
+				var maxLabel = filtered.length ? filtered[filtered.length-1].label : (levelsFull[levelsFull.length-1] || '');
+				var card = document.createElement("div");
+				card.className = "exp-card";
+				card.innerHTML = `
+					<div class="p-2">
+						<div class="flex gap-2 items-stretch">
+
+							<!-- LEFT: 이미지 -->
+							<div class="building-imgbox w-[170px] h-[160px] flex-shrink-0 rounded-2xl border overflow-hidden
+													bg-gray-100 dark:bg-[#1e1e1e] flex items-center justify-center">
+								<img
+									src="${getBuildingImgWebp(name)}"
+									onerror="this.onerror=null; this.src='${getBuildingImgPng(name)}';"
+									alt="${name}"
+									class="w-full h-full object-contain"
+								/>
+							</div>
+
+							<!-- MID: 이름/최대레벨 + 현재/목표 -->
+							<div class="flex-1 min-w-[200px]">
+								<h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
+								<div class="muted mt-1">최대 레벨: ${maxLabel}</div>
+
+								<div class="mt-5 grid grid-cols-[46px_1fr] gap-y-3 items-center">
+									<div class="text-sm text-gray-600">현재</div>
+									<select id="start-${name}" class="border rounded-lg px-3 py-2 text-sm w-full">
+										${options}
+									</select>
+
+									<div class="text-sm text-gray-600">목표</div>
+									<select id="end-${name}" class="border rounded-lg px-3 py-2 text-sm w-full">
+										${options}
+									</select>
+								</div>
+							</div>
+
+							<!-- RIGHT: 필요자원 패널 (기존 id 그대로) -->
+							<div class="w-[480px] max-w-full rounded-2xl border p-4">
+								<div class="grid grid-cols-4 gap-x-3 gap-y-3 items-center text-[13px]">
+									<div class="flex items-center gap-1 text-gray-600">
+										<img src="images/icon_Meet.webp" class="w-5 h-5" alt="고기">
+									</div>
+									<div id="sub-고기-${name}" class="tabular-nums">0</div>
+
+									<div class="flex items-center gap-1 text-gray-600">
+										<img src="images/icon_Wood.webp" class="w-5 h-5" alt="나무">
+									</div>
+									<div id="sub-나무-${name}" class="tabular-nums">0</div>
+
+									<div class="flex items-center gap-1 text-gray-600">
+										<img src="images/icon_Coal.webp" class="w-5 h-5" alt="석탄">
+									</div>
+									<div id="sub-석탄-${name}" class="tabular-nums">0</div>
+
+									<div class="flex items-center gap-1 text-gray-600">
+										<img src="images/icon_Iron.webp" class="w-5 h-5" alt="철광">
+									</div>
+									<div id="sub-철광-${name}" class="tabular-nums">0</div>
+								</div>
+
+								<div class="border-t border-gray-200 my-3"></div>
+
+								<div class="grid grid-cols-1 gap-1 text-[13px]">
+									<!-- 건설시간 -->
+									<div class="flex justify-between items-center">
+										<span class="text-gray-600">건설시간</span>
+										<span id="sub-시간-${name}" class="tabular-nums font-medium">0</span>
+									</div>
+
+									<!-- SVS -->
+									<div class="flex justify-between items-center">
+										<span class="svs-score-label font-semibold">SVS 점수</span>
+										<div class="flex gap-2">
+											<span id="sub-점수-${name}" class="svs-score-value tabular-nums font-medium">0</span>
+											<span id="sub-점수A-${name}" class="svs-score-value tabular-nums font-medium">0</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				`;
+				container.appendChild(card);
+
+				// 이벤트
+				var startSel = card.querySelector(`#start-${name}`);
+				var endSel   = card.querySelector(`#end-${name}`);
+
+				// ✅ 이전 선택값 복원 (가능하면), 아니면 기본값
+				var saved = prev[name];
+				if (saved) {
+					if ([...startSel.options].some(o => o.value === saved.start)) startSel.value = saved.start;
+					if ([...endSel.options].some(o => o.value === saved.end))     endSel.value   = saved.end;
+				} else {
+					endSel.value = startSel.value;
+				}
+
+				startSel.addEventListener("change", ()=>{
+					endSel.value = startSel.value; // 기본: 동일레벨로 맞춤
+					scheduleCalc();
+				});
+				endSel.addEventListener("change", scheduleCalc);
+
+				var maxIndex = buildingData[name].length - 1; // 원본 기준
+				buildingCards.push({name, maxIndex});
 			});
-					
-      // 카드 우측 ‘필요 합계’ 갱신
-      document.getElementById(`sub-고기-${name}`).textContent = formatValue(sub["고기"]);
-      document.getElementById(`sub-나무-${name}`).textContent = formatValue(sub["나무"]);
-      document.getElementById(`sub-석탄-${name}`).textContent = formatValue(sub["석탄"]);
-      document.getElementById(`sub-철광-${name}`).textContent = formatValue(sub["철광"]);
+		}
 
-      var adjHours = hours / factor;
-      if (cityBuff) adjHours *= 0.8;
+		// ======== 🔷 변경: 버프 계수 계산 ========
+		function getFactorForTime(){
+			var buildSpeed = parseFloat(document.getElementById("buildSpeed").value || 0);
+			var factor = 1 + (isNaN(buildSpeed) ? 0 : buildSpeed/100);
 
-      // ✅ ExpertBuff: 단계수와 무관하게 한 번만 고정 차감 (예: Lv5 → 8시간)
-      var expertFlat = getExpertFlatHours();        // 0 | 2 | 3 | 4 | 6 | 8
-      adjHours = Math.max(0, adjHours - expertFlat);
+			// 부집행관 버튼(10/15/없음)
+			var vp = getActiveVP();      // 0 | 10 | 15
+			factor += vp/100;
 
-      document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
+			// 서버버프 버튼 (활성 시 +10%)
+			if (isPressed('chkServerBuff')) factor += 0.10;
 
-      // ✅ SVS 점수
-      var vBonus = getValeriaBonus(); // 0 ~ 0.20
-      var tScore = Math.floor(((adjHours * 60) * 30) * (1 + vBonus));        
-      var finalScore = tScore;
+			// 펫버프 (체크박스 무시, None 아니면 % 반영)
+			var petPct = getPetPercent();
+			if (petPct) factor += petPct/100;
 
-      var scoreEl = document.getElementById(`sub-점수-${name}`);
-      if (scoreEl) scoreEl.textContent = finalScore.toLocaleString();
+			return factor;
+		}
+		// ======================================
 
-      var scoreAEl = document.getElementById(`sub-점수A-${name}`);
-      if (scoreAEl) scoreAEl.textContent = formatSVS(finalScore);
+		function calculateAll(){
+			// 합계
+			var total = {"고기":0, "나무":0, "석탄":0, "철광":0 };
+			var totalHours = 0;
+			var totalSvs = 0;
 
-      // 체크된 카드만 총합 포함 (현재/목표 다르면 포함)
-      if (start < end){
-        Object.keys(total).forEach(k=> total[k] += sub[k]);
-        totalHours += adjHours;
-        totalSvs   += finalScore;
-      }
-    });
+			// 카드별 필요 합계 초기화
+			buildingCards.forEach(({name})=>{
+				["고기","나무","석탄","철광"].forEach(res=>{
+					var el = document.getElementById(`sub-${res}-${name}`);
+					if (el) el.textContent = "0";
+				});
 
-    document.getElementById("sum-고기").textContent = formatValue(total["고기"]);
-    document.getElementById("sum-나무").textContent = formatValue(total["나무"]);
-    document.getElementById("sum-석탄").textContent = formatValue(total["석탄"]);
-    document.getElementById("sum-철광").textContent = formatValue(total["철광"]);
-    document.getElementById("sum-시간").textContent = formatHourToTime(totalHours);
+				var tEl = document.getElementById(`sub-시간-${name}`);
+				if (tEl) tEl.textContent = "0";
 
-    // ✅ 3) 총합 SVS 출력
-    var elLong  = document.getElementById("sum-svs");
-    var elShort = document.getElementById("sum-svs-short"); // 있으면 같이 사용
-    if (elLong)  elLong.textContent  = totalSvs.toLocaleString();
-    if (elShort) elShort.textContent = formatSVS(totalSvs);
+				var sEl = document.getElementById(`sub-점수-${name}`);
+				if (sEl) sEl.textContent = "0";
+			});
 
-    sendHeightToParent();
-  }
+			var factor = getFactorForTime();
+			// ✅ 시청버프는 토글 버튼 상태 사용 (폴백: 체크박스)
+			var cityBuff = isPressed('chkCityBuff');
 
-  // 자동 계산(디바운스)
-  var calcTimer=null;
-  function scheduleCalc(){
-    if (calcTimer) clearTimeout(calcTimer);
-    calcTimer = setTimeout(calculateAll, 120);
-  }
+			buildingCards.forEach(({name})=>{
+				var start = parseInt(document.getElementById(`start-${name}`).value);
+				var end   = parseInt(document.getElementById(`end-${name}`).value);
 
-  // 상단 토글/입력 이벤트
-  document.addEventListener("change",(e)=>{
-    var id = e.target.id;
+				// 구간 데이터
+				var data = buildingData[name].slice(start+1, end+1);
+				var sub = { "불수정":0, "정제":0, "고기":0, "나무":0, "석탄":0, "철광":0 };
+				var hours = 0; // 변환시간(시간)
 
-    switch(id){
-      case "chkVP":
-      case "chkSPVP":
-        handleVPCheck(id);
-        break;          
-      case "chkServerBuff":
-      case "chkCityBuff":
-      case "buffSelect":
-      case "chkExpertA":
-        scheduleCalc();
-        break;
-      case "chkExpertV":
-        getValeriaDesc();
-        scheduleCalc();
-        break;
-      case "buildSpeed":
-        scheduleCalc();
-        break;
-      default:
-        break;
-    }
-  });
-  ["buildSpeed"].forEach(id=>{
-    var el=document.getElementById(id);
-    if (el) el.addEventListener("input", scheduleCalc);
-  });
+				data.forEach(row=>{
+					resources.forEach(res=>{            
+						if (res === "변환시간") {
+							var v = toHours(row[res]);
+							hours += (isNaN(v)?0:v);
+						} else {
+							var n = Number(String(row[res] ?? "0").replace(/,/g, "").trim());
+							sub[res] += (Number.isFinite(n) ? n : 0);
+						}
+					});
+				});
 
-  // 🔷 버튼(토글/VP) 클릭 시에도 즉시 계산 반영
-  document.querySelectorAll('.toggle-btn, .vp-btn').forEach(b=>{
-    b.addEventListener('click', scheduleCalc);
-  });
+				// 카드 우측 ‘필요 합계’ 갱신
+				document.getElementById(`sub-고기-${name}`).textContent = formatValue(sub["고기"]);
+				document.getElementById(`sub-나무-${name}`).textContent = formatValue(sub["나무"]);
+				document.getElementById(`sub-석탄-${name}`).textContent = formatValue(sub["석탄"]);
+				document.getElementById(`sub-철광-${name}`).textContent = formatValue(sub["철광"]);
 
-  // 데이터 로드 & 초기 렌더
-  fetchBuildingData();
+				var adjHours = hours / factor;
+				if (cityBuff) adjHours *= 0.8;
 
-  // 레벨 라벨 필터 → 원본 인덱스/라벨 쌍 반환
-  function filterLevelsWithIndex(levelLabels) {
-    // CSV 라벨 정제
-    var labels = levelLabels.map(v => String(v ?? '').trim());
-    var out = [];
+				// ✅ ExpertBuff: 단계수와 무관하게 한 번만 고정 차감 (예: Lv5 → 8시간)
+				var expertFlat = getExpertFlatHours();        // 0 | 2 | 3 | 4 | 6 | 8
+				var steps = data.length;                       // 이번 계산 구간의 업그레이드 단계 수
+				adjHours = Math.max(0, adjHours - (expertFlat * steps));
 
-    // 헬퍼: 특정 라벨을 "대소문자/공백 무시"로 찾기
-    var findIdx = (want) =>
-      labels.findIndex(lv => lv.replace(/\s+/g, '').toUpperCase() === want.toUpperCase());
+				document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
 
-    // 헬퍼: 원본 순서를 유지한 채, 정규식에 맞는 것만 추출
-    var collectBy = (regex) => {
-      labels.forEach((lv, i) => {
-        var norm = lv.replace(/\s+/g, '').toUpperCase();
-        if (regex.test(norm)) out.push({ idx: i, label: labels[i] });
-      });
-      return out;
-    };
+				// ✅ SVS 점수
+				var vBonus = getValeriaBonus(); // 0 ~ 0.20
+				var tScore = Math.floor(((adjHours * 60) * 30) * (1 + vBonus));        
+				var finalScore = tScore;
 
-    // 일반 모드: 1~30이 있으면 그 범위, 없으면 FC1~FC10 범위
-    var numeric = [];
-    labels.forEach((lv, i) => {
-      var m = lv.match(/^\s*(\d+)\s*$/);
-      if (m) {
-        var n = parseInt(m[1], 10);
-        if (n >= 1 && n <= 30) numeric.push({ idx: i, label: lv });
-      }
-    });
-    if (numeric.length) return numeric;
+				var scoreEl = document.getElementById(`sub-점수-${name}`);
+				if (scoreEl) scoreEl.textContent = finalScore.toLocaleString();
 
-    // 숫자 1~30이 없다면 FC1~FC10 시도
-    var s3 = labels.findIndex(lv => /^FC\s*0*1$/i.test(lv));
-    var e3 = labels.findIndex(lv => /^FC\s*0*10$/i.test(lv));
-    if (s3 !== -1 && e3 !== -1 && s3 <= e3) {
-      var arr = [];
-      for (var i = s3; i <= e3; i++) arr.push({ idx: i, label: labels[i] });
-      return arr;
-    }
+				var scoreAEl = document.getElementById(`sub-점수A-${name}`);
+				if (scoreAEl) scoreAEl.textContent = formatSVS(finalScore);
 
-    // 최후: 원본 전체(어떤 CSV든 최소한 전부 노출)
-    return labels.map((lv, i) => ({ idx: i, label: lv }));
-  }
-   
- };
- window.RegularInit();
-})();
+				// 체크된 카드만 총합 포함 (현재/목표 다르면 포함)
+				if (start < end){
+					Object.keys(total).forEach(k=> total[k] += sub[k]);
+					totalHours += adjHours;
+					totalSvs   += finalScore;
+				}
+			});
+
+			document.getElementById("sum-고기").textContent = formatValue(total["고기"]);
+			document.getElementById("sum-나무").textContent = formatValue(total["나무"]);
+			document.getElementById("sum-석탄").textContent = formatValue(total["석탄"]);
+			document.getElementById("sum-철광").textContent = formatValue(total["철광"]);
+			document.getElementById("sum-시간").textContent = formatHourToTime(totalHours);
+
+			// ✅ 3) 총합 SVS 출력
+			var elLong  = document.getElementById("sum-svs");
+			var elShort = document.getElementById("sum-svs-short"); // 있으면 같이 사용
+			if (elLong)  elLong.textContent  = totalSvs.toLocaleString();
+			if (elShort) elShort.textContent = formatSVS(totalSvs);
+
+			sendHeightToParent();
+		}
+
+		// 자동 계산(디바운스)
+		var calcTimer=null;
+		function scheduleCalc(){
+			if (calcTimer) clearTimeout(calcTimer);
+			calcTimer = setTimeout(calculateAll, 120);
+		}
+
+		// 상단 토글/입력 이벤트
+		document.addEventListener("change",(e)=>{
+			var id = e.target.id;
+
+			switch(id){
+				case "chkVP":
+				case "chkSPVP":
+					handleVPCheck(id);
+					break;          
+				case "chkServerBuff":
+				case "chkCityBuff":
+				case "buffSelect":
+				case "chkExpertA":
+					scheduleCalc();
+					break;
+				case "chkExpertV":
+					getValeriaDesc();
+					scheduleCalc();
+					break;
+				case "buildSpeed":
+					scheduleCalc();
+					break;
+				default:
+					break;
+			}
+		});
+		["buildSpeed"].forEach(id=>{
+			var el=document.getElementById(id);
+			if (el) el.addEventListener("input", scheduleCalc);
+		});
+
+		// 🔷 버튼(토글/VP) 클릭 시에도 즉시 계산 반영
+		document.querySelectorAll('.toggle-btn, .vp-btn').forEach(b=>{
+			b.addEventListener('click', scheduleCalc);
+		});
+
+		// 데이터 로드 & 초기 렌더
+		fetchBuildingData();
+
+		// 레벨 라벨 필터 → 원본 인덱스/라벨 쌍 반환
+		function filterLevelsWithIndex(levelLabels) {
+			// CSV 라벨 정제
+			var labels = levelLabels.map(v => String(v ?? '').trim());
+			var out = [];
+
+			// 헬퍼: 특정 라벨을 "대소문자/공백 무시"로 찾기
+			var findIdx = (want) =>
+				labels.findIndex(lv => lv.replace(/\s+/g, '').toUpperCase() === want.toUpperCase());
+
+			// 헬퍼: 원본 순서를 유지한 채, 정규식에 맞는 것만 추출
+			var collectBy = (regex) => {
+				labels.forEach((lv, i) => {
+					var norm = lv.replace(/\s+/g, '').toUpperCase();
+					if (regex.test(norm)) out.push({ idx: i, label: labels[i] });
+				});
+				return out;
+			};
+
+			// 일반 모드: 1~30이 있으면 그 범위, 없으면 FC1~FC10 범위
+			var numeric = [];
+			labels.forEach((lv, i) => {
+				var m = lv.match(/^\s*(\d+)\s*$/);
+				if (m) {
+					var n = parseInt(m[1], 10);
+					if (n >= 1 && n <= 30) numeric.push({ idx: i, label: lv });
+				}
+			});
+			if (numeric.length) return numeric;
+
+			// 숫자 1~30이 없다면 FC1~FC10 시도
+			var s3 = labels.findIndex(lv => /^FC\s*0*1$/i.test(lv));
+			var e3 = labels.findIndex(lv => /^FC\s*0*10$/i.test(lv));
+			if (s3 !== -1 && e3 !== -1 && s3 <= e3) {
+				var arr = [];
+				for (var i = s3; i <= e3; i++) arr.push({ idx: i, label: labels[i] });
+				return arr;
+			}
+
+			// 최후: 원본 전체(어떤 CSV든 최소한 전부 노출)
+			return labels.map((lv, i) => ({ idx: i, label: lv }));
+		}
+
+	 };
+	 window.RegularInit();
+	})();
 </script>	

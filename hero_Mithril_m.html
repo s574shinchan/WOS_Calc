@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>영웅장비[미스릴]</title>
+  <script>
+    (function () {
+      try {
+        const v = localStorage.getItem('darkMode');
+        if (v === 'true') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/heroes.css">
+  <script src="js/common.js"></script>
+</head>
+
+<body>
+  <div class="max-w-[1500px] mx-auto bg-white rounded shadow p-2 flex flex-col sm:flex-row gap-2">
+    <div class="flex-1 bg-white rounded p-2 space-y-4 shadow">
+      <div class="bg-gray-100 p-2 font-sans text-sm">
+        <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+					<h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-800">🧝 영웅장비[미스릴]</h1>
+					<div class="text-gray-600 text-sm mt-1 space-y-1">
+						<p>현재레벨과 목표레벨을 선택하면, 업그레이드에 필요한 자원(미스릴/레전드 장비)을 계산합니다.</p>
+						<p>각 항목의 ‘필요 합계’는 레벨 선택 시 자동 갱신됩니다.</p>
+						<p>각 항목별로 체크를 하면 체크항목별 필요합계를 더하여 총합계에 표시됩니다.</p>
+					</div>
+					
+					<!-- ===================== 📕 미스릴 ===================== -->
+					<form id="heroEquipForm" class="space-y-3">
+						<div class="flex flex-wrap items-center justify-start gap-2 w-full">
+							<label class="text-sm font-medium whitespace-nowrap">발레리아</label>
+							<select id="chkExpertV" class="w-[120px] border rounded-md px-2 py-1.5">
+								<option>None</option>
+								<option>Lv.1</option><option>Lv.2</option><option>Lv.3</option><option>Lv.4</option><option>Lv.5</option>
+								<option>Lv.6</option><option>Lv.7</option><option>Lv.8</option><option>Lv.9</option><option>Lv.10</option>
+							</select>
+
+							<!-- ✅ 레벨 설명 표시 영역 -->
+							<span id="expertDesc" class="svs-score-value text-sm font-semibold hidden px-4"></span>
+						</div>
+
+						<div id="heroEquipGridBody" class="grid grid-cols-1 md:grid-cols-4 gap-2"></div>
+
+						<!-- 📕 미스릴 총합계 -->
+						<div id="mithrilTotals">
+						<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+							<!-- 🧮 필요 총합 -->
+							<div class="rounded-xl border border-black/10 p-3">
+								<div class="font-semibold text-gray-800 mb-2">필요 총합</div>
+								<div class="grid items-center text-[12px]
+														gap-x-3 gap-y-1
+														grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+									<div class="text-gray-600">경험치</div>
+									<div id="tot-exp" class="text-right tabular-nums">0</div>
+									<div class="text-gray-600">미스릴</div>
+									<div id="tot-mith" class="text-right tabular-nums">0</div>
+
+									<div class="text-gray-600">너트</div>
+									<div id="tot-nut" class="text-right tabular-nums">0</div>
+									<div class="text-gray-600">레전드장비</div>
+									<div id="tot-leg" class="text-right tabular-nums">0</div>
+
+									<div class="col-span-4 border-t border-gray-200 mt-1"></div>
+
+									<div class="svs-score-label pt-1">SVS 점수</div>
+									<span id="svs-long"  class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>
+									<div></div>
+									<span id="svs-short" class="pt-1 svs-score-value text-right tabular-nums font-medium">0</span>
+								</div>
+							</div>
+
+							<div class="flex justify-end mt-2">
+								<!-- ✅ 버튼 클릭시에만 총합 계산 -->
+								<button id="btnCalc" type="button"
+									class="w-full px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">
+									총합계산
+								</button>
+							</div>
+						</div>
+						</div>
+					</form>
+				</div>				
+			</div>
+		</div>
+	</div>
+
+  <!-- ========== 공통 유틸 & 프레임 통신 ========== -->
+  <script>
+    function sendHeightToParent() {
+      const height = document.body.scrollHeight + 10;
+      window.parent?.postMessage?.({ type: "FRAME_CHANGE", height }, "*");
+    }
+    window.addEventListener("load", () => setTimeout(sendHeightToParent, 100));
+  </script>
+
+  <!-- ========== 📕 미스릴 로직 ========== -->
+  <script>
+    const slotNames = ["고글", "장갑", "벨트", "신발"];
+    const mithrilCsvUrl = "https://raw.githubusercontent.com/s574shinchan/WOS_Calc/main/data/Hero/Mithril.csv";
+
+    let stageList = [];
+    let csvData = [];
+
+    // ✅ 발레리아(SVS 점수 보너스)
+    const EXPERT_BONUS = {
+      "None":0,
+      "Lv.1":0.02,"Lv.2":0.04,"Lv.3":0.06,"Lv.4":0.08,"Lv.5":0.10,
+      "Lv.6":0.12,"Lv.7":0.14,"Lv.8":0.16,"Lv.9":0.18,"Lv.10":0.20
+    };
+    const EXPERT_DESC = {
+      "Lv.1":"+2%",
+      "Lv.2":"+4%",
+      "Lv.3":"+6%",
+      "Lv.4":"+8%",
+      "Lv.5":"+10%",
+      "Lv.6":"+12%",
+      "Lv.7":"+14%",
+      "Lv.8":"+16%",
+      "Lv.9":"+18%",
+      "Lv.10":"+20%"
+    };
+
+    function getValeriaBonus(){
+      const sel = document.getElementById("chkExpertV");
+      if (!sel) return 0;
+      const key = (sel.value || sel.options[sel.selectedIndex]?.text || "None").trim();
+      return EXPERT_BONUS[key] ?? 0;
+    }
+
+    const expertSel  = document.getElementById('chkExpertV');
+    const expertDesc = document.getElementById('expertDesc');
+
+    function getValeriaDesc(){
+      const lv = expertSel?.value ?? "None";
+
+      if (EXPERT_DESC[lv]) {
+        expertDesc.textContent = `SVS 점수 ${EXPERT_DESC[lv]}`;
+        expertDesc.classList.remove('hidden');
+      } else {
+        expertDesc.textContent = "";
+        expertDesc.classList.add('hidden');
+      }
+    }
+
+    function formatSVS(value){
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "0";
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2).replace(/\.00$/, '') + "B";
+      if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.00$/, '') + "M";
+      return num.toLocaleString();
+    }
+
+    async function loadMithrilCSV() {
+      try{
+        const res = await fetch(mithrilCsvUrl, {cache:"no-store"});
+        const text = await res.text();
+        const lines = text.trim().split("\n").map(l => l.split(","));
+        const headers = lines[0];
+        csvData = lines.slice(1).map(row => {
+          const obj = {};
+          headers.forEach((h, i) => obj[h.trim()] = (row[i] ?? "").trim() || "0");
+          return obj;
+        });
+        stageList = csvData.map(r => r["레벨"]);
+      }catch(e){
+        csvData = [
+          {레벨:"1", 경험치:"0", 너트:"0", 미스릴:"0", 레전드장비:"0"},
+          {레벨:"2", 경험치:"100", 너트:"5", 미스릴:"8", 레전드장비:"0"},
+          {레벨:"3", 경험치:"220", 너트:"12", 미스릴:"18", 레전드장비:"0"},
+          {레벨:"4", 경험치:"360", 너트:"20", 미스릴:"30", 레전드장비:"1"},
+          {레벨:"5", 경험치:"520", 너트:"30", 미스릴:"45", 레전드장비:"1"},
+        ];
+        stageList = csvData.map(r=>r["레벨"]);
+      }
+      renderHeroEquipUI();
+      sendHeightToParent();
+    }
+
+    function renderHeroEquipUI() {
+      const grid = document.getElementById("heroEquipGridBody");
+      grid.innerHTML = "";
+
+      slotNames.forEach((name, i) => {
+        const options = stageList.map(stage => `<option value="${stage}">${stage}</option>`).join("");
+        const card = document.createElement("div");
+        card.className = "exp-card";
+        card.innerHTML = `
+          <div class="p-4 space-y-4">
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-[15px] font-semibold text-gray-800">${name}</h3>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 max-w-[360px]">
+              <div>
+                <div class="text-[12px] text-gray-600 mb-1">현재</div>
+                <select id="start-${i}"
+                        class="w-full border rounded-lg px-2 py-1 text-sm
+                               bg-white dark:bg-[#2b2b2b] dark:border-gray-600">
+                  ${options}
+                </select>
+              </div>
+              <div>
+                <div class="text-[12px] text-gray-600 mb-1">목표</div>
+                <select id="end-${i}"
+                        class="w-full border rounded-lg px-2 py-1 text-sm
+                               bg-white dark:bg-[#2b2b2b] dark:border-gray-600">
+                  ${options}
+                </select>
+              </div>
+            </div>
+
+            <!-- ✅ 카드별 필요합계 제거: 로직 보호 위해 DOM은 남기되 hidden 처리 -->
+            <div class="hidden">
+              <div class="rounded-xl border border-black/10 p-3">
+                <div class="font-semibold text-gray-800 mb-2">필요 합계</div>
+                <div class="grid items-center text-[12px]
+                            gap-x-3 gap-y-1
+                            grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
+
+                  <div class="text-gray-600">경험치</div>
+                  <div class="text-right tabular-nums" id="m-sub-exp-${i}">0</div>
+                  <div class="text-gray-600">미스릴</div>
+                  <div class="text-right tabular-nums" id="m-sub-mith-${i}">0</div>
+
+                  <div class="text-gray-600">너트</div>
+                  <div class="text-right tabular-nums" id="m-sub-nut-${i}">0</div>
+                  <div class="text-gray-600">레전드장비</div>
+                  <div class="text-right tabular-nums" id="m-sub-legend-${i}">0</div>
+
+                  <div class="col-span-4 border-t border-gray-200 dark:border-gray-200 mt-1"></div>
+
+                  <div class="svs-score-label pt-1">SVS 점수</div>
+                  <div id="sub-점수A-${slotNames[i]}" class="svs-score-value text-right tabular-nums font-medium pt-1">0</div>
+                  <div></div>
+                  <div id="sub-점수-${slotNames[i]}" class="svs-score-value text-right tabular-nums font-medium pt-1">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+
+        const curSelect = card.querySelector(`#start-${i}`);
+        const tgtSelect = card.querySelector(`#end-${i}`);
+
+        // ✅ 목표 옵션: 현재+1부터만 표시
+        function refreshTargetOptions() {
+          const curValue = curSelect.value;
+          const curIdx = stageList.indexOf(curValue);
+
+          // 현재 다음 레벨부터
+          const targets = stageList.slice(curIdx + 1);
+
+          if (targets.length === 0) {
+            // 현재가 최대레벨이면 선택 불가(표시는 현재만)
+            tgtSelect.innerHTML = `<option value="${curValue}">${curValue}</option>`;
+            tgtSelect.value = curValue;
+            tgtSelect.disabled = true;
+          } else {
+            tgtSelect.disabled = false;
+            tgtSelect.innerHTML = targets
+              .map(stage => `<option value="${stage}">${stage}</option>`)
+              .join("");
+            // 기본값 = 현재+1
+            tgtSelect.value = targets[0];
+          }
+        }
+				
+        // 초기 1회: 목표 옵션을 현재+1부터로 세팅
+        refreshTargetOptions();
+
+        // 현재 변경 시: 목표 옵션 재구성 후 subtotal 갱신
+        curSelect.addEventListener("change", () => {
+          refreshTargetOptions();
+        });        
+      });
+
+      // ✅ 발레리아 변경 시도 카드 subtotal만 갱신(총합 자동 갱신 금지)
+      document.getElementById("chkExpertV")?.addEventListener("change", () => {
+        slotNames.forEach((_, i) => updateMithrilSubtotals(i));
+        getValeriaDesc();
+      });
+
+      // ✅ 총합계산 버튼 클릭시에만 총합 계산
+			document.getElementById("btnCalc")?.addEventListener("click", function(e) {
+				e.preventDefault();
+				updateMithrilTotals();
+			});
+    }
+
+    function updateMithrilSubtotals(i) {
+      const cur = document.getElementById(`start-${i}`).value;
+      const tgt = document.getElementById(`end-${i}`).value;
+      const sIdx = stageList.indexOf(cur);
+      const eIdx = stageList.indexOf(tgt);
+
+      const sums = { exp:0, nut:0, mith:0, legend:0 };
+      if (sIdx >= 0 && eIdx > sIdx) {
+        for (let j = sIdx + 1; j <= eIdx; j++) {
+          const r = csvData[j];
+          sums.exp    += parseFloat(r["경험치"] || "0");
+          sums.nut    += parseFloat(r["너트"] || "0");
+          sums.mith   += parseFloat(r["미스릴"] || "0");
+          sums.legend += parseFloat(r["레전드장비"] || "0");
+        }
+      }
+
+      document.getElementById(`m-sub-exp-${i}`).textContent    = sums.exp.toLocaleString();
+      document.getElementById(`m-sub-nut-${i}`).textContent    = sums.nut.toLocaleString();
+      document.getElementById(`m-sub-mith-${i}`).textContent   = sums.mith.toLocaleString();
+      document.getElementById(`m-sub-legend-${i}`).textContent = sums.legend.toLocaleString();
+
+      const valeriaBonus = getValeriaBonus();
+      const baseSlot = sums.mith * 144000;
+      const svsSlot  = Math.round(baseSlot * (1 + valeriaBonus));
+
+      const id  = `sub-점수-${slotNames[i]}`;
+      const idA = `sub-점수A-${slotNames[i]}`;
+      const el  = document.getElementById(id);
+      const elA = document.getElementById(idA);
+      if (el)  el.textContent  = formatSVS(svsSlot);
+      if (elA) elA.textContent = svsSlot.toLocaleString();
+    }
+
+    function updateMithrilTotals(){
+      let total = { exp:0, nut:0, mith:0, leg:0 };
+      slotNames.forEach((_, i)=>{
+        const cur = document.getElementById(`start-${i}`).value;
+        const tgt = document.getElementById(`end-${i}`).value;
+        const sIdx = stageList.indexOf(cur);
+        const eIdx = stageList.indexOf(tgt);
+        if (sIdx < 0 || eIdx <= sIdx) return;
+
+        for(let j=sIdx+1;j<=eIdx;j++){
+          const r = csvData[j];
+          total.exp += +(r["경험치"]||0);
+          total.nut += +(r["너트"]||0);
+          total.mith+= +(r["미스릴"]||0);
+          total.leg += +(r["레전드장비"]||0);
+        }
+      });
+
+
+      document.getElementById("tot-exp").textContent  = total.exp.toLocaleString();
+      document.getElementById("tot-nut").textContent  = total.nut.toLocaleString();
+      document.getElementById("tot-mith").textContent = total.mith.toLocaleString();
+      document.getElementById("tot-leg").textContent  = total.leg.toLocaleString();
+
+      const valeriaBonus = getValeriaBonus();
+      const baseTotal = total.mith * 144000;
+      const svsTotal  = Math.round(baseTotal * (1 + valeriaBonus));
+
+      document.getElementById("svs-long").textContent  = svsTotal.toLocaleString();
+      document.getElementById("svs-short").textContent = formatSVS(svsTotal);
+    }
+
+    loadMithrilCSV();
+  </script>
+
+  <script>
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))) {
+        e.preventDefault();
+      }
+    });
+  </script>
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'DARK_MODE') {
+        document.body.classList.toggle('dark-mode', e.data.value);
+      }
+    });
+  </script>
+</body>
+</html>

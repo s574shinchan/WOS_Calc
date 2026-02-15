@@ -357,17 +357,11 @@
 
     // ✅ Expert(아그네스) 고정 차감 시간(시간/단계) 반환
     function getExpertFlatHours(){
-      var sel = document.getElementById('chkExpertA');
-      if (!sel) return 0;
-      var raw = (sel.value || sel.options[sel.selectedIndex]?.text || '').trim().toLowerCase();
-      var asNum = Number(raw);
-      var lv = (!Number.isNaN(asNum) && Number.isFinite(asNum)) ? asNum
-               : (raw.includes('lv.5')||raw.includes('lv5')) ? 5
-               : (raw.includes('lv.4')||raw.includes('lv4')) ? 4
-               : (raw.includes('lv.3')||raw.includes('lv3')) ? 3
-               : (raw.includes('lv.2')||raw.includes('lv2')) ? 2
-               : (raw.includes('lv.1')||raw.includes('lv1')) ? 1 : 0;
-      return lv === 1 ? 2 : lv === 2 ? 3 : lv === 3 ? 4 : lv === 4 ? 6 : lv === 5 ? 8 : 0;
+			var sel = document.getElementById('chkExpertA');
+			if (!sel) return 0;
+
+			var v = Number(sel.value || 0);
+			return Number.isFinite(v) ? v : 0;
     }
 
     // ✅ 발레리아(SVS 점수 보너스)
@@ -711,7 +705,8 @@
 
         // ✅ ExpertBuff: 단계수와 무관하게 한 번만 고정 차감 (예: Lv5 → 8시간)
         var expertFlat = getExpertFlatHours();        // 0 | 2 | 3 | 4 | 6 | 8
-        adjHours = Math.max(0, adjHours - expertFlat);
+        var steps = data.length;                       // 이번 계산 구간의 업그레이드 단계 수
+				adjHours = Math.max(0, adjHours - (expertFlat * steps));
 
         document.getElementById(`sub-시간-${name}`).textContent = formatHourToTime(adjHours);
 
